@@ -1,0 +1,721 @@
+// ============================================================================
+// Mixin E-Commerce Platform — PostgreSQL / Prisma Schema
+// Serves B2C retail storefront customers AND B2B wholesale/agent partners
+// (mobile phone distribution). Field names/enums are aligned with the
+// project's `openapi.json` (Mixin API v4) where equivalent resources exist
+// (Product, ProductVariant, Category, Brand, Order, OrderPayment, Coupon,
+// Customer/Address, ProductHistory), extended with the B2B pricing engine,
+// credit-limit and business-verification fields required for wholesale.
+//
+// DEV-MODE NOTE ON CASCADES
+// --------------------------------------------------------------------------
+// To make local development / demo resets painless, most parent → child
+// relations use `onDelete: Cascade` so wiping a Brand/Category/Product/User
+// never throws an FK violation. In a real production rollout you would
+// likely switch financial/audit relations (Order, Payment, ProductHistory)
+// to `Restrict` + soft deletes instead of hard cascades — this is called
+// out inline below wherever it matters.
+// ============================================================================
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ============================================================================
+// ENUMS
+// ============================================================================
+
+/// Multi-role access control. RETAIL/WHOLESALE are storefront customers,
+/// AGENT is a B2B sales agent/distributor rep who can place orders on behalf
+/// of wholesale accounts, ADMIN is back-office staff.
+enum Role {
+  RETAIL
+  WHOLESALE
+  AGENT
+  ADMIN
+}
+
+/// Mirrors the `stock_type` enum used across Product* schemas in openapi.json.
+enum StockType {
+  UNLIMITED   @map("unlimited")
+  LIMITED     @map("limited")
+  OUT_OF_STOCK @map("out_of_stock")
+  CALL        @map("call")
+}
+
+/// B2B settlement terms used by the dynamic price-tier engine.
+enum B2BPaymentTerm {
+  CASH
+  CREDIT_60_DAYS
+}
+
+/// Mirrors OrderPayment `status` values found in openapi.json
+/// (/api/v4/order-payments/ filters: initiated, sent, completed, failed, reversed, edited).
+enum PaymentStatus {
+  INITIATED @map("initiated")
+  SENT      @map("sent")
+  COMPLETED @map("completed")
+  FAILED    @map("failed")
+  REVERSED  @map("reversed")
+  EDITED    @map("edited")
+}
+
+/// Order lifecycle. Combines the business-spec pipeline (pending, completed,
+/// failed, reversed) with the concrete transitions exposed by
+/// /api/v4/order-process/{id}/status/ (processing, shipping, finished, canceled).
+enum OrderStatus {
+  PENDING
+  PROCESSING
+  SHIPPING
+  COMPLETED
+  CANCELED
+  FAILED
+  REVERSED
+}
+
+/// Mirrors Coupon `type` values from CouponCreateSchema in openapi.json.
+enum CouponType {
+  PERCENT_BASED   @map("percent_based")
+  AMOUNT_BASED    @map("amount_based")
+  SHIPPING_PRICE  @map("shipping_price")
+}
+
+/// One-time-password purpose, keeps phone verification generic/reusable.
+enum OtpPurpose {
+  REGISTER
+  LOGIN
+  PHONE_VERIFICATION
+  PASSWORD_RESET
+}
+
+/// Product/variant audit-log action type (mirrors ProductHistoryItemSchema's
+/// "+" / "~" / "-" history_type, spelled out for readability).
+enum HistoryAction {
+  CREATED
+  UPDATED
+  DELETED
+}
+
+// ============================================================================
+// USERS, AUTH & ADDRESSES
+// ============================================================================
+
+model User {
+  id       Int    @id @default(autoincrement())
+  role     Role   @default(RETAIL)
+
+  username String  @unique
+  email    String? @unique
+  passwordHash String
+
+  firstName String?
+  lastName  String?
+
+  /// OTP-ready phone number (E.164), unique login identifier for storefront customers.
+  phoneNumber       String  @unique
+  phoneVerified     Boolean @default(false)
+  phoneVerifiedAt   DateTime?
+
+  /// National ID / company registration number, used for identity & business verification.
+  nationalNumber String?
+  cardNumber     String? // bank card number used for refunds/settlements
+
+  city String?
+
+  // --- B2B / wholesale specific fields -------------------------------------
+  shopName             String?  // wholesale partner's registered shop/storefront name
+  businessLicenseNumber String? // trade license / business registration number
+  businessVerified     Boolean  @default(false)
+  businessVerifiedAt   DateTime?
+  /// Approved B2B credit ceiling (Toman) for CREDIT_60_DAYS orders.
+  creditLimit          Decimal  @default(0) @db.Decimal(14, 2)
+  /// Outstanding credit currently drawn against `creditLimit`.
+  creditUsed           Decimal  @default(0) @db.Decimal(14, 2)
+
+  /// Optional AGENT managing this WHOLESALE/RETAIL account (distribution rep).
+  agentId Int?
+  agent   User? @relation("AgentToCustomers", fields: [agentId], references: [id], onDelete: SetNull)
+  managedAccounts User[] @relation("AgentToCustomers")
+
+  isActive               Boolean @default(true)
+  receiveNewsletters     Boolean @default(false)
+  managementSmsNotif     Boolean @default(true)
+  managementEmailNotif   Boolean @default(true)
+  referer                String?
+  creationMethod         String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  addresses       Address[]
+  cart            Cart?
+  orders          Order[]        @relation("OrderCustomer")
+  agentOrders     Order[]        @relation("OrderAgent")
+  payments        Payment[]
+  otpCodes        OtpCode[]
+  couponUsages    CouponUsage[]
+  productHistory  ProductHistory[] @relation("HistoryActor")
+  revertedHistory ProductHistory[] @relation("HistoryReverter")
+
+  @@index([role])
+  @@index([city])
+  @@map("users")
+}
+
+model OtpCode {
+  id          Int        @id @default(autoincrement())
+  userId      Int?
+  user        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phoneNumber String
+  code        String
+  purpose     OtpPurpose @default(LOGIN)
+  consumed    Boolean    @default(false)
+  expiresAt   DateTime
+  createdAt   DateTime   @default(now())
+
+  @@index([phoneNumber, purpose])
+  @@map("otp_codes")
+}
+
+model Address {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  firstName   String?
+  lastName    String?
+  phoneNumber String?
+
+  province    String?
+  city        String
+  address     String
+  postalCode  String?
+  latitude    Float?
+  longitude   Float?
+  isDefault   Boolean  @default(false)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  orders      Order[]
+
+  @@index([userId])
+  @@map("addresses")
+}
+
+// ============================================================================
+// BRANDS & CATEGORIES
+// ============================================================================
+
+model Brand {
+  id              Int      @id @default(autoincrement())
+  name            String   @unique
+  slug            String   @unique
+  imageUrl        String?
+  imageAlt        String?
+  iconUrl         String?
+  seoTitle        String?
+  seoDescription  String?
+  isActive        Boolean  @default(true)
+  order           Int      @default(0)
+
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  products        Product[]
+  coupons         Coupon[] @relation("CouponBrands")
+
+  @@map("brands")
+}
+
+model Category {
+  id                   Int       @id @default(autoincrement())
+  name                 String
+  slug                 String    @unique
+  description          String?
+
+  parentId             Int?
+  parent               Category? @relation("CategoryHierarchy", fields: [parentId], references: [id], onDelete: Cascade)
+  children             Category[] @relation("CategoryHierarchy")
+
+  imageUrl             String?
+  imageAlt             String?
+  iconUrl              String?
+  seoTitle             String?
+  seoDescription       String?
+
+  available            Boolean   @default(true)
+  categoriesMenuShow   Boolean   @default(true)
+  topMenuSeparateShow  Boolean   @default(false)
+  order                Int       @default(0)
+  level                Int       @default(0)
+
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+
+  mainProducts         Product[]        @relation("ProductMainCategory")
+  secondaryProducts    Product[]        @relation("ProductOtherCategories")
+  coupons              Coupon[]         @relation("CouponCategories")
+
+  @@index([parentId])
+  @@map("categories")
+}
+
+// ============================================================================
+// PRODUCTS, VARIANTS & MEDIA
+// ============================================================================
+
+model Product {
+  id              Int       @id @default(autoincrement())
+  name            String
+  englishName     String?
+  slug            String    @unique
+  description     String?
+  analysis        String?
+
+  mainCategoryId  Int?
+  mainCategory    Category? @relation("ProductMainCategory", fields: [mainCategoryId], references: [id], onDelete: SetNull)
+  otherCategories Category[] @relation("ProductOtherCategories")
+
+  brandId         Int?
+  brand           Brand?    @relation(fields: [brandId], references: [id], onDelete: SetNull)
+
+  isDigital       Boolean   @default(false)
+
+  /// Base/display price & compare-at price (Toman). Authoritative pricing
+  /// lives on ProductVariant + PriceTier once variants exist.
+  price           Decimal   @default(0) @db.Decimal(12, 2)
+  compareAtPrice  Decimal?  @db.Decimal(12, 2)
+
+  specialOffer    Boolean   @default(false)
+  specialOfferEnd DateTime?
+
+  costPerItem     Decimal?  @db.Decimal(12, 2)
+  batchSize       Int       @default(1)
+
+  length          Int?
+  width           Int?
+  height          Int?
+  weight          Int?
+  barcode         String?
+
+  available       Boolean   @default(true)
+  showPrice       Boolean   @default(true)
+  hasVariants     Boolean   @default(false)
+
+  stock           Int       @default(0)
+  stockType       StockType @default(UNLIMITED)
+  minOrderQuantity Int?
+  maxOrderQuantity Int?
+
+  guarantee         String?
+  productIdentifier String?
+  processingTime    Int     @default(0)
+
+  seoTitle        String?
+  seoDescription  String?
+  views           Int       @default(0)
+
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  variants        ProductVariant[]
+  images          ProductImage[]
+  tags            ProductTag[]
+  priceTiers      PriceTier[]
+  history         ProductHistory[]
+  orderItems      OrderItem[]
+  cartItems       CartItem[]
+  coupons         Coupon[]  @relation("CouponProducts")
+
+  @@index([mainCategoryId])
+  @@index([brandId])
+  @@index([stockType])
+  @@index([specialOffer])
+  @@map("products")
+}
+
+model ProductImage {
+  id         Int      @id @default(autoincrement())
+  productId  Int
+  product    Product  @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  url        String
+  altText    String?
+  isDefault  Boolean  @default(false)
+  order      Int      @default(0)
+
+  createdAt  DateTime @default(now())
+
+  variants   ProductVariant[]
+
+  @@index([productId])
+  @@map("product_images")
+}
+
+model ProductTag {
+  id        Int     @id @default(autoincrement())
+  productId Int
+  product   Product @relation(fields: [productId], references: [id], onDelete: Cascade)
+  value     String
+
+  @@unique([productId, value])
+  @@map("product_tags")
+}
+
+model ProductVariant {
+  id                Int       @id @default(autoincrement())
+  productId         Int
+  product           Product   @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  /// Mobile-distribution oriented variant axes.
+  color             String?
+  storage           String?
+  guarantee         String?
+
+  /// Base unit price (Toman) before any B2B PriceTier discount is applied.
+  price             Decimal   @default(0) @db.Decimal(12, 2)
+  compareAtPrice    Decimal?  @db.Decimal(12, 2)
+
+  stock             Int       @default(0)
+  stockType         StockType @default(UNLIMITED)
+
+  barcode           String?   @unique
+  /// IMEI / Serial number for phone units — unique when tracked individually.
+  productIdentifier String?   @unique
+
+  isDefault         Boolean   @default(false)
+
+  length            Int?
+  width             Int?
+  height            Int?
+  weight            Int?
+  processingTime    Int       @default(0)
+
+  imageId           Int?
+  image             ProductImage? @relation(fields: [imageId], references: [id], onDelete: SetNull)
+
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  priceTiers        PriceTier[]
+  history           ProductHistory[]
+  orderItems        OrderItem[]
+  cartItems         CartItem[]
+
+  @@index([productId])
+  @@index([stockType])
+  @@map("product_variants")
+}
+
+// ============================================================================
+// B2B DYNAMIC PRICE-TIER ENGINE
+// ============================================================================
+
+/// Quantity/payment-term based wholesale pricing. A tier targets either a
+/// specific ProductVariant OR a whole Product (variant-less/digital SKUs),
+/// never both — enforced at the application layer since Prisma cannot
+/// express a "exactly one of" DB constraint declaratively.
+model PriceTier {
+  id               Int             @id @default(autoincrement())
+
+  productId        Int?
+  product          Product?        @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  variantId        Int?
+  variant          ProductVariant? @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  minQuantity      Int
+  maxQuantity      Int?
+
+  paymentMethod    B2BPaymentTerm  @default(CASH)
+
+  discountPercent  Decimal?        @db.Decimal(5, 2)
+  /// Final resolved unit price (Toman) for this bracket — precomputed so the
+  /// storefront/checkout can read it directly without recalculating discounts.
+  calculatedPrice  Decimal         @db.Decimal(12, 2)
+
+  isActive         Boolean         @default(true)
+  validFrom        DateTime?
+  validUntil       DateTime?
+
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  orderItems       OrderItem[]
+
+  @@index([productId])
+  @@index([variantId])
+  @@index([minQuantity, maxQuantity])
+  @@map("price_tiers")
+}
+
+// ============================================================================
+// CART
+// ============================================================================
+
+model Cart {
+  id        Int        @id @default(autoincrement())
+  userId    Int        @unique
+  user      User       @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+
+  items     CartItem[]
+
+  @@map("carts")
+}
+
+model CartItem {
+  id         Int             @id @default(autoincrement())
+  cartId     Int
+  cart       Cart            @relation(fields: [cartId], references: [id], onDelete: Cascade)
+
+  productId  Int
+  product    Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  variantId  Int?
+  variant    ProductVariant? @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  quantity   Int             @default(1)
+  /// Snapshot of the unit price shown to the customer when added to cart.
+  unitPrice  Decimal         @db.Decimal(12, 2)
+
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+
+  @@unique([cartId, productId, variantId])
+  @@map("cart_items")
+}
+
+// ============================================================================
+// ORDERS
+// ============================================================================
+
+model Order {
+  id              Int           @id @default(autoincrement())
+  orderNumber     String        @unique
+
+  userId          Int
+  user            User          @relation("OrderCustomer", fields: [userId], references: [id], onDelete: Cascade)
+
+  /// B2B orders placed on behalf of a wholesale account by a sales agent.
+  agentId         Int?
+  agent           User?         @relation("OrderAgent", fields: [agentId], references: [id], onDelete: SetNull)
+
+  addressId       Int?
+  address         Address?      @relation(fields: [addressId], references: [id], onDelete: SetNull)
+
+  status          OrderStatus   @default(PENDING)
+  paymentStatus   PaymentStatus @default(INITIATED)
+  paymentMethod   String?
+
+  firstName       String
+  lastName        String
+  phone           String
+  province        String?
+  city            String
+  addressText     String
+  postalCode      String?
+
+  shippingMethodName String?
+  shippingPrice      Decimal   @default(0) @db.Decimal(12, 2)
+  trackingCode       String?
+
+  customerNote    String?
+
+  couponId        Int?
+  coupon          Coupon?       @relation(fields: [couponId], references: [id], onDelete: SetNull)
+
+  discountAmount  Decimal       @default(0) @db.Decimal(12, 2)
+  taxAmount       Decimal       @default(0) @db.Decimal(12, 2)
+  subtotal        Decimal       @default(0) @db.Decimal(12, 2)
+  totalAmount     Decimal       @default(0) @db.Decimal(12, 2)
+
+  referer         String?
+
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  items           OrderItem[]
+  payments        Payment[]
+  couponUsages    CouponUsage[]
+
+  @@index([userId])
+  @@index([agentId])
+  @@index([status])
+  @@index([paymentStatus])
+  @@map("orders")
+}
+
+model OrderItem {
+  id              Int             @id @default(autoincrement())
+  orderId         Int
+  order           Order           @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  productId       Int?
+  product         Product?        @relation(fields: [productId], references: [id], onDelete: SetNull)
+
+  variantId       Int?
+  variant         ProductVariant? @relation(fields: [variantId], references: [id], onDelete: SetNull)
+
+  /// Applied B2B bracket, if the line was priced via the tier engine.
+  priceTierId     Int?
+  priceTier       PriceTier?      @relation(fields: [priceTierId], references: [id], onDelete: SetNull)
+
+  /// Snapshots so historical orders remain accurate even if the catalog changes later.
+  productName     String
+  variantName     String?
+
+  quantity        Int
+  price           Decimal         @db.Decimal(12, 2)
+  compareAtPrice  Decimal?        @db.Decimal(12, 2)
+  discountAmount  Decimal         @default(0) @db.Decimal(12, 2)
+  lineTotal       Decimal         @db.Decimal(12, 2)
+
+  @@index([orderId])
+  @@index([productId])
+  @@index([variantId])
+  @@map("order_items")
+}
+
+// ============================================================================
+// PAYMENTS / TRANSACTIONS
+// ============================================================================
+
+model Payment {
+  id                     Int           @id @default(autoincrement())
+  orderId                Int
+  order                  Order         @relation(fields: [orderId], references: [id], onDelete: Cascade)
+
+  userId                 Int
+  user                   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  /// Unique gateway/internal transaction reference number.
+  transactionNumber      String        @unique
+  amount                 Decimal       @db.Decimal(12, 2)
+
+  method                 String?       // e.g. "card", "zarinpal", "credit"
+  methodDisplay          String?
+
+  /// Payment Service Provider identifier (e.g. zarinpal, idpay, mellat).
+  psp                    String?
+  pspDisplay             String?
+
+  cardNumber             String?
+  ip                     String?
+  userAgent              String?
+
+  status                 PaymentStatus @default(INITIATED)
+
+  createdAt              DateTime      @default(now())
+  updatedAt              DateTime      @updatedAt
+
+  @@index([orderId])
+  @@index([userId])
+  @@index([status])
+  @@map("payments")
+}
+
+// ============================================================================
+// COUPONS & SPECIAL OFFERS
+// ============================================================================
+
+model Coupon {
+  id                       Int         @id @default(autoincrement())
+  name                     String
+  code                     String      @unique
+  type                     CouponType
+
+  /// Percent value for PERCENT_BASED, flat Toman amount for AMOUNT_BASED,
+  /// ignored for SHIPPING_PRICE.
+  amount                   Decimal?    @db.Decimal(12, 2)
+
+  usageLimitPerCoupon      Int?
+  usageLimitPerUser        Int?
+
+  startDate                DateTime?
+  endDate                  DateTime?
+
+  maxDiscountAmount        Decimal?    @db.Decimal(12, 2)
+  minCartPrice             Decimal?    @db.Decimal(12, 2)
+  minSuccessfulOrderCount  Int?
+  onlyFirstOrder           Boolean     @default(false)
+
+  /// Restrict to specific payment methods/PSPs; null/empty = unrestricted.
+  paymentMethods           String[]    @default([])
+
+  isActive                 Boolean     @default(true)
+
+  createdAt                DateTime    @default(now())
+  updatedAt                DateTime    @updatedAt
+
+  products                 Product[]   @relation("CouponProducts")
+  categories               Category[]  @relation("CouponCategories")
+  brands                   Brand[]     @relation("CouponBrands")
+
+  orders                   Order[]
+  usages                   CouponUsage[]
+
+  @@map("coupons")
+}
+
+model CouponUsage {
+  id        Int      @id @default(autoincrement())
+  couponId  Int
+  coupon    Coupon   @relation(fields: [couponId], references: [id], onDelete: Cascade)
+
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  orderId   Int?
+  order     Order?   @relation(fields: [orderId], references: [id], onDelete: SetNull)
+
+  usedAt    DateTime @default(now())
+
+  @@index([couponId])
+  @@index([userId])
+  @@map("coupon_usages")
+}
+
+// ============================================================================
+// AUDIT & HISTORY (price/stock change log with revert capability)
+// ============================================================================
+
+model ProductHistory {
+  id             Int             @id @default(autoincrement())
+
+  productId      Int
+  product        Product         @relation(fields: [productId], references: [id], onDelete: Cascade)
+
+  variantId      Int?
+  variant        ProductVariant? @relation(fields: [variantId], references: [id], onDelete: Cascade)
+
+  action         HistoryAction
+
+  /// Changed field name, e.g. "price", "stock", "compareAtPrice".
+  field          String
+  oldValue       Json?
+  newValue       Json?
+
+  changedById    Int?
+  changedBy      User?           @relation("HistoryActor", fields: [changedById], references: [id], onDelete: SetNull)
+
+  reverted       Boolean         @default(false)
+  revertedAt     DateTime?
+  revertedById   Int?
+  revertedBy     User?           @relation("HistoryReverter", fields: [revertedById], references: [id], onDelete: SetNull)
+
+  createdAt      DateTime        @default(now())
+
+  @@index([productId])
+  @@index([variantId])
+  @@index([createdAt])
+  @@map("product_history")
+}

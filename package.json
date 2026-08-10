@@ -1,0 +1,29 @@
+{
+  "name": "mixin-ecommerce-db",
+  "version": "1.0.0",
+  "description": "PostgreSQL/Prisma data layer for the Mixin B2C + B2B (mobile phone distribution) e-commerce platform",
+  "private": true,
+  "scripts": {
+    "db:generate": "prisma generate",
+    "db:push": "prisma db push",
+    "db:migrate": "prisma migrate dev",
+    "db:seed": "ts-node --transpile-only prisma/seed.ts",
+    "db:studio": "prisma studio",
+    "db:reset": "prisma migrate reset --force --skip-seed && npm run db:generate && npm run db:seed",
+    "db:fresh": "prisma db push --force-reset --accept-data-loss && npm run db:generate && npm run db:seed"
+  },
+  "prisma": {
+    "seed": "ts-node --transpile-only prisma/seed.ts"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.20.0",
+    "bcryptjs": "^2.4.3"
+  },
+  "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
+    "@types/node": "^20.14.9",
+    "prisma": "^5.20.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4"
+  }
+}
