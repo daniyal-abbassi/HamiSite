@@ -1,6 +1,8 @@
-import { B2BPaymentTerm, OrderStatus, PaymentStatus, Role, StockType } from "@prisma/client";
+import { B2BPaymentTerm, CouponType, OrderStatus, PaymentStatus, Role, StockType } from "@prisma/client";
 import { z } from "zod";
+import { evaluateCoupon } from "@/lib/coupons";
 import { ApiError, ok, parsePagination, withErrorHandling } from "@/lib/http";
+import { orderListInclude, serializeOrderSummary } from "@/lib/orders";
 import { ensureB2BTermAllowed, normalizePaymentTerm, resolveMatchingTier } from "@/lib/pricing";
 import { prisma } from "@/lib/prisma";
 import { serializeDate, toNumber } from "@/lib/serializers";
@@ -24,6 +26,7 @@ const createOrderSchema = z.object({
 
   paymentTerm: z.string().optional(),
   paymentMethod: z.string().optional(),
+  couponCode: z.string().optional(),
 
   items: z
     .array(
@@ -64,76 +67,11 @@ export async function GET(request: Request) {
         orderBy: { createdAt: "desc" },
         skip: pagination.skip,
         take: pagination.take,
-        include: {
-          items: {
-            select: {
-              id: true,
-              productId: true,
-              variantId: true,
-              productName: true,
-              variantName: true,
-              quantity: true,
-              price: true,
-              discountAmount: true,
-              lineTotal: true,
-            },
-          },
-          payments: {
-            select: {
-              id: true,
-              transactionNumber: true,
-              amount: true,
-              method: true,
-              status: true,
-              createdAt: true,
-            },
-            orderBy: { createdAt: "desc" },
-          },
-          user: { select: { id: true, username: true, role: true, phoneNumber: true } },
-        },
+        include: orderListInclude(),
       }),
     ]);
 
-    const data = orders.map((order) => ({
-      id: order.id,
-      orderNumber: order.orderNumber,
-      status: order.status,
-      paymentStatus: order.paymentStatus,
-      paymentMethod: order.paymentMethod,
-      customer: order.user,
-      shipping: {
-        methodName: order.shippingMethodName,
-        shippingPrice: toNumber(order.shippingPrice) ?? 0,
-        trackingCode: order.trackingCode,
-      },
-      totals: {
-        subtotal: toNumber(order.subtotal) ?? 0,
-        discountAmount: toNumber(order.discountAmount) ?? 0,
-        taxAmount: toNumber(order.taxAmount) ?? 0,
-        totalAmount: toNumber(order.totalAmount) ?? 0,
-      },
-      createdAt: order.createdAt.toISOString(),
-      updatedAt: order.updatedAt.toISOString(),
-      items: order.items.map((item) => ({
-        id: item.id,
-        productId: item.productId,
-        variantId: item.variantId,
-        productName: item.productName,
-        variantName: item.variantName,
-        quantity: item.quantity,
-        price: toNumber(item.price) ?? 0,
-        discountAmount: toNumber(item.discountAmount) ?? 0,
-        lineTotal: toNumber(item.lineTotal) ?? 0,
-      })),
-      payments: order.payments.map((payment) => ({
-        id: payment.id,
-        transactionNumber: payment.transactionNumber,
-        amount: toNumber(payment.amount) ?? 0,
-        method: payment.method,
-        status: payment.status,
-        createdAt: payment.createdAt.toISOString(),
-      })),
-    }));
+    const data = orders.map(serializeOrderSummary);
 
     return ok(data, {
       page: pagination.page,
@@ -175,7 +113,10 @@ export async function POST(request: Request) {
     const variantIds = [...new Set(input.items.map((i) => i.variantId).filter((v): v is number => Boolean(v)))];
 
     const [products, variants] = await Promise.all([
-      prisma.product.findMany({ where: { id: { in: productIds } }, select: { id: true, name: true, price: true } }),
+      prisma.product.findMany({
+        where: { id: { in: productIds } },
+        select: { id: true, name: true, price: true, brandId: true, mainCategoryId: true },
+      }),
       prisma.productVariant.findMany({
         where: { id: { in: variantIds } },
         select: {
@@ -254,10 +195,48 @@ export async function POST(request: Request) {
       };
     });
 
-    const shippingPrice = input.shippingPrice ?? 0;
-    const totalAmount = subtotal + shippingPrice;
+    let shippingPrice = input.shippingPrice ?? 0;
+    let discountAmount = 0;
+    let appliedCoupon: { id: number; code: string; name: string; type: CouponType } | null = null;
 
-    // wholesale credit check for CREDIT_60_DAYS
+    if (input.couponCode) {
+      const categoryIds = [...new Set(products.map((p) => p.mainCategoryId).filter((v): v is number => v !== null))];
+      const brandIds = [...new Set(products.map((p) => p.brandId).filter((v): v is number => v !== null))];
+
+      const couponResult = await evaluateCoupon({
+        code: input.couponCode,
+        userId: user.id,
+        subtotal,
+        shippingPrice,
+        paymentMethod: input.paymentMethod,
+        productIds,
+        categoryIds,
+        brandIds,
+      });
+
+      if (!couponResult.valid) {
+        throw new ApiError(409, `Coupon "${input.couponCode}" cannot be applied: ${couponResult.reason}`, {
+          code: couponResult.code,
+          reason: couponResult.reason,
+        });
+      }
+
+      discountAmount = couponResult.discountAmount;
+      appliedCoupon = { id: couponResult.couponId, code: couponResult.code, name: couponResult.name, type: couponResult.type };
+
+      if (couponResult.type === CouponType.SHIPPING_PRICE) {
+        // Shipping-price coupons discount the shipping fee itself rather than
+        // the merchandise subtotal.
+        shippingPrice = Math.max(0, shippingPrice - discountAmount);
+      }
+    }
+
+    const discountAppliedToSubtotal = appliedCoupon && appliedCoupon.type !== CouponType.SHIPPING_PRICE ? discountAmount : 0;
+    const totalAmount = subtotal - discountAppliedToSubtotal + shippingPrice;
+
+    // wholesale credit check for CREDIT_60_DAYS — evaluated against the
+    // post-discount total so an applied coupon can bring an order back
+    // under the customer's credit limit.
     if (paymentTerm === B2BPaymentTerm.CREDIT_60_DAYS && user.role === Role.WHOLESALE) {
       const creditLimit = toNumber(user.creditLimit) ?? 0;
       const creditUsed = toNumber(user.creditUsed) ?? 0;
@@ -294,7 +273,9 @@ export async function POST(request: Request) {
           shippingPrice,
           customerNote: input.customerNote,
           subtotal,
+          discountAmount,
           totalAmount,
+          couponId: appliedCoupon?.id,
 
           items: {
             create: preparedItems.map((line) => ({
@@ -336,6 +317,12 @@ export async function POST(request: Request) {
         });
       }
 
+      if (appliedCoupon) {
+        await tx.couponUsage.create({
+          data: { couponId: appliedCoupon.id, userId: user.id, orderId: created.id },
+        });
+      }
+
       return created;
     });
 
@@ -347,9 +334,11 @@ export async function POST(request: Request) {
         paymentStatus: order.paymentStatus,
         paymentTerm,
         customer: order.user,
+        coupon: appliedCoupon,
         totals: {
           subtotal,
           shippingPrice,
+          discountAmount,
           totalAmount,
         },
         items: order.items.map((item) => ({
