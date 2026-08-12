@@ -5,3 +5,4 @@ dist/
 .env.test
 *.log
 tsconfig.tsbuildinfo
+.superpowers/
