@@ -24,14 +24,19 @@ function parseId(raw: string) {
   return id;
 }
 
+async function loadOwnedAddress(id: number, ownerId: number) {
+  const address = await prisma.address.findUnique({ where: { id } });
+  if (!address || address.userId !== ownerId) {
+    throw new ApiError(404, "Address not found");
+  }
+  return address;
+}
+
 export const GET = withAuth<{ id: string }>(async (_request, { user, params }) => {
   return withErrorHandling(async () => {
     const id = parseId(params.id);
 
-    const address = await prisma.address.findUnique({ where: { id } });
-    if (!address || address.userId !== user.id) {
-      throw new ApiError(404, "Address not found");
-    }
+    const address = await loadOwnedAddress(id, user.id);
 
     return ok(address);
   });
@@ -47,10 +52,7 @@ export const PATCH = withAuth<{ id: string }>(async (request, { user, params }) 
       throw new ApiError(400, "Invalid request body", parsed.error.flatten());
     }
 
-    const existing = await prisma.address.findUnique({ where: { id } });
-    if (!existing || existing.userId !== user.id) {
-      throw new ApiError(404, "Address not found");
-    }
+    const existing = await loadOwnedAddress(id, user.id);
 
     const input = parsed.data;
 
@@ -87,10 +89,7 @@ export const DELETE = withAuth<{ id: string }>(async (_request, { user, params }
   return withErrorHandling(async () => {
     const id = parseId(params.id);
 
-    const existing = await prisma.address.findUnique({ where: { id } });
-    if (!existing || existing.userId !== user.id) {
-      throw new ApiError(404, "Address not found");
-    }
+    const existing = await loadOwnedAddress(id, user.id);
 
     await prisma.address.delete({ where: { id } });
 

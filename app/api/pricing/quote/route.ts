@@ -1,5 +1,6 @@
 import { B2BPaymentTerm, Role } from "@prisma/client";
 import { z } from "zod";
+import { getOptionalSessionUser } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { ensureB2BTermAllowed, normalizePaymentTerm, resolveMatchingTier } from "@/lib/pricing";
 import { prisma } from "@/lib/prisma";
@@ -12,8 +13,6 @@ const itemSchema = z.object({
 });
 
 const bodySchema = z.object({
-  userId: z.number().int().positive().optional(),
-  role: z.nativeEnum(Role).optional(),
   paymentTerm: z.string().optional(),
   items: z.array(itemSchema).min(1),
 });
@@ -30,17 +29,8 @@ export async function POST(request: Request) {
     const input = parsed.data;
     const paymentTerm = normalizePaymentTerm(input.paymentTerm ?? "CASH");
 
-    let role: Role = input.role ?? Role.RETAIL;
-    let user = null as null | { id: number; role: Role; creditLimit: unknown; creditUsed: unknown };
-
-    if (input.userId) {
-      user = await prisma.user.findUnique({
-        where: { id: input.userId },
-        select: { id: true, role: true, creditLimit: true, creditUsed: true },
-      });
-      if (!user) throw new ApiError(404, "User not found");
-      role = user.role;
-    }
+    const sessionUser = await getOptionalSessionUser(request);
+    const role: Role = sessionUser?.role ?? Role.RETAIL;
 
     ensureB2BTermAllowed(role, paymentTerm);
 
@@ -139,10 +129,10 @@ export async function POST(request: Request) {
       };
     });
 
-    const credit = user
+    const credit = sessionUser
       ? {
-          creditLimit: toNumber(user.creditLimit) ?? 0,
-          creditUsed: toNumber(user.creditUsed) ?? 0,
+          creditLimit: toNumber(sessionUser.creditLimit) ?? 0,
+          creditUsed: toNumber(sessionUser.creditUsed) ?? 0,
         }
       : null;
 

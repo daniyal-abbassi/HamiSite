@@ -96,6 +96,23 @@ export const POST = withAuth(async (request, { user }) => {
       throw new ApiError(400, "agentId can only be set for WHOLESALE customer orders");
     }
 
+    if (input.addressId) {
+      const address = await prisma.address.findUnique({ where: { id: input.addressId }, select: { userId: true } });
+      if (!address || address.userId !== user.id) {
+        throw new ApiError(400, "Invalid addressId");
+      }
+    }
+
+    if (input.agentId) {
+      const agent = await prisma.user.findUnique({
+        where: { id: input.agentId },
+        select: { id: true, role: true, isActive: true },
+      });
+      if (!agent || !agent.isActive || agent.role !== Role.AGENT) {
+        throw new ApiError(400, "Invalid agentId — must reference an active AGENT user");
+      }
+    }
+
     const productIds = [...new Set(input.items.map((i) => i.productId))];
     const variantIds = [...new Set(input.items.map((i) => i.variantId).filter((v): v is number => Boolean(v)))];
 

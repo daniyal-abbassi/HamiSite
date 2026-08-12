@@ -1,4 +1,3 @@
-import { Role } from "@prisma/client";
 import { beforeEach, describe, expect, it } from "vitest";
 import { GET as listOrders, POST as createOrder } from "@/app/api/orders/route";
 import { GET as getOrder, PATCH as patchOrder } from "@/app/api/orders/[id]/route";
@@ -95,5 +94,43 @@ describe("order authorization", () => {
       { params: { id: String(created.data.id) } },
     );
     expect(res.status).toBe(200);
+  });
+
+  it("POST /api/orders rejects an addressId that doesn't belong to the caller", async () => {
+    const victimAddress = await prisma.address.create({
+      data: {
+        userId: seed.wholesale.id,
+        city: "Mashhad",
+        address: "Victim Secret St 1",
+      },
+    });
+
+    const res = await createOrder(
+      jsonRequest(
+        "http://localhost/api/orders",
+        "POST",
+        orderPayload({ addressId: victimAddress.id }),
+        retailCookie,
+      ),
+    );
+    expect(res.status).toBe(400);
+
+    const ordersWithVictimAddress = await prisma.order.findMany({ where: { addressId: victimAddress.id } });
+    expect(ordersWithVictimAddress).toHaveLength(0);
+  });
+
+  it("POST /api/orders rejects an agentId that doesn't reference an active AGENT user", async () => {
+    const res = await createOrder(
+      jsonRequest(
+        "http://localhost/api/orders",
+        "POST",
+        orderPayload({ agentId: seed.retail.id }),
+        wholesaleCookie,
+      ),
+    );
+    expect(res.status).toBe(400);
+
+    const ordersWithBadAgent = await prisma.order.findMany({ where: { agentId: seed.retail.id } });
+    expect(ordersWithBadAgent).toHaveLength(0);
   });
 });
