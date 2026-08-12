@@ -1,5 +1,6 @@
 import { OrderStatus, PaymentStatus, Role, StockType } from "@prisma/client";
 import { z } from "zod";
+import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { orderListInclude, serializeOrderSummary, TERMINAL_CANCEL_STATUSES } from "@/lib/orders";
 import { prisma } from "@/lib/prisma";
@@ -23,7 +24,7 @@ function parseId(raw: string) {
   return id;
 }
 
-export async function GET(_request: Request, { params }: { params: { id: string } }) {
+export const GET = withAuth<{ id: string }>(async (_request, { user, params }) => {
   return withErrorHandling(async () => {
     const id = parseId(params.id);
 
@@ -37,7 +38,7 @@ export async function GET(_request: Request, { params }: { params: { id: string 
       },
     });
 
-    if (!order) {
+    if (!order || (order.userId !== user.id && user.role !== Role.ADMIN)) {
       throw new ApiError(404, "Order not found");
     }
 
@@ -49,80 +50,83 @@ export async function GET(_request: Request, { params }: { params: { id: string 
       customerNote: order.customerNote,
     });
   });
-}
+});
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
-  return withErrorHandling(async () => {
-    const id = parseId(params.id);
-    const body = await request.json();
-    const parsed = updateOrderSchema.safeParse(body);
+export const PATCH = withAuth<{ id: string }>(
+  async (request, { params }) => {
+    return withErrorHandling(async () => {
+      const id = parseId(params.id);
+      const body = await request.json();
+      const parsed = updateOrderSchema.safeParse(body);
 
-    if (!parsed.success) {
-      throw new ApiError(400, "Invalid request body", parsed.error.flatten());
-    }
+      if (!parsed.success) {
+        throw new ApiError(400, "Invalid request body", parsed.error.flatten());
+      }
 
-    const input = parsed.data;
+      const input = parsed.data;
 
-    const order = await prisma.order.findUnique({
-      where: { id },
-      include: {
-        items: {
-          select: {
-            variantId: true,
-            quantity: true,
-            variant: { select: { stockType: true } },
+      const order = await prisma.order.findUnique({
+        where: { id },
+        include: {
+          items: {
+            select: {
+              variantId: true,
+              quantity: true,
+              variant: { select: { stockType: true } },
+            },
           },
+          user: { select: { id: true, role: true } },
         },
-        user: { select: { id: true, role: true } },
-      },
-    });
+      });
 
-    if (!order) {
-      throw new ApiError(404, "Order not found");
-    }
+      if (!order) {
+        throw new ApiError(404, "Order not found");
+      }
 
-    const isCurrentlyClosed = TERMINAL_CANCEL_STATUSES.includes(order.status as (typeof TERMINAL_CANCEL_STATUSES)[number]);
-    const willBecomeClosed =
-      input.status !== undefined &&
-      TERMINAL_CANCEL_STATUSES.includes(input.status as (typeof TERMINAL_CANCEL_STATUSES)[number]);
+      const isCurrentlyClosed = TERMINAL_CANCEL_STATUSES.includes(order.status as (typeof TERMINAL_CANCEL_STATUSES)[number]);
+      const willBecomeClosed =
+        input.status !== undefined &&
+        TERMINAL_CANCEL_STATUSES.includes(input.status as (typeof TERMINAL_CANCEL_STATUSES)[number]);
 
-    // Only restock / reverse credit the moment an order transitions INTO a
-    // terminal cancel state — never re-apply on subsequent edits.
-    const shouldRestock = !isCurrentlyClosed && willBecomeClosed;
-    const shouldReverseCredit = shouldRestock && order.paymentMethod === "credit" && order.user.role === Role.WHOLESALE;
+      // Only restock / reverse credit the moment an order transitions INTO a
+      // terminal cancel state — never re-apply on subsequent edits.
+      const shouldRestock = !isCurrentlyClosed && willBecomeClosed;
+      const shouldReverseCredit = shouldRestock && order.paymentMethod === "credit" && order.user.role === Role.WHOLESALE;
 
-    const updated = await prisma.$transaction(async (tx) => {
-      if (shouldRestock) {
-        for (const item of order.items) {
-          if (item.variantId && item.variant?.stockType === StockType.LIMITED) {
-            await tx.productVariant.update({
-              where: { id: item.variantId },
-              data: { stock: { increment: item.quantity } },
-            });
+      const updated = await prisma.$transaction(async (tx) => {
+        if (shouldRestock) {
+          for (const item of order.items) {
+            if (item.variantId && item.variant?.stockType === StockType.LIMITED) {
+              await tx.productVariant.update({
+                where: { id: item.variantId },
+                data: { stock: { increment: item.quantity } },
+              });
+            }
           }
         }
-      }
 
-      if (shouldReverseCredit) {
-        await tx.user.update({
-          where: { id: order.user.id },
-          data: { creditUsed: { decrement: toNumber(order.totalAmount) ?? 0 } },
+        if (shouldReverseCredit) {
+          await tx.user.update({
+            where: { id: order.user.id },
+            data: { creditUsed: { decrement: toNumber(order.totalAmount) ?? 0 } },
+          });
+        }
+
+        return tx.order.update({
+          where: { id },
+          data: {
+            status: input.status,
+            paymentStatus: input.paymentStatus,
+            trackingCode: input.trackingCode,
+            shippingMethodName: input.shippingMethodName,
+            customerNote: input.customerNote,
+          },
+          include: orderListInclude(),
         });
-      }
-
-      return tx.order.update({
-        where: { id },
-        data: {
-          status: input.status,
-          paymentStatus: input.paymentStatus,
-          trackingCode: input.trackingCode,
-          shippingMethodName: input.shippingMethodName,
-          customerNote: input.customerNote,
-        },
-        include: orderListInclude(),
       });
-    });
 
-    return ok(serializeOrderSummary(updated), { message: "Order updated" });
-  });
-}
+      return ok(serializeOrderSummary(updated), { message: "Order updated" });
+    });
+  },
+  { roles: [Role.ADMIN] },
+);

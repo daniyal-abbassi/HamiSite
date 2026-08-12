@@ -1,5 +1,6 @@
 import { B2BPaymentTerm, CouponType, OrderStatus, PaymentStatus, Role, StockType } from "@prisma/client";
 import { z } from "zod";
+import { withAuth } from "@/lib/auth";
 import { evaluateCoupon } from "@/lib/coupons";
 import { ApiError, ok, parsePagination, withErrorHandling } from "@/lib/http";
 import { orderListInclude, serializeOrderSummary } from "@/lib/orders";
@@ -8,7 +9,6 @@ import { prisma } from "@/lib/prisma";
 import { serializeDate, toNumber } from "@/lib/serializers";
 
 const createOrderSchema = z.object({
-  userId: z.number().int().positive(),
   agentId: z.number().int().positive().optional(),
   addressId: z.number().int().positive().optional(),
 
@@ -45,18 +45,14 @@ function createOrderNumber() {
   return `ORD-${datePart}-${rand}`;
 }
 
-export async function GET(request: Request) {
+export const GET = withAuth(async (request, { user }) => {
   return withErrorHandling(async () => {
     const { searchParams } = new URL(request.url);
     const pagination = parsePagination(searchParams);
-
-    const userIdParam = searchParams.get("userId");
     const status = searchParams.get("status");
 
-    const userId = userIdParam ? Number(userIdParam) : undefined;
-
     const where = {
-      ...(userId ? { userId } : {}),
+      userId: user.id,
       ...(status ? { status: status as OrderStatus } : {}),
     };
 
@@ -80,9 +76,9 @@ export async function GET(request: Request) {
       hasNextPage: pagination.page * pagination.pageSize < total,
     });
   });
-}
+});
 
-export async function POST(request: Request) {
+export const POST = withAuth(async (request, { user }) => {
   return withErrorHandling(async () => {
     const body = await request.json();
     const parsed = createOrderSchema.safeParse(body);
@@ -94,16 +90,7 @@ export async function POST(request: Request) {
     const input = parsed.data;
     const paymentTerm = normalizePaymentTerm(input.paymentTerm ?? "CASH");
 
-    const user = await prisma.user.findUnique({
-      where: { id: input.userId },
-      select: { id: true, role: true, creditLimit: true, creditUsed: true, isActive: true },
-    });
-
-    if (!user || !user.isActive) {
-      throw new ApiError(404, "Active user not found");
-    }
-
-    ensureB2BTermAllowed(user.role as Role, paymentTerm);
+    ensureB2BTermAllowed(user.role, paymentTerm);
 
     if (input.agentId && user.role !== Role.WHOLESALE) {
       throw new ApiError(400, "agentId can only be set for WHOLESALE customer orders");
@@ -356,4 +343,4 @@ export async function POST(request: Request) {
       { message: "Order created" },
     );
   });
-}
+});
