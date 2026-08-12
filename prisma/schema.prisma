@@ -154,6 +154,7 @@ model User {
 
   addresses       Address[]
   cart            Cart?
+  sessions        Session[]
   orders          Order[]        @relation("OrderCustomer")
   agentOrders     Order[]        @relation("OrderAgent")
   payments        Payment[]
@@ -206,6 +207,20 @@ model Address {
 
   @@index([userId])
   @@map("addresses")
+}
+
+model Session {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  tokenHash String   @unique
+  userAgent String?
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  @@index([userId])
+  @@index([expiresAt])
+  @@map("sessions")
 }
 
 // ============================================================================
