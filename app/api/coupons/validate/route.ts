@@ -1,10 +1,10 @@
 import { z } from "zod";
+import { getOptionalSessionUser } from "@/lib/auth";
 import { evaluateCoupon } from "@/lib/coupons";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 
 const validateSchema = z.object({
   code: z.string().min(1),
-  userId: z.number().int().positive().optional(),
   subtotal: z.number().min(0),
   shippingPrice: z.number().min(0).optional(),
   paymentMethod: z.string().optional(),
@@ -22,7 +22,9 @@ export async function POST(request: Request) {
       throw new ApiError(400, "Invalid request body", parsed.error.flatten());
     }
 
-    const result = await evaluateCoupon(parsed.data);
+    const sessionUser = await getOptionalSessionUser(request);
+
+    const result = await evaluateCoupon({ ...parsed.data, userId: sessionUser?.id });
 
     return ok(
       result.valid
