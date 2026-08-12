@@ -150,6 +150,48 @@ describe("admin variants", () => {
     expect(body.data.price).toBe(1_300_000);
   });
 
+  it("404s patching or deleting a variant that belongs to a different product", async () => {
+    const otherProductRes = await createProduct(
+      jsonRequest("http://localhost/api/admin/products", "POST", payload({ slug: "other-variant-owner" }), adminCookie),
+    );
+    expect(otherProductRes.status).toBe(200);
+    const otherProduct = await otherProductRes.json();
+
+    const otherVariantRes = await createVariant(
+      jsonRequest(
+        `http://localhost/api/admin/products/${otherProduct.data.id}/variants`,
+        "POST",
+        { color: "blue", price: 200_000 },
+        adminCookie,
+      ),
+      { params: { id: String(otherProduct.data.id) } },
+    );
+    expect(otherVariantRes.status).toBe(200);
+    const otherVariant = await otherVariantRes.json();
+
+    const patchRes = await patchVariant(
+      jsonRequest(
+        `http://localhost/api/admin/products/${seed.product.id}/variants/${otherVariant.data.id}`,
+        "PATCH",
+        { price: 1_000 },
+        adminCookie,
+      ),
+      { params: { id: String(seed.product.id), variantId: String(otherVariant.data.id) } },
+    );
+    expect(patchRes.status).toBe(404);
+
+    const deleteRes = await deleteVariant(
+      jsonRequest(
+        `http://localhost/api/admin/products/${seed.product.id}/variants/${otherVariant.data.id}`,
+        "DELETE",
+        undefined,
+        adminCookie,
+      ),
+      { params: { id: String(seed.product.id), variantId: String(otherVariant.data.id) } },
+    );
+    expect(deleteRes.status).toBe(404);
+  });
+
   it("deletes a variant", async () => {
     const res = await deleteVariant(
       jsonRequest(
