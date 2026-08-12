@@ -57,6 +57,34 @@ describe("admin products", () => {
     expect(history).toHaveLength(1);
   });
 
+  it("409s when patching to a slug that collides with a different product", async () => {
+    const createRes = await createProduct(
+      jsonRequest("http://localhost/api/admin/products", "POST", payload({ slug: "other-phone" }), adminCookie),
+    );
+    expect(createRes.status).toBe(200);
+
+    const res = await patchProduct(
+      jsonRequest(`http://localhost/api/admin/products/${seed.product.id}`, "PATCH", { slug: "other-phone" }, adminCookie),
+      { params: { id: String(seed.product.id) } },
+    );
+    expect(res.status).toBe(409);
+  });
+
+  it("200s when patching without changing the slug", async () => {
+    const res = await patchProduct(
+      jsonRequest(
+        `http://localhost/api/admin/products/${seed.product.id}`,
+        "PATCH",
+        { slug: seed.product.slug, price: 750000 },
+        adminCookie,
+      ),
+      { params: { id: String(seed.product.id) } },
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.data.price).toBe(750000);
+  });
+
   it("deletes a product after recording a DELETED history row", async () => {
     const res = await deleteProduct(
       jsonRequest(`http://localhost/api/admin/products/${seed.product.id}`, "DELETE", undefined, adminCookie),
