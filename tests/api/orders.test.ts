@@ -134,3 +134,74 @@ describe("order authorization", () => {
     expect(ordersWithBadAgent).toHaveLength(0);
   });
 });
+
+describe("B2B credit reversal keys off persisted paymentTerm", () => {
+  it("a WHOLESALE CASH order with a spoofed paymentMethod:'credit' does not decrement creditUsed when canceled", async () => {
+    const created = await (
+      await createOrder(
+        jsonRequest(
+          "http://localhost/api/orders",
+          "POST",
+          orderPayload({ paymentTerm: "CASH", paymentMethod: "credit" }),
+          wholesaleCookie,
+        ),
+      )
+    ).json();
+
+    const afterCreate = await prisma.user.findUniqueOrThrow({ where: { id: seed.wholesale.id } });
+    expect(Number(afterCreate.creditUsed)).toBe(0);
+
+    const res = await patchOrder(
+      jsonRequest(`http://localhost/api/orders/${created.data.id}`, "PATCH", { status: "CANCELED" }, adminCookie),
+      { params: { id: String(created.data.id) } },
+    );
+    expect(res.status).toBe(200);
+
+    const afterCancel = await prisma.user.findUniqueOrThrow({ where: { id: seed.wholesale.id } });
+    expect(Number(afterCancel.creditUsed)).toBe(0);
+  });
+
+  it("a genuine CREDIT_60_DAYS order's creditUsed increment is reversed on cancellation", async () => {
+    const created = await (
+      await createOrder(
+        jsonRequest("http://localhost/api/orders", "POST", orderPayload({ paymentTerm: "CREDIT_60_DAYS" }), wholesaleCookie),
+      )
+    ).json();
+
+    const afterCreate = await prisma.user.findUniqueOrThrow({ where: { id: seed.wholesale.id } });
+    expect(Number(afterCreate.creditUsed)).toBeGreaterThan(0);
+    const totalAmount = Number(afterCreate.creditUsed);
+
+    const res = await patchOrder(
+      jsonRequest(`http://localhost/api/orders/${created.data.id}`, "PATCH", { status: "CANCELED" }, adminCookie),
+      { params: { id: String(created.data.id) } },
+    );
+    expect(res.status).toBe(200);
+
+    const afterCancel = await prisma.user.findUniqueOrThrow({ where: { id: seed.wholesale.id } });
+    expect(Number(afterCancel.creditUsed)).toBe(0);
+    expect(totalAmount).toBeGreaterThan(0);
+  });
+
+  it("canceling a CASH order never drives creditUsed negative", async () => {
+    const created = await (
+      await createOrder(
+        jsonRequest(
+          "http://localhost/api/orders",
+          "POST",
+          orderPayload({ paymentTerm: "CASH", paymentMethod: "credit" }),
+          wholesaleCookie,
+        ),
+      )
+    ).json();
+
+    const res = await patchOrder(
+      jsonRequest(`http://localhost/api/orders/${created.data.id}`, "PATCH", { status: "CANCELED" }, adminCookie),
+      { params: { id: String(created.data.id) } },
+    );
+    expect(res.status).toBe(200);
+
+    const afterCancel = await prisma.user.findUniqueOrThrow({ where: { id: seed.wholesale.id } });
+    expect(Number(afterCancel.creditUsed)).toBeGreaterThanOrEqual(0);
+  });
+});

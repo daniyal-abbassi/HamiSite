@@ -1,4 +1,4 @@
-import { OrderStatus, Prisma, Role, StockType } from "@prisma/client";
+import { B2BPaymentTerm, OrderStatus, Prisma, Role, StockType } from "@prisma/client";
 import { toNumber } from "@/lib/serializers";
 
 export function orderListInclude() {
@@ -86,7 +86,7 @@ export async function applyOrderStatusTransition(
   order: {
     id: number;
     status: OrderStatus;
-    paymentMethod: string | null;
+    paymentTerm: B2BPaymentTerm;
     totalAmount: Prisma.Decimal;
     items: { variantId: number | null; quantity: number; variant: { stockType: StockType } | null }[];
     user: { id: number; role: Role };
@@ -96,7 +96,8 @@ export async function applyOrderStatusTransition(
   const isCurrentlyClosed = TERMINAL_CANCEL_STATUSES.includes(order.status as (typeof TERMINAL_CANCEL_STATUSES)[number]);
   const willBecomeClosed = TERMINAL_CANCEL_STATUSES.includes(nextStatus as (typeof TERMINAL_CANCEL_STATUSES)[number]);
   const shouldRestock = !isCurrentlyClosed && willBecomeClosed;
-  const shouldReverseCredit = shouldRestock && order.paymentMethod === "credit" && order.user.role === Role.WHOLESALE;
+  const shouldReverseCredit =
+    shouldRestock && order.paymentTerm === B2BPaymentTerm.CREDIT_60_DAYS && order.user.role === Role.WHOLESALE;
 
   if (shouldRestock) {
     for (const item of order.items) {
@@ -110,9 +111,16 @@ export async function applyOrderStatusTransition(
   }
 
   if (shouldReverseCredit) {
+    const currentUser = await tx.user.findUniqueOrThrow({
+      where: { id: order.user.id },
+      select: { creditUsed: true },
+    });
+    const reversalAmount = toNumber(order.totalAmount) ?? 0;
+    const newCreditUsed = Math.max(0, (toNumber(currentUser.creditUsed) ?? 0) - reversalAmount);
+
     await tx.user.update({
       where: { id: order.user.id },
-      data: { creditUsed: { decrement: toNumber(order.totalAmount) ?? 0 } },
+      data: { creditUsed: newCreditUsed },
     });
   }
 }

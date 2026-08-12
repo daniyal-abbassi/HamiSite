@@ -530,6 +530,11 @@ model Order {
   status          OrderStatus   @default(PENDING)
   paymentStatus   PaymentStatus @default(INITIATED)
   paymentMethod   String?
+  /// Actual B2B settlement term computed/gated at order creation — the
+  /// authoritative field for credit-limit increment/reversal decisions.
+  /// Distinct from `paymentMethod` (a free-text, client-overridable display
+  /// string) which must never be used to decide whether to touch `creditUsed`.
+  paymentTerm     B2BPaymentTerm @default(CASH)
 
   firstName       String
   lastName        String

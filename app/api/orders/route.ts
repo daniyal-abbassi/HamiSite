@@ -264,6 +264,7 @@ export const POST = withAuth(async (request, { user }) => {
           status: OrderStatus.PENDING,
           paymentStatus: PaymentStatus.INITIATED,
           paymentMethod: input.paymentMethod ?? (paymentTerm === B2BPaymentTerm.CASH ? "card" : "credit"),
+          paymentTerm,
 
           firstName: input.firstName,
           lastName: input.lastName,
