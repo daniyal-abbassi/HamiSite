@@ -14,7 +14,10 @@
     "db:seed": "ts-node --transpile-only prisma/seed.ts",
     "db:studio": "prisma studio",
     "db:reset": "prisma migrate reset --force --skip-seed && npm run db:generate && npm run db:seed",
-    "db:fresh": "prisma db push --force-reset --accept-data-loss && npm run db:generate && npm run db:seed"
+    "db:fresh": "prisma db push --force-reset --accept-data-loss && npm run db:generate && npm run db:seed",
+    "test": "dotenv -e .env.test -- vitest run",
+    "test:watch": "dotenv -e .env.test -- vitest",
+    "db:test:reset": "dotenv -e .env.test -- prisma db push --force-reset --accept-data-loss"
   },
   "prisma": {
     "seed": "ts-node --transpile-only prisma/seed.ts"
@@ -31,8 +34,10 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.14.9",
     "@types/react": "19.2.18",
+    "dotenv-cli": "^11.0.0",
     "prisma": "^5.20.0",
     "ts-node": "^10.9.2",
-    "typescript": "^5.5.4"
+    "typescript": "^5.5.4",
+    "vitest": "^4.1.10"
   }
 }
