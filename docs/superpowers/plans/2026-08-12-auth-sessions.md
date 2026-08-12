@@ -13,7 +13,7 @@
 - Reuse existing conventions exactly: `ApiError`/`ok`/`fail`/`withErrorHandling`/`parsePagination` from `lib/http.ts`, Zod schemas per route, Prisma singleton from `lib/prisma.ts`.
 - Sessions: 30-day expiry, **sliding** — every authenticated request that resolves a valid session bumps `expiresAt`. Cookie is `httpOnly`, `secure` in production, `sameSite: "lax"`.
 - Only the token **hash** is ever stored server-side; the raw token exists only in the cookie.
-- Tests run against a **real Postgres test database** (`DATABASE_URL_TEST`), never mocked Prisma — this project's order/session logic relies on `prisma.$transaction` with dependent reads/writes that mocks would fake unfaithfully.
+- Tests run against a **real Postgres test database** (`DATABASE_URL` as loaded from `.env.test`), never mocked Prisma — this project's order/session logic relies on `prisma.$transaction` with dependent reads/writes that mocks would fake unfaithfully.
 - Next.js route handlers are tested by importing them directly (`import { POST } from '@/app/api/auth/login/route'`) and invoking with a constructed `Request` — no real HTTP server. This is why cookie handling must avoid `next/headers`.
 - Out of scope for this plan: SMS OTP (the `OtpCode`/`OtpPurpose` models stay unused), admin API, payments, authorization hardening of cart/orders/addresses (that's the next plan, which depends on this one).
 
@@ -130,8 +130,10 @@ npm install --save-dev vitest@^4.1.10 dotenv-cli@^11.0.0
 Create `.env.test`:
 
 ```bash
-DATABASE_URL="postgresql://postgres:postgres@localhost:5432/mixin_ecommerce_test?schema=public"
+DATABASE_URL="postgresql://hami_app:hami_app_pw@127.0.0.1:5432/hami_site_api?schema=test"
 ```
+
+> **Environment note (deviates from the plan's original placeholder):** this project's actual dev role (`hami_app`) has no `CREATEDB` privilege, so a separate test *database* isn't available — this uses a separate Postgres *schema* (`test`) on the same database/role instead, which `hami_app` can create/drop freely. Confirmed working before this task started.
 
 Add to `.gitignore` (it currently contains `node_modules/`, `dist/`, `.next/`, `.env`, `*.log`):
 
@@ -169,16 +171,18 @@ In `package.json`, add to `"scripts"`:
 ```json
     "test": "dotenv -e .env.test -- vitest run",
     "test:watch": "dotenv -e .env.test -- vitest",
-    "db:test:reset": "dotenv -e .env.test -- prisma migrate reset --force --skip-seed"
+    "db:test:reset": "dotenv -e .env.test -- prisma db push --force-reset --accept-data-loss"
 ```
 
-- [ ] **Step 5: Create the test database and reset it**
+> **Environment note (deviates from the plan's original `prisma migrate reset`):** this project's migration history is incomplete for replay — the whole schema was originally applied via `prisma db push` (not `prisma migrate`), and Task 1 found `hami_app` also lacks the shadow-database privilege `migrate dev`/`migrate reset` need, so only a single (Session-only) migration file exists. Replaying just that against an empty schema would create the `sessions` table alone and silently drop every other table. `prisma db push --force-reset` sidesteps migration history entirely — it syncs the *current* `schema.prisma` directly, which is exactly what a disposable test schema needs, and matches this project's own pre-existing `db:fresh` script (`package.json`), which uses the identical pattern for the dev database.
+
+- [ ] **Step 5: Create the test schema and reset it**
 
 ```bash
 npm run db:test:reset
 ```
 
-Expected: Prisma reports the test database reset and all migrations applied (including `add_session` from Task 1).
+Expected: Prisma reports `Your database is now in sync with your Prisma schema` against the `test` schema.
 
 - [ ] **Step 6: `tests/helpers/db.ts` — `resetDb()`**
 
