@@ -64,4 +64,25 @@ describe("withAuth", () => {
     const updated = await prisma.session.findUniqueOrThrow({ where: { id: session.id } });
     expect(updated.expiresAt.getTime()).toBeGreaterThan(session.expiresAt.getTime());
   });
+
+  it("threads real route params through to the handler", async () => {
+    const { token } = await createSession(seed.admin.id);
+    const handler = withAuth<{ id: string }>(async (_req, { params }) =>
+      NextResponse.json({ receivedId: params.id }),
+    );
+    const res = await handler(requestWithCookie(token), { params: { id: "42" } });
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body).toEqual({ receivedId: "42" });
+  });
+
+  it("refreshes the session cookie's expiry on the response (sliding expiry)", async () => {
+    const { token } = await createSession(seed.admin.id);
+    const handler = withAuth(async () => NextResponse.json({ ok: true }));
+    const res = await handler(requestWithCookie(token));
+    expect(res.status).toBe(200);
+    const setCookie = res.headers.get("set-cookie") ?? "";
+    expect(setCookie).toContain(`${SESSION_COOKIE_NAME}=${token}`);
+    expect(setCookie).toContain("Path=/");
+  });
 });

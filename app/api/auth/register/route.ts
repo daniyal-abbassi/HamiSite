@@ -1,6 +1,6 @@
 import { Role } from "@prisma/client";
 import { z } from "zod";
-import { createSession, hashPassword, sanitizeUser, SESSION_COOKIE_NAME } from "@/lib/auth";
+import { createSession, hashPassword, sanitizeUser, setSessionCookie } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
 
@@ -93,13 +93,7 @@ export async function POST(request: Request) {
 
     const { token, session } = await createSession(user.id, request.headers.get("user-agent"));
     const response = ok(sanitizeUser(user), { message: "Account created" });
-    response.cookies.set(SESSION_COOKIE_NAME, token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
-      sameSite: "lax",
-      path: "/",
-      expires: session.expiresAt,
-    });
+    setSessionCookie(response, token, session.expiresAt);
 
     return response;
   });

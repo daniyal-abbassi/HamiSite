@@ -101,3 +101,30 @@ describe("GET /api/auth/me", () => {
     expect(res.status).toBe(401);
   });
 });
+
+describe("session lifecycle (login -> me -> logout -> me)", () => {
+  it("revokes the session end-to-end and clears the cookie at Path=/", async () => {
+    const loginRes = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    expect(loginRes.status).toBe(200);
+    const cookie = loginRes.headers.get("set-cookie")!.split(";")[0];
+
+    const meBeforeLogout = await me(new Request("http://localhost/api/auth/me", { headers: { cookie } }));
+    expect(meBeforeLogout.status).toBe(200);
+
+    const logoutRes = await logout(
+      new Request("http://localhost/api/auth/logout", { method: "POST", headers: { cookie } }),
+    );
+    expect(logoutRes.status).toBe(200);
+    const logoutSetCookie = logoutRes.headers.get("set-cookie") ?? "";
+    expect(logoutSetCookie).toMatch(/session_token=;/);
+    // This is the assertion that would have caught the missing Path attribute:
+    // without it, the clearing cookie is scoped to /api/auth and never
+    // overrides the Path=/ cookie the browser is actually holding.
+    expect(logoutSetCookie).toContain("Path=/");
+
+    // Same original cookie, reused after logout — the session row is gone,
+    // so this must be rejected even though the cookie string itself is unchanged.
+    const meAfterLogout = await me(new Request("http://localhost/api/auth/me", { headers: { cookie } }));
+    expect(meAfterLogout.status).toBe(401);
+  });
+});

@@ -66,6 +66,42 @@ function parseCookies(header: string | null): Record<string, string> {
   );
 }
 
+/** Extracts the raw session token from a request's `Cookie` header, using the
+ * same anchored parsing as session resolution (never a substring regex match). */
+export function getSessionTokenFromRequest(request: Request): string | null {
+  const cookies = parseCookies(request.headers.get("cookie"));
+  return cookies[SESSION_COOKIE_NAME] ?? null;
+}
+
+const SESSION_COOKIE_BASE_OPTIONS = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "lax" as const,
+  path: "/",
+};
+
+/** Sets (or refreshes) the session cookie on an outgoing response. Always use
+ * this instead of a hand-rolled `response.cookies.set(...)` call so every
+ * route agrees on cookie attributes (path in particular — see clearSessionCookie). */
+export function setSessionCookie(response: NextResponse, token: string, expiresAt: Date) {
+  response.cookies.set(SESSION_COOKIE_NAME, token, {
+    ...SESSION_COOKIE_BASE_OPTIONS,
+    expires: expiresAt,
+  });
+}
+
+/** Clears the session cookie on an outgoing response. Uses the string-overload-free
+ * `.set()` form with matching attributes (notably `path: "/"`) so the clearing
+ * `Set-Cookie` header actually matches the cookie the browser is holding —
+ * `response.cookies.delete(name)` omits `Path`, which scopes the delete to the
+ * current route path and leaves the real, `/`-scoped cookie in place. */
+export function clearSessionCookie(response: NextResponse) {
+  response.cookies.set(SESSION_COOKIE_NAME, "", {
+    ...SESSION_COOKIE_BASE_OPTIONS,
+    expires: new Date(0),
+  });
+}
+
 export async function createSession(userId: number, userAgent?: string | null) {
   const token = generateSessionToken();
   const tokenHash = hashSessionToken(token);
@@ -78,9 +114,14 @@ export async function createSession(userId: number, userAgent?: string | null) {
   return { token, session };
 }
 
-async function resolveSessionUser(request: Request): Promise<User | null> {
-  const cookies = parseCookies(request.headers.get("cookie"));
-  const token = cookies[SESSION_COOKIE_NAME];
+type ResolvedSession = { user: User; token: string; expiresAt: Date };
+
+/** Resolves the request's session cookie to its user, bumping the session's
+ * `expiresAt` in the DB (sliding expiry) along the way. Returns the raw token
+ * and the new expiry too, so callers (namely `withAuth`) can also refresh the
+ * cookie sent back to the browser to match. */
+async function resolveSession(request: Request): Promise<ResolvedSession | null> {
+  const token = getSessionTokenFromRequest(request);
   if (!token) return null;
 
   const tokenHash = hashSessionToken(token);
@@ -90,22 +131,23 @@ async function resolveSessionUser(request: Request): Promise<User | null> {
     return null;
   }
 
-  await prisma.session.update({
+  const updated = await prisma.session.update({
     where: { id: session.id },
     data: { expiresAt: new Date(Date.now() + SESSION_TTL_MS) },
   });
 
-  return session.user;
+  return { user: session.user, token, expiresAt: updated.expiresAt };
 }
 
 /** Requires a valid session; callers should treat a null return as "not authenticated". */
 export async function getSessionUser(request: Request): Promise<User | null> {
-  return resolveSessionUser(request);
+  const resolved = await resolveSession(request);
+  return resolved?.user ?? null;
 }
 
 /** Same resolution as getSessionUser but named for call sites where auth is optional (e.g. coupon validation). */
 export async function getOptionalSessionUser(request: Request): Promise<User | null> {
-  return resolveSessionUser(request);
+  return getSessionUser(request);
 }
 
 type AuthedHandler<Params> = (
@@ -119,10 +161,11 @@ export function withAuth<Params = undefined>(
 ) {
   return async (request: Request, routeCtx?: { params: Params }) => {
     return withErrorHandling(async () => {
-      const user = await getSessionUser(request);
-      if (!user) {
+      const resolved = await resolveSession(request);
+      if (!resolved) {
         throw new ApiError(401, "Authentication required");
       }
+      const { user, token, expiresAt } = resolved;
       if (!user.isActive) {
         throw new ApiError(403, "Account deactivated");
       }
@@ -130,7 +173,15 @@ export function withAuth<Params = undefined>(
         throw new ApiError(403, "Forbidden");
       }
 
-      return handler(request, { user, params: routeCtx?.params as Params });
+      const response = await handler(request, { user, params: routeCtx?.params as Params });
+      // Sliding expiry: every successful authenticated request refreshes the
+      // cookie's expiry to match the DB row's just-bumped expiresAt — unless
+      // the handler itself already set the session cookie on this response
+      // (e.g. logout's clearSessionCookie), in which case that decision wins.
+      if (!response.cookies.get(SESSION_COOKIE_NAME)) {
+        setSessionCookie(response, token, expiresAt);
+      }
+      return response;
     });
   };
 }
