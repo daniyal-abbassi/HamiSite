@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { POST as login } from "@/app/api/auth/login/route";
 import { POST as register } from "@/app/api/auth/register/route";
 import { POST as logout } from "@/app/api/auth/logout/route";
+import { GET as me } from "@/app/api/auth/me/route";
 import { SESSION_COOKIE_NAME } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
@@ -79,6 +80,24 @@ describe("POST /api/auth/logout", () => {
 
   it("returns 401 without a session cookie", async () => {
     const res = await logout(new Request("http://localhost/api/auth/logout", { method: "POST" }));
+    expect(res.status).toBe(401);
+  });
+});
+
+describe("GET /api/auth/me", () => {
+  it("returns the sanitized current user", async () => {
+    const loginRes = await login(jsonRequest({ identifier: seed.admin.username, password: seed.admin.password }));
+    const cookie = loginRes.headers.get("set-cookie")!.split(";")[0];
+
+    const res = await me(new Request("http://localhost/api/auth/me", { headers: { cookie } }));
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.data.username).toBe(seed.admin.username);
+    expect(body.data.passwordHash).toBeUndefined();
+  });
+
+  it("returns 401 without a session", async () => {
+    const res = await me(new Request("http://localhost/api/auth/me"));
     expect(res.status).toBe(401);
   });
 });
