@@ -1,18 +1,18 @@
 import { StockType } from "@prisma/client";
 import { z } from "zod";
+import { withAuth } from "@/lib/auth";
 import { loadCartByUserId, serializeCart } from "@/lib/cart";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
 import { toNumber } from "@/lib/serializers";
 
 const addItemSchema = z.object({
-  userId: z.number().int().positive(),
   productId: z.number().int().positive(),
   variantId: z.number().int().positive().optional(),
   quantity: z.number().int().positive().default(1),
 });
 
-export async function POST(request: Request) {
+export const POST = withAuth(async (request, { user }) => {
   return withErrorHandling(async () => {
     const body = await request.json();
     const parsed = addItemSchema.safeParse(body);
@@ -22,11 +22,6 @@ export async function POST(request: Request) {
     }
 
     const input = parsed.data;
-
-    const user = await prisma.user.findUnique({ where: { id: input.userId }, select: { id: true } });
-    if (!user) {
-      throw new ApiError(404, "User not found");
-    }
 
     const product = await prisma.product.findUnique({
       where: { id: input.productId },
@@ -57,9 +52,9 @@ export async function POST(request: Request) {
     }
 
     const cart = await prisma.cart.upsert({
-      where: { userId: input.userId },
+      where: { userId: user.id },
       update: {},
-      create: { userId: input.userId },
+      create: { userId: user.id },
     });
 
     // A composite `findUnique` can't express `variantId: null` at the type
@@ -101,8 +96,8 @@ export async function POST(request: Request) {
       });
     }
 
-    const updatedCart = await loadCartByUserId(input.userId);
+    const updatedCart = await loadCartByUserId(user.id);
 
-    return ok(serializeCart(updatedCart, input.userId), { message: "Item added to cart" });
+    return ok(serializeCart(updatedCart, user.id), { message: "Item added to cart" });
   });
-}
+});

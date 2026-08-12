@@ -1,5 +1,6 @@
 import { StockType } from "@prisma/client";
 import { z } from "zod";
+import { withAuth } from "@/lib/auth";
 import { loadCartByUserId, serializeCart } from "@/lib/cart";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
@@ -16,7 +17,7 @@ function parseId(raw: string) {
   return id;
 }
 
-async function loadItemWithStock(id: number) {
+async function loadItemWithStock(id: number, ownerId: number) {
   const item = await prisma.cartItem.findUnique({
     where: { id },
     include: {
@@ -26,14 +27,14 @@ async function loadItemWithStock(id: number) {
     },
   });
 
-  if (!item) {
+  if (!item || item.cart.userId !== ownerId) {
     throw new ApiError(404, "Cart item not found");
   }
 
   return item;
 }
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export const PATCH = withAuth<{ id: string }>(async (request, { user, params }) => {
   return withErrorHandling(async () => {
     const id = parseId(params.id);
     const body = await request.json();
@@ -43,7 +44,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
       throw new ApiError(400, "Invalid request body", parsed.error.flatten());
     }
 
-    const item = await loadItemWithStock(id);
+    const item = await loadItemWithStock(id, user.id);
     const { quantity } = parsed.data;
 
     const stockType = item.variant?.stockType ?? item.product.stockType;
@@ -59,21 +60,21 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
     await prisma.cartItem.update({ where: { id }, data: { quantity } });
 
-    const updatedCart = await loadCartByUserId(item.cart.userId);
+    const updatedCart = await loadCartByUserId(user.id);
 
-    return ok(serializeCart(updatedCart, item.cart.userId), { message: "Cart item updated" });
+    return ok(serializeCart(updatedCart, user.id), { message: "Cart item updated" });
   });
-}
+});
 
-export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
+export const DELETE = withAuth<{ id: string }>(async (_request, { user, params }) => {
   return withErrorHandling(async () => {
     const id = parseId(params.id);
-    const item = await loadItemWithStock(id);
+    await loadItemWithStock(id, user.id);
 
     await prisma.cartItem.delete({ where: { id } });
 
-    const updatedCart = await loadCartByUserId(item.cart.userId);
+    const updatedCart = await loadCartByUserId(user.id);
 
-    return ok(serializeCart(updatedCart, item.cart.userId), { message: "Cart item removed" });
+    return ok(serializeCart(updatedCart, user.id), { message: "Cart item removed" });
   });
-}
+});
