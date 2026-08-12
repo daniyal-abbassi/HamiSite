@@ -1,10 +1,9 @@
-import { OrderStatus, PaymentStatus, Role, StockType } from "@prisma/client";
+import { OrderStatus, PaymentStatus, Role } from "@prisma/client";
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
-import { orderListInclude, serializeOrderSummary, TERMINAL_CANCEL_STATUSES } from "@/lib/orders";
+import { applyOrderStatusTransition, orderListInclude, serializeOrderSummary } from "@/lib/orders";
 import { prisma } from "@/lib/prisma";
-import { toNumber } from "@/lib/serializers";
 
 const updateOrderSchema = z
   .object({
@@ -83,34 +82,8 @@ export const PATCH = withAuth<{ id: string }>(
         throw new ApiError(404, "Order not found");
       }
 
-      const isCurrentlyClosed = TERMINAL_CANCEL_STATUSES.includes(order.status as (typeof TERMINAL_CANCEL_STATUSES)[number]);
-      const willBecomeClosed =
-        input.status !== undefined &&
-        TERMINAL_CANCEL_STATUSES.includes(input.status as (typeof TERMINAL_CANCEL_STATUSES)[number]);
-
-      // Only restock / reverse credit the moment an order transitions INTO a
-      // terminal cancel state — never re-apply on subsequent edits.
-      const shouldRestock = !isCurrentlyClosed && willBecomeClosed;
-      const shouldReverseCredit = shouldRestock && order.paymentMethod === "credit" && order.user.role === Role.WHOLESALE;
-
       const updated = await prisma.$transaction(async (tx) => {
-        if (shouldRestock) {
-          for (const item of order.items) {
-            if (item.variantId && item.variant?.stockType === StockType.LIMITED) {
-              await tx.productVariant.update({
-                where: { id: item.variantId },
-                data: { stock: { increment: item.quantity } },
-              });
-            }
-          }
-        }
-
-        if (shouldReverseCredit) {
-          await tx.user.update({
-            where: { id: order.user.id },
-            data: { creditUsed: { decrement: toNumber(order.totalAmount) ?? 0 } },
-          });
-        }
+        await applyOrderStatusTransition(tx, order, input.status ?? order.status);
 
         return tx.order.update({
           where: { id },

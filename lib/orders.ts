@@ -1,4 +1,4 @@
-import { Prisma } from "@prisma/client";
+import { OrderStatus, Prisma, Role, StockType } from "@prisma/client";
 import { toNumber } from "@/lib/serializers";
 
 export function orderListInclude() {
@@ -80,3 +80,39 @@ export function serializeOrderSummary(order: ListedOrder) {
 // and B2B credit usage from placing the order should be reversed if the
 // order moves here from a still-open status.
 export const TERMINAL_CANCEL_STATUSES = ["CANCELED", "FAILED", "REVERSED"] as const;
+
+export async function applyOrderStatusTransition(
+  tx: Prisma.TransactionClient,
+  order: {
+    id: number;
+    status: OrderStatus;
+    paymentMethod: string | null;
+    totalAmount: Prisma.Decimal;
+    items: { variantId: number | null; quantity: number; variant: { stockType: StockType } | null }[];
+    user: { id: number; role: Role };
+  },
+  nextStatus: OrderStatus,
+) {
+  const isCurrentlyClosed = TERMINAL_CANCEL_STATUSES.includes(order.status as (typeof TERMINAL_CANCEL_STATUSES)[number]);
+  const willBecomeClosed = TERMINAL_CANCEL_STATUSES.includes(nextStatus as (typeof TERMINAL_CANCEL_STATUSES)[number]);
+  const shouldRestock = !isCurrentlyClosed && willBecomeClosed;
+  const shouldReverseCredit = shouldRestock && order.paymentMethod === "credit" && order.user.role === Role.WHOLESALE;
+
+  if (shouldRestock) {
+    for (const item of order.items) {
+      if (item.variantId && item.variant?.stockType === StockType.LIMITED) {
+        await tx.productVariant.update({
+          where: { id: item.variantId },
+          data: { stock: { increment: item.quantity } },
+        });
+      }
+    }
+  }
+
+  if (shouldReverseCredit) {
+    await tx.user.update({
+      where: { id: order.user.id },
+      data: { creditUsed: { decrement: toNumber(order.totalAmount) ?? 0 } },
+    });
+  }
+}

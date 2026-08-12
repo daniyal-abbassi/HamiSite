@@ -1,4 +1,4 @@
-import { StockType } from "@prisma/client";
+import { Product, ProductVariant, StockType } from "@prisma/client";
 
 export function toNumber(value: unknown): number | null {
   if (value === null || value === undefined) return null;
@@ -27,4 +27,21 @@ export function serializeStockType(stockType: StockType) {
 
 export function serializeDate(value: Date | null | undefined) {
   return value ? value.toISOString() : null;
+}
+
+export function serializeAdminProduct(product: Product) {
+  return {
+    ...product,
+    price: toNumber(product.price),
+    compareAtPrice: toNumber(product.compareAtPrice),
+    costPerItem: toNumber(product.costPerItem),
+  };
+}
+
+export function serializeAdminVariant(variant: ProductVariant) {
+  return {
+    ...variant,
+    price: toNumber(variant.price),
+    compareAtPrice: toNumber(variant.compareAtPrice),
+  };
 }
