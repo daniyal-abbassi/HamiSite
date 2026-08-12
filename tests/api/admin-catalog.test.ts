@@ -74,6 +74,8 @@ describe("admin categories", () => {
       { params: { id: String(created.data.id) } },
     );
     expect(patchRes.status).toBe(200);
+    const patchBody = await patchRes.json();
+    expect(patchBody.data.name).toBe("Mobile Phones");
 
     const deleteRes = await deleteCategory(
       jsonRequest(`http://localhost/api/admin/categories/${created.data.id}`, "DELETE", undefined, adminCookie),
@@ -81,6 +83,60 @@ describe("admin categories", () => {
     );
     expect(deleteRes.status).toBe(200);
     expect(await prisma.category.findUnique({ where: { id: created.data.id } })).toBeNull();
+  });
+
+  it("400s when patching a category with an invalid parentId", async () => {
+    const created = await (
+      await createCategory(jsonRequest("http://localhost/api/admin/categories", "POST", { name: "Phones", slug: "phones" }, adminCookie))
+    ).json();
+
+    const res = await patchCategory(
+      jsonRequest(`http://localhost/api/admin/categories/${created.data.id}`, "PATCH", { parentId: 999999 }, adminCookie),
+      { params: { id: String(created.data.id) } },
+    );
+    expect(res.status).toBe(400);
+  });
+
+  it("409s when patching a category to a colliding slug", async () => {
+    await createCategory(jsonRequest("http://localhost/api/admin/categories", "POST", { name: "Phones", slug: "phones" }, adminCookie));
+    const other = await (
+      await createCategory(jsonRequest("http://localhost/api/admin/categories", "POST", { name: "Tablets", slug: "tablets" }, adminCookie))
+    ).json();
+
+    const res = await patchCategory(
+      jsonRequest(`http://localhost/api/admin/categories/${other.data.id}`, "PATCH", { slug: "phones" }, adminCookie),
+      { params: { id: String(other.data.id) } },
+    );
+    expect(res.status).toBe(409);
+  });
+
+  it("updates level when patching a category's parentId to a valid new parent", async () => {
+    const parent = await (
+      await createCategory(jsonRequest("http://localhost/api/admin/categories", "POST", { name: "Phones", slug: "phones" }, adminCookie))
+    ).json();
+    const child = await (
+      await createCategory(
+        jsonRequest("http://localhost/api/admin/categories", "POST", { name: "Tablets", slug: "tablets" }, adminCookie),
+      )
+    ).json();
+    expect(child.data.level).toBe(0);
+
+    const res = await patchCategory(
+      jsonRequest(
+        `http://localhost/api/admin/categories/${child.data.id}`,
+        "PATCH",
+        { parentId: parent.data.id },
+        adminCookie,
+      ),
+      { params: { id: String(child.data.id) } },
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.data.level).toBe(1);
+
+    const refetched = await prisma.category.findUnique({ where: { id: child.data.id } });
+    expect(refetched?.level).toBe(1);
+    expect(refetched?.parentId).toBe(parent.data.id);
   });
 
   it("403s a non-admin patching a category", async () => {
@@ -115,6 +171,8 @@ describe("admin brands", () => {
       { params: { id: String(created.data.id) } },
     );
     expect(patchRes.status).toBe(200);
+    const patchBody = await patchRes.json();
+    expect(patchBody.data.isActive).toBe(false);
 
     const deleteRes = await deleteBrand(
       jsonRequest(`http://localhost/api/admin/brands/${created.data.id}`, "DELETE", undefined, adminCookie),
@@ -136,6 +194,32 @@ describe("admin brands", () => {
     await createBrand(jsonRequest("http://localhost/api/admin/brands", "POST", { name: "Nokia", slug: "nokia" }, adminCookie));
     const res = await createBrand(
       jsonRequest("http://localhost/api/admin/brands", "POST", { name: "Nokia Mobile", slug: "nokia" }, adminCookie),
+    );
+    expect(res.status).toBe(409);
+  });
+
+  it("409s when patching a brand to a colliding name", async () => {
+    await createBrand(jsonRequest("http://localhost/api/admin/brands", "POST", { name: "Nokia", slug: "nokia" }, adminCookie));
+    const other = await (
+      await createBrand(jsonRequest("http://localhost/api/admin/brands", "POST", { name: "Motorola", slug: "motorola" }, adminCookie))
+    ).json();
+
+    const res = await patchBrand(
+      jsonRequest(`http://localhost/api/admin/brands/${other.data.id}`, "PATCH", { name: "Nokia" }, adminCookie),
+      { params: { id: String(other.data.id) } },
+    );
+    expect(res.status).toBe(409);
+  });
+
+  it("409s when patching a brand to a colliding slug", async () => {
+    await createBrand(jsonRequest("http://localhost/api/admin/brands", "POST", { name: "Nokia", slug: "nokia" }, adminCookie));
+    const other = await (
+      await createBrand(jsonRequest("http://localhost/api/admin/brands", "POST", { name: "Motorola", slug: "motorola" }, adminCookie))
+    ).json();
+
+    const res = await patchBrand(
+      jsonRequest(`http://localhost/api/admin/brands/${other.data.id}`, "PATCH", { slug: "nokia" }, adminCookie),
+      { params: { id: String(other.data.id) } },
     );
     expect(res.status).toBe(409);
   });

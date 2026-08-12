@@ -46,7 +46,29 @@ export const PATCH = withAuth<{ id: string }>(
         throw new ApiError(404, "Category not found");
       }
 
-      const category = await prisma.category.update({ where: { id }, data: parsed.data });
+      const input = parsed.data;
+
+      if (input.slug && input.slug !== existing.slug) {
+        const slugTaken = await prisma.category.findUnique({ where: { slug: input.slug }, select: { id: true } });
+        if (slugTaken) {
+          throw new ApiError(409, `A category with slug "${input.slug}" already exists`);
+        }
+      }
+
+      let level = existing.level;
+      if ("parentId" in input) {
+        if (input.parentId) {
+          const parent = await prisma.category.findUnique({ where: { id: input.parentId }, select: { level: true } });
+          if (!parent) {
+            throw new ApiError(400, "Invalid parentId");
+          }
+          level = parent.level + 1;
+        } else {
+          level = 0;
+        }
+      }
+
+      const category = await prisma.category.update({ where: { id }, data: { ...input, level } });
 
       return ok(category, { message: "Category updated" });
     });

@@ -42,7 +42,28 @@ export const PATCH = withAuth<{ id: string }>(
         throw new ApiError(404, "Brand not found");
       }
 
-      const brand = await prisma.brand.update({ where: { id }, data: parsed.data });
+      const input = parsed.data;
+
+      if (
+        (input.name && input.name !== existing.name) ||
+        (input.slug && input.slug !== existing.slug)
+      ) {
+        const conflict = await prisma.brand.findFirst({
+          where: {
+            id: { not: id },
+            OR: [
+              ...(input.name && input.name !== existing.name ? [{ name: input.name }] : []),
+              ...(input.slug && input.slug !== existing.slug ? [{ slug: input.slug }] : []),
+            ],
+          },
+          select: { id: true },
+        });
+        if (conflict) {
+          throw new ApiError(409, `A brand with this name or slug already exists`);
+        }
+      }
+
+      const brand = await prisma.brand.update({ where: { id }, data: input });
 
       return ok(brand, { message: "Brand updated" });
     });
