@@ -1,6 +1,7 @@
 import { Role } from "@prisma/client";
+import { z } from "zod";
 import { sanitizeUser, withAuth } from "@/lib/auth";
-import { ok, parsePagination, withErrorHandling } from "@/lib/http";
+import { ApiError, ok, parsePagination, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
 
 export const GET = withAuth(
@@ -8,9 +9,18 @@ export const GET = withAuth(
     return withErrorHandling(async () => {
       const { searchParams } = new URL(request.url);
       const pagination = parsePagination(searchParams);
-      const role = searchParams.get("role");
+      const roleParam = searchParams.get("role");
 
-      const where = role ? { role: role as Role } : {};
+      let role: Role | undefined;
+      if (roleParam !== null) {
+        const parsedRole = z.nativeEnum(Role).safeParse(roleParam);
+        if (!parsedRole.success) {
+          throw new ApiError(400, "Invalid role");
+        }
+        role = parsedRole.data;
+      }
+
+      const where = role ? { role } : {};
 
       const [total, users] = await Promise.all([
         prisma.user.count({ where }),

@@ -53,6 +53,16 @@ describe("admin orders", () => {
     expect(body.data).toHaveLength(1);
   });
 
+  it("400s listing orders with an invalid status query param", async () => {
+    const res = await listAdminOrders(getRequest("http://localhost/api/admin/orders?status=NOT_A_STATUS", adminCookie));
+    expect(res.status).toBe(400);
+  });
+
+  it("400s listing orders with an invalid userId query param", async () => {
+    const res = await listAdminOrders(getRequest("http://localhost/api/admin/orders?userId=not-a-number", adminCookie));
+    expect(res.status).toBe(400);
+  });
+
   it("403s a status update for a non-admin", async () => {
     const created = await (await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie))).json();
 

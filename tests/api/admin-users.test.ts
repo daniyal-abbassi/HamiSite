@@ -36,6 +36,11 @@ describe("admin users", () => {
     expect(body.data[0].role).toBe(Role.WHOLESALE);
   });
 
+  it("400s listing users with an invalid role query param", async () => {
+    const res = await listUsers(getRequest("http://localhost/api/admin/users?role=NOT_A_ROLE", adminCookie));
+    expect(res.status).toBe(400);
+  });
+
   it("gets a single user by id", async () => {
     const res = await getUser(getRequest(`http://localhost/api/admin/users/${seed.retail.id}`, adminCookie), {
       params: { id: String(seed.retail.id) },
@@ -58,6 +63,28 @@ describe("admin users", () => {
     const relist = await listUsers(getRequest(`http://localhost/api/admin/users?role=RETAIL`, adminCookie));
     const body = await relist.json();
     expect(body.data[0].isActive).toBe(false);
+  });
+
+  it("400s an admin attempting to deactivate their own account", async () => {
+    const res = await patchUser(
+      jsonRequest(`http://localhost/api/admin/users/${seed.admin.id}`, "PATCH", { isActive: false }, adminCookie),
+      { params: { id: String(seed.admin.id) } },
+    );
+    expect(res.status).toBe(400);
+
+    const stillActive = await prisma.user.findUniqueOrThrow({ where: { id: seed.admin.id } });
+    expect(stillActive.isActive).toBe(true);
+  });
+
+  it("400s an admin attempting to change their own role", async () => {
+    const res = await patchUser(
+      jsonRequest(`http://localhost/api/admin/users/${seed.admin.id}`, "PATCH", { role: "RETAIL" }, adminCookie),
+      { params: { id: String(seed.admin.id) } },
+    );
+    expect(res.status).toBe(400);
+
+    const stillAdmin = await prisma.user.findUniqueOrThrow({ where: { id: seed.admin.id } });
+    expect(stillAdmin.role).toBe(Role.ADMIN);
   });
 
   it("changes a user's role", async () => {

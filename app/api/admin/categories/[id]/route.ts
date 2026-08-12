@@ -85,6 +85,11 @@ export const DELETE = withAuth<{ id: string }>(
         throw new ApiError(404, "Category not found");
       }
 
+      const childCount = await prisma.category.count({ where: { parentId: id } });
+      if (childCount > 0) {
+        throw new ApiError(409, "Cannot delete a category with child categories");
+      }
+
       await prisma.category.delete({ where: { id } });
 
       return ok({ id }, { message: "Category deleted" });

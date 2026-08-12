@@ -35,7 +35,7 @@ export const GET = withAuth<{ id: string }>(
 );
 
 export const PATCH = withAuth<{ id: string }>(
-  async (request, { params }) => {
+  async (request, { params, user: actingUser }) => {
     return withErrorHandling(async () => {
       const id = parseId(params.id);
       const body = await request.json();
@@ -44,14 +44,18 @@ export const PATCH = withAuth<{ id: string }>(
         throw new ApiError(400, "Invalid request body", parsed.error.flatten());
       }
 
+      if (id === actingUser.id && (parsed.data.role !== undefined || parsed.data.isActive === false)) {
+        throw new ApiError(400, "Cannot change your own role or deactivate your own account");
+      }
+
       const existing = await prisma.user.findUnique({ where: { id } });
       if (!existing) {
         throw new ApiError(404, "User not found");
       }
 
-      const user = await prisma.user.update({ where: { id }, data: parsed.data });
+      const updatedUser = await prisma.user.update({ where: { id }, data: parsed.data });
 
-      return ok(sanitizeUser(user), { message: "User updated" });
+      return ok(sanitizeUser(updatedUser), { message: "User updated" });
     });
   },
   { roles: [Role.ADMIN] },

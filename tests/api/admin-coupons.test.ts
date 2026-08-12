@@ -39,6 +39,18 @@ describe("admin coupons", () => {
     expect(res.status).toBe(409);
   });
 
+  it("409s when patching a coupon to a colliding code", async () => {
+    const other = await (
+      await createCoupon(jsonRequest("http://localhost/api/admin/coupons", "POST", payload({ code: "OTHER10" }), adminCookie))
+    ).json();
+
+    const res = await patchCoupon(
+      jsonRequest(`http://localhost/api/admin/coupons/${other.data.id}`, "PATCH", { code: seed.coupon.code }, adminCookie),
+      { params: { id: String(other.data.id) } },
+    );
+    expect(res.status).toBe(409);
+  });
+
   it("patches and deletes a coupon", async () => {
     const patchRes = await patchCoupon(
       jsonRequest(`http://localhost/api/admin/coupons/${seed.coupon.id}`, "PATCH", { isActive: false }, adminCookie),

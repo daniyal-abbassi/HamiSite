@@ -57,6 +57,16 @@ export const PATCH = withAuth<{ id: string }>(
         throw new ApiError(404, "Coupon not found");
       }
 
+      if (parsed.data.code && parsed.data.code !== existing.code) {
+        const conflict = await prisma.coupon.findFirst({
+          where: { code: parsed.data.code, id: { not: id } },
+          select: { id: true },
+        });
+        if (conflict) {
+          throw new ApiError(409, `A coupon with code "${parsed.data.code}" already exists`);
+        }
+      }
+
       const { startDate, endDate, ...rest } = parsed.data;
 
       const coupon = await prisma.coupon.update({

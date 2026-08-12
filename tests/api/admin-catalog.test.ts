@@ -139,6 +139,27 @@ describe("admin categories", () => {
     expect(refetched?.parentId).toBe(parent.data.id);
   });
 
+  it("409s deleting a category that has child categories", async () => {
+    const parent = await (
+      await createCategory(jsonRequest("http://localhost/api/admin/categories", "POST", { name: "Phones", slug: "phones" }, adminCookie))
+    ).json();
+    await createCategory(
+      jsonRequest(
+        "http://localhost/api/admin/categories",
+        "POST",
+        { name: "Smartphones", slug: "smartphones", parentId: parent.data.id },
+        adminCookie,
+      ),
+    );
+
+    const res = await deleteCategory(
+      jsonRequest(`http://localhost/api/admin/categories/${parent.data.id}`, "DELETE", undefined, adminCookie),
+      { params: { id: String(parent.data.id) } },
+    );
+    expect(res.status).toBe(409);
+    expect(await prisma.category.findUnique({ where: { id: parent.data.id } })).not.toBeNull();
+  });
+
   it("403s a non-admin patching a category", async () => {
     const created = await (
       await createCategory(jsonRequest("http://localhost/api/admin/categories", "POST", { name: "Phones", slug: "phones" }, adminCookie))
