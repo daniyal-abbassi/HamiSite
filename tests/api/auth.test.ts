@@ -1,6 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { POST as login } from "@/app/api/auth/login/route";
 import { POST as register } from "@/app/api/auth/register/route";
+import { POST as logout } from "@/app/api/auth/logout/route";
 import { SESSION_COOKIE_NAME } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
@@ -58,5 +59,26 @@ describe("POST /api/auth/register", () => {
     );
     expect(res.status).toBe(409);
     expect(res.headers.get("set-cookie")).toBeNull();
+  });
+});
+
+describe("POST /api/auth/logout", () => {
+  it("deletes the session row and clears the cookie", async () => {
+    const loginRes = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    const cookie = loginRes.headers.get("set-cookie")!.split(";")[0];
+
+    const res = await logout(new Request("http://localhost/api/auth/logout", { method: "POST", headers: { cookie } }));
+    expect(res.status).toBe(200);
+
+    const setCookie = res.headers.get("set-cookie") ?? "";
+    expect(setCookie).toMatch(/session_token=;/);
+
+    const sessionCount = await prisma.session.count({ where: { userId: seed.retail.id } });
+    expect(sessionCount).toBe(0);
+  });
+
+  it("returns 401 without a session cookie", async () => {
+    const res = await logout(new Request("http://localhost/api/auth/logout", { method: "POST" }));
+    expect(res.status).toBe(401);
   });
 });
