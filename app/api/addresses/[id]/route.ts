@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
 
@@ -23,20 +24,20 @@ function parseId(raw: string) {
   return id;
 }
 
-export async function GET(_request: Request, { params }: { params: { id: string } }) {
+export const GET = withAuth<{ id: string }>(async (_request, { user, params }) => {
   return withErrorHandling(async () => {
     const id = parseId(params.id);
 
     const address = await prisma.address.findUnique({ where: { id } });
-    if (!address) {
+    if (!address || address.userId !== user.id) {
       throw new ApiError(404, "Address not found");
     }
 
     return ok(address);
   });
-}
+});
 
-export async function PATCH(request: Request, { params }: { params: { id: string } }) {
+export const PATCH = withAuth<{ id: string }>(async (request, { user, params }) => {
   return withErrorHandling(async () => {
     const id = parseId(params.id);
     const body = await request.json();
@@ -47,7 +48,7 @@ export async function PATCH(request: Request, { params }: { params: { id: string
     }
 
     const existing = await prisma.address.findUnique({ where: { id } });
-    if (!existing) {
+    if (!existing || existing.userId !== user.id) {
       throw new ApiError(404, "Address not found");
     }
 
@@ -80,22 +81,20 @@ export async function PATCH(request: Request, { params }: { params: { id: string
 
     return ok(address, { message: "Address updated" });
   });
-}
+});
 
-export async function DELETE(_request: Request, { params }: { params: { id: string } }) {
+export const DELETE = withAuth<{ id: string }>(async (_request, { user, params }) => {
   return withErrorHandling(async () => {
     const id = parseId(params.id);
 
     const existing = await prisma.address.findUnique({ where: { id } });
-    if (!existing) {
+    if (!existing || existing.userId !== user.id) {
       throw new ApiError(404, "Address not found");
     }
 
     await prisma.address.delete({ where: { id } });
 
     if (existing.isDefault) {
-      // Promote the most recently created remaining address to default so
-      // the user always has one, if possible.
       const nextDefault = await prisma.address.findFirst({
         where: { userId: existing.userId },
         orderBy: { createdAt: "desc" },
@@ -108,4 +107,4 @@ export async function DELETE(_request: Request, { params }: { params: { id: stri
 
     return ok({ id }, { message: "Address deleted" });
   });
-}
+});

@@ -1,9 +1,9 @@
 import { z } from "zod";
+import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
 
 const createAddressSchema = z.object({
-  userId: z.number().int().positive(),
   firstName: z.string().optional(),
   lastName: z.string().optional(),
   phoneNumber: z.string().optional(),
@@ -16,30 +16,16 @@ const createAddressSchema = z.object({
   isDefault: z.boolean().optional(),
 });
 
-export async function GET(request: Request) {
-  return withErrorHandling(async () => {
-    const { searchParams } = new URL(request.url);
-    const userIdParam = searchParams.get("userId");
-
-    if (!userIdParam) {
-      throw new ApiError(400, "userId query parameter is required");
-    }
-
-    const userId = Number(userIdParam);
-    if (!Number.isInteger(userId) || userId <= 0) {
-      throw new ApiError(400, "userId must be a positive integer");
-    }
-
-    const addresses = await prisma.address.findMany({
-      where: { userId },
-      orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }],
-    });
-
-    return ok(addresses, { total: addresses.length });
+export const GET = withAuth(async (_request, { user }) => {
+  const addresses = await prisma.address.findMany({
+    where: { userId: user.id },
+    orderBy: [{ isDefault: "desc" }, { createdAt: "desc" }],
   });
-}
 
-export async function POST(request: Request) {
+  return ok(addresses, { total: addresses.length });
+});
+
+export const POST = withAuth(async (request, { user }) => {
   return withErrorHandling(async () => {
     const body = await request.json();
     const parsed = createAddressSchema.safeParse(body);
@@ -50,27 +36,20 @@ export async function POST(request: Request) {
 
     const input = parsed.data;
 
-    const user = await prisma.user.findUnique({ where: { id: input.userId }, select: { id: true } });
-    if (!user) {
-      throw new ApiError(404, "User not found");
-    }
-
-    const existingCount = await prisma.address.count({ where: { userId: input.userId } });
-    // The very first address for a user is always the default, regardless
-    // of what the client sent.
+    const existingCount = await prisma.address.count({ where: { userId: user.id } });
     const shouldBeDefault = input.isDefault === true || existingCount === 0;
 
     const address = await prisma.$transaction(async (tx) => {
       if (shouldBeDefault) {
         await tx.address.updateMany({
-          where: { userId: input.userId, isDefault: true },
+          where: { userId: user.id, isDefault: true },
           data: { isDefault: false },
         });
       }
 
       return tx.address.create({
         data: {
-          userId: input.userId,
+          userId: user.id,
           firstName: input.firstName,
           lastName: input.lastName,
           phoneNumber: input.phoneNumber,
@@ -87,4 +66,4 @@ export async function POST(request: Request) {
 
     return ok(address, { message: "Address created" });
   });
-}
+});
