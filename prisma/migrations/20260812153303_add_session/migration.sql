@@ -20,4 +20,4 @@ CREATE INDEX "sessions_userId_idx" ON "sessions"("userId");
 CREATE INDEX "sessions_expiresAt_idx" ON "sessions"("expiresAt");
 
 -- AddForeignKey
-ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE;
+ALTER TABLE "sessions" ADD CONSTRAINT "sessions_userId_fkey" FOREIGN KEY ("userId") REFERENCES "users"("id") ON DELETE CASCADE ON UPDATE CASCADE;
