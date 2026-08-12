@@ -12,14 +12,14 @@ export type PaymentGateway = {
   }>;
 };
 
-export function getPaymentGateway(): PaymentGateway {
+export async function getPaymentGateway(): Promise<PaymentGateway> {
   // Deferred imports so a test that only needs one gateway doesn't pay for
   // constructing the other, and so this stays a pure env-var switch.
   if (process.env.ZARINPAL_MERCHANT_ID) {
-    const { zarinpalGateway } = require("@/lib/payment/zarinpal") as typeof import("@/lib/payment/zarinpal");
+    const { zarinpalGateway } = await import("@/lib/payment/zarinpal");
     return zarinpalGateway;
   }
 
-  const { mockGateway } = require("@/lib/payment/mock") as typeof import("@/lib/payment/mock");
+  const { mockGateway } = await import("@/lib/payment/mock");
   return mockGateway;
 }

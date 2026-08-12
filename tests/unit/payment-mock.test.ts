@@ -34,6 +34,6 @@ describe("mock payment gateway", () => {
   });
 
   it("getPaymentGateway returns the mock gateway when ZARINPAL_MERCHANT_ID is unset", async () => {
-    expect(getPaymentGateway()).toBe(mockGateway);
+    expect(await getPaymentGateway()).toBe(mockGateway);
   });
 });
