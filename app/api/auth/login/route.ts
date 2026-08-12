@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { sanitizeUser, verifyPassword } from "@/lib/auth";
+import { createSession, sanitizeUser, verifyPassword, SESSION_COOKIE_NAME } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
 
@@ -41,6 +41,16 @@ export async function POST(request: Request) {
       throw new ApiError(403, "This account has been deactivated");
     }
 
-    return ok(sanitizeUser(user), { message: "Login successful" });
+    const { token, session } = await createSession(user.id, request.headers.get("user-agent"));
+    const response = ok(sanitizeUser(user), { message: "Login successful" });
+    response.cookies.set(SESSION_COOKIE_NAME, token, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax",
+      path: "/",
+      expires: session.expiresAt,
+    });
+
+    return response;
   });
 }
