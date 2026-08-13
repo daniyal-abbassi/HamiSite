@@ -1,6 +1,6 @@
 import { PaymentStatus } from "@prisma/client";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
-import { applyOrderStatusTransition } from "@/lib/orders";
+import { applyOrderStatusTransition, TERMINAL_CANCEL_STATUSES } from "@/lib/orders";
 import { getPaymentGateway } from "@/lib/payment/gateway";
 import { prisma } from "@/lib/prisma";
 import { toNumber } from "@/lib/serializers";
@@ -52,6 +52,7 @@ export async function GET(request: Request) {
     const nextOrderStatus = result.success ? ("PROCESSING" as const) : ("FAILED" as const);
 
     let orderAlreadySettled = false;
+    let alreadySettledMessage = "Order is already settled";
 
     try {
       await prisma.$transaction(async (tx) => {
@@ -68,6 +69,14 @@ export async function GET(request: Request) {
           throw new PaymentAlreadyProcessedError();
         }
 
+        // Serialize every callback that targets this order, not just those that
+        // target the same Payment row. Stacked attempts have distinct Payment
+        // ids, so the claim above lets two of them run concurrently; without an
+        // order-level lock both would read the order in its pre-resolution state
+        // under Read Committed and both would apply a status transition.
+        // Prisma has no FOR UPDATE builder, hence the raw read.
+        await tx.$queryRaw`SELECT id FROM "orders" WHERE id = ${orderId} FOR UPDATE`;
+
         // Re-read the order inside the transaction: the pre-transaction snapshot
         // predates any lock and may be stale.
         const current = await tx.order.findUniqueOrThrow({
@@ -78,11 +87,23 @@ export async function GET(request: Request) {
           },
         });
 
-        // An order settled by an earlier attempt must never be re-transitioned:
-        // moving a paid order to FAILED would restock and reverse B2B credit for
-        // goods that were actually paid for.
+        // An order resolved by an earlier attempt must never be re-transitioned,
+        // in EITHER direction:
+        //  - paid -> FAILED would restock and reverse B2B credit for goods that
+        //    were actually paid for;
+        //  - failed/canceled -> PROCESSING would silently keep the stock and
+        //    credit that the failing attempt already gave back, because
+        //    applyOrderStatusTransition only reverses on open -> closed and
+        //    never re-applies on closed -> open.
+        // The Payment row's own outcome is already recorded by the claim above
+        // and stays committed; only the order transition is skipped.
         if (current.paymentStatus === PaymentStatus.COMPLETED) {
           orderAlreadySettled = true;
+          return;
+        }
+        if (TERMINAL_CANCEL_STATUSES.includes(current.status as (typeof TERMINAL_CANCEL_STATUSES)[number])) {
+          orderAlreadySettled = true;
+          alreadySettledMessage = "Order was already resolved by another payment attempt";
           return;
         }
 
@@ -101,7 +122,7 @@ export async function GET(request: Request) {
     }
 
     if (orderAlreadySettled) {
-      return ok({ orderId, success: result.success, orderAlreadySettled: true }, { message: "Order is already settled" });
+      return ok({ orderId, success: result.success, orderAlreadySettled: true }, { message: alreadySettledMessage });
     }
 
     return ok({ orderId, success: result.success }, { message: result.success ? "Payment completed" : "Payment failed" });

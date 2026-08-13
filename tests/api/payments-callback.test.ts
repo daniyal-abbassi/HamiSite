@@ -224,4 +224,44 @@ describe("callback idempotency", () => {
     const staleAttempt = await prisma.payment.findFirstOrThrow({ where: { authority: second.authority } });
     expect(staleAttempt.status).toBe(PaymentStatus.FAILED);
   });
+
+  it("does not re-transition an order already FAILED by a sibling attempt when a later success arrives", async () => {
+    const order = await createRetailOrder();
+
+    const first = await initiatePayment(order.id);
+    const second = await initiatePayment(order.id);
+
+    // The FAILURE resolves first: the order is still open, so this legitimately
+    // restocks and moves the order to FAILED.
+    const failRes = await callback(
+      getRequest(`http://localhost/api/payments/callback?Authority=${first.authority}&Status=NOK`),
+    );
+    expect(failRes.status).toBe(200);
+
+    const failedOrder = await prisma.order.findUniqueOrThrow({ where: { id: order.id } });
+    expect(failedOrder.status).toBe(OrderStatus.FAILED);
+    const variantAfterRestock = await prisma.productVariant.findUniqueOrThrow({ where: { id: seed.variant.id } });
+
+    // The SUCCESS for the sibling attempt lands afterwards. The order is already
+    // in a terminal state, so it must not be moved to PROCESSING — doing so
+    // would keep the stock/credit the failure just gave back.
+    const okRes = await callback(
+      getRequest(`http://localhost/api/payments/callback?Authority=${second.authority}&Status=OK`),
+    );
+    expect(okRes.status).toBe(200);
+    expect((await okRes.json()).data.orderAlreadySettled).toBe(true);
+
+    const finalOrder = await prisma.order.findUniqueOrThrow({ where: { id: order.id } });
+    expect(finalOrder.status).toBe(OrderStatus.FAILED);
+    expect(finalOrder.paymentStatus).toBe(PaymentStatus.FAILED);
+
+    // No further stock movement from the second callback in either direction.
+    const variantFinal = await prisma.productVariant.findUniqueOrThrow({ where: { id: seed.variant.id } });
+    expect(variantFinal.stock).toBe(variantAfterRestock.stock);
+
+    // Accepted edge case: the money really was captured, so the Payment row
+    // itself stays recorded as COMPLETED even though the order did not move.
+    const capturedAttempt = await prisma.payment.findFirstOrThrow({ where: { authority: second.authority } });
+    expect(capturedAttempt.status).toBe(PaymentStatus.COMPLETED);
+  });
 });
