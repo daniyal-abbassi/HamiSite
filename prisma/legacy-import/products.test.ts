@@ -1,8 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { mapVariantAttributes, mapStockType, mapLegacyProduct } from "./products";
+import { mapVariantAttributes, mapStockType, mapLegacyProduct, mapLegacyVariant } from "./products";
 import { normalizeUniqueText } from "./normalize";
 import { StockType } from "@prisma/client";
-import type { LegacyProductDetail } from "./types";
+import type { LegacyProductDetail, LegacyProductVariant } from "./types";
 
 describe("mapVariantAttributes", () => {
   it("maps رنگ to color and leaves storage null when it's the only attribute", () => {
@@ -112,5 +112,54 @@ describe("mapLegacyProduct", () => {
   it("coalesces a null price to 0 (Product.price is a non-nullable Decimal)", () => {
     const mapped = mapLegacyProduct({ ...raw, price: null }, { mainCategoryId: 100, otherCategoryIds: [], brandId: null });
     expect(mapped.price).toBe(0);
+  });
+});
+
+describe("mapLegacyVariant", () => {
+  const raw: LegacyProductVariant = {
+    id: 451,
+    product_id: 384,
+    price: 81300000,
+    compare_at_price: 81300000,
+    stock: 3,
+    length: null,
+    width: null,
+    height: null,
+    weight: null,
+    barcode: "",
+    product_identifier: "",
+    processing_time: 0,
+    is_default: true,
+    image: { id: 4454, image: "https://example.com/img.jpg", image_alt: "" },
+    attributes: [{ id: 1, name: "رنگ", value: "مشکی", order: 0 }],
+  };
+
+  it("maps direct fields, resolves color/storage via mapVariantAttributes, and takes the inherited guarantee", () => {
+    const mapped = mapLegacyVariant(raw, { guarantee: "گارانتی 18 ماهه", imageId: 999 });
+
+    expect(mapped.color).toBe("مشکی");
+    expect(mapped.storage).toBeNull();
+    expect(mapped.guarantee).toBe("گارانتی 18 ماهه");
+    expect(mapped.price).toBe(81300000);
+    expect(mapped.stock).toBe(3);
+    expect(mapped.isDefault).toBe(true);
+    expect(mapped.imageId).toBe(999);
+    expect(mapped.barcode).toBeNull();
+    expect(mapped.productIdentifier).toBeNull();
+  });
+
+  it("coalesces a null price to 0 (ProductVariant.price is a non-nullable Decimal)", () => {
+    const mapped = mapLegacyVariant({ ...raw, price: null }, { guarantee: null, imageId: null });
+    expect(mapped.price).toBe(0);
+  });
+
+  it("derives LIMITED stockType when stock > 0 and OUT_OF_STOCK when stock is 0", () => {
+    expect(mapLegacyVariant({ ...raw, stock: 5 }, { guarantee: null, imageId: null }).stockType).toBe(StockType.LIMITED);
+    expect(mapLegacyVariant({ ...raw, stock: 0 }, { guarantee: null, imageId: null }).stockType).toBe(StockType.OUT_OF_STOCK);
+  });
+
+  it("passes a null imageId through when no image resolved", () => {
+    const mapped = mapLegacyVariant(raw, { guarantee: null, imageId: null });
+    expect(mapped.imageId).toBeNull();
   });
 });

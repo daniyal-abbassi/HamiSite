@@ -1,5 +1,5 @@
 import { StockType, type Prisma, type PrismaClient } from "@prisma/client";
-import type { LegacyProductDetail, LegacyVariantAttribute } from "./types";
+import type { LegacyProductDetail, LegacyProductVariant, LegacyVariantAttribute } from "./types";
 import { normalizeUniqueText } from "./normalize";
 
 export function mapStockType(value: string): StockType {
@@ -76,6 +76,34 @@ export function mapLegacyProduct(
   };
 }
 
+export function mapLegacyVariant(
+  variant: LegacyProductVariant,
+  ctx: { guarantee: string | null; imageId: number | null }
+): Omit<Prisma.ProductVariantUncheckedCreateInput, "productId"> {
+  const { color, storage } = mapVariantAttributes(variant.attributes);
+
+  return {
+    color,
+    storage,
+    guarantee: ctx.guarantee,
+    // Same null-price quirk as the product level (see mapLegacyProduct) —
+    // ProductVariant.price is a non-nullable Decimal in our schema.
+    price: variant.price ?? 0,
+    compareAtPrice: variant.compare_at_price,
+    stock: variant.stock,
+    stockType: variant.stock > 0 ? StockType.LIMITED : StockType.OUT_OF_STOCK,
+    barcode: normalizeUniqueText(variant.barcode),
+    productIdentifier: normalizeUniqueText(variant.product_identifier),
+    isDefault: variant.is_default,
+    length: round(variant.length),
+    width: round(variant.width),
+    height: round(variant.height),
+    weight: round(variant.weight),
+    processingTime: variant.processing_time,
+    imageId: ctx.imageId,
+  };
+}
+
 export async function importProduct(
   prisma: PrismaClient,
   raw: LegacyProductDetail,
@@ -131,29 +159,12 @@ export async function importProduct(
     }
 
     for (const variant of raw.variants) {
-      const { color, storage } = mapVariantAttributes(variant.attributes);
+      const data = mapLegacyVariant(variant, {
+        guarantee: raw.guarantee,
+        imageId: variant.image ? legacyImageIdMap.get(variant.image.id) ?? null : null,
+      });
       const created = await tx.productVariant.create({
-        data: {
-          productId: product.id,
-          color,
-          storage,
-          guarantee: raw.guarantee,
-          // Same null-price quirk as the product level (see mapLegacyProduct) —
-          // ProductVariant.price is a non-nullable Decimal in our schema.
-          price: variant.price ?? 0,
-          compareAtPrice: variant.compare_at_price,
-          stock: variant.stock,
-          stockType: variant.stock > 0 ? StockType.LIMITED : StockType.OUT_OF_STOCK,
-          barcode: normalizeUniqueText(variant.barcode),
-          productIdentifier: normalizeUniqueText(variant.product_identifier),
-          isDefault: variant.is_default,
-          length: round(variant.length),
-          width: round(variant.width),
-          height: round(variant.height),
-          weight: round(variant.weight),
-          processingTime: variant.processing_time,
-          imageId: variant.image ? legacyImageIdMap.get(variant.image.id) ?? null : null,
-        },
+        data: { productId: product.id, ...data },
       });
       variantIdMap.set(variant.id, created.id);
     }
