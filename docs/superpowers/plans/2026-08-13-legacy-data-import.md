@@ -63,16 +63,23 @@ git commit -m "chore: gitignore the legacy shop API credentials file"
 
 ---
 
-## Task 1: Fix `npm run db:seed` (`ts-node` + Next.js's `esnext` tsconfig conflict)
+## Task 1: Fix `npm run db:seed` (`ts-node` + Node 22's `.ts` module-format detection) — DONE
 
-`prisma/seed.ts` currently fails with `Unknown file extension ".ts"` because
-`ts-node --transpile-only` picks up the root `tsconfig.json`, which sets
-`"module": "esnext"` for Next.js's bundler — `ts-node`'s default CommonJS
-execution then tries to `require()` the ESM output ts-node produces from that
-setting. Fix: give `ts-node` its own `module`/`moduleResolution` override,
-scoped only to how `ts-node` compiles, via a `"ts-node"` block in
-`package.json` (the standard fix for this exact Next.js + Prisma + ts-node
-combination).
+`prisma/seed.ts` failed with `Unknown file extension ".ts"`, thrown from
+Node's own `node:internal/modules/esm/get_format` — **not** from a
+tsconfig `module` mismatch as originally suspected. Root-caused live: adding
+a `"ts-node": { compilerOptions: {...} }` block to `package.json` (the
+standard fix for the Next.js-`esnext`-tsconfig-vs-ts-node conflict) did
+**not** change the error at all — proving `ts-node --transpile-only
+prisma/seed.ts` (no other flags) never reads that package.json block in this
+environment (ts-node 10.9.2 / Node 22.17.0 / npm-script invocation). Passing
+the exact same compiler options via the CLI flag `--compiler-options`
+instead **did** fix it, immediately and reproducibly. Fix: put
+`--compiler-options '{"module":"CommonJS","moduleResolution":"node"}'`
+directly in both the `db:seed` script and the `prisma.seed` field (the
+latter is what Prisma's own CLI spawns for `prisma db seed` /
+`prisma migrate dev`'s auto-seed, independent of `npm run db:seed`) — no
+`"ts-node"` package.json block, since it's silently ignored in this setup.
 
 **Files:**
 - Modify: `package.json`
@@ -80,34 +87,40 @@ combination).
 **Interfaces:**
 - Produces: a working `npm run db:seed` (no code interface — this is a config-only task).
 
-- [ ] **Step 1: Reproduce the failure**
+- [x] **Step 1: Reproduce the failure**
 
 Run: `npm run db:seed 2>&1 | tail -20`
-Expected: `Unknown file extension ".ts"` (or an equivalent ESM/CJS mismatch error), confirming the bug before fixing it.
+Result: `TypeError: Unknown file extension ".ts"` thrown from
+`node:internal/modules/esm/get_format`, confirmed before fixing.
 
-- [ ] **Step 2: Add the `ts-node` compiler override**
+- [x] **Step 2: Confirm the package.json `"ts-node"` block does NOT fix it (ruled out)**
 
-In `package.json`, add a top-level `"ts-node"` key (sibling to `"scripts"` and `"prisma"`):
+Added `"ts-node": { "esm": false, "compilerOptions": { "module": "CommonJS", "moduleResolution": "node" } }` to `package.json` and re-ran — **identical error, byte-for-byte**. Confirmed via `node prisma/seed.ts` (no ts-node at all) failing the same way, and via `npx ts-node --transpile-only --compiler-options '{"module":"CommonJS","moduleResolution":"node"}' prisma/seed.ts` (CLI flag, no package.json block) **succeeding** — isolating the fix to the CLI flag, not the package.json config surface. The non-functional `"ts-node"` block was removed rather than left in as dead/misleading config.
 
+- [x] **Step 3: Apply the working fix**
+
+In `package.json`:
 ```json
-"ts-node": {
-  "compilerOptions": {
-    "module": "CommonJS",
-    "moduleResolution": "node"
-  }
-}
+"db:seed": "ts-node --transpile-only --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" prisma/seed.ts",
 ```
+and:
+```json
+"prisma": {
+  "seed": "ts-node --transpile-only --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" prisma/seed.ts"
+},
+```
+Also added `"dotenv": "^17.4.2"` to `devDependencies` (present transitively in `node_modules` already, but not declared as a direct dependency — needed as a direct import by Task 2's `client.ts`).
 
-- [ ] **Step 3: Verify the fix**
+- [x] **Step 4: Verify the fix**
 
-Run: `npm run db:seed 2>&1 | tail -40`
-Expected: no `Unknown file extension` error; the script runs to completion and prints the existing "Seed complete." banner (the synthetic seeding logic is untouched by this task — later tasks add the legacy import phases).
+Ran `npm run db:seed` twice in a row (idempotency check per the script's own docstring): both runs complete cleanly, printing the "Seed complete." banner, no duplicate-row errors. Ran `npm run typecheck`: only the 2 pre-existing `app/api/products/route.ts:118` errors, nothing new.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
-git add package.json
-git commit -m "fix: unbreak npm run db:seed (ts-node/Next.js esnext tsconfig conflict)"
+git add package.json package-lock.json
+git commit -m "fix: unbreak npm run db:seed (ts-node --compiler-options, not the package.json ts-node block)"
+git push origin main
 ```
 
 ---

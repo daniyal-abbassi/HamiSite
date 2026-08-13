@@ -11,7 +11,7 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
-    "db:seed": "ts-node --transpile-only prisma/seed.ts",
+    "db:seed": "ts-node --transpile-only --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" prisma/seed.ts",
     "db:studio": "prisma studio",
     "_comment_db_reset": "db:reset is intentionally disabled: prisma/migrations only has a Session-only migration (schema was always managed via `db push`, no baseline migration exists), so `migrate reset` would drop the whole DB and replay just the sessions table. Use db:fresh instead. See db:reset:UNSAFE_missing_baseline if you truly need the old behavior after generating a full baseline migration.",
     "db:reset": "echo 'db:reset is disabled: no migration baseline exists yet (see prisma/migrations) — migrate reset would drop the whole DB and only recreate the sessions table. Use \"npm run db:fresh\" instead (prisma db push --force-reset).' && exit 1",
@@ -22,7 +22,7 @@
     "db:test:reset": "dotenv -e .env.test -- prisma db push --force-reset --accept-data-loss"
   },
   "prisma": {
-    "seed": "ts-node --transpile-only prisma/seed.ts"
+    "seed": "ts-node --transpile-only --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^5.20.0",
@@ -36,6 +36,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.14.9",
     "@types/react": "19.2.18",
+    "dotenv": "^17.4.2",
     "dotenv-cli": "^11.0.0",
     "prisma": "^5.20.0",
     "ts-node": "^10.9.2",
