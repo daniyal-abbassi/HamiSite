@@ -46,6 +46,29 @@ describe("zarinpal gateway", () => {
     });
   });
 
+  it("rounds fractional amounts to integers on both request and verify", async () => {
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ data: { code: 100, authority: "A1" }, errors: [] }),
+    });
+
+    await zarinpalGateway.requestPayment({
+      orderId: 7,
+      amount: 250000.4,
+      callbackUrl: "http://localhost/api/payments/callback",
+      description: "Order 7",
+    });
+    expect(JSON.parse(fetchMock.mock.calls[0][1].body).amount).toBe(250000);
+
+    fetchMock.mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({ data: { code: 100, ref_id: 1 }, errors: [] }),
+    });
+
+    await zarinpalGateway.verifyPayment({ authority: "A1", status: "OK", amount: 250000.6 });
+    expect(JSON.parse(fetchMock.mock.calls[1][1].body).amount).toBe(250001);
+  });
+
   it("requestPayment throws when Zarinpal returns a non-100 code", async () => {
     fetchMock.mockResolvedValueOnce({
       ok: true,

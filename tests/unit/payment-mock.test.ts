@@ -1,4 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import { GET as mockConfirm } from "@/app/api/payments/mock-confirm/route";
 import { mockGateway } from "@/lib/payment/mock";
 import { getPaymentGateway } from "@/lib/payment/gateway";
 
@@ -35,5 +36,46 @@ describe("mock payment gateway", () => {
 
   it("getPaymentGateway returns the mock gateway when ZARINPAL_MERCHANT_ID is unset", async () => {
     expect(await getPaymentGateway()).toBe(mockGateway);
+  });
+});
+
+describe("production gating", () => {
+  afterEach(() => {
+    vi.unstubAllEnvs();
+  });
+
+  it("getPaymentGateway fails closed in production when ZARINPAL_MERCHANT_ID is unset", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("ZARINPAL_MERCHANT_ID", "");
+
+    await expect(getPaymentGateway()).rejects.toThrow(/ZARINPAL_MERCHANT_ID must be set in production/);
+  });
+
+  it("getPaymentGateway still returns the real gateway in production when the merchant id is set", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+    vi.stubEnv("ZARINPAL_MERCHANT_ID", "some-merchant-id");
+
+    const { zarinpalGateway } = await import("@/lib/payment/zarinpal");
+    expect(await getPaymentGateway()).toBe(zarinpalGateway);
+  });
+
+  it("mock-confirm 404s in production", async () => {
+    vi.stubEnv("NODE_ENV", "production");
+
+    const res = await mockConfirm(
+      new Request("http://localhost/api/payments/mock-confirm?authority=abc&orderId=1"),
+    );
+    expect(res.status).toBe(404);
+    expect((await res.json()).error.message).toBe("Not found");
+  });
+
+  it("mock-confirm still redirects outside production", async () => {
+    vi.stubEnv("NODE_ENV", "test");
+
+    const res = await mockConfirm(
+      new Request("http://localhost/api/payments/mock-confirm?authority=abc&orderId=1"),
+    );
+    expect(res.status).toBe(302);
+    expect(res.headers.get("location")).toContain("/api/payments/callback");
   });
 });

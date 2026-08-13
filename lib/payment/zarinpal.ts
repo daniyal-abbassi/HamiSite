@@ -19,7 +19,9 @@ export const zarinpalGateway: PaymentGateway = {
       headers: { "content-type": "application/json" },
       body: JSON.stringify({
         merchant_id: merchantId(),
-        amount,
+        // Zarinpal amounts are integer Toman/Rial; a fractional amount is rejected
+        // outright, and request/verify must agree exactly, so round at the boundary.
+        amount: Math.round(amount),
         callback_url: callbackUrl,
         description,
       }),
@@ -48,7 +50,7 @@ export const zarinpalGateway: PaymentGateway = {
     const response = await fetch(VERIFY_URL, {
       method: "POST",
       headers: { "content-type": "application/json" },
-      body: JSON.stringify({ merchant_id: merchantId(), amount, authority }),
+      body: JSON.stringify({ merchant_id: merchantId(), amount: Math.round(amount), authority }),
     });
 
     const payload = (await response.json()) as { data: { code: number; ref_id: number }; errors: { message: string }[] };
