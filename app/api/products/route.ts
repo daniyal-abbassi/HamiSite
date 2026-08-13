@@ -1,4 +1,4 @@
-import { Role, StockType } from "@prisma/client";
+import { Prisma, Role, StockType } from "@prisma/client";
 import { z } from "zod";
 import { ApiError, ok, parsePagination, withErrorHandling } from "@/lib/http";
 import { normalizePaymentTerm, resolveMatchingTier } from "@/lib/pricing";
@@ -16,6 +16,14 @@ const querySchema = z.object({
   role: z.enum(["RETAIL", "WHOLESALE", "AGENT", "ADMIN"]).optional(),
   includeVariants: z.enum(["true", "false"]).optional(),
 });
+
+// Prisma's `findMany` return type can't statically resolve a runtime-conditional
+// `include` (variants: includeVariants ? {...} : false), so it falls back to the
+// narrower "variants without priceTiers" shape. This is the fully-included shape
+// actually returned when `includeVariants` is true, per the query below.
+type VariantWithTiers = Prisma.ProductVariantGetPayload<{
+  include: { priceTiers: true };
+}>;
 
 const stockTypeFromQuery: Record<string, StockType> = {
   unlimited: StockType.UNLIMITED,
@@ -110,7 +118,7 @@ export async function GET(request: Request) {
       const productCompareAt = toNumber(p.compareAtPrice);
 
       const serializedVariants = includeVariants
-        ? p.variants.map((v) => {
+        ? (p.variants as VariantWithTiers[]).map((v) => {
             const basePrice = toNumber(v.price) ?? 0;
             const matchedTier = resolveMatchingTier({
               quantity,
