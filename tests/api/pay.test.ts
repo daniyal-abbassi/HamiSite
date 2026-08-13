@@ -1,4 +1,4 @@
-import { PaymentStatus } from "@prisma/client";
+import { OrderStatus, PaymentStatus } from "@prisma/client";
 import { beforeEach, describe, expect, it } from "vitest";
 import { POST as createOrder } from "@/app/api/orders/route";
 import { POST as pay } from "@/app/api/orders/[id]/pay/route";
@@ -65,5 +65,47 @@ describe("POST /api/orders/[id]/pay", () => {
       params: { id: "999999" },
     });
     expect(res.status).toBe(404);
+  });
+
+  it("persists the gateway authority on the Payment row", async () => {
+    const order = await createRetailOrder();
+
+    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie), {
+      params: { id: String(order.id) },
+    });
+    const { authority } = (await res.json()).data;
+
+    const payment = await prisma.payment.findFirstOrThrow({ where: { orderId: order.id } });
+    expect(payment.authority).toBe(authority);
+    expect(authority).toBeTruthy();
+  });
+
+  it("409s and creates no new Payment row when the order is already paid", async () => {
+    const order = await createRetailOrder();
+    await prisma.order.update({
+      where: { id: order.id },
+      data: { paymentStatus: PaymentStatus.COMPLETED, status: OrderStatus.PROCESSING },
+    });
+
+    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie), {
+      params: { id: String(order.id) },
+    });
+    expect(res.status).toBe(409);
+
+    const payments = await prisma.payment.findMany({ where: { orderId: order.id } });
+    expect(payments).toHaveLength(0);
+  });
+
+  it("409s and creates no new Payment row when the order is in a terminal state", async () => {
+    const order = await createRetailOrder();
+    await prisma.order.update({ where: { id: order.id }, data: { status: OrderStatus.CANCELED } });
+
+    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie), {
+      params: { id: String(order.id) },
+    });
+    expect(res.status).toBe(409);
+
+    const payments = await prisma.payment.findMany({ where: { orderId: order.id } });
+    expect(payments).toHaveLength(0);
   });
 });

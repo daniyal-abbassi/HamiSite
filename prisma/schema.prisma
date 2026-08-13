@@ -619,6 +619,12 @@ model Payment {
 
   /// Unique gateway/internal transaction reference number.
   transactionNumber      String        @unique
+  /// Gateway-issued authority/token for this payment attempt. This is the ONLY
+  /// trusted binding between an unauthenticated gateway callback and the
+  /// Payment/Order it settles — never resolve a callback by a query-string
+  /// orderId. Nullable because non-gateway payments (e.g. seeded/manual rows)
+  /// have no authority.
+  authority              String?       @unique
   amount                 Decimal       @db.Decimal(12, 2)
 
   method                 String?       // e.g. "card", "zarinpal", "credit"
