@@ -14,7 +14,7 @@ describe("normalizePhoneNumber", () => {
 });
 
 describe("mapLegacyCustomer", () => {
-  const raw: LegacyCustomer = {
+  const raw: LegacyCustomer & { phone_number: string } = {
     id: 239,
     username: "09923286434",
     first_name: null,

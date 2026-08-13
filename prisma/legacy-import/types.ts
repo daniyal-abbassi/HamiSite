@@ -47,7 +47,7 @@ export interface LegacyVariantAttribute {
 export interface LegacyProductVariant {
   id: number;
   product_id: number;
-  price: number;
+  price: number | null;
   compare_at_price: number | null;
   stock: number;
   length: number | null;
@@ -73,7 +73,7 @@ export interface LegacyProductDetail {
   other_categories: { id: number; name: string }[];
   brand: { id: number; name: string } | null;
   is_digital: boolean;
-  price: number;
+  price: number | null;
   compare_at_price: number | null;
   special_offer: boolean;
   special_offer_end: string | null;
@@ -108,7 +108,7 @@ export interface LegacyCustomer {
   first_name: string | null;
   last_name: string | null;
   email: string | null;
-  phone_number: string;
+  phone_number: string | null;
   national_number: string | null;
   card_number: string | null;
   is_active: boolean;

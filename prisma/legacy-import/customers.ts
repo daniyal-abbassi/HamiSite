@@ -9,7 +9,11 @@ export function normalizePhoneNumber(raw: string): string {
   return `+98${raw.replace(/^0/, "")}`;
 }
 
-export function mapLegacyCustomer(raw: LegacyCustomer, passwordHash: string): Prisma.UserUncheckedCreateInput {
+function hasPhoneNumber(raw: LegacyCustomer): raw is LegacyCustomer & { phone_number: string } {
+  return typeof raw.phone_number === "string" && raw.phone_number.length > 0;
+}
+
+export function mapLegacyCustomer(raw: LegacyCustomer & { phone_number: string }, passwordHash: string): Prisma.UserUncheckedCreateInput {
   return {
     role: Role.RETAIL,
     username: raw.username,
@@ -36,6 +40,10 @@ export async function importCustomers(prisma: PrismaClient, rows: LegacyCustomer
   const passwordHash = await bcrypt.hash(IMPORTED_CUSTOMER_PASSWORD, 10);
 
   for (const raw of rows) {
+    if (!hasPhoneNumber(raw)) {
+      console.warn(`Skipping legacy customer ${raw.id} (${raw.username}): no phone number.`);
+      continue;
+    }
     const data = mapLegacyCustomer(raw, passwordHash);
 
     const user = await prisma.user.upsert({

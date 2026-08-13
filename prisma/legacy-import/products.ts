@@ -47,7 +47,12 @@ export function mapLegacyProduct(
     mainCategoryId: ctx.mainCategoryId,
     brandId: ctx.brandId,
     isDigital: raw.is_digital,
-    price: raw.price,
+    // The legacy API returns `price: null` for some has_variants=true products
+    // (authoritative pricing lives on the variants). Product.price is a
+    // non-nullable Decimal in our schema (@default(0)), so coalesce here —
+    // passing `null` through causes Prisma to reject the whole create/update
+    // payload with a confusing "Unknown argument" error.
+    price: raw.price ?? 0,
     compareAtPrice: raw.compare_at_price,
     specialOffer: raw.special_offer,
     specialOfferEnd: raw.special_offer_end ? new Date(raw.special_offer_end) : null,
@@ -119,7 +124,9 @@ export async function importProduct(
         color,
         storage,
         guarantee: raw.guarantee,
-        price: variant.price,
+        // Same null-price quirk as the product level (see mapLegacyProduct) —
+        // ProductVariant.price is a non-nullable Decimal in our schema.
+        price: variant.price ?? 0,
         compareAtPrice: variant.compare_at_price,
         stock: variant.stock,
         stockType: variant.stock > 0 ? StockType.LIMITED : StockType.OUT_OF_STOCK,
