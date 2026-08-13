@@ -1630,7 +1630,7 @@ async function importPayments(
 - [ ] **Step 4: Run the tests to verify they pass**
 
 Run: `dotenv -e .env.test -- vitest run prisma/legacy-import/orders.test.ts`
-Expected: PASS (10 tests).
+Expected: PASS (7 tests — the plan originally said 10 here, a miscount against the `it()` blocks actually written above; corrected after implementation).
 
 - [ ] **Step 5: Typecheck the whole `prisma/legacy-import/` module**
 
