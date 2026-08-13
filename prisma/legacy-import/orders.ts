@@ -1,7 +1,12 @@
 import { OrderStatus, PaymentStatus, B2BPaymentTerm, Role, type PrismaClient } from "@prisma/client";
 import type { LegacyOrder, LegacyOrderPayment } from "./types";
-import { normalizePhoneNumber, IMPORTED_CUSTOMER_PASSWORD } from "./customers";
+import { IMPORTED_CUSTOMER_PASSWORD } from "./customers";
+import { normalizePhoneNumber } from "./normalize";
 import bcrypt from "bcryptjs";
+
+export function hasCustomerPhone(raw: LegacyOrder): raw is LegacyOrder & { customer_phone: string } {
+  return typeof raw.customer_phone === "string" && raw.customer_phone.length > 0;
+}
 
 export function mapOrderStatus(value: string): OrderStatus {
   switch (value) {
@@ -53,7 +58,7 @@ export function computeOrderTotals(raw: LegacyOrder): { subtotal: number; shippi
   return { subtotal, shippingPrice, totalAmount };
 }
 
-async function resolveOrderUserId(prisma: PrismaClient, raw: LegacyOrder, userIdMap: Map<string, number>): Promise<number> {
+async function resolveOrderUserId(prisma: PrismaClient, raw: LegacyOrder & { customer_phone: string }, userIdMap: Map<string, number>): Promise<number> {
   const normalizedPhone = normalizePhoneNumber(raw.customer_phone);
   const existing = userIdMap.get(normalizedPhone);
   if (existing) return existing;
@@ -113,6 +118,11 @@ export async function importOrders(
   const orderIdMap = new Map<number, number>();
 
   for (const raw of orders) {
+    if (!hasCustomerPhone(raw)) {
+      console.warn(`Skipping legacy order ${raw.id}: no customer_phone.`);
+      continue;
+    }
+
     const userId = await resolveOrderUserId(prisma, raw, userIdMap);
     const addressId = await resolveOrderAddressId(prisma, raw, userId);
     const { subtotal, shippingPrice, totalAmount } = computeOrderTotals(raw);
@@ -168,23 +178,28 @@ export async function importOrders(
 
     orderIdMap.set(raw.id, order.id);
 
-    await prisma.orderItem.deleteMany({ where: { orderId: order.id } });
-    for (const item of raw.items) {
-      await prisma.orderItem.create({
-        data: {
-          orderId: order.id,
-          productId: item.product_id !== null ? productIdMap.get(item.product_id) ?? null : null,
-          variantId: item.variant_id !== null ? variantIdMap.get(item.variant_id) ?? null : null,
-          productName: item.product_name,
-          variantName: item.variant_name,
-          quantity: item.quantity,
-          price: item.price,
-          compareAtPrice: item.compare_at_price,
-          discountAmount: 0,
-          lineTotal: item.total_price,
-        },
-      });
-    }
+    // Full replace of order items on every run — see spec's Idempotency
+    // section. Wrapped in a transaction so a thrown error mid-sequence (e.g.
+    // an unmapped value) can't leave the order with partial/zero items.
+    await prisma.$transaction(async (tx) => {
+      await tx.orderItem.deleteMany({ where: { orderId: order.id } });
+      for (const item of raw.items) {
+        await tx.orderItem.create({
+          data: {
+            orderId: order.id,
+            productId: item.product_id !== null ? productIdMap.get(item.product_id) ?? null : null,
+            variantId: item.variant_id !== null ? variantIdMap.get(item.variant_id) ?? null : null,
+            productName: item.product_name,
+            variantName: item.variant_name,
+            quantity: item.quantity,
+            price: item.price,
+            compareAtPrice: item.compare_at_price,
+            discountAmount: 0,
+            lineTotal: item.total_price,
+          },
+        });
+      }
+    });
   }
 
   await importPayments(prisma, payments, orderIdMap, userIdMap, orders);
@@ -207,9 +222,22 @@ async function importPayments(
       continue;
     }
 
+    if (!hasCustomerPhone(legacyOrder)) {
+      console.warn(`Skipping legacy payment ${raw.id}: order ${raw.order_id} has no customer_phone.`);
+      continue;
+    }
+
     const userId = userIdMap.get(normalizePhoneNumber(legacyOrder.customer_phone));
     if (!userId) {
       console.warn(`Skipping legacy payment ${raw.id}: no matching imported user for order ${raw.order_id}`);
+      continue;
+    }
+
+    if (!raw.mixin_transaction_number) {
+      // Falsy mixin_transaction_number would otherwise collapse every
+      // affected payment onto the single key "LEGACY-" and silently
+      // overwrite each other via the upsert below.
+      console.warn(`Skipping legacy payment ${raw.id}: no mixin_transaction_number.`);
       continue;
     }
 

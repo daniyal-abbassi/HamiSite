@@ -1,9 +1,6 @@
 import { StockType, type Prisma, type PrismaClient } from "@prisma/client";
 import type { LegacyProductDetail, LegacyVariantAttribute } from "./types";
-
-export function normalizeUniqueText(value: string | null | undefined): string | null {
-  return value ? value : null;
-}
+import { normalizeUniqueText } from "./normalize";
 
 export function mapStockType(value: string): StockType {
   switch (value) {
@@ -97,52 +94,70 @@ export async function importProduct(
     create: { ...data, otherCategories: { connect: otherCategoryIds.map((id) => ({ id })) } },
   });
 
-  // Full replace of images/variants on every run — see spec's Idempotency section.
-  await prisma.productVariant.deleteMany({ where: { productId: product.id } });
-  await prisma.productImage.deleteMany({ where: { productId: product.id } });
+  // Full replace of images/variants on every run — see spec's Idempotency
+  // section. This is more destructive than "images/variants" alone:
+  // ProductVariant has onDelete: Cascade relations to PriceTier (the B2B
+  // pricing engine's own admin-created data — never legacy-sourced),
+  // CartItem (live shopping carts), and ProductHistory (the audit trail) —
+  // all of those rows are cascade-deleted for every variant on this product.
+  // Any non-"LEGACY-"-prefixed OrderItem referencing one of these variants
+  // has its variantId SET NULL (it is not recreated by this script). See
+  // the final-review fix report (finding #1) for the full analysis.
+  const cascadeImpact = await prisma.priceTier.count({ where: { variant: { productId: product.id } } });
+  if (cascadeImpact > 0) {
+    console.warn(
+      `Re-importing product ${product.id} (${raw.slug}) will delete ${cascadeImpact} PriceTier row(s) on its variants (cascade). Re-create them after this import if needed.`
+    );
+  }
 
   const legacyImageIdMap = new Map<number, number>();
-  for (const image of raw.images) {
-    const created = await prisma.productImage.create({
-      data: {
-        productId: product.id,
-        url: image.image,
-        altText: image.image_alt,
-        isDefault: image.default,
-        order: image.order,
-      },
-    });
-    legacyImageIdMap.set(image.id, created.id);
-  }
-
   const variantIdMap = new Map<number, number>();
-  for (const variant of raw.variants) {
-    const { color, storage } = mapVariantAttributes(variant.attributes);
-    const created = await prisma.productVariant.create({
-      data: {
-        productId: product.id,
-        color,
-        storage,
-        guarantee: raw.guarantee,
-        // Same null-price quirk as the product level (see mapLegacyProduct) —
-        // ProductVariant.price is a non-nullable Decimal in our schema.
-        price: variant.price ?? 0,
-        compareAtPrice: variant.compare_at_price,
-        stock: variant.stock,
-        stockType: variant.stock > 0 ? StockType.LIMITED : StockType.OUT_OF_STOCK,
-        barcode: normalizeUniqueText(variant.barcode),
-        productIdentifier: normalizeUniqueText(variant.product_identifier),
-        isDefault: variant.is_default,
-        length: round(variant.length),
-        width: round(variant.width),
-        height: round(variant.height),
-        weight: round(variant.weight),
-        processingTime: variant.processing_time,
-        imageId: variant.image ? legacyImageIdMap.get(variant.image.id) ?? null : null,
-      },
-    });
-    variantIdMap.set(variant.id, created.id);
-  }
+
+  await prisma.$transaction(async (tx) => {
+    await tx.productVariant.deleteMany({ where: { productId: product.id } });
+    await tx.productImage.deleteMany({ where: { productId: product.id } });
+
+    for (const image of raw.images) {
+      const created = await tx.productImage.create({
+        data: {
+          productId: product.id,
+          url: image.image,
+          altText: image.image_alt,
+          isDefault: image.default,
+          order: image.order,
+        },
+      });
+      legacyImageIdMap.set(image.id, created.id);
+    }
+
+    for (const variant of raw.variants) {
+      const { color, storage } = mapVariantAttributes(variant.attributes);
+      const created = await tx.productVariant.create({
+        data: {
+          productId: product.id,
+          color,
+          storage,
+          guarantee: raw.guarantee,
+          // Same null-price quirk as the product level (see mapLegacyProduct) —
+          // ProductVariant.price is a non-nullable Decimal in our schema.
+          price: variant.price ?? 0,
+          compareAtPrice: variant.compare_at_price,
+          stock: variant.stock,
+          stockType: variant.stock > 0 ? StockType.LIMITED : StockType.OUT_OF_STOCK,
+          barcode: normalizeUniqueText(variant.barcode),
+          productIdentifier: normalizeUniqueText(variant.product_identifier),
+          isDefault: variant.is_default,
+          length: round(variant.length),
+          width: round(variant.width),
+          height: round(variant.height),
+          weight: round(variant.weight),
+          processingTime: variant.processing_time,
+          imageId: variant.image ? legacyImageIdMap.get(variant.image.id) ?? null : null,
+        },
+      });
+      variantIdMap.set(variant.id, created.id);
+    }
+  });
 
   return { productId: product.id, variantIdMap };
 }

@@ -137,7 +137,10 @@ export interface LegacyOrderItem {
 export interface LegacyOrder {
   id: number;
   customer_name: string;
-  customer_phone: string;
+  // Observed nullable at runtime for some legacy records (same class of gap
+  // as LegacyCustomer.phone_number) despite the legacy API's own OpenAPI doc
+  // implying it's required — see hasCustomerPhone in orders.ts.
+  customer_phone: string | null;
   status: "processing" | "finished" | "canceled" | string;
   payment_method: string | null;
   payment_status: "pending" | "paid" | string;

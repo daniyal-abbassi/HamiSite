@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { normalizePhoneNumber, mapLegacyCustomer } from "./customers";
+import { mapLegacyCustomer, hasPhoneNumber } from "./customers";
+import { normalizePhoneNumber } from "./normalize";
 import { Role } from "@prisma/client";
 import type { LegacyCustomer } from "./types";
 
@@ -48,5 +49,38 @@ describe("mapLegacyCustomer", () => {
       creationMethod: "website",
     });
     expect(mapped.createdAt).toEqual(new Date("2026-08-01T12:59:22.495122+03:30"));
+  });
+});
+
+describe("hasPhoneNumber", () => {
+  const base: LegacyCustomer = {
+    id: 239,
+    username: "09923286434",
+    first_name: null,
+    last_name: null,
+    email: null,
+    phone_number: "09923286434",
+    national_number: null,
+    card_number: null,
+    is_active: true,
+    verified: false,
+    receive_newsletters: false,
+    management_sms_notifications: false,
+    management_email_notifications: false,
+    referer: "google",
+    creation_method: "website",
+    date_joined: "2026-08-01T12:59:22.495122+03:30",
+  };
+
+  it("returns false when phone_number is null", () => {
+    expect(hasPhoneNumber({ ...base, phone_number: null })).toBe(false);
+  });
+
+  it("returns false when phone_number is an empty string", () => {
+    expect(hasPhoneNumber({ ...base, phone_number: "" })).toBe(false);
+  });
+
+  it("returns true when phone_number is a real value", () => {
+    expect(hasPhoneNumber({ ...base, phone_number: "09923286434" })).toBe(true);
   });
 });

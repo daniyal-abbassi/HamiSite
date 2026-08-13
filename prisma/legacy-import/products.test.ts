@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
-import { mapVariantAttributes, normalizeUniqueText, mapStockType, mapLegacyProduct } from "./products";
+import { mapVariantAttributes, mapStockType, mapLegacyProduct } from "./products";
+import { normalizeUniqueText } from "./normalize";
 import { StockType } from "@prisma/client";
 import type { LegacyProductDetail } from "./types";
 
@@ -106,5 +107,10 @@ describe("mapLegacyProduct", () => {
   it("maps a null brand through as null", () => {
     const mapped = mapLegacyProduct({ ...raw, brand: null }, { mainCategoryId: 100, otherCategoryIds: [], brandId: null });
     expect(mapped.brandId).toBeNull();
+  });
+
+  it("coalesces a null price to 0 (Product.price is a non-nullable Decimal)", () => {
+    const mapped = mapLegacyProduct({ ...raw, price: null }, { mainCategoryId: 100, otherCategoryIds: [], brandId: null });
+    expect(mapped.price).toBe(0);
   });
 });

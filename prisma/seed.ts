@@ -13,8 +13,16 @@
  *    categories, brands, products + variants + images, customers and
  *    orders + payments.
  *
- * Safe to re-run: every record is created with `upsert`/idempotent lookups
- * keyed on a unique field, so `npm run db:seed` never duplicates data.
+ * Re-run safety: top-level records (Category, Brand, Product, User, Order)
+ * are all `upsert`ed on a unique key, so re-running never duplicates those.
+ * However, each imported product's images/variants and each imported
+ * order's items are hard-deleted and recreated with new ids on every run —
+ * this is NOT non-destructive. Because ProductVariant cascade-deletes
+ * PriceTier, CartItem, and ProductHistory rows (see `prisma/schema.prisma`
+ * and the warning logged in `prisma/legacy-import/products.ts`), re-running
+ * `npm run db:seed` also deletes any B2B pricing tiers, live cart items, and
+ * audit history attached to previously-imported variants. Re-create that
+ * data after re-running the import if you rely on it.
  */
 
 import { PrismaClient, Role, CouponType } from "@prisma/client";
@@ -271,43 +279,59 @@ async function main() {
   await seedCoupons(brands);
 
   console.log("\nImporting real catalog/customer/order data from the legacy shop...");
-  const config = loadLegacyClientConfig();
-  const client = createLegacyClient(config);
+  let legacyConfig: ReturnType<typeof loadLegacyClientConfig> | null = null;
+  try {
+    legacyConfig = loadLegacyClientConfig();
+  } catch (err) {
+    console.warn("  Skipping legacy data import: could not load legacy API credentials.");
+    console.warn(
+      '  Expected a gitignored file at the repo root named "actuall_old_webSite_api_token.txt" with the format:\n' +
+        "    API_TOKEN=<token>\n" +
+        "    WEBSITE_URL=<https://...>"
+    );
+    console.warn(`  (${err instanceof Error ? err.message : String(err)})`);
+  }
 
-  console.log("  categories...");
-  const legacyCategories = await client.fetchAllPages<LegacyCategory>("/categories/");
-  const categoryIdMap = await importCategories(prisma, legacyCategories);
-  console.log(`  ${legacyCategories.length} categories imported.`);
+  if (legacyConfig) {
+    const client = createLegacyClient(legacyConfig);
 
-  console.log("  brands...");
-  const legacyBrands = await client.fetchAllPages<LegacyBrand>("/brands/");
-  const brandIdMap = await importBrands(prisma, legacyBrands);
-  console.log(`  ${legacyBrands.length} brands imported.`);
+    console.log("  categories...");
+    const legacyCategories = await client.fetchAllPages<LegacyCategory>("/categories/");
+    const categoryIdMap = await importCategories(prisma, legacyCategories);
+    console.log(`  ${legacyCategories.length} categories imported.`);
 
-  console.log("  products (this fetches one detail call per product, ~5 at a time)...");
-  const legacyProductIds = (await client.fetchAllPages<{ id: number }>("/products/")).map((p) => p.id);
-  const productIdMap = new Map<number, number>();
-  const variantIdMap = new Map<number, number>();
-  await mapWithConcurrency(legacyProductIds, 5, async (id) => {
-    const detail = await client.fetchJson<{ data: LegacyProductDetail }>(`/products/${id}/`);
-    const { productId, variantIdMap: productVariantIdMap } = await importProduct(prisma, detail.data, categoryIdMap, brandIdMap);
-    productIdMap.set(id, productId);
-    for (const [legacyVariantId, ourVariantId] of productVariantIdMap) {
-      variantIdMap.set(legacyVariantId, ourVariantId);
-    }
-  });
-  console.log(`  ${legacyProductIds.length} products imported.`);
+    console.log("  brands...");
+    const legacyBrands = await client.fetchAllPages<LegacyBrand>("/brands/");
+    const brandIdMap = await importBrands(prisma, legacyBrands);
+    console.log(`  ${legacyBrands.length} brands imported.`);
 
-  console.log("  customers...");
-  const legacyCustomers = await client.fetchAllPages<LegacyCustomer>("/customers/");
-  const userIdMap = await importCustomers(prisma, legacyCustomers);
-  console.log(`  ${legacyCustomers.length} customers imported.`);
+    console.log("  products (this fetches one detail call per product, ~5 at a time)...");
+    const legacyProductIds = (await client.fetchAllPages<{ id: number }>("/products/")).map((p) => p.id);
+    const productIdMap = new Map<number, number>();
+    const variantIdMap = new Map<number, number>();
+    await mapWithConcurrency(legacyProductIds, 5, async (id) => {
+      const detail = await client.fetchJson<{ data: LegacyProductDetail }>(`/products/${id}/`);
+      const { productId, variantIdMap: productVariantIdMap } = await importProduct(prisma, detail.data, categoryIdMap, brandIdMap);
+      productIdMap.set(id, productId);
+      for (const [legacyVariantId, ourVariantId] of productVariantIdMap) {
+        variantIdMap.set(legacyVariantId, ourVariantId);
+      }
+    });
+    console.log(`  ${legacyProductIds.length} products imported.`);
 
-  console.log("  orders and payments...");
-  const legacyOrders = await client.fetchAllPages<LegacyOrder>("/orders/");
-  const legacyPayments = await client.fetchAllPages<LegacyOrderPayment>("/order-payments/");
-  await importOrders(prisma, legacyOrders, legacyPayments, userIdMap, productIdMap, variantIdMap);
-  console.log(`  ${legacyOrders.length} orders and ${legacyPayments.length} payments imported.`);
+    console.log("  customers...");
+    const legacyCustomers = await client.fetchAllPages<LegacyCustomer>("/customers/");
+    const userIdMap = await importCustomers(prisma, legacyCustomers);
+    console.log(`  ${legacyCustomers.length} customers imported.`);
+
+    console.log("  orders and payments...");
+    const legacyOrders = await client.fetchAllPages<LegacyOrder>("/orders/");
+    const legacyPayments = await client.fetchAllPages<LegacyOrderPayment>("/order-payments/");
+    await importOrders(prisma, legacyOrders, legacyPayments, userIdMap, productIdMap, variantIdMap);
+    console.log(`  ${legacyOrders.length} orders and ${legacyPayments.length} payments imported.`);
+  } else {
+    console.log("  (legacy import phase skipped)");
+  }
 
   console.log("\nSeed complete.");
   console.log("---------------------------------------------------------");

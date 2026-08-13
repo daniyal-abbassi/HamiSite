@@ -1,15 +1,11 @@
 import { Role, type Prisma, type PrismaClient } from "@prisma/client";
 import bcrypt from "bcryptjs";
 import type { LegacyCustomer } from "./types";
+import { normalizePhoneNumber, normalizeUniqueText } from "./normalize";
 
 export const IMPORTED_CUSTOMER_PASSWORD = "Imported@12345";
 
-export function normalizePhoneNumber(raw: string): string {
-  if (raw.startsWith("+")) return raw;
-  return `+98${raw.replace(/^0/, "")}`;
-}
-
-function hasPhoneNumber(raw: LegacyCustomer): raw is LegacyCustomer & { phone_number: string } {
+export function hasPhoneNumber(raw: LegacyCustomer): raw is LegacyCustomer & { phone_number: string } {
   return typeof raw.phone_number === "string" && raw.phone_number.length > 0;
 }
 
@@ -17,7 +13,9 @@ export function mapLegacyCustomer(raw: LegacyCustomer & { phone_number: string }
   return {
     role: Role.RETAIL,
     username: raw.username,
-    email: raw.email,
+    // User.email is String? @unique — an unnormalized "" would collide with
+    // any other empty-email customer on the second upsert (P2002).
+    email: normalizeUniqueText(raw.email),
     passwordHash,
     firstName: raw.first_name,
     lastName: raw.last_name,
