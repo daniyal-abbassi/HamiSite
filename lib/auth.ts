@@ -58,12 +58,32 @@ export function sanitizeUser(user: User) {
 
 function parseCookies(header: string | null): Record<string, string> {
   if (!header) return {};
-  return Object.fromEntries(
-    header.split(";").map((pair) => {
-      const [key, ...rest] = pair.trim().split("=");
-      return [key, decodeURIComponent(rest.join("="))];
-    }),
-  );
+
+  const cookies: Record<string, string> = {};
+  for (const pair of header.split(";")) {
+    const trimmed = pair.trim();
+    if (!trimmed) continue;
+
+    const eq = trimmed.indexOf("=");
+    if (eq < 1) continue; // no name, or a bare flag with no "=" — skip it
+
+    const name = trimmed.slice(0, eq);
+    const raw = trimmed.slice(eq + 1);
+
+    // decodeURIComponent throws URIError on a malformed escape (e.g. "%zz").
+    // A junk THIRD-PARTY cookie must never be able to 500 an authenticated
+    // request, so fall back to the raw value instead of propagating.
+    let value: string;
+    try {
+      value = decodeURIComponent(raw);
+    } catch {
+      value = raw;
+    }
+
+    cookies[name] = value; // last-wins, matching the previous Object.fromEntries behaviour
+  }
+
+  return cookies;
 }
 
 /** Extracts the raw session token from a request's `Cookie` header, using the

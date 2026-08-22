@@ -100,6 +100,15 @@ describe("GET /api/auth/me", () => {
     const res = await me(new Request("http://localhost/api/auth/me"));
     expect(res.status).toBe(401);
   });
+  it("authenticates normally when the browser also sends a malformed cookie", async () => {
+    const loginRes = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    const sessionCookie = loginRes.headers.get("set-cookie")!.split(";")[0];
+
+    const res = await me(new Request("http://localhost/api/auth/me", {
+      headers: { cookie: `_ga=%zz; ${sessionCookie}` },
+    }));
+    expect(res.status).toBe(200);   // was 500 before this fix
+  });
 });
 
 describe("session lifecycle (login -> me -> logout -> me)", () => {
