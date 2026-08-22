@@ -1,4 +1,6 @@
 import { beforeEach, describe, expect, it } from "vitest";
+import { POST as changePassword } from "@/app/api/auth/change-password/route";
+import { POST as login } from "@/app/api/auth/login/route";
 import { GET as me, PATCH as updateMe } from "@/app/api/auth/me/route";
 import { prisma } from "@/lib/prisma";
 import { getRequest, jsonRequest, loginAs } from "../helpers/request";
@@ -110,5 +112,88 @@ describe("PATCH /api/auth/me", () => {
     const res = await updateMe(jsonRequest(URL, "PATCH", { firstName: "Ali" }, cookie));
     expect(res.headers.get("set-cookie")).toContain("Path=/");
     expect((await me(getRequest(URL, cookie))).status).toBe(200);
+  });
+});
+
+const CP_URL = "http://localhost/api/auth/change-password";
+const LOGIN_URL = "http://localhost/api/auth/login";
+
+describe("POST /api/auth/change-password", () => {
+  it("changes the password; the old one stops working and the new one works", async () => {
+    const res = await changePassword(
+      jsonRequest(CP_URL, "POST", { currentPassword: seed.retail.password, newPassword: "NewPassword@456" }, cookie),
+    );
+    expect(res.status).toBe(200);
+    expect((await res.json()).data.passwordChanged).toBe(true);
+
+    const old = await login(
+      jsonRequest(LOGIN_URL, "POST", { identifier: seed.retail.username, password: seed.retail.password }),
+    );
+    expect(old.status).toBe(401);
+    expect((await old.json()).error.code).toBe("INVALID_CREDENTIALS");
+
+    const fresh = await login(
+      jsonRequest(LOGIN_URL, "POST", { identifier: seed.retail.username, password: "NewPassword@456" }),
+    );
+    expect(fresh.status).toBe(200);
+  });
+
+  it("revokes every OTHER session and keeps the current one alive", async () => {
+    const otherCookie = await loginAs(seed.retail);
+    expect(await prisma.session.count({ where: { userId: seed.retail.id } })).toBe(2);
+
+    const res = await changePassword(
+      jsonRequest(CP_URL, "POST", { currentPassword: seed.retail.password, newPassword: "NewPassword@456" }, cookie),
+    );
+    expect((await res.json()).data.revokedSessions).toBe(1);
+
+    expect(await prisma.session.count({ where: { userId: seed.retail.id } })).toBe(1);
+    expect((await me(getRequest(URL, cookie))).status).toBe(200); // current: alive
+    expect((await me(getRequest(URL, otherCookie))).status).toBe(401); // other: revoked
+  });
+
+  it("returns 400 INVALID_CURRENT_PASSWORD (not 401) for a wrong current password", async () => {
+    const res = await changePassword(
+      jsonRequest(CP_URL, "POST", { currentPassword: "not-my-password", newPassword: "NewPassword@456" }, cookie),
+    );
+
+    expect(res.status).toBe(400);
+    expect((await res.json()).error.code).toBe("INVALID_CURRENT_PASSWORD");
+
+    // Nothing changed: password intact, session untouched.
+    expect(
+      (await login(jsonRequest(LOGIN_URL, "POST", { identifier: seed.retail.username, password: seed.retail.password })))
+        .status,
+    ).toBe(200);
+    expect((await me(getRequest(URL, cookie))).status).toBe(200);
+  });
+
+  it("rejects a new password identical to the current one", async () => {
+    const res = await changePassword(
+      jsonRequest(CP_URL, "POST", { currentPassword: seed.retail.password, newPassword: seed.retail.password }, cookie),
+    );
+    expect(res.status).toBe(400);
+    expect((await res.json()).error.code).toBe("VALIDATION_FAILED");
+  });
+
+  it("rejects a new password under 6 characters", async () => {
+    const res = await changePassword(
+      jsonRequest(CP_URL, "POST", { currentPassword: seed.retail.password, newPassword: "abc12" }, cookie),
+    );
+    expect(res.status).toBe(400);
+    expect((await res.json()).error.details.fieldErrors.newPassword).toBeTruthy();
+  });
+
+  it("returns 401 AUTH_REQUIRED without a session and 400 MALFORMED_JSON on bad JSON", async () => {
+    expect(
+      (await changePassword(jsonRequest(CP_URL, "POST", { currentPassword: "x", newPassword: "NewPassword@456" })))
+        .status,
+    ).toBe(401);
+
+    const bad = await changePassword(
+      new Request(CP_URL, { method: "POST", headers: { "content-type": "application/json", cookie }, body: "nope" }),
+    );
+    expect(bad.status).toBe(400);
+    expect((await bad.json()).error.code).toBe("MALFORMED_JSON");
   });
 });
