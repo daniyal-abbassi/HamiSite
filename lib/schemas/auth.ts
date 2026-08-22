@@ -27,3 +27,32 @@ export const registerSchema = z.object({
   agentId: z.number().int().positive().optional(),
   referer: z.string().max(200).optional(),
 });
+
+/** Self-service profile edits ONLY. Deliberately excludes role, isActive,
+ * creditLimit, creditUsed, agentId, phoneNumber, username, businessVerified,
+ * phoneVerified, nationalNumber, cardNumber, shopName, businessLicenseNumber
+ * — see docs/api/auth.md for why each is admin-managed.
+ *
+ * .partial() over nullable fields yields `T | null | undefined`, which maps
+ * exactly onto Prisma's update semantics: absent = don't touch, null = clear,
+ * value = set. That three-state behaviour is part of the public contract. */
+export const updateProfileSchema = z
+  .object({
+    firstName: z.string().max(100).nullable(),
+    lastName: z.string().max(100).nullable(),
+    email: z.string().trim().email().max(255).nullable(),
+    city: z.string().max(100).nullable(),
+    receiveNewsletters: z.boolean(),
+  })
+  .partial()
+  .refine((data) => Object.keys(data).length > 0, { message: "At least one field must be provided" });
+
+export const changePasswordSchema = z
+  .object({
+    currentPassword: z.string().min(1).max(100),
+    newPassword: z.string().min(6).max(100),
+  })
+  .refine((d) => d.currentPassword !== d.newPassword, {
+    message: "New password must differ from the current one",
+    path: ["newPassword"],
+  });
