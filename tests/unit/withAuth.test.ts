@@ -85,4 +85,17 @@ describe("withAuth", () => {
     expect(setCookie).toContain(`${SESSION_COOKIE_NAME}=${token}`);
     expect(setCookie).toContain("Path=/");
   });
+
+  it("tags its 401/403 failures with stable codes", async () => {
+    const handler = withAuth(async () => NextResponse.json({ ok: true }), { roles: [Role.ADMIN] });
+
+    expect((await (await handler(requestWithCookie())).json()).error.code).toBe("AUTH_REQUIRED");
+
+    const { token } = await createSession(seed.retail.id);
+    expect((await (await handler(requestWithCookie(token))).json()).error.code).toBe("FORBIDDEN_ROLE");
+
+    // isActive is checked before roles, so this now reports deactivation.
+    await prisma.user.update({ where: { id: seed.retail.id }, data: { isActive: false } });
+    expect((await (await handler(requestWithCookie(token))).json()).error.code).toBe("ACCOUNT_DEACTIVATED");
+  });
 });

@@ -163,14 +163,14 @@ export function withAuth<Params = undefined>(
     return withErrorHandling(async () => {
       const resolved = await resolveSession(request);
       if (!resolved) {
-        throw new ApiError(401, "Authentication required");
+        throw ApiError.coded(401, "AUTH_REQUIRED", "Authentication required");
       }
       const { user, token, expiresAt } = resolved;
       if (!user.isActive) {
-        throw new ApiError(403, "Account deactivated");
+        throw ApiError.coded(403, "ACCOUNT_DEACTIVATED", "Account deactivated");
       }
       if (options?.roles && !options.roles.includes(user.role)) {
-        throw new ApiError(403, "Forbidden");
+        throw ApiError.coded(403, "FORBIDDEN_ROLE", "Forbidden");
       }
 
       const response = await handler(request, { user, params: routeCtx?.params as Params });
