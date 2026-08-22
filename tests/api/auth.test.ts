@@ -3,7 +3,7 @@ import { POST as login } from "@/app/api/auth/login/route";
 import { POST as register } from "@/app/api/auth/register/route";
 import { POST as logout } from "@/app/api/auth/logout/route";
 import { GET as me } from "@/app/api/auth/me/route";
-import { SESSION_COOKIE_NAME } from "@/lib/auth";
+import { hashSessionToken, SESSION_COOKIE_NAME } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
 
@@ -20,6 +20,16 @@ function jsonRequest(body: unknown) {
     body: JSON.stringify(body),
   });
 }
+
+function rawRequest(url: string, body: string, headers: Record<string, string> = {}) {
+  return new Request(url, {
+    method: "POST",
+    headers: { "content-type": "application/json", ...headers },
+    body,
+  });
+}
+
+const LOGIN_URL = "http://localhost/api/auth/login";
 
 describe("POST /api/auth/login", () => {
   it("sets a session cookie and creates a Session row on success", async () => {
@@ -38,6 +48,138 @@ describe("POST /api/auth/login", () => {
     const res = await login(jsonRequest({ identifier: seed.retail.username, password: "wrong-password" }));
     expect(res.status).toBe(401);
     expect(res.headers.get("set-cookie")).toBeNull();
+  });
+  it("logs in by normalized phone number, not just username", async () => {
+    const res = await login(jsonRequest({ identifier: "+989120000102", password: seed.retail.password }));
+    expect(res.status).toBe(200);
+    expect((await res.json()).data.id).toBe(seed.retail.id);
+  });
+
+  it("accepts the local 0912… spelling of a stored +98 number", async () => {
+    const res = await login(jsonRequest({ identifier: "09120000102", password: seed.retail.password }));
+    expect(res.status).toBe(200);
+    expect((await res.json()).data.id).toBe(seed.retail.id);
+  });
+
+  it("returns a byte-identical 401 for an unknown identifier and a wrong password", async () => {
+    const unknown = await login(jsonRequest({ identifier: "no.such.user", password: seed.retail.password }));
+    const wrongPw = await login(jsonRequest({ identifier: seed.retail.username, password: "definitely-wrong" }));
+
+    expect(unknown.status).toBe(401);
+    expect(wrongPw.status).toBe(401);
+    expect(await unknown.json()).toEqual(await wrongPw.json());
+    expect(unknown.headers.get("set-cookie")).toBeNull();
+  });
+
+  it("tags a failed login with INVALID_CREDENTIALS", async () => {
+    const res = await login(jsonRequest({ identifier: seed.retail.username, password: "nope" }));
+    expect((await res.json()).error.code).toBe("INVALID_CREDENTIALS");
+  });
+
+  it("pays the bcrypt cost even when no user matched (no timing oracle)", async () => {
+    const start = Date.now();
+    const res = await login(jsonRequest({ identifier: "no.such.user", password: "whatever" }));
+    const elapsed = Date.now() - start;
+
+    expect(res.status).toBe(401);
+    // Floor only, never a ceiling or a ratio -> cannot flake on a loaded runner.
+    // A cost-10 compare is ~120ms; the pre-fix code returned in ~1ms.
+    expect(elapsed).toBeGreaterThan(20);
+  });
+
+  it("returns 403 ACCOUNT_DEACTIVATED at the login route itself", async () => {
+    await prisma.user.update({ where: { id: seed.retail.id }, data: { isActive: false } });
+    const res = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+
+    expect(res.status).toBe(403);
+    expect((await res.json()).error.code).toBe("ACCOUNT_DEACTIVATED");
+    expect(res.headers.get("set-cookie")).toBeNull();
+    expect(await prisma.session.count({ where: { userId: seed.retail.id } })).toBe(0);
+  });
+
+  it("returns 400 MALFORMED_JSON (not 500) for an unparseable body", async () => {
+    const res = await login(rawRequest(LOGIN_URL, "{ identifier: "));
+    expect(res.status).toBe(400);
+    expect((await res.json()).error.code).toBe("MALFORMED_JSON");
+  });
+
+  it("returns 400 VALIDATION_FAILED for a missing, empty, or too-short field", async () => {
+    for (const body of [
+      { password: "Password@123" },                       // identifier missing
+      { identifier: seed.retail.username },               // password missing
+      { identifier: seed.retail.username, password: "" }, // empty password
+      { identifier: "ab", password: "Password@123" },     // identifier too short
+    ]) {
+      const res = await login(jsonRequest(body));
+      expect(res.status).toBe(400);
+      const parsed = await res.json();
+      expect(parsed.error.code).toBe("VALIDATION_FAILED");
+      expect(parsed.error.details).toBeTruthy();
+    }
+  });
+
+  it("returns the sanitized user with no passwordHash", async () => {
+    const res = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    const { data } = await res.json();
+
+    expect(Object.keys(data)).not.toContain("passwordHash");
+    expect(data).toMatchObject({
+      id: seed.retail.id,
+      username: seed.retail.username,
+      role: "RETAIL",
+      isActive: true,
+    });
+    expect(typeof data.createdAt).toBe("string"); // ISO string, not a Date
+  });
+
+  it("sets the session cookie with Path=/, HttpOnly, SameSite and an Expires", async () => {
+    const res = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    const setCookie = res.headers.get("set-cookie")!;
+
+    expect(setCookie).toContain(`${SESSION_COOKIE_NAME}=`);
+    expect(setCookie).toContain("Path=/");
+    expect(setCookie).toContain("HttpOnly");
+    expect(setCookie).toMatch(/SameSite=lax/i); // Next serializes it LOWERCASE
+    expect(setCookie).toMatch(/Expires=/);
+    expect(setCookie).not.toContain("Secure"); // NODE_ENV !== production
+  });
+
+  it("persists the request's user-agent on the Session row", async () => {
+    await login(
+      rawRequest(
+        LOGIN_URL,
+        JSON.stringify({ identifier: seed.retail.username, password: seed.retail.password }),
+        { "user-agent": "HamiTest/1.0 (vitest)" },
+      ),
+    );
+    const session = await prisma.session.findFirstOrThrow({ where: { userId: seed.retail.id } });
+    expect(session.userAgent).toBe("HamiTest/1.0 (vitest)");
+  });
+
+  it("stores only a SHA-256 hash of the token, never the token itself", async () => {
+    const res = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    const token = res.headers.get("set-cookie")!.split(";")[0].split("=")[1];
+
+    const session = await prisma.session.findFirstOrThrow({ where: { userId: seed.retail.id } });
+    expect(token).toMatch(/^[0-9a-f]{64}$/);
+    expect(session.tokenHash).not.toBe(token);
+    expect(session.tokenHash).toBe(hashSessionToken(token));
+  });
+
+  it("keeps a second device signed in when the first logs out", async () => {
+    const a = (await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password })))
+      .headers.get("set-cookie")!.split(";")[0];
+    const b = (await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password })))
+      .headers.get("set-cookie")!.split(";")[0];
+
+    expect(a).not.toBe(b);
+    expect(await prisma.session.count({ where: { userId: seed.retail.id } })).toBe(2);
+
+    await logout(new Request("http://localhost/api/auth/logout", { method: "POST", headers: { cookie: a } }));
+
+    expect((await me(new Request("http://localhost/api/auth/me", { headers: { cookie: a } }))).status).toBe(401);
+    expect((await me(new Request("http://localhost/api/auth/me", { headers: { cookie: b } }))).status).toBe(200);
+    expect(await prisma.session.count({ where: { userId: seed.retail.id } })).toBe(1);
   });
 });
 

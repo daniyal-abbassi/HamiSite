@@ -8,6 +8,15 @@ import { ApiError, withErrorHandling } from "@/lib/http";
 
 const SALT_ROUNDS = 10;
 
+/** A pre-computed bcrypt hash (cost 10, matching SALT_ROUNDS) of a random string
+ * no user can hold as a password. Login compares against this when no user
+ * matched, so an unknown identifier costs the same ~120ms as a known one.
+ *
+ * MUST stay a well-formed bcrypt hash: bcryptjs short-circuits to `false` in
+ * ~0ms on a malformed one, silently restoring the enumeration oracle.
+ * tests/unit/auth.test.ts asserts both the shape and the cost. */
+export const DUMMY_PASSWORD_HASH = "$2a$10$c8CwoSevOhlL0yNH7ZT54er8ILWbqBXIs8vkgZE73YG4X2C20PRdC";
+
 export async function hashPassword(password: string) {
   return bcrypt.hash(password, SALT_ROUNDS);
 }

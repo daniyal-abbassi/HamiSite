@@ -1,48 +1,42 @@
-import { z } from "zod";
-import { createSession, sanitizeUser, verifyPassword, setSessionCookie } from "@/lib/auth";
-import { ApiError, ok, withErrorHandling } from "@/lib/http";
+import { createSession, sanitizeUser, verifyPassword, setSessionCookie, DUMMY_PASSWORD_HASH } from "@/lib/auth";
+import { ApiError, ok, parseJsonBody, withErrorHandling } from "@/lib/http";
+import { normalizeIranianMobile } from "@/lib/phone";
 import { prisma } from "@/lib/prisma";
-
-const loginSchema = z.object({
-  // Accepts either the username or the phone number as the identifier.
-  identifier: z.string().min(3),
-  password: z.string().min(1),
-});
+import { loginSchema } from "@/lib/schemas/auth";
+import type { LoginResponse } from "@/types/auth";
 
 export async function POST(request: Request) {
   return withErrorHandling(async () => {
-    const body = await request.json();
-    const parsed = loginSchema.safeParse(body);
+    const { identifier, password } = await parseJsonBody(request, loginSchema);
 
-    if (!parsed.success) {
-      throw new ApiError(400, "Invalid request body", parsed.error.flatten());
-    }
-
-    const { identifier, password } = parsed.data;
+    // Accept either spelling of an Iranian mobile. normalizeIranianMobile is a
+    // no-op on anything that isn't one, so usernames pass through untouched.
+    const normalized = normalizeIranianMobile(identifier);
+    const phoneCandidates = normalized === identifier ? [identifier] : [identifier, normalized];
 
     const user = await prisma.user.findFirst({
-      where: {
-        OR: [{ username: identifier }, { phoneNumber: identifier }],
-      },
+      where: { OR: [{ username: identifier }, { phoneNumber: { in: phoneCandidates } }] },
     });
 
-    // Same error for "not found" and "wrong password" to avoid leaking
-    // which accounts exist.
-    if (!user) {
-      throw new ApiError(401, "Invalid credentials");
+    // Always run exactly one bcrypt compare, even with no matching user, so
+    // response time is identical for "no such account" and "wrong password".
+    // Without this, latency is a reliable user-enumeration oracle (~120ms vs ~1ms).
+    const passwordMatches = await verifyPassword(password, user?.passwordHash ?? DUMMY_PASSWORD_HASH);
+
+    // Same status, message and code for both failures.
+    // `!user ||` is redundant at runtime but required for TS to narrow below.
+    if (!user || !passwordMatches) {
+      throw ApiError.coded(401, "INVALID_CREDENTIALS", "Invalid credentials");
     }
 
-    const passwordMatches = await verifyPassword(password, user.passwordHash);
-    if (!passwordMatches) {
-      throw new ApiError(401, "Invalid credentials");
-    }
-
+    // Checked AFTER the password so a deactivated account isn't discoverable
+    // without valid credentials.
     if (!user.isActive) {
-      throw new ApiError(403, "This account has been deactivated");
+      throw ApiError.coded(403, "ACCOUNT_DEACTIVATED", "This account has been deactivated");
     }
 
     const { token, session } = await createSession(user.id, request.headers.get("user-agent"));
-    const response = ok(sanitizeUser(user), { message: "Login successful" });
+    const response = ok<LoginResponse>(sanitizeUser(user), { message: "Login successful" });
     setSessionCookie(response, token, session.expiresAt);
 
     return response;

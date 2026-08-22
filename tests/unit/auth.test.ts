@@ -1,4 +1,6 @@
 import { describe, expect, it } from "vitest";
+import { DUMMY_PASSWORD_HASH, verifyPassword } from "@/lib/auth";
+import { normalizeIranianMobile } from "@/lib/phone";
 import {
   generateSessionToken,
   getSessionTokenFromRequest,
@@ -42,5 +44,33 @@ describe("cookie parsing robustness", () => {
     });
     // `c` has no '=' and must be skipped rather than producing a garbage key.
     expect(getSessionTokenFromRequest(req)).toBeNull();
+  });
+});
+
+describe("login timing equalization", () => {
+  it("DUMMY_PASSWORD_HASH is a well-formed cost-10 bcrypt hash", () => {
+    // A malformed hash makes bcrypt.compare return false in ~0ms, silently
+    // reintroducing the user-enumeration oracle this constant exists to close.
+    expect(DUMMY_PASSWORD_HASH).toMatch(/^\$2[aby]\$10\$[./A-Za-z0-9]{53}$/);
+  });
+
+  it("comparing against it costs real bcrypt work and never matches", async () => {
+    const start = Date.now();
+    await expect(verifyPassword("anything at all", DUMMY_PASSWORD_HASH)).resolves.toBe(false);
+    expect(Date.now() - start).toBeGreaterThan(20);
+  });
+});
+
+describe("normalizeIranianMobile", () => {
+  it("canonicalizes the common Iranian mobile spellings to E.164", () => {
+    expect(normalizeIranianMobile("09121112233")).toBe("+989121112233");
+    expect(normalizeIranianMobile("9121112233")).toBe("+989121112233");
+    expect(normalizeIranianMobile("0912 111 2233")).toBe("+989121112233");
+    expect(normalizeIranianMobile("+989121112233")).toBe("+989121112233");
+  });
+
+  it("leaves anything unrecognised untouched so usernames pass through", () => {
+    expect(normalizeIranianMobile("test.retail")).toBe("test.retail");
+    expect(normalizeIranianMobile("admin")).toBe("admin");
   });
 });
