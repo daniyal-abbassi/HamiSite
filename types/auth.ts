@@ -1,7 +1,7 @@
 import type { Role } from "@prisma/client";
 import type { z } from "zod";
 import type { sanitizeUser } from "@/lib/auth";
-import type { loginSchema } from "@/lib/schemas/auth";
+import type { loginSchema, registerSchema } from "@/lib/schemas/auth";
 
 /** The ONLY user shape any endpoint returns. Wire types, not DB types:
  * Decimal -> number, DateTime -> ISO string. `passwordHash` is never present. */
@@ -43,5 +43,9 @@ export type _PublicUserMatchesSanitizeUser = AssertTrue<Exact<PublicUser, Return
 
 export type LoginRequest = z.infer<typeof loginSchema>;
 export type LoginResponse = PublicUser;
+/** NOTE: this is the schema's OUTPUT type — `phoneNumber` is already normalized
+ * to E.164. For the shape a client actually sends, use z.input<typeof registerSchema>. */
+export type RegisterRequest = z.infer<typeof registerSchema>;
+export type RegisterResponse = PublicUser;
 export type MeResponse = PublicUser;
 export type LogoutResponse = { loggedOut: true };

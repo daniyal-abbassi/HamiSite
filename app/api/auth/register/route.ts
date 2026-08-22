@@ -1,37 +1,22 @@
-import { Role } from "@prisma/client";
-import { z } from "zod";
+import { Prisma, Role } from "@prisma/client";
 import { createSession, hashPassword, sanitizeUser, setSessionCookie } from "@/lib/auth";
-import { ApiError, ok, withErrorHandling } from "@/lib/http";
+import { ApiError, ok, parseJsonBody, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
+import { registerSchema } from "@/lib/schemas/auth";
+import type { RegisterResponse } from "@/types/auth";
 
-// Self-registration is limited to storefront/B2B roles — ADMIN accounts are
-// provisioned out-of-band (seed script / internal tooling).
-const registerSchema = z.object({
-  username: z.string().min(3).max(50),
-  password: z.string().min(6).max(100),
-  phoneNumber: z.string().min(5).max(20),
-  email: z.string().email().optional(),
-  firstName: z.string().optional(),
-  lastName: z.string().optional(),
-  city: z.string().optional(),
-  role: z.enum([Role.RETAIL, Role.WHOLESALE, Role.AGENT]).optional(),
-  shopName: z.string().optional(),
-  businessLicenseNumber: z.string().optional(),
-  nationalNumber: z.string().optional(),
-  agentId: z.number().int().positive().optional(),
-  referer: z.string().optional(),
-});
+/** Prisma reports the violated unique index in `meta.target`; on Postgres that's
+ * an array of COLUMN names. username/email/phoneNumber have no @map, so column
+ * names equal field names. Defensive about the shape anyway. */
+function duplicateFieldFrom(error: Prisma.PrismaClientKnownRequestError): string {
+  const target = (error.meta as { target?: unknown } | undefined)?.target;
+  const first = Array.isArray(target) ? target[0] : target;
+  return typeof first === "string" ? first : "account";
+}
 
 export async function POST(request: Request) {
   return withErrorHandling(async () => {
-    const body = await request.json();
-    const parsed = registerSchema.safeParse(body);
-
-    if (!parsed.success) {
-      throw new ApiError(400, "Invalid request body", parsed.error.flatten());
-    }
-
-    const input = parsed.data;
+    const input = await parseJsonBody(request, registerSchema);
     const role = input.role ?? Role.RETAIL;
 
     const existing = await prisma.user.findFirst({
@@ -52,7 +37,7 @@ export async function POST(request: Request) {
           : existing.phoneNumber === input.phoneNumber
             ? "phoneNumber"
             : "email";
-      throw new ApiError(409, `An account with this ${field} already exists`);
+      throw ApiError.coded(409, "DUPLICATE_ACCOUNT", `An account with this ${field} already exists`);
     }
 
     if (input.agentId) {
@@ -72,27 +57,44 @@ export async function POST(request: Request) {
 
     const passwordHash = await hashPassword(input.password);
 
-    const user = await prisma.user.create({
-      data: {
-        username: input.username,
-        email: input.email,
-        passwordHash,
-        role,
-        firstName: input.firstName,
-        lastName: input.lastName,
-        phoneNumber: input.phoneNumber,
-        city: input.city,
-        shopName: role === Role.WHOLESALE ? input.shopName : undefined,
-        businessLicenseNumber: role === Role.WHOLESALE ? input.businessLicenseNumber : undefined,
-        nationalNumber: input.nationalNumber,
-        agentId: input.agentId,
-        referer: input.referer,
-        creationMethod: "password",
-      },
-    });
+    let user;
+    try {
+      user = await prisma.user.create({
+        data: {
+          username: input.username,
+          email: input.email,
+          passwordHash,
+          role,
+          firstName: input.firstName,
+          lastName: input.lastName,
+          phoneNumber: input.phoneNumber,
+          city: input.city,
+          shopName: role === Role.WHOLESALE ? input.shopName : undefined,
+          businessLicenseNumber: role === Role.WHOLESALE ? input.businessLicenseNumber : undefined,
+          nationalNumber: input.nationalNumber,
+          agentId: input.agentId,
+          referer: input.referer,
+          creationMethod: "password",
+        },
+      });
+    } catch (error) {
+      // The pre-check above is best-effort: two concurrent registrations can
+      // both pass it. The unique index is what actually prevents the duplicate;
+      // this turns its violation into the same 409 instead of a 500.
+      // (A transaction would NOT help — at READ COMMITTED both txns read
+      // "no existing user" and both insert.)
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
+        throw ApiError.coded(
+          409,
+          "DUPLICATE_ACCOUNT",
+          `An account with this ${duplicateFieldFrom(error)} already exists`,
+        );
+      }
+      throw error;
+    }
 
     const { token, session } = await createSession(user.id, request.headers.get("user-agent"));
-    const response = ok(sanitizeUser(user), { message: "Account created" });
+    const response = ok<RegisterResponse>(sanitizeUser(user), { message: "Account created" });
     setSessionCookie(response, token, session.expiresAt);
 
     return response;

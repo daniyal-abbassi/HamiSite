@@ -1,3 +1,4 @@
+import { Role } from "@prisma/client";
 import { beforeEach, describe, expect, it } from "vitest";
 import { POST as login } from "@/app/api/auth/login/route";
 import { POST as register } from "@/app/api/auth/register/route";
@@ -202,6 +203,105 @@ describe("POST /api/auth/register", () => {
     );
     expect(res.status).toBe(409);
     expect(res.headers.get("set-cookie")).toBeNull();
+  });
+  it("returns 409 DUPLICATE_ACCOUNT for a duplicate phoneNumber", async () => {
+    const res = await register(jsonRequest({
+      username: "brand.new", password: "Password@123", phoneNumber: "+989120000102",
+    }));
+    expect(res.status).toBe(409);
+    const body = await res.json();
+    expect(body.error.code).toBe("DUPLICATE_ACCOUNT");
+    expect(body.error.message).toContain("phoneNumber");
+    expect(res.headers.get("set-cookie")).toBeNull();
+  });
+
+  it("returns 409 DUPLICATE_ACCOUNT for a duplicate email", async () => {
+    await prisma.user.update({ where: { id: seed.retail.id }, data: { email: "taken@example.com" } });
+    const res = await register(jsonRequest({
+      username: "brand.new2", password: "Password@123",
+      phoneNumber: "+989120000197", email: "taken@example.com",
+    }));
+    expect(res.status).toBe(409);
+    expect((await res.json()).error.message).toContain("email");
+  });
+
+  it("rejects self-registration as ADMIN or AGENT", async () => {
+    for (const [role, digit] of [["ADMIN", "5"], ["AGENT", "6"]] as const) {
+      const res = await register(jsonRequest({
+        username: `escalate.${role}`, password: "Password@123",
+        phoneNumber: `+98912000019${digit}`, role,
+      }));
+      expect(res.status).toBe(400);
+      expect((await res.json()).error.code).toBe("VALIDATION_FAILED");
+      expect(await prisma.user.findUnique({ where: { username: `escalate.${role}` } })).toBeNull();
+    }
+  });
+
+  it("returns 400 for a password under 6 characters", async () => {
+    const res = await register(jsonRequest({
+      username: "shorty", password: "abc12", phoneNumber: "+989120000194",
+    }));
+    expect(res.status).toBe(400);
+    expect((await res.json()).error.details.fieldErrors.password).toBeTruthy();
+  });
+
+  it("drops shopName/businessLicenseNumber for a non-WHOLESALE role", async () => {
+    await register(jsonRequest({
+      username: "retail.shop", password: "Password@123", phoneNumber: "+989120000193",
+      role: "RETAIL", shopName: "Should Be Dropped", businessLicenseNumber: "LIC-999",
+    }));
+    const user = await prisma.user.findUniqueOrThrow({ where: { username: "retail.shop" } });
+    expect(user.shopName).toBeNull();
+    expect(user.businessLicenseNumber).toBeNull();
+  });
+
+  it("keeps shopName/businessLicenseNumber for WHOLESALE", async () => {
+    await register(jsonRequest({
+      username: "wholesale.shop", password: "Password@123", phoneNumber: "+989120000192",
+      role: "WHOLESALE", shopName: "Hami Distribution", businessLicenseNumber: "LIC-123",
+    }));
+    const user = await prisma.user.findUniqueOrThrow({ where: { username: "wholesale.shop" } });
+    expect(user.shopName).toBe("Hami Distribution");
+  });
+
+  it("rejects agentId on a non-WHOLESALE account", async () => {
+    const res = await register(jsonRequest({
+      username: "retail.agent", password: "Password@123", phoneNumber: "+989120000191",
+      role: "RETAIL", agentId: seed.admin.id,
+    }));
+    expect(res.status).toBe(400);
+    expect((await res.json()).error.message).toContain("WHOLESALE");
+  });
+
+  it("rejects an agentId that doesn't reference an active AGENT", async () => {
+    const agent = await prisma.user.create({
+      data: { username: "an.agent", phoneNumber: "+989120000190",
+              passwordHash: "x", role: Role.AGENT, isActive: false },
+    });
+    const res = await register(jsonRequest({
+      username: "ws.badagent", password: "Password@123", phoneNumber: "+989120000189",
+      role: "WHOLESALE", agentId: agent.id,
+    }));
+    expect(res.status).toBe(400);
+    expect((await res.json()).error.message).toContain("active AGENT");
+  });
+
+  it("normalizes an Iranian mobile to E.164 and rejects the other spelling as a duplicate", async () => {
+    await register(jsonRequest({ username: "phone.norm", password: "Password@123", phoneNumber: "09121112233" }));
+    const user = await prisma.user.findUniqueOrThrow({ where: { username: "phone.norm" } });
+    expect(user.phoneNumber).toBe("+989121112233");
+
+    const dup = await register(jsonRequest({
+      username: "phone.norm2", password: "Password@123", phoneNumber: "+989121112233",
+    }));
+    expect(dup.status).toBe(409);
+    expect((await dup.json()).error.code).toBe("DUPLICATE_ACCOUNT");
+  });
+
+  it("returns 400 MALFORMED_JSON for an unparseable body", async () => {
+    const res = await register(rawRequest("http://localhost/api/auth/register", "{{"));
+    expect(res.status).toBe(400);
+    expect((await res.json()).error.code).toBe("MALFORMED_JSON");
   });
 });
 
