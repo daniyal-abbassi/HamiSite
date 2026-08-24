@@ -2,9 +2,32 @@
 
 Next.js (App Router, API routes only) + Prisma/PostgreSQL backend for a B2C
 retail storefront that also serves B2B wholesale/agent partners (mobile phone
-distribution). No frontend lives in this repo — see
-`docs/superpowers/specs/2026-08-12-backend-completion-design.md` for what's
-explicitly out of scope.
+distribution). See
+`docs/superpowers/specs/2026-08-12-backend-completion-design.md` for what was
+explicitly out of scope when the backend was built.
+
+## The frontend
+
+`hami-hamrah-luxury/` holds a Persian-language Vite + React storefront. It is a
+**migration in progress and does not build yet.** It arrived as an export from
+the Manus app builder with its `server/`, `shared/` and `client/public/`
+directories stripped out, which means:
+
+- Its data layer is **tRPC** against a server that is not in this repo. This
+  backend serves **REST**, has no tRPC router, and none is planned. Rewiring the
+  frontend to the REST API is the next phase of work.
+- Its auth is a Manus OAuth portal flow. This backend uses an httpOnly session
+  cookie. `docs/api/auth.md` is the contract to build against — it is pinned by
+  tests, so it cannot silently go stale.
+- All 22 of its media assets are missing. See
+  `hami-hamrah-luxury/client/public/manus-storage/MISSING-ASSETS.md`.
+- It is **excluded from this project's `tsconfig.json`** and has its own. Running
+  `npm run typecheck` at the root checks the backend only, by design — the two
+  apps have incompatible TypeScript and React versions.
+
+Still load-bearing and deliberately left broken until the rewire: `main.tsx`,
+`client/src/const.ts`, `client/src/lib/trpc.ts`, and the `trpc.*` calls in
+`Home.tsx` / `ProductDetail.tsx`.
 
 ## Setup
 
@@ -80,7 +103,7 @@ npm run typecheck
   back-office routes, all `Role.ADMIN`-gated).
 - `lib/` — shared request/response helpers, auth, pricing engine.
 - `prisma/schema.prisma` — the data model; field names/enums are aligned with
-  `openapi.json` (the legacy shop's own OpenAPI doc) wherever an equivalent
+  `oldWebsite-openapi.json` (the legacy shop's own OpenAPI doc) wherever an equivalent
   resource exists.
 - `prisma/legacy-import/` — the legacy-data-import pipeline `db:seed` uses
   (HTTP client + one pure-mapper module per resource).
@@ -89,3 +112,4 @@ npm run typecheck
   reading before touching a given area — they document *why*, not just what.
 - `tests/` — integration tests against a real (test-schema) Postgres
   database, not mocks.
+- `hami-hamrah-luxury/` — the frontend, mid-migration (see above).
