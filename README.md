@@ -1,8 +1,9 @@
-# Mixin E-Commerce API
+# Mixin → HAMI E-Commerce Platform
 
-Next.js (App Router, API routes only) + Prisma/PostgreSQL backend for a B2C
-retail storefront that also serves B2B wholesale/agent partners (mobile phone
-distribution). See
+Next.js 14 (App Router) + Prisma/PostgreSQL — a B2C retail storefront that also
+serves B2B wholesale/agent partners (mobile phone distribution). The REST API
+is complete and test-pinned; **the storefront frontend is being built in this
+same app** (same-origin, Persian/RTL). See
 `docs/superpowers/specs/2026-08-12-backend-completion-design.md` for what was
 explicitly out of scope when the backend was built.
 

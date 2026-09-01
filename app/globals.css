@@ -1,0 +1,114 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * HAMI brand tokens — ported from the «آرشیو بورگوندی شبانه» design
+ * (docs/inspires/HamiHamrah-DNA-Brand-Color/.../index.css).
+ * Dark burgundy is the default theme; a warm-paper light theme is available
+ * via the `.light` class for surfaces that need contrast (forms, invoices).
+ */
+:root {
+  /* RGB triplets (Tailwind consumes via `rgb(var(--x) / <alpha>)`) */
+  --background: 100 2 17;      /* #640211 — wine RAL 3004 */
+  --foreground: 244 239 232;   /* #f4efe8 */
+
+  --card: 81 3 15;             /* #51030f */
+  --card-foreground: 244 239 232;
+  --popover: 66 4 13;          /* #42040d */
+  --popover-foreground: 244 239 232;
+
+  --primary: 212 175 106;      /* #d4af6a champagne */
+  --primary-foreground: 40 1 7;
+
+  --secondary: 66 4 13;
+  --secondary-foreground: 244 239 232;
+
+  --muted: 81 3 15;
+  --muted-foreground: 208 180 170;
+
+  --accent: 66 4 13;
+  --accent-foreground: 240 217 171;
+
+  --destructive: 229 72 77;
+  --destructive-foreground: 255 245 245;
+
+  --border: 239 220 184;       /* champagne hairline @ 15% */
+  --input: 239 220 184;        /* @ 22% */
+  --ring: 212 175 106;
+
+  --radius: 0.25rem;
+}
+
+.light {
+  --background: 242 244 237;   /* #f2f4ed warm paper */
+  --foreground: 40 28 29;      /* #281c1d */
+  --card: 255 255 255;
+  --card-foreground: 40 28 29;
+  --popover: 255 255 255;
+  --popover-foreground: 40 28 29;
+  --primary: 100 2 17;         /* wine becomes the accent on paper */
+  --primary-foreground: 255 250 243;
+  --secondary: 233 226 216;    /* #e9e2d8 */
+  --secondary-foreground: 40 28 29;
+  --muted: 233 226 216;
+  --muted-foreground: 117 107 100;
+  --accent: 100 2 17;
+  --accent-foreground: 240 217 171;
+  --border: 40 28 29;          /* @ 15% */
+  --input: 40 28 29;
+  --ring: 100 2 17;
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    background-image:
+      radial-gradient(circle at 13% 8%, rgba(255, 232, 190, 0.07), transparent 22%),
+      radial-gradient(circle at 87% 75%, rgba(31, 0, 5, 0.26), transparent 28%);
+    background-attachment: fixed;
+  }
+  /* champagne focus ring — brand accessibility signature */
+  :where(a, button, input, select, textarea):focus-visible {
+    outline: 2px solid var(--champagne);
+    outline-offset: 3px;
+  }
+}
+
+@layer components {
+  /* thin champagne hairline used across the editorial layout */
+  .brand-hairline {
+    @apply h-px w-full;
+    background: linear-gradient(
+      to left,
+      transparent,
+      rgba(212, 175, 106, 0.55),
+      transparent
+    );
+  }
+  /* numbered section label: «۰۱ — عنوان بخش» */
+  .section-label {
+    @apply flex items-center gap-3;
+  }
+  .section-label > span {
+    @apply font-mono text-[10px] tracking-[0.06em] text-champagne;
+  }
+  .section-label > i {
+    @apply h-px w-10 bg-champagne/60;
+  }
+  .section-label > p {
+    @apply m-0 text-[11px] font-bold uppercase tracking-[0.03em] text-foreground/70;
+  }
+  /* sticky cream header surface, faithful to the luxury reference */
+  .site-header {
+    @apply sticky top-0 z-30;
+    backdrop-filter: blur(18px);
+    background: rgba(244, 241, 235, 0.92);
+  }
+}

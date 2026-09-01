@@ -1,7 +1,7 @@
 {
-  "name": "mixin-ecommerce-api",
+  "name": "hami-hamrah-store",
   "version": "1.0.0",
-  "description": "PostgreSQL/Prisma data layer for the Mixin B2C + B2B (mobile phone distribution) e-commerce platform",
+  "description": "Hami Hamrah — Persian B2C + B2B (mobile phone & accessories) e-commerce platform: Next.js App Router (REST API + storefront) with Prisma/PostgreSQL",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -27,18 +27,26 @@
   "dependencies": {
     "@prisma/client": "^5.20.0",
     "bcryptjs": "^2.4.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.38.0",
     "next": "^14.2.14",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
+    "tailwind-merge": "^3.6.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.14.9",
     "@types/react": "19.2.18",
+    "autoprefixer": "^10.5.4",
     "dotenv": "^17.4.2",
     "dotenv-cli": "^11.0.0",
+    "postcss": "^8.5.26",
     "prisma": "^5.20.0",
+    "tailwindcss": "^3.4.19",
+    "tailwindcss-animate": "^1.0.7",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.4",
     "vitest": "^4.1.10"
