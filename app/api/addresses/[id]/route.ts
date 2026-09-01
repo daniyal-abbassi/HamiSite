@@ -1,0 +1,109 @@
+import { z } from "zod";
+import { withAuth } from "@/lib/auth";
+import { ApiError, ok, withErrorHandling } from "@/lib/http";
+import { prisma } from "@/lib/prisma";
+
+const updateAddressSchema = z.object({
+  firstName: z.string().optional(),
+  lastName: z.string().optional(),
+  phoneNumber: z.string().optional(),
+  province: z.string().optional(),
+  city: z.string().min(1).optional(),
+  address: z.string().min(1).optional(),
+  postalCode: z.string().optional(),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  isDefault: z.boolean().optional(),
+});
+
+function parseId(raw: string) {
+  const id = Number(raw);
+  if (!Number.isInteger(id) || id <= 0) {
+    throw new ApiError(400, "Invalid address id");
+  }
+  return id;
+}
+
+async function loadOwnedAddress(id: number, ownerId: number) {
+  const address = await prisma.address.findUnique({ where: { id } });
+  if (!address || address.userId !== ownerId) {
+    throw new ApiError(404, "Address not found");
+  }
+  return address;
+}
+
+export const GET = withAuth<{ id: string }>(async (_request, { user, params }) => {
+  return withErrorHandling(async () => {
+    const id = parseId(params.id);
+
+    const address = await loadOwnedAddress(id, user.id);
+
+    return ok(address);
+  });
+});
+
+export const PATCH = withAuth<{ id: string }>(async (request, { user, params }) => {
+  return withErrorHandling(async () => {
+    const id = parseId(params.id);
+    const body = await request.json();
+    const parsed = updateAddressSchema.safeParse(body);
+
+    if (!parsed.success) {
+      throw new ApiError(400, "Invalid request body", parsed.error.flatten());
+    }
+
+    const existing = await loadOwnedAddress(id, user.id);
+
+    const input = parsed.data;
+
+    const address = await prisma.$transaction(async (tx) => {
+      if (input.isDefault === true) {
+        await tx.address.updateMany({
+          where: { userId: existing.userId, isDefault: true, id: { not: id } },
+          data: { isDefault: false },
+        });
+      }
+
+      return tx.address.update({
+        where: { id },
+        data: {
+          firstName: input.firstName,
+          lastName: input.lastName,
+          phoneNumber: input.phoneNumber,
+          province: input.province,
+          city: input.city,
+          address: input.address,
+          postalCode: input.postalCode,
+          latitude: input.latitude,
+          longitude: input.longitude,
+          isDefault: input.isDefault,
+        },
+      });
+    });
+
+    return ok(address, { message: "Address updated" });
+  });
+});
+
+export const DELETE = withAuth<{ id: string }>(async (_request, { user, params }) => {
+  return withErrorHandling(async () => {
+    const id = parseId(params.id);
+
+    const existing = await loadOwnedAddress(id, user.id);
+
+    await prisma.address.delete({ where: { id } });
+
+    if (existing.isDefault) {
+      const nextDefault = await prisma.address.findFirst({
+        where: { userId: existing.userId },
+        orderBy: { createdAt: "desc" },
+      });
+
+      if (nextDefault) {
+        await prisma.address.update({ where: { id: nextDefault.id }, data: { isDefault: true } });
+      }
+    }
+
+    return ok({ id }, { message: "Address deleted" });
+  });
+});

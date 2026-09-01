@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: hami_app
+          POSTGRES_PASSWORD: hami_app_pw
+          POSTGRES_DB: hami_site_api
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    env:
+      DATABASE_URL: "postgresql://hami_app:hami_app_pw@127.0.0.1:5432/hami_site_api?schema=test"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - run: npm ci
+
+      # npm test/db:test:reset go through dotenv-cli's `-e .env.test`, so
+      # that file needs to exist in CI too (mirrors .env.example's shape).
+      - name: Write .env.test
+        run: echo 'DATABASE_URL="${{ env.DATABASE_URL }}"' > .env.test
+
+      - run: npx prisma generate
+
+      - name: Push schema to the test schema
+        run: npm run db:test:reset
+
+      - run: npm run typecheck
+
+      - run: npm test
