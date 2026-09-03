@@ -1,11 +1,13 @@
-/* Home page bespoke editorial styles — ported from the luxury reference's
-   index.css (only the pieces Tailwind can't express cleanly). */
+/* Home page bespoke editorial styles — the pieces Tailwind can't express
+   cleanly. Repainted for the "Aura" world (near-black canvas, oxblood glow,
+   muted gold, full rounded geometry) — see the direction contract at the
+   top of app/layout.tsx. */
 
 /* ---------- scroll reveal ---------- */
 .reveal {
   opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.65s cubic-bezier(0.23, 1, 0.32, 1), transform 0.65s cubic-bezier(0.23, 1, 0.32, 1);
+  transform: translateY(26px);
+  transition: opacity 0.85s cubic-bezier(0.2, 0.7, 0.3, 1), transform 0.85s cubic-bezier(0.2, 0.7, 0.3, 1);
 }
 .reveal--visible {
   opacity: 1;
@@ -17,57 +19,6 @@
     transform: none;
     transition: none;
   }
-}
-
-/* ---------- hero atmosphere (missing video → CSS composition) ---------- */
-.hero-surface {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-}
-.hero-surface::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background:
-    radial-gradient(circle at 18% 12%, rgba(255, 232, 190, 0.1), transparent 30%),
-    radial-gradient(circle at 82% 80%, rgba(31, 0, 5, 0.4), transparent 34%),
-    linear-gradient(160deg, #42040d 0%, #640211 52%, #280107 100%);
-}
-.hero-surface::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-  opacity: 0.22;
-  background-image: radial-gradient(rgba(232, 205, 151, 0.2) 0.45px, transparent 0.65px);
-  background-size: 6px 6px;
-}
-.hero-frame {
-  position: relative;
-  aspect-ratio: 1;
-  border: 1px solid rgba(212, 175, 106, 0.35);
-  background: linear-gradient(155deg, rgba(66, 4, 13, 0.9), rgba(40, 1, 7, 0.95));
-  box-shadow: 0 18px 36px rgba(20, 0, 4, 0.45);
-}
-.hero-frame::before {
-  content: "";
-  position: absolute;
-  left: 33px;
-  top: 0;
-  width: 1px;
-  height: 78%;
-  background: var(--champagne);
-  opacity: 0.7;
-}
-.hero-glow {
-  position: absolute;
-  inset: auto 12% 10% 12%;
-  height: 34%;
-  background: radial-gradient(ellipse at center, rgba(212, 175, 106, 0.22), transparent 70%);
-  filter: blur(14px);
 }
 
 /* ---------- category mosaic ---------- */
@@ -91,13 +42,14 @@
   position: relative;
   display: flex;
   overflow: hidden;
-  border: 1px solid var(--border);
+  border-radius: 22px;
+  border: 1px solid var(--line);
   background: var(--card);
-  transition: transform 0.35s cubic-bezier(0.23, 1, 0.32, 1), border-color 0.35s;
+  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1), border-color 0.35s;
 }
 .cat-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(212, 175, 106, 0.5);
+  border-color: rgba(201, 162, 39, 0.5);
 }
 .cat-card--mobile { grid-area: mobile; }
 .cat-card--audio { grid-area: audio; }
@@ -113,13 +65,13 @@
   display: grid;
   place-items: center;
   background:
-    radial-gradient(circle at 70% 30%, rgba(212, 175, 106, 0.16), transparent 55%),
-    linear-gradient(150deg, rgba(66, 4, 13, 0.55), rgba(40, 1, 7, 0.85));
-  color: rgba(212, 175, 106, 0.75);
+    radial-gradient(circle at 70% 30%, rgba(201, 162, 39, 0.16), transparent 55%),
+    linear-gradient(150deg, rgba(156, 10, 34, 0.55), rgba(58, 1, 10, 0.85));
+  color: rgba(201, 162, 39, 0.75);
 }
 .cat-art i {
   position: absolute;
-  border: 1px solid rgba(212, 175, 106, 0.25);
+  border: 1px solid rgba(201, 162, 39, 0.25);
   border-radius: 50%;
 }
 .cat-art i:nth-child(1) { width: 46%; aspect-ratio: 1; }
@@ -133,13 +85,13 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  border-bottom: 1px solid var(--border);
-  background: linear-gradient(150deg, rgba(66, 4, 13, 0.5), rgba(40, 1, 7, 0.75));
+  border-bottom: 1px solid var(--line);
+  background: linear-gradient(150deg, rgba(156, 10, 34, 0.5), rgba(58, 1, 10, 0.75));
 }
 .store-architecture i {
   display: block;
   height: 2px;
-  background: rgba(212, 175, 106, 0.4);
+  background: rgba(201, 162, 39, 0.4);
 }
 .store-architecture i:nth-child(1) { width: 120px; }
 .store-architecture i:nth-child(2) { width: 88px; }
@@ -150,7 +102,7 @@
   font-family: var(--font-dm-mono), monospace;
   font-size: 11px;
   letter-spacing: 0.08em;
-  color: rgba(240, 217, 171, 0.85);
+  color: rgba(240, 220, 160, 0.85);
 }
 .brand-composition { text-align: center; }
 .b2b-route { text-align: center; }
@@ -159,14 +111,14 @@
   width: 64px;
   height: 1px;
   margin: 10px 0;
-  background: rgba(212, 175, 106, 0.6);
+  background: rgba(201, 162, 39, 0.6);
 }
 .b2b-route small {
   display: block;
   font-family: var(--font-dm-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.12em;
-  color: rgba(212, 175, 106, 0.7);
+  color: rgba(201, 162, 39, 0.7);
 }
 
 /* ---------- store experience photo slots ---------- */
@@ -175,8 +127,9 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  border: 1px solid var(--border);
-  background: linear-gradient(155deg, rgba(233, 226, 216, 0.06), rgba(40, 1, 7, 0.35));
+  border-radius: 22px;
+  border: 1px solid var(--line);
+  background: linear-gradient(155deg, rgba(156, 10, 34, 0.3), rgba(58, 1, 10, 0.5));
 }
 .store-slot > div {
   display: flex;
@@ -187,14 +140,15 @@
 .store-slot > div > i {
   width: 90px;
   height: 1px;
-  background: rgba(212, 175, 106, 0.45);
+  background: rgba(201, 162, 39, 0.45);
 }
 .store-slot > div > i:nth-child(2) { width: 60px; }
 .store-slot > div > span {
   width: 34px;
   height: 46px;
-  border: 1px solid rgba(212, 175, 106, 0.4);
-  background: rgba(212, 175, 106, 0.08);
+  border-radius: 10px;
+  border: 1px solid rgba(201, 162, 39, 0.4);
+  background: rgba(201, 162, 39, 0.08);
 }
 
 /* ---------- final conversion atmosphere ---------- */
@@ -208,7 +162,7 @@
   position: absolute;
   inset: 0;
   z-index: -2;
-  background: linear-gradient(170deg, #42040d, #280107 70%);
+  background: linear-gradient(170deg, #160709, #0D0406 70%);
 }
 .final-conversion .beam {
   position: absolute;
@@ -217,7 +171,7 @@
   width: 1px;
   height: 160%;
   z-index: -1;
-  background: linear-gradient(to bottom, transparent, rgba(212, 175, 106, 0.55), transparent);
+  background: linear-gradient(to bottom, transparent, rgba(201, 162, 39, 0.55), transparent);
 }
 .final-conversion .glow {
   position: absolute;
@@ -227,13 +181,13 @@
   height: 280px;
   transform: translateX(-50%);
   z-index: -1;
-  background: radial-gradient(ellipse at center, rgba(212, 175, 106, 0.18), transparent 70%);
+  background: radial-gradient(ellipse at center, rgba(100, 2, 17, 0.35), transparent 70%);
   filter: blur(10px);
 }
 
 /* ---------- online services FAQ (native details) ---------- */
 .faq details {
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--line);
 }
 .faq summary {
   display: flex;
@@ -247,11 +201,10 @@
   list-style: none;
 }
 .faq summary::-webkit-details-marker { display: none; }
-.faq details[open] summary { color: var(--champagne); }
+.faq details[open] summary { color: var(--gold); }
 .faq details > p {
   margin: 0 0 16px;
   font-size: 13px;
   line-height: 2;
   color: rgb(var(--foreground) / 0.65);
 }
-

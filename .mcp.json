@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "graphify": {
+      "command": "C:/Users/SHETAB SYSTEM/.local/bin/graphify-mcp",
+      "args": ["G:/programmer/HAMI-SITE-2/hami2-p-main/graphify-out/graph.json"]
+    }
+  }
+}

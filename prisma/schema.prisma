@@ -162,6 +162,7 @@ model User {
   couponUsages    CouponUsage[]
   productHistory  ProductHistory[] @relation("HistoryActor")
   revertedHistory ProductHistory[] @relation("HistoryReverter")
+  reviewedPartnerApplications PartnerApplication[] @relation("PartnerReviewer")
 
   @@index([role])
   @@index([city])
@@ -744,4 +745,62 @@ model ProductHistory {
   @@index([variantId])
   @@index([createdAt])
   @@map("product_history")
+}
+
+/// Applicant legal personality: فرد حقیقی vs شخص حقوقی.
+enum PartnerEntityType {
+  INDIVIDUAL
+  LEGAL
+}
+
+/// Lifecycle of a partnership application.
+enum PartnerApplicationStatus {
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+/// B2B partnership application submitted via /partners (multipart form).
+/// Documents are stored on disk under data/uploads/; only the file paths are kept here.
+model PartnerApplication {
+  id         Int      @id @default(autoincrement())
+  entityType PartnerEntityType
+  status     PartnerApplicationStatus @default(PENDING)
+
+  // --- Shared (both entity types) ------------------------------------------
+  fullName     String
+  mobile       String   @unique // E.164, e.g. +989123456789
+  nationalCode String
+  shopName     String
+  shopAddress  String
+  leaseDocumentPath String? // اجاره‌نامه — required for both entity types
+
+  // --- INDIVIDUAL (حقیقی) ---------------------------------------------------
+  businessLicensePath  String?
+  postalCode           String?
+  shopPhone            String?
+
+  // --- LEGAL (حقوقی) ---------------------------------------------------------
+  companyName            String?
+  companyAddress         String?
+  registrationNoticePath String?
+  legalNationalId        String?
+  economicCode           String?
+
+  // --- Request metadata ------------------------------------------------------
+  ipAddress String?
+  userAgent String?
+
+  notes       String?
+  reviewedBy  Int?
+  reviewedByRel User? @relation("PartnerReviewer", fields: [reviewedBy], references: [id], onDelete: SetNull)
+  reviewedAt  DateTime?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([entityType])
+  @@index([status])
+  @@index([createdAt])
+  @@map("partner_applications")
 }

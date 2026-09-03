@@ -11,6 +11,9 @@ const querySchema = z.object({
   categoryId: z.coerce.number().int().positive().optional(),
   stockType: z.enum(["unlimited", "limited", "out_of_stock", "call"]).optional(),
   specialOffer: z.enum(["true", "false"]).optional(),
+  minPrice: z.coerce.number().nonnegative().optional(),
+  maxPrice: z.coerce.number().nonnegative().optional(),
+  sort: z.enum(["newest", "price-asc", "price-desc", "special"]).optional(),
   paymentTerm: z.string().optional(),
   quantity: z.coerce.number().int().positive().optional(),
   role: z.enum(["RETAIL", "WHOLESALE", "AGENT", "ADMIN"]).optional(),
@@ -78,13 +81,27 @@ export async function GET(request: Request) {
       andFilters.push({ specialOffer: input.specialOffer === "true" });
     }
 
+    if (input.minPrice !== undefined || input.maxPrice !== undefined) {
+      const priceCondition: { gte?: number; lte?: number } = {};
+      if (input.minPrice !== undefined) priceCondition.gte = input.minPrice;
+      if (input.maxPrice !== undefined) priceCondition.lte = input.maxPrice;
+      andFilters.push({
+        OR: [{ price: priceCondition }, { variants: { some: { price: priceCondition } } }],
+      });
+    }
+
     const where = { AND: andFilters };
 
     const [total, products] = await Promise.all([
       prisma.product.count({ where }),
       prisma.product.findMany({
         where,
-        orderBy: [{ specialOffer: "desc" }, { updatedAt: "desc" }],
+        orderBy:
+          input.sort === "price-asc"
+            ? [{ price: "asc" }]
+            : input.sort === "price-desc"
+              ? [{ price: "desc" }]
+              : [{ specialOffer: "desc" }, { updatedAt: "desc" }],
         skip: pagination.skip,
         take: pagination.take,
         include: {

@@ -6,6 +6,15 @@
  * real brand media is supplied.
  */
 
+/** Header marquee — real, confirmed facts only (no fabricated stats). */
+export const tickerItems = [
+  "عرضه تخصصی موبایل و اکسسوری",
+  "پشتیبانی خرید عمده برای همکاران (B2C + B2B)",
+  "نمایندگی رسمی برند TCH",
+  "همکار معتبر Redmi در مشهد",
+  "گارانتی و اصالت کالا",
+] as const;
+
 export const featuredTabs = [
   { key: "newest", label: "جدیدترین‌ها", badge: "NEW" },
   { key: "special", label: "پیشنهاد ویژه", badge: "SPECIAL OFFER" },

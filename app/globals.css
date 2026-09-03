@@ -3,112 +3,160 @@
 @tailwind utilities;
 
 /**
- * HAMI brand tokens — ported from the «آرشیو بورگوندی شبانه» design
- * (docs/inspires/HamiHamrah-DNA-Brand-Color/.../index.css).
- * Dark burgundy is the default theme; a warm-paper light theme is available
- * via the `.light` class for surfaces that need contrast (forms, invoices).
+ * HAMI brand tokens v2 — "Two Chapters" (flat wine canvas + paper trust
+ * sections) retired. Current world, pinned by the user from a supplied
+ * reference (aura-landingSample.html): near-black canvas throughout, RAL
+ * 3004 oxblood as atmospheric glow (not a flat fill), muted antique gold as
+ * the singular accent, full glass/pill geometry. See the direction contract
+ * at the top of app/layout.tsx.
  */
 :root {
   /* RGB triplets (Tailwind consumes via `rgb(var(--x) / <alpha>)`) */
-  --background: 100 2 17;      /* #640211 — wine RAL 3004 */
-  --foreground: 244 239 232;   /* #f4efe8 */
+  --background: 13 4 6;        /* #0D0406 — near-black ink canvas */
+  --foreground: 242 244 237;   /* #F2F4ED */
 
-  --card: 81 3 15;             /* #51030f */
-  --card-foreground: 244 239 232;
-  --popover: 66 4 13;          /* #42040d */
-  --popover-foreground: 244 239 232;
+  --card: 22 7 9;              /* #160709 — ink-2, elevated surface */
+  --card-foreground: 242 244 237;
+  --popover: 31 10 14;         /* #1F0A0E — ink-3 */
+  --popover-foreground: 242 244 237;
 
-  --primary: 212 175 106;      /* #d4af6a champagne */
-  --primary-foreground: 40 1 7;
+  --primary: 201 162 39;       /* #C9A227 muted antique gold */
+  --primary-foreground: 42 2 7; /* #2A0207 — near-black-oxblood, for text on gold */
 
-  --secondary: 66 4 13;
-  --secondary-foreground: 244 239 232;
+  --secondary: 22 7 9;
+  --secondary-foreground: 242 244 237;
 
-  --muted: 81 3 15;
-  --muted-foreground: 208 180 170;
+  --muted: 22 7 9;
+  --muted-foreground: 242 244 237; /* consumed at reduced alpha, e.g. text-muted-foreground/62 */
 
-  --accent: 66 4 13;
+  --accent: 100 2 17;          /* oxblood */
   --accent-foreground: 240 217 171;
 
   --destructive: 229 72 77;
   --destructive-foreground: 255 245 245;
 
-  --border: 239 220 184;       /* champagne hairline @ 15% */
-  --input: 239 220 184;        /* @ 22% */
-  --ring: 212 175 106;
+  --border: 242 244 237;       /* hairline @ 10%, see --line below */
+  --input: 242 244 237;        /* @ 16% */
+  --ring: 201 162 39;          /* gold */
 
-  --radius: 0.25rem;
-}
+  --radius: 22px;
 
-.light {
-  --background: 242 244 237;   /* #f2f4ed warm paper */
-  --foreground: 40 28 29;      /* #281c1d */
-  --card: 255 255 255;
-  --card-foreground: 40 28 29;
-  --popover: 255 255 255;
-  --popover-foreground: 40 28 29;
-  --primary: 100 2 17;         /* wine becomes the accent on paper */
-  --primary-foreground: 255 250 243;
-  --secondary: 233 226 216;    /* #e9e2d8 */
-  --secondary-foreground: 40 28 29;
-  --muted: 233 226 216;
-  --muted-foreground: 117 107 100;
-  --accent: 100 2 17;
-  --accent-foreground: 240 217 171;
-  --border: 40 28 29;          /* @ 15% */
-  --input: 40 28 29;
-  --ring: 100 2 17;
+  /* Literal hex, consumed directly (outline, gradients) rather than through
+     rgb(var(--x)/alpha). */
+  --gold: #C9A227;
+  --line: rgba(242, 244, 237, 0.10);
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-border/10;
   }
   html {
     scroll-behavior: smooth;
   }
   body {
     @apply bg-background text-foreground font-sans antialiased;
-    background-image:
-      radial-gradient(circle at 13% 8%, rgba(255, 232, 190, 0.07), transparent 22%),
-      radial-gradient(circle at 87% 75%, rgba(31, 0, 5, 0.26), transparent 28%);
-    background-attachment: fixed;
+    overflow-x: hidden;
   }
-  /* champagne focus ring — brand accessibility signature */
+  /* Atmospheric oxblood glow layer — the world's signature "material":
+     depth comes from layered radial gradients over a near-black canvas,
+     never a flat maroon fill. Fixed so it reads as one continuous
+     atmosphere behind the whole scroll, not a per-section background. */
+  body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background:
+      radial-gradient(900px 520px at 88% -8%, rgba(100, 2, 17, 0.55), transparent 60%),
+      radial-gradient(700px 480px at 6% 12%, rgba(156, 10, 34, 0.22), transparent 62%),
+      radial-gradient(1000px 700px at 50% 108%, rgba(201, 162, 39, 0.10), transparent 60%);
+  }
+  ::selection {
+    background: rgba(201, 162, 39, 0.35);
+    color: #fff;
+  }
+  /* gold focus ring — brand accessibility signature */
   :where(a, button, input, select, textarea):focus-visible {
-    outline: 2px solid var(--champagne);
+    outline: 2px solid var(--gold);
     outline-offset: 3px;
   }
 }
 
 @layer components {
-  /* thin champagne hairline used across the editorial layout */
+  /* Every section's content sits above the fixed atmosphere layer. */
+  .wrap {
+    position: relative;
+    z-index: 2;
+  }
+  /* thin gold hairline */
   .brand-hairline {
     @apply h-px w-full;
-    background: linear-gradient(
-      to left,
-      transparent,
-      rgba(212, 175, 106, 0.55),
-      transparent
-    );
+    background: linear-gradient(to left, transparent, rgba(201, 162, 39, 0.55), transparent);
   }
-  /* numbered section label: «۰۱ — عنوان بخش» */
-  .section-label {
-    @apply flex items-center gap-3;
-  }
-  .section-label > span {
-    @apply font-mono text-[10px] tracking-[0.06em] text-champagne;
-  }
-  .section-label > i {
-    @apply h-px w-10 bg-champagne/60;
-  }
-  .section-label > p {
-    @apply m-0 text-[11px] font-bold uppercase tracking-[0.03em] text-foreground/70;
-  }
-  /* sticky cream header surface, faithful to the luxury reference */
-  .site-header {
-    @apply sticky top-0 z-30;
+  /* Frosted glass surface — the world's default elevated-content material.
+     Gradient-masked 1px border simulates a two-tone hairline (gold-lit on
+     one corner, oxblood-lit on the other) without an extra DOM layer. */
+  .glass {
+    position: relative;
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, rgba(242, 244, 237, 0.055), rgba(242, 244, 237, 0.02));
+    border: 1px solid var(--line);
     backdrop-filter: blur(18px);
-    background: rgba(244, 241, 235, 0.92);
+    -webkit-backdrop-filter: blur(18px);
+    overflow: hidden;
+  }
+  .glass::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(140deg, rgba(201, 162, 39, 0.55), transparent 38%, transparent 62%, rgba(156, 10, 34, 0.55));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+  /* Eyebrow pill — reintroduced by this world's brief. A rounded, bordered,
+     dot-led label sitting above a heading. Do not use this pattern outside
+     this committed world; the previous world banned it for a reason that
+     held there (see DESIGN.md history) and stopped holding only because the
+     world itself changed, not because the old reasoning was wrong. */
+  .eyebrow {
+    @apply inline-flex items-center gap-2 rounded-full text-[12px] tracking-[0.14em];
+    color: var(--gold-lite, #F0DCA0);
+    border: 1px solid rgba(201, 162, 39, 0.32);
+    background: rgba(201, 162, 39, 0.07);
+    padding: 7px 14px;
+  }
+  .eyebrow i {
+    @apply block rounded-full;
+    width: 6px;
+    height: 6px;
+    background: var(--gold);
+    box-shadow: 0 0 10px var(--gold);
+  }
+  /* Gradient-shimmer text — reserved for exactly one word per heading. This
+     world explicitly wants it; craft-floor's blanket "no gradient text" ban
+     is a default for the previous world, not a universal law. */
+  .grad {
+    background: linear-gradient(100deg, #F0DCA0, #C9A227 40%, #fff 55%, #C9A227 70%, #8A6A15);
+    background-size: 220% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  /* sticky glass nav — static, no scroll-based recoloring. The previous
+     world's chapter-matching header (HeaderChapterWatcher) is retired along
+     with the light/dark chapter system it served: this world has no light
+     chapter to match against. */
+  .site-header {
+    @apply sticky top-0 z-50;
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    background: rgba(13, 4, 6, 0.72);
+    border-bottom: 1px solid var(--line);
   }
 }

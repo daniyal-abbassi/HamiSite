@@ -1,37 +1,35 @@
+import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Reveal } from "@/components/home/Reveal";
-import { toFaDigits } from "@/lib/utils";
+import hamiMark from "@/public/brand/hami-mark.png";
 
 export function CampaignBanner() {
   return (
-    <section id="campaign" className="container py-6" aria-labelledby="campaign-title">
+    <section id="campaign" className="wrap container py-6" aria-labelledby="campaign-title">
       <Reveal>
-        <div className="hero-surface relative overflow-hidden rounded-sm border border-champagne/20">
-          <div className="hero-glow" />
+        <div
+          className="relative overflow-hidden rounded-2xl border border-gold/20"
+          style={{ background: "linear-gradient(160deg, #7D0417 0%, #640211 52%, #3A010A 100%)" }}
+        >
+          <div className="pointer-events-none absolute inset-x-[12%] bottom-[10%] h-[34%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(201,162,39,0.22),transparent_70%)] blur-2xl" />
           <div className="relative grid items-center gap-8 p-10 md:grid-cols-[1.2fr_0.8fr] md:p-14">
             <div>
-              <p className="m-0 flex items-center gap-2.5 text-[11px] font-bold text-foreground/70">
-                <span className="font-mono text-champagne">{toFaDigits("05")}</span>
-                <i className="h-px w-8 bg-champagne/60" aria-hidden="true" />
-                THE NEW STANDARD
-              </p>
-              <h2 id="campaign-title" className="mt-4 text-3xl font-black leading-[1.4] tracking-tight md:text-4xl">
+              <h2 id="campaign-title" className="text-3xl font-black leading-[1.4] tracking-tight md:text-4xl">
                 انتخابی که
-                <em className="block font-black not-italic text-champagne">بهترین می‌ماند.</em>
+                <span className="grad block">بهترین می‌ماند.</span>
               </h2>
               <p className="mt-4 max-w-md text-sm leading-8 text-foreground/65">
                 موبایل، لوازم جانبی و خدمات دیجیتال؛ در یک تجربهٔ متفاوت و دقیق.
               </p>
-              <Button className="mt-6" size="lg">
+              <Button className="mt-6" size="lg" variant="oxblood">
                 مشاهده محصولات <ArrowLeft />
               </Button>
             </div>
             <div className="relative hidden aspect-square max-w-xs place-items-center justify-self-end md:grid" aria-hidden="true">
-              <i className="absolute inset-0 rounded-full border border-champagne/25" />
-              <i className="absolute inset-6 rounded-full border border-champagne/15" />
-              <span className="font-mono text-6xl text-champagne/70">H</span>
-              <span className="absolute -bottom-2 font-mono text-[9px] tracking-[0.14em] text-foreground/40">HAMI / CAMPAIGN 01</span>
+              <i className="absolute inset-0 rounded-full border border-gold/25" />
+              <i className="absolute inset-6 rounded-full border border-gold/15" />
+              <Image src={hamiMark} alt="" className="relative size-24 rounded-2xl bg-white ring-1 ring-gold/45" />
             </div>
           </div>
         </div>

@@ -1,4 +1,6 @@
 import Link from "next/link";
+import Image from "next/image";
+import hamiMark from "@/public/brand/hami-mark.png";
 
 const footerGroups = [
   {
@@ -30,22 +32,20 @@ const footerGroups = [
 
 export function Footer() {
   return (
-    <footer className="mt-20 bg-wine-ink text-[#fffaf2]">
+    <footer className="relative z-[2] mt-20 border-t border-line bg-ink-2/60">
       <div className="brand-hairline" />
-      <div className="container grid gap-10 py-14 md:grid-cols-[1.4fr_repeat(3,1fr)]">
+      <div className="container grid gap-10 py-16 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
           <div className="flex items-center gap-2.5">
-            <span className="grid size-9 place-items-center rounded-sm border border-champagne/40 font-mono text-sm text-champagne">
-              H
-            </span>
+            <Image src={hamiMark} alt="" className="size-9 rounded-xl bg-white ring-1 ring-gold/45" />
             <span className="text-base font-black">
               حامی همراه
-              <span className="block font-mono text-[9px] font-normal tracking-[0.14em] text-[#fffaf2]/40">
-                HAMI HAMRAH
+              <span className="block font-mono text-[11px] font-normal text-muted-foreground/60">
+                پخش تلفن همراه — مشهد
               </span>
             </span>
           </div>
-          <p className="mt-4 max-w-xs text-[13px] leading-7 text-[#fffaf2]/60">
+          <p className="mt-4 max-w-xs text-[13px] leading-7 text-muted-foreground/70">
             عرضه‌کننده تخصصی موبایل، ساعت هوشمند و اکسسوری — با تکیه بر اصالت کالا،
             شفافیت قیمت و پشتیبانی حرفه‌ای از خرید خرد و عمده.
           </p>
@@ -53,7 +53,7 @@ export function Footer() {
 
         {footerGroups.map((group) => (
           <nav key={group.title} aria-label={group.title}>
-            <h3 className="m-0 font-mono text-[10px] font-medium uppercase tracking-[0.08em] text-champagne">
+            <h3 className="m-0 font-mono text-[11px] font-medium tracking-[0.04em] text-gold">
               {group.title}
             </h3>
             <ul className="mt-4 list-none space-y-2.5 p-0">
@@ -61,7 +61,7 @@ export function Footer() {
                 <li key={link.href + link.label}>
                   <Link
                     href={link.href}
-                    className="text-[13px] text-[#fffaf2]/70 transition-colors hover:text-champagne"
+                    className="text-[13.5px] text-muted-foreground/85 transition-colors hover:text-foreground"
                   >
                     {link.label}
                   </Link>
@@ -72,10 +72,10 @@ export function Footer() {
         ))}
       </div>
 
-      <div className="border-t border-[#fffaf2]/10">
-        <div className="container flex flex-col items-center justify-between gap-2 py-5 text-[11px] text-[#fffaf2]/45 sm:flex-row">
+      <div className="border-t border-line">
+        <div className="container flex flex-col items-center justify-between gap-2 py-5 text-[12.5px] text-muted-foreground/45 sm:flex-row">
           <p className="m-0">© ۱۴۰۵ حامی همراه — تمامی حقوق محفوظ است.</p>
-          <p className="m-0 font-mono tracking-[0.06em]">EST. TEHRAN — MOBILE &amp; ACCESSORIES</p>
+          <p className="m-0">مشهد</p>
         </div>
       </div>
     </footer>

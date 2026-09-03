@@ -8,6 +8,8 @@ tsconfig.tsbuildinfo
 .superpowers/
 actuall_old_webSite_api_token.txt
 graphify-out/
+data/uploads/
+.worktrees/
 oldWebsite-openapi.json
 .claude/settings.json
 .claude/settings.local.json

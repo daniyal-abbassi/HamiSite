@@ -1,0 +1,107 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "design-system-color",
+        "value": "rgba(255, 232, 190, 0.1)",
+        "createdAt": "2026-09-02T12:11:39.575Z",
+        "reason": "pre-existing hero-surface glow overlay, low-alpha champagne-gold derivative, not a new color — decorative atmosphere only"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(232, 205, 151, 0.2)",
+        "createdAt": "2026-09-02T12:11:39.674Z",
+        "reason": "pre-existing hero-surface glow overlay, low-alpha champagne-gold derivative, not a new color — decorative atmosphere only"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(20, 0, 4, 0.45)",
+        "createdAt": "2026-09-02T12:11:39.759Z",
+        "reason": "pre-existing hero-frame shadow, low-alpha wine-ink derivative, not a new color — decorative atmosphere only"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "rgba(255, 232, 190, 0.07)",
+        "createdAt": "2026-09-02T12:11:39.858Z",
+        "reason": "pre-existing body background ambient glow, low-alpha champagne-gold derivative, not a new color — decorative atmosphere only"
+      },
+      {
+        "rule": "gradient-text",
+        "value": "*",
+        "files": [
+          "app/globals.css"
+        ],
+        "createdAt": "2026-09-03T07:41:53.131Z",
+        "reason": "user confirmed: full pivot to aura-landingSample.html reference world, which explicitly uses gold gradient-shimmer text as a signature device (.grad class, one word per heading)"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "9px",
+        "createdAt": "2026-09-03T10:08:23.951Z",
+        "reason": "confirmed real micro-type scale, used consistently for labels/hints/captions across the app; documented in DESIGN.md prose, YAML frontmatter fontSize field doesn't parse a multi-value list the way I wrote it"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "10px",
+        "createdAt": "2026-09-03T10:08:24.131Z",
+        "reason": "confirmed real micro-type scale, used consistently for labels/hints/captions across the app; documented in DESIGN.md prose, YAML frontmatter fontSize field doesn't parse a multi-value list the way I wrote it"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "11px",
+        "createdAt": "2026-09-03T10:08:24.231Z",
+        "reason": "confirmed real micro-type scale, used consistently for labels/hints/captions across the app; documented in DESIGN.md prose, YAML frontmatter fontSize field doesn't parse a multi-value list the way I wrote it"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "12px",
+        "createdAt": "2026-09-03T10:08:24.326Z",
+        "reason": "confirmed real micro-type scale, used consistently for labels/hints/captions across the app; documented in DESIGN.md prose, YAML frontmatter fontSize field doesn't parse a multi-value list the way I wrote it"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "13px",
+        "createdAt": "2026-09-03T10:08:24.461Z",
+        "reason": "confirmed real micro-type scale, used consistently for labels/hints/captions across the app; documented in DESIGN.md prose, YAML frontmatter fontSize field doesn't parse a multi-value list the way I wrote it"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "15px",
+        "createdAt": "2026-09-03T10:08:24.558Z",
+        "reason": "confirmed real micro-type scale, used consistently for labels/hints/captions across the app; documented in DESIGN.md prose, YAML frontmatter fontSize field doesn't parse a multi-value list the way I wrote it"
+      },
+      {
+        "rule": "design-system-radius",
+        "value": "10px",
+        "createdAt": "2026-09-03T10:08:24.691Z",
+        "reason": "tiny decorative element (34x46px placeholder icon in home.css), an intentional micro-adjustment below the card-level radius scale, not drift"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#fff",
+        "createdAt": "2026-09-03T10:08:24.791Z",
+        "reason": "plain white, used sparingly (button text on gradient fills, selection highlight) — a real neutral, not drift"
+      },
+      {
+        "rule": "design-system-color",
+        "value": "#000",
+        "createdAt": "2026-09-03T10:08:24.876Z",
+        "reason": "plain black, used once for a decorative dot shadow tint — a real neutral, not drift"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "8px",
+        "createdAt": "2026-09-03T10:10:43.375Z",
+        "reason": "smallest step of the confirmed real micro-type scale (see DESIGN.md), used for the tightest caption contexts"
+      },
+      {
+        "rule": "design-system-font-size",
+        "value": "12.5px",
+        "createdAt": "2026-09-03T10:10:43.475Z",
+        "reason": "confirmed real micro-type scale variant, used consistently in Footer"
+      }
+    ]
+  }
+}

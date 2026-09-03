@@ -1,0 +1,132 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-09-03T00:00:00Z",
+  "title": "Design System: Hami Hamrah",
+  "extensions": {
+    "colorMeta": {
+      "gold": {
+        "role": "primary",
+        "displayName": "Muted Antique Gold",
+        "canonical": "#C9A227",
+        "tonalRamp": ["#3d3009", "#5c4813", "#7a601d", "#997827", "#C9A227", "#d9bc5c", "#e8d491", "#f5ecc9"]
+      },
+      "ral-3004-oxblood": {
+        "role": "secondary",
+        "displayName": "RAL 3004 Oxblood",
+        "canonical": "#640211",
+        "tonalRamp": ["#1c0004", "#3A010A", "#4d0410", "#640211", "#7D0417", "#9C0A22", "#c4304a", "#e08a9a"]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Ink Canvas",
+        "canonical": "#0D0406",
+        "tonalRamp": ["#0D0406", "#160709", "#1F0A0E", "#3d1a1f", "#6b3238", "#a1595f", "#cf9195", "#ecd2d4"]
+      },
+      "foreground": {
+        "role": "neutral",
+        "displayName": "Foreground",
+        "canonical": "#F2F4ED",
+        "tonalRamp": ["#2a2c26", "#4d4f45", "#767865", "#a8ab93", "#c9ccb8", "#e2e4d6", "#F2F4ED", "#fbfbf8"]
+      }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero H1 only." },
+      "headline": { "displayName": "Headline", "purpose": "Section H2s, preceded by an eyebrow pill on Persuade-mode surfaces." },
+      "body": { "displayName": "Body", "purpose": "Paragraph copy." },
+      "label": { "displayName": "Label", "purpose": "Mono uppercase captions, form hints, badges, ticker items — real 4-step micro-scale: 9px/10px/11px/13px, none an isolated exception." }
+    },
+    "shadows": [
+      { "name": "card", "value": "0 8px 30px rgba(0, 0, 0, 0.45)", "purpose": "Default ambient shadow for glass surfaces on the near-black canvas." },
+      { "name": "deep", "value": "0 40px 90px rgba(0, 0, 0, 0.6)", "purpose": "Larger objects — the hero phone silhouette." },
+      { "name": "glow-oxblood", "value": "0 10px 30px rgba(100, 2, 17, 0.5)", "purpose": "Oxblood button glow, brightens on hover." },
+      { "name": "glow-gold", "value": "0 10px 30px rgba(201, 162, 39, 0.32)", "purpose": "Gold button glow, brightens on hover." }
+    ],
+    "motion": [
+      { "name": "signature-ease", "value": "cubic-bezier(0.2, 0.7, 0.3, 1)", "purpose": "The one timing function used everywhere — a livelier fast-out than the previous world's pure ease-out-expo, pinned from the reference world." },
+      { "name": "duration-fast", "value": "150ms", "purpose": "Small contained state changes." },
+      { "name": "duration-normal", "value": "220ms", "purpose": "Default — color/background transitions, card hover-lift." },
+      { "name": "duration-slow", "value": "300ms", "purpose": "Larger movement — drawer slide-in, backdrop fade, scroll-reveal entrances." }
+    ],
+    "breakpoints": [
+      { "name": "2xl", "value": "1280px" }
+    ],
+    "materials": [
+      { "name": "glass", "purpose": "Default elevated-surface material: backdrop-filter blur(18px) + translucent gradient fill + gradient-masked hairline border (gold-lit corner to oxblood-lit corner). Replaces flat bg-card + solid border from the previous world." },
+      { "name": "atmosphere", "purpose": "Fixed layered radial-gradient oxblood glow behind the entire scroll (body::before) — the canvas's only color, never a flat fill." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Gold Pill Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "The 'money' CTA — signup, submit, place order.",
+      "html": "<button class=\"ds-btn-gold\">ثبت‌نام همکار</button>",
+      "css": ".ds-btn-gold { background: linear-gradient(180deg, #F0DCA0, #C9A227); color: #2A0207; padding: 13px 24px; border-radius: 9999px; border: none; font-weight: 600; font-size: 15px; box-shadow: 0 10px 30px rgba(201,162,39,0.32); transition: transform 220ms cubic-bezier(0.2,0.7,0.3,1), box-shadow 220ms cubic-bezier(0.2,0.7,0.3,1); } .ds-btn-gold:hover { transform: translateY(-2px); box-shadow: 0 16px 42px rgba(201,162,39,0.45); } .ds-btn-gold:focus-visible { outline: 2px solid #C9A227; outline-offset: 3px; }"
+    },
+    {
+      "name": "Oxblood Pill Button",
+      "kind": "button",
+      "refersTo": "button-oxblood",
+      "description": "General primary action — used more often than gold (e.g. hero main CTA).",
+      "html": "<button class=\"ds-btn-oxblood\">مشاهده محصولات</button>",
+      "css": ".ds-btn-oxblood { background: linear-gradient(180deg, #9C0A22, #640211); color: #fff; padding: 13px 24px; border-radius: 9999px; border: none; font-weight: 600; font-size: 15px; box-shadow: 0 10px 30px rgba(100,2,17,0.5), inset 0 1px 0 rgba(255,255,255,0.18); transition: transform 220ms cubic-bezier(0.2,0.7,0.3,1), box-shadow 220ms cubic-bezier(0.2,0.7,0.3,1); } .ds-btn-oxblood:hover { transform: translateY(-2px); box-shadow: 0 16px 42px rgba(100,2,17,0.65), inset 0 1px 0 rgba(255,255,255,0.25); }"
+    },
+    {
+      "name": "Glass Card",
+      "kind": "card",
+      "refersTo": "card-glass",
+      "description": "Default elevated content surface — frosted glass, not flat fill.",
+      "html": "<article class=\"ds-glass-card\"><span class=\"ds-card-brand\">TCH</span><h3 class=\"ds-card-title\">Mini 1020 پاوربانک</h3><strong class=\"ds-card-price\">۱٬۲۵۰٬۰۰۰ تومان</strong></article>",
+      "css": ".ds-glass-card { position: relative; border-radius: 22px; background: linear-gradient(180deg, rgba(242,244,237,0.055), rgba(242,244,237,0.02)); border: 1px solid rgba(242,244,237,0.10); backdrop-filter: blur(18px); padding: 20px; box-shadow: 0 8px 30px rgba(0,0,0,0.45); transition: transform 300ms cubic-bezier(0.2,0.7,0.3,1); } .ds-glass-card:hover { transform: translateY(-6px); } .ds-card-brand { display: block; font-family: monospace; font-size: 9px; letter-spacing: 0.1em; color: rgba(242,244,237,0.5); } .ds-card-title { margin: 6px 0 0; font-weight: 800; font-size: 14px; color: #F2F4ED; } .ds-card-price { display: block; margin-top: 12px; font-weight: 900; font-size: 14px; color: #C9A227; }"
+    },
+    {
+      "name": "Eyebrow Pill",
+      "kind": "chip",
+      "refersTo": "eyebrow",
+      "description": "Reintroduced label above Persuade-mode section headings (home page only, not Operate-mode shop/partners surfaces).",
+      "html": "<span class=\"ds-eyebrow\"><i></i> مشهد • حامی همراه • ۲۰ سال سابقه</span>",
+      "css": ".ds-eyebrow { display: inline-flex; align-items: center; gap: 8px; border-radius: 9999px; font-size: 12px; letter-spacing: 0.14em; color: #F0DCA0; border: 1px solid rgba(201,162,39,0.32); background: rgba(201,162,39,0.07); padding: 7px 14px; } .ds-eyebrow i { width: 6px; height: 6px; border-radius: 50%; background: #C9A227; box-shadow: 0 0 10px #C9A227; }"
+    },
+    {
+      "name": "Gradient Shimmer Text",
+      "kind": "custom",
+      "refersTo": "grad",
+      "description": "One-word gold gradient-shimmer emphasis inside headings. Sanctioned exception to the general no-gradient-text rule for this world only.",
+      "html": "<h1>اطمینان، <span class=\"ds-grad\">در هر انتخاب.</span></h1>",
+      "css": ".ds-grad { background: linear-gradient(100deg, #F0DCA0, #C9A227 40%, #fff 55%, #C9A227 70%, #8A6A15); background-size: 220% auto; -webkit-background-clip: text; background-clip: text; color: transparent; animation: ds-shiny 6s linear infinite; } @keyframes ds-shiny { to { background-position: -220% center; } }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Aura — an atmosphere, not a fill",
+    "overview": "This world replaced the previous 'Two Chapters' system (flat wine canvas + paper trust sections) in full — pinned by the user from a supplied reference implementation (aura-landingSample.html), not derived from a discovery round. The default surface is a near-black ink canvas, never a flat color field: depth comes from layered oxblood radial-gradient glow fixed behind the whole scroll, muted antique-gold accents, and frosted glass content surfaces floating above it. Geometry is fully rounded — pills for every button and chip, 22-34px radii for cards and panels — the opposite of the previous world's near-sharp language, and that reversal is deliberate. One constant survives the replacement: RAL 3004 (#640211), the real physical-store oxblood, remains the base of the color ramp. Business facts stay exactly as confirmed in PRODUCT.md — this is a visual-world change, not a positioning change.",
+    "keyCharacteristics": [
+      "Near-black canvas with a fixed, layered oxblood-glow atmosphere behind the entire scroll — never a flat color fill.",
+      "Frosted glass is the default elevated-surface material, not a flat card fill.",
+      "Full rounded geometry: pills for every button/chip, 22-34px radii for cards/panels. No sharp corners anywhere.",
+      "Eyebrow pills and one-word gold gradient-shimmer text are back, used per-section on Persuade-mode surfaces.",
+      "One motion signature (cubic-bezier(0.2, 0.7, 0.3, 1)) across every transition, at one of three named durations."
+    ],
+    "rules": [
+      { "name": "The Atmosphere-Not-Fill Rule", "body": "Oxblood never owns a flat full-bleed background. It appears as radial-gradient glow, gradient button fill, or elevated-surface tint — always graduated, never flat.", "section": "colors" },
+      { "name": "The One Accent Rule", "body": "Gold marks exactly one thing per view: the primary action or the price. Section labels use the dedicated eyebrow pill treatment, not bare gold text.", "section": "colors" },
+      { "name": "The One Motion Signature Rule", "body": "Every transition uses cubic-bezier(0.2, 0.7, 0.3, 1) at one of three named durations (150/220/300ms) — never a hardcoded per-component duration/ease pair.", "section": "elevation" },
+      { "name": "The Full Rounding Rule", "body": "rounded-full for every interactive pill, 22px+ for cards. A 0-4px radius appearing anywhere is a regression to the retired sharp-corner world.", "section": "shapes" },
+      { "name": "The Mode-Appropriate Device Rule", "body": "Eyebrow pills, gradient text, and floating glass stat cards are Persuade-mode devices (home page). Operate-mode surfaces (shop, partners) get the palette and glass material, not the full marketing device set.", "section": "components" }
+    ],
+    "dos": [
+      "Do treat oxblood as atmosphere (gradient glow, gradient button fill) — never as a flat full-bleed background fill.",
+      "Do use .glass for elevated content surfaces by default.",
+      "Do round everything — rounded-full for pills, 22px+ for cards.",
+      "Do use the eyebrow pill above Persuade-mode section headings, but skip it on Operate-mode surfaces.",
+      "Do reserve the gold gradient-shimmer for exactly one word per heading."
+    ],
+    "donts": [
+      "Don't reintroduce the .light/paper chapter, HeaderChapterWatcher, or data-chapter attributes — deliberately deleted.",
+      "Don't hardcode a per-component duration/ease pair.",
+      "Don't use champagne/wine/paper/ink-dark class names — renamed to gold/oxblood/ink/foreground.",
+      "Don't apply the full Persuade-mode device set to Operate-mode utility surfaces.",
+      "Don't state unconfirmed facts from the reference sample as real (its address, '12 years' claim, or fabricated stats) — PRODUCT.md is the only source of truth."
+    ]
+  }
+}

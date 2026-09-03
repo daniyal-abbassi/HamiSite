@@ -1,16 +1,5 @@
 import type { TrustFeatureKey } from "@/lib/content/home";
 
-/** Numbered editorial section label: «۰۰۲ — عنوان بخش» */
-export function SectionLabel({ index, children }: { index: string; children: React.ReactNode }) {
-  return (
-    <div className="section-label">
-      <span>{index}</span>
-      <i />
-      <p>{children}</p>
-    </div>
-  );
-}
-
 /** Custom 32×32 stroke glyphs — ported verbatim from the reference TrustGlyph. */
 export function TrustGlyph({ name }: { name: TrustFeatureKey }) {
   const shared = { fill: "none", stroke: "currentColor", strokeWidth: 1.45, strokeLinecap: "round" as const, strokeLinejoin: "round" as const };

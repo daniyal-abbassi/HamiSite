@@ -1,0 +1,575 @@
+- generic [active] [ref=e1]:
+  - generic [ref=e2]:
+    - banner [ref=e3]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: عرضه تخصصی موبایل و اکسسوری
+        - generic [ref=e8]: پشتیبانی خرید عمده برای همکاران (B2C + B2B)
+        - generic [ref=e10]: نمایندگی رسمی برند TCH
+        - generic [ref=e12]: همکار معتبر Redmi در مشهد
+        - generic [ref=e14]: گارانتی و اصالت کالا
+        - generic [ref=e16]: عرضه تخصصی موبایل و اکسسوری
+        - generic [ref=e18]: پشتیبانی خرید عمده برای همکاران (B2C + B2B)
+        - generic [ref=e20]: نمایندگی رسمی برند TCH
+        - generic [ref=e22]: همکار معتبر Redmi در مشهد
+        - generic [ref=e24]: گارانتی و اصالت کالا
+      - generic [ref=e27]:
+        - link "حامی همراه — صفحه اصلی" [ref=e28] [cursor=pointer]:
+          - /url: /
+          - generic [ref=e29]:
+            - text: حامی همراه
+            - generic [ref=e30]: پخش تلفن همراه — مشهد
+        - navigation "ناوبری اصلی" [ref=e31]:
+          - link "خانه" [ref=e32] [cursor=pointer]:
+            - /url: /
+          - link "فروشگاه" [ref=e33] [cursor=pointer]:
+            - /url: /shop
+        - search [ref=e34]:
+          - searchbox "جستجوی محصول" [ref=e35]
+        - generic [ref=e36]:
+          - link "ورود به حساب" [ref=e37] [cursor=pointer]:
+            - /url: /login
+          - link "سبد خرید" [ref=e41] [cursor=pointer]:
+            - /url: /cart
+        - link [ref=e45] [cursor=pointer]:
+          - /url: /partners
+          - button "ثبت‌نام همکار" [ref=e46]
+    - main [ref=e47]:
+      - region [ref=e48]:
+        - generic [ref=e49]:
+          - generic [ref=e50]:
+            - generic [ref=e51]: مشهد • حامی همراه • ۲۰ سال سابقه
+            - heading "اطمینان، در هر انتخاب." [level=1] [ref=e53]
+            - paragraph [ref=e54]: تجربه‌ای مطمئن برای خرید و تأمین تلفن همراه؛ از انتخاب تا تحویل.
+            - generic "مسیرهای اصلی" [ref=e55]:
+              - button "مشاهده محصولات" [ref=e56] [cursor=pointer]
+              - link [ref=e57] [cursor=pointer]:
+                - /url: /partners
+                - button "شروع همکاری" [ref=e58]
+            - list "نشانه‌های اعتماد حامی همراه" [ref=e59]:
+              - listitem [ref=e60]: اصالت کالا
+              - listitem [ref=e64]: گارانتی رسمی
+              - listitem [ref=e68]: سابقه بیست ساله
+          - generic [ref=e73]:
+            - generic [ref=e76]:
+              - generic [ref=e77]: ۲۰ سال
+              - text: سابقه در بازار مشهد
+            - generic [ref=e78]:
+              - generic [ref=e79]: TCH
+              - text: نمایندگی رسمی برند
+            - generic [ref=e80]:
+              - generic [ref=e81]: Redmi
+              - text: همکار معتبر در مشهد
+      - region [ref=e82]:
+        - generic [ref=e83]:
+          - heading "چهار دلیل برای اعتماد به حامی همراه" [level=2] [ref=e84]
+          - paragraph [ref=e85]: فروش حضوری، پخش عمده و اکوسیستم موبایل
+          - list [ref=e86]:
+            - listitem [ref=e87]:
+              - generic [ref=e93]:
+                - heading "فروش حضوری" [level=3] [ref=e94]
+                - paragraph [ref=e95]: تجربه خرید حضوری از فروشگاه حامی همراه
+            - listitem [ref=e96]:
+              - generic [ref=e101]:
+                - heading "پخش عمده" [level=3] [ref=e102]
+                - paragraph [ref=e103]: قیمت و تأمین ویژه برای همکاران
+            - listitem [ref=e104]:
+              - generic [ref=e112]:
+                - heading "تنوع محصولات" [level=3] [ref=e113]
+                - paragraph [ref=e114]: موبایل، لوازم جانبی و محصولات دیجیتال
+            - listitem [ref=e115]:
+              - generic [ref=e121]:
+                - heading "خرید مطمئن" [level=3] [ref=e122]
+                - paragraph [ref=e123]: اصالت کالا و تجربه خرید قابل اعتماد
+      - region [ref=e124]:
+        - generic [ref=e126]:
+          - generic [ref=e127]:
+            - generic [ref=e128]: فروشگاه
+            - heading "دسته‌بندی محصولات." [level=2] [ref=e130]
+            - paragraph [ref=e131]: هر چیزی که برای تجربه بهتر موبایل نیاز داری
+          - link "مشاهده همه" [ref=e132] [cursor=pointer]:
+            - /url: /shop
+        - list [ref=e136]:
+          - listitem [ref=e137] [cursor=pointer]:
+            - generic [ref=e144]:
+              - text: ۰۱
+              - generic [ref=e145]: MOBILE / CORE
+              - heading "موبایل" [level=3] [ref=e146]
+              - paragraph [ref=e147]: Samsung · Apple · Xiaomi · Nokia
+              - generic [ref=e148]: مشاهده
+          - listitem [ref=e151] [cursor=pointer]:
+            - generic [ref=e158]:
+              - text: ۰۲
+              - generic [ref=e159]: AUDIO / PERSONAL
+              - heading "ایرپاد و هدفون" [level=3] [ref=e160]
+              - paragraph [ref=e161]: AirPods · Headphones
+              - generic [ref=e162]: مشاهده
+          - listitem [ref=e165] [cursor=pointer]:
+            - generic [ref=e172]:
+              - text: ۰۳
+              - generic [ref=e173]: POWER / ESSENTIAL
+              - heading "شارژر و آداپتور" [level=3] [ref=e174]
+              - paragraph [ref=e175]: Adapters · Cables · Power
+              - generic [ref=e176]: مشاهده
+          - listitem [ref=e179] [cursor=pointer]:
+            - generic [ref=e188]:
+              - text: ۰۴
+              - generic [ref=e189]: POWER / READY
+              - heading "پاوربانک" [level=3] [ref=e190]
+              - paragraph [ref=e191]: همیشه آماده
+              - generic [ref=e192]: مشاهده
+          - listitem [ref=e195] [cursor=pointer]:
+            - generic [ref=e205]:
+              - text: ۰۵
+              - generic [ref=e206]: WATCH / CONNECTED
+              - heading "ساعت هوشمند" [level=3] [ref=e207]
+              - paragraph [ref=e208]: روزمره، دقیق، نزدیک
+              - generic [ref=e209]: مشاهده
+          - listitem [ref=e212] [cursor=pointer]:
+            - generic [ref=e219]:
+              - text: ۰۶
+              - generic [ref=e220]: FEATURE / SIMPLE
+              - heading "فیچرفون" [level=3] [ref=e221]
+              - paragraph [ref=e222]: ساده، ماندگار، آماده
+              - generic [ref=e223]: مشاهده
+          - listitem [ref=e226] [cursor=pointer]:
+            - generic [ref=e234]:
+              - text: ۰۷
+              - generic [ref=e235]: ENTERTAINMENT / SOUND
+              - heading "اسپیکر و Party Box" [level=3] [ref=e236]
+              - paragraph [ref=e237]: Sound for larger moments
+              - generic [ref=e238]: مشاهده
+          - listitem [ref=e241] [cursor=pointer]:
+            - generic [ref=e251]:
+              - text: ۰۸
+              - generic [ref=e252]: DIGITAL / ONLINE
+              - heading "خدمات آنلاین" [level=3] [ref=e253]
+              - paragraph [ref=e254]: Apple ID · Digital Services
+              - generic [ref=e255]: مشاهده
+      - region [ref=e258]:
+        - generic [ref=e260]:
+          - generic [ref=e261]:
+            - generic [ref=e262]: ویترین منتخب
+            - heading "محصولات منتخب." [level=2] [ref=e264]
+            - paragraph [ref=e265]: انتخابی از محبوب‌ترین و تازه‌ترین محصولات حامی همراه
+          - link "مشاهده همه محصولات" [ref=e266] [cursor=pointer]:
+            - /url: /shop
+        - tablist "فیلتر محصولات منتخب" [ref=e270]:
+          - tab "جدیدترین‌ها" [selected] [ref=e271] [cursor=pointer]
+          - tab "پیشنهاد ویژه" [ref=e273] [cursor=pointer]
+        - status [ref=e860]:
+          - generic [ref=e861]: دریافت محصولات موقتاً ممکن نیست.
+          - paragraph [ref=e862]: می‌توانید کاتالوگ کامل را ببینید یا بعداً دوباره تلاش کنید.
+          - generic [ref=e863]:
+            - button "تلاش دوباره" [ref=e864] [cursor=pointer]
+            - link "مشاهده همه محصولات" [ref=e865] [cursor=pointer]:
+              - /url: /shop
+      - region [ref=e295]:
+        - generic [ref=e296]:
+          - generic [ref=e297]:
+            - generic [ref=e298]: چرا حامی همراه
+            - generic [ref=e300]:
+              - heading "فقط یک فروشگاه نیستیم." [level=2] [ref=e302]
+              - paragraph [ref=e303]: تجربه‌ای که از انتخاب محصول شروع می‌شود و به خرید مطمئن و همکاری بلندمدت می‌رسد.
+          - generic "شواهد تجربه حامی همراه" [ref=e304]:
+            - article [ref=e306]:
+              - generic [ref=e308]:
+                - generic [ref=e312]: PHYSICAL PRESENCE
+                - generic [ref=e313]: تصویر واقعی فروشگاه در انتظار افزودن
+              - generic [ref=e314]:
+                - generic [ref=e315]: PHYSICAL STORE
+                - heading "حضوری هم کنار شما هستیم." [level=3] [ref=e316]
+                - paragraph [ref=e317]: برای دیدن محصولات و دریافت راهنمایی، مسیر حضوری نیز در کنار تجربه آنلاین در دسترس است.
+                - generic [ref=e318]: تصویر واقعی فروشگاه پس از دریافت، در همین قاب قرار می‌گیرد.
+                - link "اطلاعات فروشگاه" [ref=e319] [cursor=pointer]:
+                  - /url: "#store-experience"
+            - article [ref=e323]:
+              - generic [ref=e325]:
+                - generic [ref=e326]: CURATED
+                - generic [ref=e327]: PRODUCTS
+                - generic [ref=e328]: SELECTED WITH CARE
+              - generic [ref=e329]:
+                - generic [ref=e330]: CURATED CHOICE
+                - heading "انتخاب با اطمینان." [level=3] [ref=e331]
+                - paragraph [ref=e332]: تمرکز ما روی ارائه محصول معتبر و تجربه خریدی است که جزئیات آن روشن باشد.
+                - generic [ref=e333]: محصولات منتخب، با نگاه دقیق‌تر.
+                - link "مشاهده محصولات" [ref=e334] [cursor=pointer]:
+                  - /url: "#featured"
+            - article [ref=e338]:
+              - generic [ref=e340]:
+                - generic [ref=e341]: APPLE
+                - generic [ref=e342]: SAMSUNG
+                - generic [ref=e343]: XIAOMI
+                - generic [ref=e344]: NOKIA
+                - generic [ref=e345]: REALME
+                - generic [ref=e346]: MULTI / BRAND
+              - generic [ref=e347]:
+                - generic [ref=e348]: MULTI-BRAND
+                - heading "انتخاب محدود نیست." [level=3] [ref=e349]
+                - paragraph [ref=e350]: برندهای مختلف، در یک مقصد و در کنار نیازهای متفاوت شما قرار می‌گیرند.
+                - generic [ref=e351]: چندبرندی، در یک تجربه منسجم.
+                - link "برندها را ببینید" [ref=e352] [cursor=pointer]:
+                  - /url: "#brands"
+            - article [ref=e356]:
+              - generic [ref=e358]:
+                - generic [ref=e359]:
+                  - text: PARTNER
+                  - generic [ref=e361]: ROUTE
+                - generic [ref=e362]: REGISTER — VERIFY — ORDER
+              - generic [ref=e363]:
+                - generic [ref=e364]: FOR BUSINESS
+                - heading "برای همکاران، فراتر از فروش." [level=3] [ref=e365]
+                - paragraph [ref=e366]: مسیر همکاری برای قیمت همکاری، تنوع محصول و ثبت سفارش کسب‌وکارها طراحی شده است.
+                - generic [ref=e367]: یک مسیر روشن برای همکاری حرفه‌ای.
+                - link "بخش همکاری" [ref=e368] [cursor=pointer]:
+                  - /url: "#b2b"
+          - generic [ref=e371]:
+            - blockquote [ref=e372]:
+              - paragraph [ref=e373]: اعتماد، چیزی نیست که نوشته شود؛ تجربه‌ای است که ساخته می‌شود.
+            - generic "امضای خدمات حامی همراه" [ref=e374]:
+              - generic [ref=e375]: فروش حضوری
+              - generic [ref=e376]: فروش آنلاین
+              - generic [ref=e378]: پخش عمده
+              - generic [ref=e380]: خدمات دیجیتال
+              - generic [ref=e382]: چندبرندی
+      - region [ref=e384]:
+        - generic [ref=e385]:
+          - generic [ref=e386]:
+            - generic [ref=e387]: برندها
+            - heading "برندهایی که می‌شناسید. انتخاب‌هایی که به آن‌ها اعتماد دارید." [level=2] [ref=e389]:
+              - text: برندهایی که می‌شناسید.
+              - generic [ref=e390]: انتخاب‌هایی که به آن‌ها اعتماد دارید.
+            - paragraph [ref=e391]: مجموعه‌ای از برندهای معتبر موبایل، تکنولوژی و لوازم جانبی، در یک تجربهٔ خرید واحد.
+          - list "برندهای منتخب حامی همراه" [ref=e393]:
+            - listitem "نمایش روایت APPLE" [ref=e394] [cursor=pointer]: APPLE
+            - listitem "نمایش روایت SAMSUNG" [ref=e395] [cursor=pointer]: SAMSUNG
+            - listitem "نمایش روایت XIAOMI" [ref=e396] [cursor=pointer]: XIAOMI
+            - listitem "NOKIA — روایت برند به‌زودی" [ref=e397]: NOKIA
+            - listitem "REALME — روایت برند به‌زودی" [ref=e398]: REALME
+            - listitem "TCH — روایت برند به‌زودی" [ref=e399]: TCH
+            - listitem "VOCAL — روایت برند به‌زودی" [ref=e400]: VOCAL
+            - listitem "NEXA — روایت برند به‌زودی" [ref=e401]: NEXA
+            - listitem "OAK — روایت برند به‌زودی" [ref=e402]: OAK
+          - article [ref=e404]:
+            - generic [ref=e405]:
+              - generic [ref=e406]: 01 / BRAND STORY
+              - generic [ref=e407]:
+                - generic [ref=e408]: APPLE
+                - generic [ref=e409]: BRAND VISUAL / PENDING ASSET
+            - generic [ref=e410]:
+              - paragraph [ref=e411]: APPLE
+              - heading "مینیمال، دقیق، بی‌حاشیه." [level=3] [ref=e412]
+              - paragraph [ref=e413]: یک روایت آرام برای انتخاب‌هایی که جزئیات متریال، تجربهٔ نرم و طراحی خالص برایشان مهم است.
+              - link "مشاهده محصولات APPLE" [ref=e414] [cursor=pointer]:
+                - /url: /shop?brand=apple
+          - generic [ref=e418]:
+            - paragraph [ref=e419]: یک مقصد.
+            - strong [ref=e420]: انتخاب‌های بی‌نهایت.
+            - generic [ref=e421]: HAMI HAMRAH
+      - region [ref=e422]:
+        - generic [ref=e426]:
+          - heading "انتخابی که بهترین می‌ماند." [level=2] [ref=e427]:
+            - text: انتخابی که
+            - generic [ref=e428]: بهترین می‌ماند.
+          - paragraph [ref=e429]: موبایل، لوازم جانبی و خدمات دیجیتال؛ در یک تجربهٔ متفاوت و دقیق.
+          - button "مشاهده محصولات" [ref=e430] [cursor=pointer]
+      - region [ref=e434]:
+        - generic [ref=e436]:
+          - generic [ref=e437]:
+            - generic [ref=e438]: تازه‌ها
+            - heading "تازه رسیده‌اند." [level=2] [ref=e440]
+            - paragraph [ref=e441]: جدیدترین محصولاتی که به مجموعه حامی همراه اضافه شده‌اند.
+          - generic [ref=e442]:
+            - link "مشاهده همه" [ref=e443] [cursor=pointer]:
+              - /url: /shop
+            - button "نمایش محصولات جدید بعدی" [disabled] [ref=e446]
+        - status [ref=e868]:
+          - generic [ref=e869]: دریافت تازه‌واردها موقتاً ممکن نیست.
+          - link "مشاهده همه محصولات" [ref=e870] [cursor=pointer]:
+            - /url: /shop
+      - region [ref=e472]:
+        - generic [ref=e473]:
+          - generic [ref=e475]:
+            - generic [ref=e476]:
+              - generic [ref=e477]: همکاری عمده
+              - heading "برای همکاران، فراتر از فروش." [level=2] [ref=e479]:
+                - text: برای همکاران،
+                - generic [ref=e480]: فراتر از فروش.
+              - paragraph [ref=e481]: مسیر همکاری برای قیمت همکاری، تنوع محصول و ثبت سفارش کسب‌وکارها طراحی شده است؛ از ثبت‌نام تا سفارش، در سه گام روشن.
+              - generic "حوزه‌های تأمین" [ref=e482]:
+                - generic [ref=e483]: موبایل
+                - generic [ref=e484]: لوازم جانبی
+                - generic [ref=e485]: چندبرندی
+                - generic [ref=e486]: همکاری مستمر
+              - generic [ref=e487]:
+                - link "ورود به پنل همکاری" [ref=e488] [cursor=pointer]:
+                  - /url: /partners/login
+                - link "ثبت‌نام همکار" [ref=e492] [cursor=pointer]:
+                  - /url: /partners
+            - generic [ref=e495]:
+              - article [ref=e497]:
+                - heading "قیمت همکاری" [level=3] [ref=e503]
+                - paragraph [ref=e504]: Pricing مخصوص همکاران
+              - article [ref=e506]:
+                - heading "موجودی به‌روز" [level=3] [ref=e512]
+                - paragraph [ref=e513]: اطلاع از موجودی پیش از سفارش
+              - article [ref=e515]:
+                - heading "تنوع کالا" [level=3] [ref=e521]
+                - paragraph [ref=e522]: موبایل و لوازم جانبی در یک مجموعه
+              - article [ref=e524]:
+                - heading "سفارش آسان" [level=3] [ref=e530]
+                - paragraph [ref=e531]: فرآیند ساده و سریع سفارش
+          - list "فرآیند همکاری" [ref=e533]:
+            - listitem [ref=e534]:
+              - generic [ref=e535]: "01"
+              - generic [ref=e536]:
+                - heading "ثبت‌نام" [level=3] [ref=e537]
+                - paragraph [ref=e538]: اطلاعات همکاری را ثبت می‌کنید.
+            - listitem [ref=e539]:
+              - generic [ref=e540]: "02"
+              - generic [ref=e541]:
+                - heading "تأیید" [level=3] [ref=e542]
+                - paragraph [ref=e543]: حساب همکاری بررسی و فعال می‌شود.
+            - listitem [ref=e544]:
+              - generic [ref=e545]: "03"
+              - generic [ref=e546]:
+                - heading "سفارش" [level=3] [ref=e547]
+                - paragraph [ref=e548]: دسترسی همکاری برای سفارش آماده می‌شود.
+      - region [ref=e549]:
+        - generic [ref=e550]:
+          - generic [ref=e551]: لوازم جانبی
+          - heading "لوازم جانبی، دقیق انتخاب کنید." [level=2] [ref=e553]
+        - generic [ref=e554]:
+          - list "دسته‌های لوازم جانبی" [ref=e556]:
+            - listitem [ref=e557]:
+              - button "نمایش تمرکز بصری دسته صدا" [pressed] [ref=e558] [cursor=pointer]:
+                - generic [ref=e559]: "01"
+                - generic [ref=e560]: AUDIO
+                - generic [ref=e561]: ایرباد و هدفون
+              - link "مشاهدهٔ دسته صدا" [ref=e562] [cursor=pointer]:
+                - /url: /shop?category=audio
+            - listitem [ref=e565]:
+              - button "نمایش تمرکز بصری دسته توان" [ref=e566] [cursor=pointer]:
+                - generic [ref=e567]: "02"
+                - generic [ref=e568]: POWER
+                - generic [ref=e569]: پاوربانک
+              - link "مشاهدهٔ دسته توان" [ref=e570] [cursor=pointer]:
+                - /url: /shop?category=power-bank
+            - listitem [ref=e573]:
+              - button "نمایش تمرکز بصری دسته شارژ" [ref=e574] [cursor=pointer]:
+                - generic [ref=e575]: "03"
+                - generic [ref=e576]: CHARGING
+                - generic [ref=e577]: آداپتور و کابل
+              - link "مشاهدهٔ دسته شارژ" [ref=e578] [cursor=pointer]:
+                - /url: /shop?category=charger
+            - listitem [ref=e581]:
+              - button "نمایش تمرکز بصری دسته پوشیدنی" [ref=e582] [cursor=pointer]:
+                - generic [ref=e583]: "04"
+                - generic [ref=e584]: WEARABLES
+                - generic [ref=e585]: ساعت هوشمند
+              - link "مشاهدهٔ دسته پوشیدنی" [ref=e586] [cursor=pointer]:
+                - /url: /shop?category=smartwatch
+            - listitem [ref=e589]:
+              - button "نمایش تمرکز بصری دسته سرگرمی" [ref=e590] [cursor=pointer]:
+                - generic [ref=e591]: "05"
+                - generic [ref=e592]: ENTERTAINMENT
+                - generic [ref=e593]: اسپیکر و Party Box
+              - link "مشاهدهٔ دسته سرگرمی" [ref=e594] [cursor=pointer]:
+                - /url: /shop?category=speaker
+          - generic [ref=e600]:
+            - text: AUDIO
+            - generic [ref=e601]: صدا
+            - paragraph [ref=e602]: ایرباد و هدفون
+            - link "مشاهده محصولات" [ref=e603] [cursor=pointer]:
+              - /url: /shop?category=audio
+        - generic [ref=e607]:
+          - paragraph [ref=e608]: برای کامل‌کردن تجربهٔ هر دستگاه، انتخابی دقیق‌تر داشته باشید.
+          - link "مشاهده همه لوازم جانبی" [ref=e609] [cursor=pointer]:
+            - /url: /shop
+      - region [ref=e612]:
+        - generic [ref=e613]:
+          - generic [ref=e614]:
+            - generic [ref=e616]:
+              - generic [ref=e617]: خدمات دیجیتال
+              - heading "بیشتر از یک فروشگاه." [level=2] [ref=e619]
+              - paragraph [ref=e620]: خدمات دیجیتال حامی همراه، برای نیازهایی که در جعبه گوشی جا نمی‌شوند.
+              - link "مشاهده خدمات آنلاین" [ref=e621] [cursor=pointer]:
+                - /url: /shop?category=online-services
+            - article [ref=e625]:
+              - generic [ref=e626]:
+                - generic [ref=e627]: "01"
+                - generic [ref=e628]: ONLINE SERVICE
+              - paragraph [ref=e629]: APPLE ID
+              - heading "Apple ID" [level=3] [ref=e630]
+              - paragraph [ref=e632]: ساخت و آماده‌سازی Apple ID برای نیازهای دیجیتال شما.
+              - link "دریافت این خدمت" [ref=e633] [cursor=pointer]:
+                - /url: /shop?category=online-services
+              - generic [ref=e636]: فرآیند ساده، شفاف و قابل پیگیری.
+          - generic [ref=e641]:
+            - paragraph [ref=e642]: SHORT FAQ / سؤال‌های کوتاه
+            - generic [ref=e643]:
+              - group [ref=e644]:
+                - generic "Apple ID چیست؟" [ref=e645] [cursor=pointer]
+              - group [ref=e648]:
+                - generic "برای دریافت خدمت چه اطلاعاتی لازم است؟" [ref=e649] [cursor=pointer]
+              - group [ref=e652]:
+                - generic "خدمت چگونه پیگیری می‌شود؟" [ref=e653] [cursor=pointer]
+      - region [ref=e656]:
+        - generic [ref=e657]:
+          - generic [ref=e659]:
+            - generic [ref=e660]: تجربه حضوری
+            - heading "خرید را لمس کنید." [level=2] [ref=e662]
+            - paragraph [ref=e663]: از انتخاب محصول تا دریافت مشاوره، حامی همراه در کنار شماست.
+          - 'generic "جایگاه عکس واقعی: نمای کلی فروشگاه" [ref=e665]':
+            - generic [ref=e670]:
+              - generic [ref=e671]: REAL PHOTO SLOT / WIDE STORE
+              - generic [ref=e672]: نمای کلی فروشگاه
+              - generic [ref=e673]: نور، ویترین، قفسه‌ها و فضای واقعی مجموعه
+          - generic "اجزای تجربه خرید حضوری" [ref=e674]:
+            - article [ref=e676]:
+              - text: "01"
+              - heading "مشاهده و انتخاب" [level=3] [ref=e679]
+              - paragraph [ref=e680]: محصول را ببینید، مقایسه کنید و انتخاب کنید.
+            - article [ref=e682]:
+              - text: "02"
+              - heading "مشاوره تخصصی" [level=3] [ref=e685]
+              - paragraph [ref=e686]: پیش از خرید، انتخاب مناسب خودتان را پیدا کنید.
+            - article [ref=e688]:
+              - text: "03"
+              - heading "پشتیبانی پس از خرید" [level=3] [ref=e692]
+              - paragraph [ref=e693]: همراه شما بعد از خرید.
+          - generic "جایگاه تصاویر تجربه حضوری" [ref=e694]:
+            - 'generic "جایگاه عکس واقعی: تعامل با محصول" [ref=e696]':
+              - generic [ref=e700]:
+                - paragraph [ref=e701]: REAL PHOTO SLOT
+                - generic [ref=e702]: تعامل با محصول
+                - generic [ref=e703]: انتخاب محصول یا گفت‌وگوی طبیعی مشاوره
+            - 'generic "جایگاه عکس واقعی: جزئیات فروشگاه" [ref=e705]':
+              - generic [ref=e709]:
+                - paragraph [ref=e710]: REAL PHOTO SLOT
+                - generic [ref=e711]: جزئیات فروشگاه
+                - generic [ref=e712]: بسته‌بندی، میز فروش یا نشانهٔ بصری مجموعه
+          - generic [ref=e714]:
+            - generic [ref=e715]:
+              - text: HAMI / ONLINE + OFFLINE
+              - heading "از صفحه نمایش تا فروشگاه، همراه شما هستیم." [level=3] [ref=e716]
+              - paragraph [ref=e717]: برای اطلاعات حضور فروشگاهی یا گفت‌وگو با ما، از مسیرهای زیر استفاده کنید.
+            - generic [ref=e718]:
+              - link "اطلاعات فروشگاه" [ref=e719] [cursor=pointer]:
+                - /url: "#contact"
+              - link "تماس با ما" [ref=e722] [cursor=pointer]:
+                - /url: /contact
+      - region [ref=e725]:
+        - generic [ref=e726]:
+          - generic [ref=e727]:
+            - generic [ref=e728]: اعتماد مشتری
+            - generic [ref=e730]:
+              - heading "اعتماد، با واقعیت ساخته می‌شود." [level=2] [ref=e731]
+              - paragraph [ref=e732]: تجربه‌ها و محتوای مشتریان فقط پس از تأیید منبع و دریافت اجازه، در این فضا منتشر می‌شوند.
+          - generic "فضای شفاف اعتماد مشتری" [ref=e733]:
+            - article [ref=e735]:
+              - text: VERIFIED COMMUNITY / PENDING
+              - heading "جای تجربه‌های واقعی مشتریان" [level=3] [ref=e739]
+              - paragraph [ref=e740]: محتوای تجربه مشتریان پس از دریافت اجازه و تأیید منبع منتشر می‌شود.
+              - generic [ref=e741]: برای نمایش نظر، عکس یا محتوای اجتماعی، منبع و رضایت صاحب محتوا لازم است.
+            - article [ref=e743]:
+              - text: CUSTOMER JOURNEY
+              - heading "ارتباط بعد از خرید تمام نمی‌شود." [level=3] [ref=e744]
+              - list [ref=e745]:
+                - listitem [ref=e746]:
+                  - generic [ref=e747]: ۰۱
+                  - text: انتخاب
+                - listitem [ref=e749]:
+                  - generic [ref=e750]: ۰۲
+                  - text: مشاوره
+                - listitem [ref=e752]:
+                  - generic [ref=e753]: ۰۳
+                  - text: خرید
+                - listitem [ref=e755]:
+                  - generic [ref=e756]: ۰۴
+                  - text: همراهی
+            - article "جایگاه محتوای اجتماعی پس از تأیید منبع" [ref=e759]:
+              - generic [ref=e764]: SOCIAL CONTENT / AWAITING VERIFIED SOURCE
+              - paragraph [ref=e765]: گالری و پیوند اجتماعی پس از تأیید حساب رسمی و دریافت محتوای مجاز فعال می‌شود.
+          - generic [ref=e766]:
+            - generic [ref=e767]:
+              - paragraph [ref=e768]: TRUST SIGNALS
+              - generic [ref=e769]:
+                - link "فروش حضوری" [ref=e774] [cursor=pointer]:
+                  - /url: "#store-experience"
+                - link "فروش آنلاین" [ref=e779] [cursor=pointer]:
+                  - /url: /shop
+                - link "پشتیبانی" [ref=e784] [cursor=pointer]:
+                  - /url: "#contact"
+                - link "همکاری عمده" [ref=e789] [cursor=pointer]:
+                  - /url: "#b2b"
+                - link "تنوع برند" [ref=e794] [cursor=pointer]:
+                  - /url: "#brands"
+            - generic [ref=e795]:
+              - paragraph [ref=e796]: برای شروع انتخاب، مسیر فروشگاه در دسترس است.
+              - link "شروع خرید" [ref=e797] [cursor=pointer]:
+                - /url: /shop
+      - region [ref=e800]:
+        - generic [ref=e804]:
+          - text: HAMI HAMRAH / FINAL NOTE
+          - heading [level=2] [ref=e805]:
+            - text: همراه شما،
+            - emphasis [ref=e806]: از انتخاب تا تجربه.
+          - paragraph [ref=e807]: خرید آنلاین، فروش حضوری و همکاری حرفه‌ای؛ همه در یک مجموعه.
+          - generic [ref=e808]:
+            - link "مشاهده محصولات" [ref=e809] [cursor=pointer]:
+              - /url: /shop
+            - generic [ref=e812]:
+              - link "فروشگاه حضوری" [ref=e813] [cursor=pointer]:
+                - /url: "#store-experience"
+              - link "همکاری با ما" [ref=e816] [cursor=pointer]:
+                - /url: /partners
+    - contentinfo [ref=e819]:
+      - generic [ref=e821]:
+        - generic [ref=e822]:
+          - generic [ref=e824]:
+            - text: حامی همراه
+            - generic [ref=e825]: پخش تلفن همراه — مشهد
+          - paragraph [ref=e826]: عرضه‌کننده تخصصی موبایل، ساعت هوشمند و اکسسوری — با تکیه بر اصالت کالا، شفافیت قیمت و پشتیبانی حرفه‌ای از خرید خرد و عمده.
+        - navigation "فروشگاه" [ref=e827]:
+          - heading "فروشگاه" [level=3] [ref=e828]
+          - list [ref=e829]:
+            - listitem [ref=e830]:
+              - link "همه محصولات" [ref=e831] [cursor=pointer]:
+                - /url: /shop
+            - listitem [ref=e832]:
+              - link "موبایل" [ref=e833] [cursor=pointer]:
+                - /url: /shop?category=mobile
+            - listitem [ref=e834]:
+              - link "ایرپاد و هدفون" [ref=e835] [cursor=pointer]:
+                - /url: /shop?category=headphones
+            - listitem [ref=e836]:
+              - link "ساعت هوشمند" [ref=e837] [cursor=pointer]:
+                - /url: /shop?category=smartwatch
+        - navigation "حامی همراه" [ref=e838]:
+          - heading "حامی همراه" [level=3] [ref=e839]
+          - list [ref=e840]:
+            - listitem [ref=e841]:
+              - link "همکاری عمده (B2B)" [ref=e842] [cursor=pointer]:
+                - /url: /partners
+            - listitem [ref=e843]:
+              - link "درباره ما" [ref=e844] [cursor=pointer]:
+                - /url: /about
+            - listitem [ref=e845]:
+              - link "تماس با ما" [ref=e846] [cursor=pointer]:
+                - /url: /contact
+        - navigation "حساب کاربری" [ref=e847]:
+          - heading "حساب کاربری" [level=3] [ref=e848]
+          - list [ref=e849]:
+            - listitem [ref=e850]:
+              - link "ورود" [ref=e851] [cursor=pointer]:
+                - /url: /login
+            - listitem [ref=e852]:
+              - link "ثبت‌نام" [ref=e853] [cursor=pointer]:
+                - /url: /register
+            - listitem [ref=e854]:
+              - link "سفارش‌های من" [ref=e855] [cursor=pointer]:
+                - /url: /my-orders
+      - generic [ref=e857]:
+        - paragraph [ref=e858]: © ۱۴۰۵ حامی همراه — تمامی حقوق محفوظ است.
+        - paragraph [ref=e859]: مشهد
+  - alert [ref=e873]

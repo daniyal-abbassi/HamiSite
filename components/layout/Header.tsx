@@ -1,60 +1,64 @@
 import Link from "next/link";
+import Image from "next/image";
 import { ShoppingBag, UserRound } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { tickerItems } from "@/lib/content/home";
+import hamiMark from "@/public/brand/hami-mark.png";
 
 const navLinks = [
   { href: "/", label: "خانه" },
   { href: "/shop", label: "فروشگاه" },
-  { href: "/partners", label: "همکاری عمده" },
 ];
 
-/** Text-based brand mark — the official `hami-mark` asset is still missing
- * (see docs/inspires/.../MISSING-ASSETS.md); swap in the <img> once restored. */
 function BrandMark() {
   return (
-    <Link href="/" className="flex items-center gap-2.5" aria-label="حامی همراه — صفحه اصلی">
-      <span className="grid size-9 place-items-center rounded-sm bg-wine font-mono text-sm font-medium text-champagne-light">
-        H
-      </span>
-      <span className="text-base font-black leading-tight text-ink-dark">
+    <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="حامی همراه — صفحه اصلی">
+      <Image src={hamiMark} alt="" priority className="size-9 rounded-xl bg-white ring-1 ring-gold/45" />
+      <span className="hidden text-base font-black leading-tight text-foreground sm:block">
         حامی همراه
-        <span className="block font-mono text-[9px] font-normal tracking-[0.14em] text-ink-dark/50">
-          HAMI HAMRAH
+        <span className="block font-mono text-[11px] font-normal text-muted-foreground/70">
+          پخش تلفن همراه — مشهد
         </span>
       </span>
     </Link>
   );
 }
 
+/** Infinite marquee — content rendered twice, animated by exactly half its
+ * own (doubled) width so the loop is seamless with no JS measurement. */
+function Ticker() {
+  return (
+    <div className="overflow-hidden border-b border-line bg-gradient-to-l from-oxblood/35 to-oxblood-deep/15">
+      <div className="flex w-max animate-slide gap-12 py-2.5 hover:[animation-play-state:paused]">
+        {[...tickerItems, ...tickerItems].map((item, i) => (
+          <i key={i} className="flex shrink-0 items-center gap-2 text-[13px] not-italic text-muted-foreground/85">
+            <span className="size-1.5 shrink-0 rounded-full bg-gold" aria-hidden="true" />
+            {item}
+          </i>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 export function Header() {
   return (
     <header>
-      {/* brand ticker strip */}
-      <div className="flex min-h-[38px] items-center bg-wine-ink text-[10px] font-semibold text-[#fffaf2]/80">
-        <div className="container flex items-center gap-2.5">
-          <span className="size-[5px] animate-pulse-dot rounded-full bg-champagne shadow-[0_0_0_4px_rgba(217,185,121,0.12)]" />
-          <p className="m-0">عرضه تخصصی موبایل و اکسسوری</p>
-          <span className="mx-1 h-3 w-px bg-[#fffaf2]/20" />
-          <span className="font-mono tracking-[0.06em] text-champagne-light">B2C + B2B</span>
-          <p className="m-0 hidden text-[#fffaf2]/50 sm:block">
-            پشتیبانی خرید عمده برای همکاران
-          </p>
-        </div>
-      </div>
+      <Ticker />
 
-      {/* cream sticky bar */}
-      <div className="site-header border-b border-[rgba(40,28,29,0.08)]">
-        <div className="container flex h-16 items-center gap-4">
-          <MobileNav links={navLinks} />
+      <div className="site-header">
+        <div className="container flex h-[72px] items-center gap-5">
+          <MobileNav links={[...navLinks, { href: "/partners", label: "همکاری عمده" }]} />
           <BrandMark />
 
-          <nav className="ms-6 hidden items-center gap-6 md:flex" aria-label="ناوبری اصلی">
+          <nav className="ms-2 hidden items-center gap-1 md:flex" aria-label="ناوبری اصلی">
             {navLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}
-                className="text-sm font-bold text-ink-dark/80 transition-colors hover:text-wine"
+                className="rounded-xl px-3.5 py-2 text-sm text-muted-foreground/90 transition-colors hover:bg-foreground/5 hover:text-foreground"
               >
                 {link.label}
               </Link>
@@ -67,7 +71,7 @@ export function Header() {
               name="q"
               placeholder="جستجوی محصول…"
               aria-label="جستجوی محصول"
-              className="h-9 border-[rgba(40,28,29,0.16)] bg-white/60 text-ink-dark placeholder:text-ink-dark/40"
+              className="h-9"
             />
           </form>
 
@@ -75,18 +79,22 @@ export function Header() {
             <Link
               href="/login"
               aria-label="ورود به حساب"
-              className="grid size-10 place-items-center rounded-sm text-ink-dark/80 transition-colors hover:bg-wine/10 hover:text-wine"
+              className="grid size-10 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground"
             >
               <UserRound className="size-[18px]" />
             </Link>
             <Link
               href="/cart"
               aria-label="سبد خرید"
-              className="grid size-10 place-items-center rounded-sm text-ink-dark/80 transition-colors hover:bg-wine/10 hover:text-wine"
+              className="grid size-10 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground"
             >
               <ShoppingBag className="size-[18px]" />
             </Link>
           </div>
+
+          <Link href="/partners">
+            <Button size="sm">ثبت‌نام همکار</Button>
+          </Link>
         </div>
       </div>
     </header>
