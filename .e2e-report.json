@@ -1,0 +1,144 @@
+{
+  "base": "http://localhost:3000",
+  "passed": 21,
+  "failed": 0,
+  "results": [
+    {
+      "name": "home: GET / returns 200",
+      "pass": true,
+      "detail": "status=200"
+    },
+    {
+      "name": "home: page has content",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "guard: guest /admin → /login?next=/admin",
+      "pass": true,
+      "detail": "http://localhost:3000/login?next=/admin"
+    },
+    {
+      "name": "login: wrong password rejected by API (401)",
+      "pass": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "login: wrong password shows error",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "login: correct credentials accepted (200)",
+      "pass": true,
+      "detail": "status=200"
+    },
+    {
+      "name": "login: admin lands on /admin",
+      "pass": true,
+      "detail": "http://localhost:3000/admin"
+    },
+    {
+      "name": "dashboard: calls /api/admin/reports/summary",
+      "pass": true,
+      "detail": "status=200"
+    },
+    {
+      "name": "dashboard: AdminSidebar rendered",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "nav: /admin/orders renders & shows \"DEV-1001\"",
+      "pass": true,
+      "detail": "url=http://localhost:3000/admin/orders"
+    },
+    {
+      "name": "nav: /admin/products renders & shows \"iPhone 15 Pro\"",
+      "pass": true,
+      "detail": "url=http://localhost:3000/admin/products"
+    },
+    {
+      "name": "nav: /admin/users renders & shows \"reza\"",
+      "pass": true,
+      "detail": "url=http://localhost:3000/admin/users"
+    },
+    {
+      "name": "nav: /admin/categories renders & shows \"موبایل\"",
+      "pass": true,
+      "detail": "url=http://localhost:3000/admin/categories"
+    },
+    {
+      "name": "nav: /admin/brands renders & shows \"Apple\"",
+      "pass": true,
+      "detail": "url=http://localhost:3000/admin/brands"
+    },
+    {
+      "name": "nav: /admin/coupons renders & shows \"آماده‌سازی نشده\"",
+      "pass": true,
+      "detail": "url=http://localhost:3000/admin/coupons"
+    },
+    {
+      "name": "orders: rows link to detail page",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "order detail: status editor visible",
+      "pass": true,
+      "detail": "http://localhost:3000/admin/orders/3"
+    },
+    {
+      "name": "order detail: PATCH status mutation succeeds",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "security: unauthenticated /api/admin/users → 401",
+      "pass": true,
+      "detail": "status=401"
+    },
+    {
+      "name": "guard: RETAIL user /admin → redirected to /",
+      "pass": true,
+      "detail": "http://localhost:3000/"
+    },
+    {
+      "name": "security: RETAIL /api/admin/users → 403",
+      "pass": true,
+      "detail": "status=403"
+    }
+  ],
+  "consoleErrors": [
+    "[home] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[home] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[guest-guard] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[guest-guard] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[guest-guard] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[guest-guard] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[admin] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[admin] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[admin] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[admin] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[admin] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[retail] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[retail] Failed to load resource: the server responded with a status of 401 (Unauthorized)",
+    "[retail] Failed to load resource: the server responded with a status of 403 (Forbidden)"
+  ],
+  "badResponses": [
+    "[home] 401 http://localhost:3000/api/auth/me",
+    "[home] 401 http://localhost:3000/api/auth/me",
+    "[guest-guard] 401 http://localhost:3000/api/auth/me",
+    "[guest-guard] 401 http://localhost:3000/api/auth/me",
+    "[guest-guard] 401 http://localhost:3000/api/auth/me",
+    "[guest-guard] 401 http://localhost:3000/api/auth/me",
+    "[admin] 401 http://localhost:3000/api/auth/me",
+    "[admin] 401 http://localhost:3000/api/auth/me",
+    "[admin] 401 http://localhost:3000/api/auth/login",
+    "[admin] 401 http://localhost:3000/api/auth/me",
+    "[admin] 401 http://localhost:3000/api/auth/me",
+    "[retail] 401 http://localhost:3000/api/auth/me",
+    "[retail] 401 http://localhost:3000/api/auth/me",
+    "[retail] 403 http://localhost:3000/api/admin/users"
+  ]
+}
