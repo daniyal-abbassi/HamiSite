@@ -1,9 +1,10 @@
 import Link from "next/link";
 import Image from "next/image";
-import { ShoppingBag, UserRound } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/layout/MobileNav";
+import { CartButton } from "@/components/layout/CartButton";
+import { UserMenu } from "@/components/layout/UserMenu";
 import { tickerItems } from "@/lib/content/home";
 import hamiMark from "@/public/brand/hami-mark.png";
 
@@ -50,7 +51,7 @@ export function Header() {
 
       <div className="site-header">
         <div className="container flex h-[72px] items-center gap-5">
-          <MobileNav links={[...navLinks, { href: "/partners", label: "همکاری عمده" }]} />
+          <MobileNav links={[...navLinks, { href: "/cart", label: "سبد خرید" }, { href: "/partners", label: "همکاری عمده" }]} />
           <BrandMark />
 
           <nav className="ms-2 hidden items-center gap-1 md:flex" aria-label="ناوبری اصلی">
@@ -76,20 +77,8 @@ export function Header() {
           </form>
 
           <div className="ms-auto flex items-center gap-1 lg:ms-3">
-            <Link
-              href="/login"
-              aria-label="ورود به حساب"
-              className="grid size-10 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground"
-            >
-              <UserRound className="size-[18px]" />
-            </Link>
-            <Link
-              href="/cart"
-              aria-label="سبد خرید"
-              className="grid size-10 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground"
-            >
-              <ShoppingBag className="size-[18px]" />
-            </Link>
+            <UserMenu />
+            <CartButton />
           </div>
 
           <Link href="/partners">

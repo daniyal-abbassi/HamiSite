@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { AddToCartButton } from "@/components/shop/AddToCartButton";
 import { resolveProductImage } from "@/lib/product-images";
 import { cn, formatToman } from "@/lib/utils";
 import { stockLabels } from "@/lib/content/shop";
@@ -37,7 +38,7 @@ export function ProductCard({ product }: { product: ShopProduct }) {
           )}
           <strong className="text-sm font-black text-gold">{formatToman(product.displayPrice)}</strong>
         </div>
-        <div className="mt-auto flex items-center justify-between border-t border-line pt-3">
+        <div className="mt-auto flex items-center justify-between gap-2 border-t border-line pt-3">
           <span className="flex items-center gap-1.5 text-[11px] text-foreground/60">
             <i
               className={cn("size-1.5 rounded-full", product.stockType === "out_of_stock" ? "bg-destructive" : "bg-emerald-400")}
@@ -45,9 +46,12 @@ export function ProductCard({ product }: { product: ShopProduct }) {
             />
             {stockLabels[product.stockType] ?? "—"}
           </span>
-          <Link href={`/shop/${product.slug}`} className="inline-flex items-center gap-1 text-[11px] font-bold text-gold hover:underline">
-            مشاهده <ArrowLeft className="size-3.5" />
-          </Link>
+          <span className="flex items-center gap-1.5">
+            <AddToCartButton productId={product.id} disabled={product.stockType === "out_of_stock"} />
+            <Link href={`/shop/${product.slug}`} className="inline-flex items-center gap-1 text-[11px] font-bold text-gold hover:underline">
+              مشاهده <ArrowLeft className="size-3.5" />
+            </Link>
+          </span>
         </div>
       </div>
     </article>

@@ -1,20 +1,5 @@
 import type { Metadata } from "next";
-import { DM_Mono, Vazirmatn } from "next/font/google";
 import "./globals.css";
-
-const vazirmatn = Vazirmatn({
-  subsets: ["arabic"],
-  weight: ["400", "500", "600", "700", "800", "900"],
-  variable: "--font-vazirmatn",
-  display: "swap",
-});
-
-const dmMono = DM_Mono({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  variable: "--font-dm-mono",
-  display: "swap",
-});
 
 export const metadata: Metadata = {
   title: {
@@ -52,7 +37,9 @@ export const metadata: Metadata = {
  */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fa" dir="rtl" className={`${vazirmatn.variable} ${dmMono.variable}`}>
+    /* Fonts are self-hosted (see globals.css @font-face) — the font variables
+       live on :root there, so no next/font className is needed here. */
+    <html lang="fa" dir="rtl">
       <body>{children}</body>
     </html>
   );

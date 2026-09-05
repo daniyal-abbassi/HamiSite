@@ -133,6 +133,12 @@ const config: Config = {
           from: { transform: "translateX(100%)" },
           to: { transform: "translateX(0)" },
         },
+        // Mirror of slide-in-end for an end-anchored (physical left under RTL)
+        // panel — the cart drawer enters from the side of its header icon.
+        "slide-in-start": {
+          from: { transform: "translateX(-100%)" },
+          to: { transform: "translateX(0)" },
+        },
         // Floating stat cards — the hero's signature idle motion.
         bob: {
           "50%": { transform: "translateY(-14px)" },
@@ -153,6 +159,7 @@ const config: Config = {
         "fade-up": "fade-up 0.85s cubic-bezier(0.2, 0.7, 0.3, 1) both",
         "fade-in": "fade-in 300ms cubic-bezier(0.2, 0.7, 0.3, 1) both",
         "slide-in-end": "slide-in-end 300ms cubic-bezier(0.2, 0.7, 0.3, 1) both",
+        "slide-in-start": "slide-in-start 300ms cubic-bezier(0.2, 0.7, 0.3, 1) both",
         bob: "bob 7s ease-in-out infinite",
         shiny: "shiny 6s linear infinite",
         slide: "slide 34s linear infinite",

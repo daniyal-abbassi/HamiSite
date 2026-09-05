@@ -57,3 +57,25 @@ export async function apiGetWithMeta<T>(
   }
   return { data: body.data, meta: body.meta };
 }
+
+/** JSON body mutation helper — POST/PATCH/PUT/DELETE with the same envelope
+ * unwrapping as `apiGet`. `credentials: "same-origin"` keeps the httpOnly
+ * session cookie flowing (the only auth mechanism — no header/token exists). */
+export async function apiMutate<T>(
+  method: "POST" | "PATCH" | "PUT" | "DELETE",
+  path: string,
+  body?: unknown,
+): Promise<T> {
+  const response = await fetch(path, {
+    method,
+    credentials: "same-origin",
+    ...(body !== undefined
+      ? { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }
+      : {}),
+  });
+  return unwrap<T>(response);
+}
+
+export const apiPost = <T,>(path: string, body?: unknown) => apiMutate<T>("POST", path, body);
+export const apiPatch = <T,>(path: string, body?: unknown) => apiMutate<T>("PATCH", path, body);
+export const apiDelete = <T,>(path: string) => apiMutate<T>("DELETE", path);
