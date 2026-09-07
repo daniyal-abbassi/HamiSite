@@ -1,91 +1,85 @@
 import Link from "next/link";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
 import { MobileNav } from "@/components/layout/MobileNav";
 import { CartButton } from "@/components/layout/CartButton";
 import { UserMenu } from "@/components/layout/UserMenu";
-import { tickerItems } from "@/lib/content/home";
+import { PillNav, type PillNavItem } from "@/components/layout/PillNav";
 import hamiMark from "@/public/brand/hami-mark.png";
 
-const navLinks = [
+const navItems: PillNavItem[] = [
   { href: "/", label: "خانه" },
   { href: "/shop", label: "فروشگاه" },
+  { href: "/partners", label: "همکاری عمده" },
 ];
 
-function BrandMark() {
-  return (
-    <Link href="/" className="flex shrink-0 items-center gap-2.5" aria-label="حامی همراه — صفحه اصلی">
-      <Image src={hamiMark} alt="" priority className="size-9 rounded-xl bg-white ring-1 ring-gold/45" />
-      <span className="hidden text-base font-black leading-tight text-foreground sm:block">
-        حامی همراه
-        <span className="block font-mono text-[11px] font-normal text-muted-foreground/70">
-          پخش تلفن همراه — مشهد
-        </span>
-      </span>
-    </Link>
-  );
-}
-
-/** Infinite marquee — content rendered twice, animated by exactly half its
- * own (doubled) width so the loop is seamless with no JS measurement. */
-function Ticker() {
-  return (
-    <div className="overflow-hidden border-b border-line bg-gradient-to-l from-oxblood/35 to-oxblood-deep/15">
-      <div className="flex w-max animate-slide gap-12 py-2.5 hover:[animation-play-state:paused]">
-        {[...tickerItems, ...tickerItems].map((item, i) => (
-          <i key={i} className="flex shrink-0 items-center gap-2 text-[13px] not-italic text-muted-foreground/85">
-            <span className="size-1.5 shrink-0 rounded-full bg-gold" aria-hidden="true" />
-            {item}
-          </i>
-        ))}
-      </div>
-    </div>
-  );
-}
-
+/**
+ * A floating navigation island, not a full-width bar.
+ *
+ * The header is fixed and its only child is one centred glass pill, matching
+ * the reference layout. The credentials marquee that used to sit under it was
+ * removed outright; the clearance it provided now lives on <main> in the
+ * storefront layout.
+ *
+ * PillNav keeps its rising-circle hover but drops its own logo circle and
+ * container fill here — the island already provides both, and nesting a pill
+ * inside a pill reads as a mistake.
+ */
 export function Header() {
   return (
-    <header>
-      <Ticker />
+    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 md:pt-6">
+      <nav className="mx-auto flex max-w-6xl items-center gap-3 rounded-full border border-line bg-card/70 px-3 py-2 shadow-deep backdrop-blur-xl">
+        <MobileNav links={[...navItems, { href: "/cart", label: "سبد خرید" }]} />
 
-      <div className="site-header">
-        <div className="container flex h-[72px] items-center gap-5">
-          <MobileNav links={[...navLinks, { href: "/cart", label: "سبد خرید" }, { href: "/partners", label: "همکاری عمده" }]} />
-          <BrandMark />
+        <Link
+          href="/"
+          className="flex shrink-0 items-center gap-2.5 ps-1"
+          aria-label="حامی همراه — صفحه اصلی"
+        >
+          <Image src={hamiMark} alt="" priority className="size-9 rounded-xl bg-white ring-1 ring-aqua/45" />
+          <span className="hidden text-[15px] font-black leading-tight text-card-foreground sm:block">
+            حامی همراه
+          </span>
+        </Link>
 
-          <nav className="ms-2 hidden items-center gap-1 md:flex" aria-label="ناوبری اصلی">
-            {navLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                className="rounded-xl px-3.5 py-2 text-sm text-muted-foreground/90 transition-colors hover:bg-foreground/5 hover:text-foreground"
-              >
-                {link.label}
-              </Link>
-            ))}
-          </nav>
+        <PillNav
+          className="hidden md:block"
+          showLogo={false}
+          logo=""
+          items={navItems}
+          baseColor="transparent"
+          circleColor="rgb(var(--primary))"
+          pillColor="rgb(var(--foreground) / 0.05)"
+          pillTextColor="rgb(var(--foreground) / 0.85)"
+          hoveredPillTextColor="rgb(var(--primary-foreground))"
+        />
 
-          <form action="/shop" role="search" className="ms-auto hidden w-64 lg:block">
+        <div className="ms-auto flex items-center gap-2">
+          <form action="/shop" role="search" className="hidden lg:block">
             <Input
               type="search"
               name="q"
               placeholder="جستجوی محصول…"
               aria-label="جستجوی محصول"
-              className="h-9"
+              className="h-9 w-48 rounded-full border-line bg-foreground/[0.04]"
             />
           </form>
 
-          <div className="ms-auto flex items-center gap-1 lg:ms-3">
+          <div className="flex items-center gap-1">
             <UserMenu />
             <CartButton />
           </div>
 
-          <Link href="/partners">
-            <Button size="sm">ثبت‌نام همکار</Button>
+          {/* The one place signal red appears in the chrome. */}
+          <Link
+            href="/partners"
+            className="shiny-edge hidden h-10 items-center gap-2 px-5 text-sm font-bold transition-transform hover:-translate-y-0.5 active:scale-95 sm:inline-flex"
+          >
+            ثبت‌نام همکار
+            <span className="size-1.5 rounded-full bg-signal" aria-hidden="true" />
           </Link>
         </div>
-      </div>
+      </nav>
     </header>
   );
 }

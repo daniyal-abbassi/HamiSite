@@ -4,7 +4,7 @@ import type { Config } from "tailwindcss";
  * HAMI brand design system v2 — "Two Chapters" (flat wine + paper) retired.
  * Current world, pinned by the user from a supplied reference
  * (aura-landingSample.html): near-black canvas, atmospheric oxblood-ramp
- * glow, muted antique gold, fully rounded glass surfaces. See the direction
+ * glow, muted antique aqua, fully rounded glass surfaces. See the direction
  * contract at the top of app/layout.tsx before touching this file.
  */
 const config: Config = {
@@ -57,33 +57,36 @@ const config: Config = {
         },
         // Brand DNA v2 — literal hex so opacity modifiers (bg-oxblood/10) just
         // work. RAL 3004 (oxblood DEFAULT) is preserved as the real brand hue;
-        // everything around it (canvas, gold, radius, glass) changed.
+        // everything around it (canvas, aqua, radius, glass) changed.
         oxblood: {
-          DEFAULT: "#640211", // RAL 3004 — unchanged, the one preserved constant
-          lite: "#9C0A22",
-          mid: "#7D0417",
+          DEFAULT: "#640211", // RAL 3004 — the brand DNA, untouched
+          lite: "#8E0A1E",
+          mid: "#75040F",
           deep: "#3A010A",
         },
-        gold: {
-          DEFAULT: "#C9A227", // muted antique gold — replaces champagne #d4af6a
-          lite: "#F0DCA0",
-          deep: "#8A6A15",
+        aqua: {
+          DEFAULT: "#D6CFCB", // aqua — the brand red's complement. No gold in any shade.
+          lite: "#F0EDEB",
+          deep: "#8A8280",
         },
         ink: {
-          DEFAULT: "#0D0406", // near-black canvas
-          2: "#160709",
-          3: "#1F0A0E",
+          DEFAULT: "#080A0F", // cool near-black canvas
+          2: "#12151D",
+          3: "#1A1F2A",
         },
-        success: "#3FBF7F",
+        success: "#6FBF9B",
+        // Red-noir second accent. Reserved for live/edge treatments; oxblood
+        // (RAL 3004) stays the brand red and aqua stays the primary accent.
+        signal: "#D9604A",
         // Matches --line in globals.css — the world's default hairline.
-        line: "rgba(242, 244, 237, 0.10)",
+        line: "rgba(226, 222, 219, 0.12)",
       },
       borderRadius: {
-        sm: "12px",
-        md: "16px",
+        sm: "6px",
+        md: "8px",
         lg: "var(--radius)", // 22px, see globals.css
-        xl: "28px",
-        "2xl": "34px",
+        xl: "14px",
+        "2xl": "16px",
       },
       fontFamily: {
         sans: ["var(--font-vazirmatn)", "Tahoma", "sans-serif"],
@@ -95,8 +98,8 @@ const config: Config = {
         // a light-maroon background this world no longer has.
         card: "0 8px 30px rgba(0, 0, 0, 0.45)",
         deep: "0 40px 90px rgba(0, 0, 0, 0.6)",
-        "glow-oxblood": "0 10px 30px rgba(100, 2, 17, 0.5)",
-        "glow-gold": "0 10px 30px rgba(201, 162, 39, 0.32)",
+        "glow-oxblood": "0 10px 30px rgba(100, 2, 17, 0.55)",
+        "glow-aqua": "0 10px 30px rgba(34, 211, 238, 0.30)",
       },
       /* Motion duration tokens — design-system scale (instant/fast/normal/slow).
          Arbitrary durations outside this scale are not allowed. */

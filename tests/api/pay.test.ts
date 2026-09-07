@@ -3,7 +3,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { POST as createOrder } from "@/app/api/orders/route";
 import { POST as pay } from "@/app/api/orders/[id]/pay/route";
 import { prisma } from "@/lib/prisma";
-import { getRequest, jsonRequest, loginAs } from "../helpers/request";
+import { ctx, getRequest, jsonRequest, loginAs } from "../helpers/request";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
 
 let seed: SeedResult;
@@ -30,8 +30,7 @@ async function createRetailOrder() {
         items: [{ productId: seed.product.id, variantId: seed.variant.id, quantity: 1 }],
       },
       retailCookie,
-    ),
-  );
+    ), ctx());
   return (await res.json()).data;
 }
 
@@ -39,9 +38,7 @@ describe("POST /api/orders/[id]/pay", () => {
   it("creates an INITIATED Payment row and returns a redirect URL", async () => {
     const order = await createRetailOrder();
 
-    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie), {
-      params: { id: String(order.id) },
-    });
+    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie), ctx({ id: String(order.id) }));
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.data.redirectUrl).toContain("/api/payments/mock-confirm");
@@ -54,25 +51,19 @@ describe("POST /api/orders/[id]/pay", () => {
   it("403s when the order belongs to another user", async () => {
     const order = await createRetailOrder();
 
-    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, wholesaleCookie), {
-      params: { id: String(order.id) },
-    });
+    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, wholesaleCookie), ctx({ id: String(order.id) }));
     expect(res.status).toBe(403);
   });
 
   it("404s for a nonexistent order", async () => {
-    const res = await pay(getRequest("http://localhost/api/orders/999999/pay", retailCookie), {
-      params: { id: "999999" },
-    });
+    const res = await pay(getRequest("http://localhost/api/orders/999999/pay", retailCookie), ctx({ id: "999999" }));
     expect(res.status).toBe(404);
   });
 
   it("persists the gateway authority on the Payment row", async () => {
     const order = await createRetailOrder();
 
-    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie), {
-      params: { id: String(order.id) },
-    });
+    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie), ctx({ id: String(order.id) }));
     const { authority } = (await res.json()).data;
 
     const payment = await prisma.payment.findFirstOrThrow({ where: { orderId: order.id } });
@@ -87,9 +78,7 @@ describe("POST /api/orders/[id]/pay", () => {
       data: { paymentStatus: PaymentStatus.COMPLETED, status: OrderStatus.PROCESSING },
     });
 
-    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie), {
-      params: { id: String(order.id) },
-    });
+    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie), ctx({ id: String(order.id) }));
     expect(res.status).toBe(409);
 
     const payments = await prisma.payment.findMany({ where: { orderId: order.id } });
@@ -100,9 +89,7 @@ describe("POST /api/orders/[id]/pay", () => {
     const order = await createRetailOrder();
     await prisma.order.update({ where: { id: order.id }, data: { status: OrderStatus.CANCELED } });
 
-    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie), {
-      params: { id: String(order.id) },
-    });
+    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie), ctx({ id: String(order.id) }));
     expect(res.status).toBe(409);
 
     const payments = await prisma.payment.findMany({ where: { orderId: order.id } });

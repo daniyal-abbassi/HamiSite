@@ -77,7 +77,7 @@ export function FeaturedProducts() {
               انتخابی از محبوب‌ترین و تازه‌ترین محصولات حامی همراه
             </p>
           </div>
-          <Link href="/shop" className="inline-flex items-center gap-1.5 text-sm font-bold text-gold hover:underline">
+          <Link href="/shop" className="inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
             مشاهده همه محصولات <ArrowLeft className="size-4" />
           </Link>
         </div>
@@ -94,11 +94,11 @@ export function FeaturedProducts() {
               onClick={() => setTab(t.key)}
               className={cn(
                 "relative px-4 pb-3 text-sm font-bold transition-colors duration-normal",
-                tab === t.key ? "text-gold" : "text-foreground/55 hover:text-foreground/80",
+                tab === t.key ? "text-aqua" : "text-foreground/55 hover:text-foreground/80",
               )}
             >
               {t.label}
-              {tab === t.key && <i className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-gold" aria-hidden="true" />}
+              {tab === t.key && <i className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-aqua" aria-hidden="true" />}
             </button>
           ))}
         </div>
@@ -125,7 +125,7 @@ export function FeaturedProducts() {
             <button type="button" onClick={() => setTab(tab)} className="rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground">
               تلاش دوباره
             </button>
-            <Link href="/shop" className="inline-flex items-center gap-1 text-xs font-bold text-gold hover:underline">
+            <Link href="/shop" className="inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
               مشاهده همه محصولات <ArrowLeft className="size-3.5" />
             </Link>
           </div>
@@ -136,7 +136,7 @@ export function FeaturedProducts() {
         <div className="glass mt-10 rounded-2xl p-8 text-center" role="status">
           <b className="block font-extrabold">محصولی برای نمایش در این انتخاب وجود ندارد.</b>
           <p className="mt-2 text-sm text-foreground/60">محصولات جدید به‌زودی به این بخش اضافه می‌شوند.</p>
-          <Link href="/shop" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-gold hover:underline">
+          <Link href="/shop" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
             مشاهده همه محصولات <ArrowLeft className="size-3.5" />
           </Link>
         </div>
@@ -149,7 +149,7 @@ export function FeaturedProducts() {
             return (
               <article key={product.id} className="glass group flex flex-col overflow-hidden rounded-2xl transition-transform duration-slow hover:-translate-y-1.5">
                 <div className="relative aspect-square overflow-hidden bg-ink/40">
-                  <span className="absolute start-3 top-3 z-10 rounded-full bg-ink-2/85 px-2.5 py-1 font-mono text-[9px] tracking-[0.08em] text-gold-lite">
+                  <span className="absolute start-3 top-3 z-10 rounded-full bg-ink-2/85 px-2.5 py-1 font-mono text-[9px] tracking-[0.08em] text-aqua-lite">
                     {activeBadge}
                   </span>
                   <button
@@ -158,8 +158,8 @@ export function FeaturedProducts() {
                     aria-pressed={favorite}
                     onClick={() => toggleFavorite(product.id)}
                     className={cn(
-                      "absolute end-3 top-3 z-10 grid size-8 place-items-center rounded-full border border-gold/40 bg-ink-2/70 transition-colors duration-fast",
-                      favorite ? "text-gold" : "text-foreground/60 hover:text-gold",
+                      "absolute end-3 top-3 z-10 grid size-8 place-items-center rounded-full border border-aqua/40 bg-ink-2/70 transition-colors duration-fast",
+                      favorite ? "text-aqua" : "text-foreground/60 hover:text-aqua",
                     )}
                   >
                     <Heart className="size-4" fill={favorite ? "currentColor" : "none"} />
@@ -177,21 +177,21 @@ export function FeaturedProducts() {
                 <div className="flex flex-1 flex-col p-4">
                   <span className="font-mono text-[9px] tracking-[0.1em] text-foreground/50">{product.brand?.name ?? "—"}</span>
                   <h3 className="mt-1.5 text-sm font-extrabold leading-6">
-                    <Link href={`/shop/${product.slug}`} className="hover:text-gold">{product.name}</Link>
+                    <Link href={`/shop/${product.slug}`} className="hover:text-aqua">{product.name}</Link>
                   </h3>
                   {product.mainCategory && <p className="mt-0.5 text-[11px] text-foreground/50">{product.mainCategory.name}</p>}
                   <div className="mt-3 flex items-baseline gap-2">
                     {product.compareAtPrice != null && product.compareAtPrice > 0 && (
                       <del className="text-[11px] text-foreground/55">{formatToman(product.compareAtPrice)}</del>
                     )}
-                    <strong className="text-sm font-black text-gold-lite">{formatToman(product.displayPrice)}</strong>
+                    <strong className="text-sm font-black text-aqua-lite">{formatToman(product.displayPrice)}</strong>
                   </div>
                   <div className="mt-auto flex items-center justify-between border-t border-line pt-3">
                     <span className="flex items-center gap-1.5 text-[11px] text-foreground/60">
                       <i className={cn("size-1.5 rounded-full", product.stockType === "out_of_stock" ? "bg-destructive" : "bg-success")} aria-hidden="true" />
                       {stockLabels[product.stockType] ?? "—"}
                     </span>
-                    <Link href={`/shop/${product.slug}`} className="inline-flex items-center gap-1 text-[11px] font-bold text-gold hover:underline">
+                    <Link href={`/shop/${product.slug}`} className="inline-flex items-center gap-1 text-[11px] font-bold text-aqua hover:underline">
                       مشاهده <ArrowLeft className="size-3.5" />
                     </Link>
                   </div>

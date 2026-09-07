@@ -115,7 +115,7 @@ export function CategoriesAdminClient() {
           style={{ marginInlineStart: `${depth * 22}px` }}
         >
           <div className="flex min-w-0 items-center gap-2.5">
-            <FolderTree className="size-4 shrink-0 text-gold/70" />
+            <FolderTree className="size-4 shrink-0 text-aqua/70" />
             <div className="min-w-0">
               <p className="text-[13px] font-bold">
                 {category.name}

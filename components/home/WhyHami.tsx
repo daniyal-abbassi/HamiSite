@@ -42,25 +42,16 @@ function ProofMedia({ media }: { media: string }) {
   );
 }
 
-export function WhyHami() {
+/**
+ * The proof grid, extracted so the merged trust section can host it. The three
+ * former trust sections (TrustBar / WhyHami / CustomerTrust) said "trust us"
+ * three separate times; these proof cards were the part with actual evidence in
+ * them, so they survive the merge while the surrounding chrome does not.
+ */
+export function WhyHamiProofs() {
   return (
-    <section id="why-hami" className="wrap py-20" aria-labelledby="why-hami-title">
-      <div className="container">
-      <Reveal>
-        <span className="eyebrow"><i /> چرا حامی همراه</span>
-        <div className="mt-4 grid gap-6 md:grid-cols-[0.8fr_1.2fr] md:items-end">
-          <div>
-            <h2 id="why-hami-title" className="text-3xl font-black tracking-tight md:text-4xl">
-              فقط یک <span className="grad">فروشگاه</span> نیستیم.
-            </h2>
-          </div>
-          <p className="text-sm leading-8 text-foreground/60">
-            تجربه‌ای که از انتخاب محصول شروع می‌شود و به خرید مطمئن و همکاری بلندمدت می‌رسد.
-          </p>
-        </div>
-      </Reveal>
-
-      <div className="mt-10 grid gap-5 sm:grid-cols-2" aria-label="شواهد تجربه حامی همراه">
+    <>
+      <div className="mt-14 grid gap-5 sm:grid-cols-2" aria-label="شواهد تجربه حامی همراه">
         {whyHamiProofs.map((proof, index) => (
           <Reveal key={proof.key} delay={index * 65}>
             <article className="glass flex h-full flex-col overflow-hidden rounded-2xl">
@@ -94,7 +85,6 @@ export function WhyHami() {
           ))}
         </div>
       </Reveal>
-      </div>
-    </section>
+    </>
   );
 }

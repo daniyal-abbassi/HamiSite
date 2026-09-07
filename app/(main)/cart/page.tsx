@@ -16,7 +16,7 @@ export default function CartPage() {
           <p>سبد خرید</p>
         </div>
         <h1 className="mt-4 text-2xl font-black tracking-tight md:text-3xl">
-          بازبینی <em className="font-black not-italic text-gold">سفارش.</em>
+          بازبینی <em className="font-black not-italic text-aqua">سفارش.</em>
         </h1>
       </header>
       <CartPageClient />

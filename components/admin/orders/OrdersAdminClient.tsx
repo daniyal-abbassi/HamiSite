@@ -68,7 +68,7 @@ export function OrdersAdminClient() {
       {failed ? (
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-destructive/40 bg-destructive/10 p-10 text-center">
           <p className="text-sm text-destructive">در بارگذاری سفارش‌ها خطایی رخ داد.</p>
-          <button type="button" onClick={() => void load(page, status)} className="flex items-center gap-1.5 text-xs font-bold text-gold">
+          <button type="button" onClick={() => void load(page, status)} className="flex items-center gap-1.5 text-xs font-bold text-aqua">
             <RotateCcw className="size-3.5" /> تلاش دوباره
           </button>
         </div>
@@ -101,7 +101,7 @@ export function OrdersAdminClient() {
                 {orders.map((order) => (
                   <tr key={order.id} className="transition-colors hover:bg-foreground/5">
                     <td className="px-4 py-3">
-                      <Link href={`/admin/orders/${order.id}`} className="font-mono text-[13px] font-bold text-gold hover:underline">
+                      <Link href={`/admin/orders/${order.id}`} className="font-mono text-[13px] font-bold text-aqua hover:underline">
                         {order.orderNumber}
                       </Link>
                     </td>
@@ -127,7 +127,7 @@ export function OrdersAdminClient() {
 
           <Pagination page={page} pageSize={PAGE_SIZE} total={meta?.total ?? 0} hasNextPage={meta?.hasNextPage ?? false} onPageChange={setPage} />
           <p className="mt-3 text-center text-xs">
-            <Link href="/admin" className="flex items-center justify-center gap-1 text-[12px] font-bold text-gold hover:underline">
+            <Link href="/admin" className="flex items-center justify-center gap-1 text-[12px] font-bold text-aqua hover:underline">
               <ArrowLeft className="size-3.5" /> بازگشت به داشبورد
             </Link>
           </p>

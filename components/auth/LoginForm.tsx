@@ -120,7 +120,7 @@ export function LoginForm() {
         حساب ندارید؟{" "}
         <Link
           href={nextPath !== "/" ? `/register?next=${encodeURIComponent(nextPath)}` : "/register"}
-          className="font-bold text-gold underline-offset-4 hover:underline"
+          className="font-bold text-aqua underline-offset-4 hover:underline"
         >
           ثبت‌نام کنید
         </Link>

@@ -211,7 +211,7 @@ export function CheckoutClient() {
   if (!cart || cart.items.length === 0) {
     return (
       <div className="glass mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
-        <ShoppingBag className="size-10 text-gold/60" />
+        <ShoppingBag className="size-10 text-aqua/60" />
         <h2 className="text-lg font-black">سبد خرید خالی است</h2>
         <p className="text-sm text-muted-foreground">برای تسویه حساب ابتدا محصولی به سبد اضافه کنید.</p>
         <Link href="/shop">
@@ -231,7 +231,7 @@ export function CheckoutClient() {
         {/* ۱ — آدرس */}
         <section className="glass rounded-2xl p-6">
           <header className="flex items-center gap-2.5">
-            <span className="grid size-7 place-items-center rounded-full bg-gold/15 font-mono text-[11px] font-bold text-gold">۱</span>
+            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-[11px] font-bold text-aqua">۱</span>
             <h2 className="text-base font-black">اطلاعات تماس و آدرس</h2>
           </header>
           <div className="brand-hairline my-4" />
@@ -244,8 +244,8 @@ export function CheckoutClient() {
                   className={cn(
                     "flex cursor-pointer items-start gap-3 rounded-xl border p-3.5 transition-all duration-fast",
                     addressMode === "saved" && selectedAddressId === address.id
-                      ? "border-gold bg-gold/10"
-                      : "border-line bg-foreground/5 hover:border-gold/40",
+                      ? "border-aqua bg-aqua/10"
+                      : "border-line bg-foreground/5 hover:border-aqua/40",
                   )}
                 >
                   <input
@@ -261,7 +261,7 @@ export function CheckoutClient() {
                   <span className="min-w-0 text-[13px] leading-6">
                     <strong className="block">
                       {address.firstName || user?.firstName} {address.lastName || user?.lastName} — {address.city}
-                      {address.isDefault && <span className="ms-2 rounded-full bg-gold/15 px-2 py-0.5 text-[10px] text-gold">پیش‌فرض</span>}
+                      {address.isDefault && <span className="ms-2 rounded-full bg-aqua/15 px-2 py-0.5 text-[10px] text-aqua">پیش‌فرض</span>}
                     </strong>
                     <span className="block text-muted-foreground">{address.address}</span>
                   </span>
@@ -270,7 +270,7 @@ export function CheckoutClient() {
               <button
                 type="button"
                 onClick={() => setAddressMode("new")}
-                className="text-xs font-bold text-gold underline-offset-4 hover:underline"
+                className="text-xs font-bold text-aqua underline-offset-4 hover:underline"
               >
                 + افزودن آدرس جدید
               </button>
@@ -311,7 +311,7 @@ export function CheckoutClient() {
                 <button
                   type="button"
                   onClick={() => setAddressMode("saved")}
-                  className="text-xs font-bold text-gold underline-offset-4 hover:underline sm:col-span-2"
+                  className="text-xs font-bold text-aqua underline-offset-4 hover:underline sm:col-span-2"
                 >
                   استفاده از آدرس‌های ذخیره‌شده
                 </button>
@@ -323,9 +323,9 @@ export function CheckoutClient() {
         {/* ۲ — ارسال */}
         <section className="glass rounded-2xl p-6">
           <header className="flex items-center gap-2.5">
-            <span className="grid size-7 place-items-center rounded-full bg-gold/15 font-mono text-[11px] font-bold text-gold">۲</span>
+            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-[11px] font-bold text-aqua">۲</span>
             <h2 className="flex items-center gap-2 text-base font-black">
-              <Truck className="size-4 text-gold" />
+              <Truck className="size-4 text-aqua" />
               روش ارسال
             </h2>
           </header>
@@ -336,7 +336,7 @@ export function CheckoutClient() {
                 key={option.key}
                 className={cn(
                   "cursor-pointer rounded-xl border p-3.5 transition-all duration-fast",
-                  shippingKey === option.key ? "border-gold bg-gold/10" : "border-line bg-foreground/5 hover:border-gold/40",
+                  shippingKey === option.key ? "border-aqua bg-aqua/10" : "border-line bg-foreground/5 hover:border-aqua/40",
                 )}
               >
                 <span className="flex items-center justify-between gap-2">
@@ -349,7 +349,7 @@ export function CheckoutClient() {
                   />
                   <strong className="text-[13px]">{option.label}</strong>
                 </span>
-                <span className="mt-2 block font-mono text-[11px] text-gold">
+                <span className="mt-2 block font-mono text-[11px] text-aqua">
                   {option.price === 0 ? "رایگان" : formatToman(option.price)}
                 </span>
                 <span className="mt-1 block text-[11px] text-muted-foreground">{option.note}</span>
@@ -361,9 +361,9 @@ export function CheckoutClient() {
         {/* ۳ — کوپن */}
         <section className="glass rounded-2xl p-6">
           <header className="flex items-center gap-2.5">
-            <span className="grid size-7 place-items-center rounded-full bg-gold/15 font-mono text-[11px] font-bold text-gold">۳</span>
+            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-[11px] font-bold text-aqua">۳</span>
             <h2 className="flex items-center gap-2 text-base font-black">
-              <BadgePercent className="size-4 text-gold" />
+              <BadgePercent className="size-4 text-aqua" />
               کد تخفیف
             </h2>
           </header>
@@ -390,7 +390,7 @@ export function CheckoutClient() {
         {/* ۴ — پرداخت */}
         <section className="glass rounded-2xl p-6">
           <header className="flex items-center gap-2.5">
-            <span className="grid size-7 place-items-center rounded-full bg-gold/15 font-mono text-[11px] font-bold text-gold">۴</span>
+            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-[11px] font-bold text-aqua">۴</span>
             <h2 className="text-base font-black">پرداخت</h2>
           </header>
           <div className="brand-hairline my-4" />
@@ -401,7 +401,7 @@ export function CheckoutClient() {
                   key={term}
                   className={cn(
                     "cursor-pointer rounded-xl border p-3.5 text-[13px] transition-all duration-fast",
-                    paymentTerm === term ? "border-gold bg-gold/10" : "border-line bg-foreground/5 hover:border-gold/40",
+                    paymentTerm === term ? "border-aqua bg-aqua/10" : "border-line bg-foreground/5 hover:border-aqua/40",
                   )}
                 >
                   <span className="flex items-center gap-2.5">
@@ -463,7 +463,7 @@ export function CheckoutClient() {
           </div>
           <div className="flex justify-between border-t border-line pt-3 text-base">
             <dt className="font-black">مبلغ نهایی</dt>
-            <dd className="font-black text-gold" aria-live="polite">
+            <dd className="font-black text-aqua" aria-live="polite">
               {formatToman(total)}
             </dd>
           </div>

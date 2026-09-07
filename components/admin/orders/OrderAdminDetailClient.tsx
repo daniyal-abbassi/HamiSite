@@ -93,7 +93,7 @@ export function OrderAdminDetailClient({ orderId }: { orderId: string }) {
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground/70">ORDER</p>
-            <h2 className="mt-1 font-mono text-xl font-black text-gold">{order.orderNumber}</h2>
+            <h2 className="mt-1 font-mono text-xl font-black text-aqua">{order.orderNumber}</h2>
             <p className="mt-1.5 text-[12px] text-muted-foreground">
               ثبت‌شده در {formatFaDateTime(order.createdAt)} · توسط {order.customer?.username ?? "—"}
             </p>
@@ -119,7 +119,7 @@ export function OrderAdminDetailClient({ orderId }: { orderId: string }) {
       {/* Status update */}
       <section className="rounded-2xl border border-line bg-ink-2/60 p-6">
         <h3 className="flex items-center gap-2 text-sm font-black">
-          <Truck className="size-4 text-gold" />
+          <Truck className="size-4 text-aqua" />
           تغییر وضعیت سفارش
         </h3>
         <div className="brand-hairline my-4" />
@@ -160,7 +160,7 @@ export function OrderAdminDetailClient({ orderId }: { orderId: string }) {
                 ذخیره وضعیت
               </Button>
               {order.shipping.trackingCode && (
-                <span className="ms-3 font-mono text-[12px] text-gold">رهگیری فعلی: {order.shipping.trackingCode}</span>
+                <span className="ms-3 font-mono text-[12px] text-aqua">رهگیری فعلی: {order.shipping.trackingCode}</span>
               )}
             </div>
           </div>
@@ -181,7 +181,7 @@ export function OrderAdminDetailClient({ orderId }: { orderId: string }) {
                   {item.quantity.toLocaleString("fa-IR")} × {formatToman(item.price)}
                 </span>
               </span>
-              <strong className="shrink-0 font-mono text-[13px] text-gold">{formatToman(item.lineTotal)}</strong>
+              <strong className="shrink-0 font-mono text-[13px] text-aqua">{formatToman(item.lineTotal)}</strong>
             </li>
           ))}
         </ul>
@@ -202,7 +202,7 @@ export function OrderAdminDetailClient({ orderId }: { orderId: string }) {
           </div>
           <div className="flex justify-between border-t border-line pt-2.5 text-base">
             <dt className="font-black">مبلغ کل</dt>
-            <dd className="font-black text-gold">{formatToman(order.totals.totalAmount)}</dd>
+            <dd className="font-black text-aqua">{formatToman(order.totals.totalAmount)}</dd>
           </div>
         </dl>
       </div>
@@ -261,7 +261,7 @@ export function OrderAdminDetailClient({ orderId }: { orderId: string }) {
       </div>
 
       <p className="text-center text-xs">
-        <Link href="/admin/orders" className="flex items-center justify-center gap-1 text-[12px] font-bold text-gold hover:underline">
+        <Link href="/admin/orders" className="flex items-center justify-center gap-1 text-[12px] font-bold text-aqua hover:underline">
           <ArrowLeft className="size-3.5" /> بازگشت به فهرست سفارش‌ها
         </Link>
       </p>

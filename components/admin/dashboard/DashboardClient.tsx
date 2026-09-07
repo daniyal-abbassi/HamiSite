@@ -69,7 +69,7 @@ export function DashboardClient() {
     <div className="space-y-8">
       {/* Stat cards */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-        <StatCard label="سفارش‌های ۳۰ روز اخیر" value={summary.totalOrders.toLocaleString("fa-IR")} icon={Package} accent="gold" />
+        <StatCard label="سفارش‌های ۳۰ روز اخیر" value={summary.totalOrders.toLocaleString("fa-IR")} icon={Package} accent="aqua" />
         <StatCard label="درآمد ۳۰ روز اخیر" value={formatToman(summary.totalRevenue)} icon={CircleDollarSign} accent="green" />
         <StatCard label="میانگین مبلغ سفارش" value={formatToman(avgOrder)} icon={TrendingUp} />
         <StatCard label="سفارش‌های واریزشده" value={paidOrders.toLocaleString("fa-IR")} icon={ReceiptText} />
@@ -91,7 +91,7 @@ export function DashboardClient() {
                 </div>
                 <div className="h-1.5 overflow-hidden rounded-full bg-foreground/10">
                   <div
-                    className="h-full rounded-full bg-gold/80 transition-all duration-500"
+                    className="h-full rounded-full bg-aqua/80 transition-all duration-500"
                     style={{ width: `${(row.orderCount / maxStatusCount) * 100}%` }}
                   />
                 </div>
@@ -105,7 +105,7 @@ export function DashboardClient() {
         <section className="rounded-2xl border border-line bg-ink-2/60 p-6 lg:col-span-3">
           <div className="flex items-center justify-between">
             <h2 className="text-sm font-black">آخرین سفارش‌ها</h2>
-            <Link href="/admin/orders" className="flex items-center gap-1 text-[12px] font-bold text-gold hover:underline">
+            <Link href="/admin/orders" className="flex items-center gap-1 text-[12px] font-bold text-aqua hover:underline">
               همه سفارش‌ها <ArrowLeft className="size-3.5" />
             </Link>
           </div>
@@ -122,7 +122,7 @@ export function DashboardClient() {
                     className="flex flex-wrap items-center justify-between gap-3 py-3.5 transition-colors hover:bg-foreground/5"
                   >
                     <span className="min-w-0">
-                      <span className="block font-mono text-[13px] font-bold text-gold">{order.orderNumber}</span>
+                      <span className="block font-mono text-[13px] font-bold text-aqua">{order.orderNumber}</span>
                       <span className="mt-0.5 block truncate text-[11px] text-muted-foreground">
                         {order.customer?.username ?? "—"} · {formatFaDate(order.createdAt)}
                       </span>

@@ -73,7 +73,7 @@ export function StoreExperience() {
             <p className="mt-2 text-sm text-foreground/60">برای اطلاعات حضور فروشگاهی یا گفت‌وگو با ما، از مسیرهای زیر استفاده کنید.</p>
           </div>
           <div className="flex shrink-0 flex-wrap gap-3">
-            <Link href="#contact" className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-glow-gold transition-transform hover:-translate-y-0.5">
+            <Link href="#contact" className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-glow-aqua transition-transform hover:-translate-y-0.5">
               اطلاعات فروشگاه <ArrowLeft className="size-4" />
             </Link>
             <Link href="/contact" className="inline-flex items-center gap-1.5 rounded-full border border-primary/50 px-5 py-2.5 text-sm font-bold text-primary transition-colors duration-fast hover:bg-primary/10">

@@ -24,15 +24,15 @@ export function ProductListRow({ product }: { product: ShopProduct }) {
       </Link>
       <div className="flex min-w-0 flex-1 flex-col p-4 md:p-5">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="font-mono text-[9px] tracking-[0.1em] text-gold/80">{product.brand?.name ?? "—"}</span>
+          <span className="font-mono text-[9px] tracking-[0.1em] text-aqua/80">{product.brand?.name ?? "—"}</span>
           {product.specialOffer && (
-            <span className="rounded-xl bg-gold/15 px-1.5 py-0.5 font-mono text-[9px] tracking-[0.08em] text-gold">
+            <span className="rounded-xl bg-aqua/15 px-1.5 py-0.5 font-mono text-[9px] tracking-[0.08em] text-aqua">
               SPECIAL OFFER
             </span>
           )}
         </div>
         <h3 className="mt-1.5 text-sm font-extrabold leading-6">
-          <Link href={`/shop/${product.slug}`} className="hover:text-gold">
+          <Link href={`/shop/${product.slug}`} className="hover:text-aqua">
             {product.name}
           </Link>
         </h3>
@@ -49,9 +49,9 @@ export function ProductListRow({ product }: { product: ShopProduct }) {
             {product.compareAtPrice != null && product.compareAtPrice > 0 && (
               <del className="text-[11px] text-foreground/55">{formatToman(product.compareAtPrice)}</del>
             )}
-            <strong className="text-sm font-black text-gold">{formatToman(product.displayPrice)}</strong>
+            <strong className="text-sm font-black text-aqua">{formatToman(product.displayPrice)}</strong>
           </div>
-          <Link href={`/shop/${product.slug}`} className="inline-flex items-center gap-1 text-[11px] font-bold text-gold hover:underline">
+          <Link href={`/shop/${product.slug}`} className="inline-flex items-center gap-1 text-[11px] font-bold text-aqua hover:underline">
             مشاهده جزئیات <ArrowLeft className="size-3.5" />
           </Link>
         </div>

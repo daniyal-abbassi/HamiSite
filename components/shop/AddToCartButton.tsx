@@ -58,7 +58,7 @@ export function AddToCartButton({ productId, disabled = false, className }: Prop
       aria-label="افزودن به سبد خرید"
       className={className}
     >
-      {state === "done" ? <Check className="size-4 text-emerald-400" /> : <Plus className="size-4 text-gold" />}
+      {state === "done" ? <Check className="size-4 text-emerald-400" /> : <Plus className="size-4 text-aqua" />}
       {state === "done" ? "افزوده شد" : "افزودن"}
     </Button>
   );

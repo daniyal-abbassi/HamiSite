@@ -36,7 +36,7 @@ function NavLink({ item }: { item: (typeof NAV_ITEMS)[number] }) {
       className={cn(
         "flex items-center gap-2.5 rounded-xl px-3.5 py-2.5 text-[13px] font-bold transition-colors duration-fast",
         active
-          ? "bg-gold/15 text-gold"
+          ? "bg-aqua/15 text-aqua"
           : "text-muted-foreground/85 hover:bg-foreground/5 hover:text-foreground",
       )}
       aria-current={active ? "page" : undefined}
@@ -56,7 +56,7 @@ export function AdminSidebar() {
       {/* Desktop: fixed rail on the logical start (physical right under RTL) */}
       <aside className="sticky top-0 hidden h-screen w-60 shrink-0 flex-col border-e border-line bg-ink-2/60 p-4 backdrop-blur-md lg:flex">
         <Link href="/admin" className="flex items-center gap-2 px-2 py-2" aria-label="حامی همراه — پنل مدیریت">
-          <span className="grid size-9 place-items-center rounded-xl bg-gold/15 font-mono text-[10px] font-bold tracking-[0.1em] text-gold">
+          <span className="grid size-9 place-items-center rounded-xl bg-aqua/15 font-mono text-[10px] font-bold tracking-[0.1em] text-aqua">
             ADMIN
           </span>
           <span className="text-sm font-black">حامی همراه</span>
@@ -92,7 +92,7 @@ export function AdminSidebar() {
       <div className="sticky top-0 z-30 border-b border-line bg-ink-2/90 backdrop-blur-md lg:hidden">
         <div className="flex items-center gap-1 overflow-x-auto p-2">
           <Link href="/" className="me-auto shrink-0" aria-label="فروشگاه">
-            <span className="grid size-9 place-items-center rounded-xl bg-gold/15 font-mono text-[9px] font-bold text-gold">
+            <span className="grid size-9 place-items-center rounded-xl bg-aqua/15 font-mono text-[9px] font-bold text-aqua">
               ADMIN
             </span>
           </Link>
@@ -104,7 +104,7 @@ export function AdminSidebar() {
                 href={item.href}
                 className={cn(
                   "shrink-0 rounded-full px-4 py-2 text-xs font-bold transition-colors",
-                  active ? "bg-gold/15 text-gold" : "text-muted-foreground/85 hover:text-foreground",
+                  active ? "bg-aqua/15 text-aqua" : "text-muted-foreground/85 hover:text-foreground",
                 )}
               >
                 {item.label}

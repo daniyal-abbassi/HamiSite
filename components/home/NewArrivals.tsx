@@ -62,7 +62,7 @@ export function NewArrivals() {
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/shop" className="inline-flex items-center gap-1.5 text-sm font-bold text-gold hover:underline">
+            <Link href="/shop" className="inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
               مشاهده همه <ArrowLeft className="size-4" />
             </Link>
             <button
@@ -70,7 +70,7 @@ export function NewArrivals() {
               onClick={() => emblaApi?.scrollNext()}
               aria-label="نمایش محصولات جدید بعدی"
               disabled={!emblaApi || !canNext}
-              className="grid size-10 place-items-center rounded-full border border-gold/50 text-gold transition-colors hover:bg-gold/10 disabled:opacity-40"
+              className="grid size-10 place-items-center rounded-full border border-aqua/50 text-aqua transition-colors hover:bg-aqua/10 disabled:opacity-40"
             >
               <ArrowLeft className="size-4" />
             </button>
@@ -82,7 +82,7 @@ export function NewArrivals() {
         {error ? (
           <div className="mt-10 glass rounded-2xl p-8 text-center" role="status">
             <b className="block font-extrabold">دریافت تازه‌واردها موقتاً ممکن نیست.</b>
-            <Link href="/shop" className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-gold hover:underline">
+            <Link href="/shop" className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
               مشاهده همه محصولات <ArrowLeft className="size-3.5" />
             </Link>
           </div>
@@ -130,7 +130,7 @@ function ArrivalCard({ product }: { product: ProductCard }) {
     <article className="min-w-0 flex-[0_0_78%] sm:flex-[0_0_42%] lg:flex-[0_0_28%]">
       <div className="glass group overflow-hidden rounded-2xl transition-transform duration-slow hover:-translate-y-1.5">
         <div className="relative aspect-[4/5] overflow-hidden bg-ink/40">
-          <span className="absolute start-3 top-3 z-10 rounded-full bg-gold px-2.5 py-1 font-mono text-[9px] font-bold tracking-[0.08em] text-primary-foreground">
+          <span className="absolute start-3 top-3 z-10 rounded-full bg-aqua px-2.5 py-1 font-mono text-[9px] font-bold tracking-[0.08em] text-primary-foreground">
             NEW
           </span>
           <Link href={`/shop/${product.slug}`} className="grid h-full place-items-center" aria-label={product.name}>
@@ -146,9 +146,9 @@ function ArrivalCard({ product }: { product: ProductCard }) {
         <div className="p-4">
           <span className="font-mono text-[9px] tracking-[0.1em] text-foreground/50">{product.brand?.name ?? "—"}</span>
           <h3 className="mt-1 text-sm font-extrabold leading-6">
-            <Link href={`/shop/${product.slug}`} className="hover:text-gold">{product.name}</Link>
+            <Link href={`/shop/${product.slug}`} className="hover:text-aqua">{product.name}</Link>
           </h3>
-          <strong className="mt-2 block text-sm font-black text-gold">{formatToman(product.displayPrice)}</strong>
+          <strong className="mt-2 block text-sm font-black text-aqua">{formatToman(product.displayPrice)}</strong>
         </div>
       </div>
     </article>

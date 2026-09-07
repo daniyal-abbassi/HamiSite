@@ -93,7 +93,7 @@ export function UsersAdminClient() {
       {failed ? (
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-destructive/40 bg-destructive/10 p-10 text-center">
           <p className="text-sm text-destructive">در بارگذاری کاربران خطایی رخ داد.</p>
-          <button type="button" onClick={() => void load(page, role)} className="flex items-center gap-1.5 text-xs font-bold text-gold">
+          <button type="button" onClick={() => void load(page, role)} className="flex items-center gap-1.5 text-xs font-bold text-aqua">
             <RotateCcw className="size-3.5" /> تلاش دوباره
           </button>
         </div>
@@ -131,7 +131,7 @@ export function UsersAdminClient() {
                         </span>
                         <span className="font-mono text-[10px] text-muted-foreground/70">
                           @{u.username}
-                          {u.id === currentUser?.id && <span className="ms-1.5 rounded-full bg-gold/15 px-1.5 py-0.5 text-[9px] text-gold">شما</span>}
+                          {u.id === currentUser?.id && <span className="ms-1.5 rounded-full bg-aqua/15 px-1.5 py-0.5 text-[9px] text-aqua">شما</span>}
                         </span>
                       </div>
                     </td>
@@ -160,7 +160,7 @@ export function UsersAdminClient() {
                         type="button"
                         disabled={busyId === u.id || u.id === currentUser?.id}
                         onClick={() => void changeUser(u.id, { isActive: !u.isActive })}
-                        className="text-[12px] font-bold text-gold underline-offset-4 hover:underline disabled:opacity-50"
+                        className="text-[12px] font-bold text-aqua underline-offset-4 hover:underline disabled:opacity-50"
                       >
                         {u.isActive ? "غیرفعال کن" : "فعال کن"}
                       </button>

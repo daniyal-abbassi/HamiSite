@@ -113,7 +113,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground/70">ORDER</p>
-            <h2 className="mt-1 font-mono text-lg font-black text-gold">{order.orderNumber}</h2>
+            <h2 className="mt-1 font-mono text-lg font-black text-aqua">{order.orderNumber}</h2>
             <p className="mt-1 text-[11px] text-muted-foreground">ثبت‌شده در {formatFaDateTime(order.createdAt)}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
@@ -126,7 +126,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
         </div>
 
         {canPay && (
-          <div className="mt-5 rounded-xl border border-gold/40 bg-gold/10 p-4">
+          <div className="mt-5 rounded-xl border border-aqua/40 bg-aqua/10 p-4">
             <p className="text-[13px] leading-6">این سفارش هنوز پرداخت نشده است. برای ادامه فرایند، پرداخت را انجام دهید.</p>
             <Button className="mt-3" loading={paying} onClick={() => void pay()}>
               <CreditCard className="size-4" />
@@ -144,7 +144,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
       {/* Items */}
       <div className="glass mt-6 rounded-2xl p-6">
         <h3 className="flex items-center gap-2 text-base font-black">
-          <PackageCheck className="size-4 text-gold" />
+          <PackageCheck className="size-4 text-aqua" />
           اقلام سفارش
         </h3>
         <div className="brand-hairline my-4" />
@@ -158,7 +158,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
                   {item.quantity.toLocaleString("fa-IR")} × {formatToman(item.price)}
                 </span>
               </span>
-              <strong className="shrink-0 text-gold">{formatToman(item.lineTotal)}</strong>
+              <strong className="shrink-0 text-aqua">{formatToman(item.lineTotal)}</strong>
             </li>
           ))}
         </ul>
@@ -183,7 +183,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
           </div>
           <div className="flex justify-between border-t border-line pt-2.5 text-base">
             <dt className="font-black">مبلغ کل</dt>
-            <dd className="font-black text-gold">{formatToman(order.totals.totalAmount)}</dd>
+            <dd className="font-black text-aqua">{formatToman(order.totals.totalAmount)}</dd>
           </div>
         </dl>
       </div>
@@ -192,7 +192,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
       <div className="mt-6 grid gap-6 md:grid-cols-2">
         <div className="glass rounded-2xl p-6">
           <h3 className="flex items-center gap-2 text-sm font-black">
-            <MapPin className="size-4 text-gold" />
+            <MapPin className="size-4 text-aqua" />
             آدرس تحویل
           </h3>
           <div className="brand-hairline my-3.5" />
@@ -215,7 +215,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
             </p>
           )}
           {order.shipping.trackingCode && (
-            <p className="mt-3 rounded-lg bg-ink/50 px-3 py-2 font-mono text-[12px] text-gold">
+            <p className="mt-3 rounded-lg bg-ink/50 px-3 py-2 font-mono text-[12px] text-aqua">
               کد رهگیری پستی: {order.shipping.trackingCode}
             </p>
           )}
@@ -249,7 +249,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
       </div>
 
       <div className="mt-8 text-center">
-        <Link href="/shop" className="text-xs font-bold text-gold underline-offset-4 hover:underline">
+        <Link href="/shop" className="text-xs font-bold text-aqua underline-offset-4 hover:underline">
           ادامه خرید از فروشگاه ←
         </Link>
       </div>

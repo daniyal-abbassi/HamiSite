@@ -6,10 +6,11 @@ export const metadata: Metadata = {
   description: "مشخصات، قیمت و خرید محصول از فروشگاه حامی همراه — با پشتیبانی از خرید عمده.",
 };
 
-export default function ProductPage({ params }: { params: { slug: string } }) {
+export default async function ProductPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
   return (
     <div className="container py-10">
-      <ProductDetail slug={params.slug} />
+      <ProductDetail slug={slug} />
     </div>
   );
 }

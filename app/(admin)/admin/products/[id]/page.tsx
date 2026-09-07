@@ -4,21 +4,22 @@ import { ProductForm } from "@/components/admin/products/ProductForm";
 
 export const metadata: Metadata = { title: "ویرایش محصول" };
 
-export default function AdminProductEditPage({
+export default async function AdminProductEditPage({
   params,
   searchParams,
 }: {
-  params: { id: string };
-  searchParams: { slug?: string };
+  params: Promise<{ id: string }>;
+  searchParams: Promise<{ slug?: string }>;
 }) {
-  const productId = Number(params.id);
+  const [{ id }, { slug }] = await Promise.all([params, searchParams]);
+  const productId = Number(id);
   // The detail API is keyed by slug; the list page passes the slug through the
   // URL so the form can prefill. Without it the form starts empty (PATCH-safe).
   return (
     <>
       <AdminPageHeader index="۰۰۳" eyebrow="پنل مدیریت" title="ویرایش محصول." />
       {Number.isInteger(productId) ? (
-        <ProductForm mode="edit" productId={productId} slug={searchParams.slug} />
+        <ProductForm mode="edit" productId={productId} slug={slug} />
       ) : (
         <p className="text-sm text-destructive">شناسه محصول نامعتبر است.</p>
       )}

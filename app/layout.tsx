@@ -17,16 +17,16 @@ export const metadata: Metadata = {
  * command-center for reseller pricing — not a flat editorial brochure. Every
  * number (price, stock, discount tier) must read as alive and current.
  * OWN-WORLD: near-black ink canvas (#0D0406) with atmospheric oxblood-ramp
- * glows (a 4-step burgundy scale, not a flat maroon fill), muted antique gold
+ * glows (a 4-step burgundy scale, not a flat maroon fill), muted antique aqua
  * accents (#C9A227 family — not the previous champagne-yellow), fully rounded
  * geometry (pills, 20-34px radii) and frosted glass surfaces (backdrop-blur +
- * gradient hairline border) throughout. Eyebrow pills and gold gradient-
+ * gradient hairline border) throughout. Eyebrow pills and aqua gradient-
  * shimmer text (one word per heading) are back — this world wants them.
  * STORY: a reseller/shop-owner lands, immediately reads this as a serious
  * live wholesale price source (not a retail storefront), and the primary
  * action is checking today's price list or applying to become a partner.
  * FIRST VIEWPORT: sticky glass nav → scrolling ticker → hero: eyebrow pill,
- * display headline with one gold gradient word, lead, two pill CTAs, trust
+ * display headline with one aqua gradient word, lead, two pill CTAs, trust
  * checklist, floating glass stat cards over a rotated phone silhouette.
  * FORM: user-pinned via a supplied reference file (aura-landingSample.html),
  * not derived from a discovery round — carries that catalog world's palette,

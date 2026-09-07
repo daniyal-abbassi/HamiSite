@@ -57,7 +57,7 @@ export function MobileNav({ links }: { links: NavLink[] }) {
             <Link
               href="/login"
               onClick={() => setOpen(false)}
-              className="rounded-full bg-gradient-to-b from-gold-lite to-gold px-3 py-3 text-center text-sm font-bold text-primary-foreground transition-transform hover:-translate-y-0.5"
+              className="rounded-full bg-gradient-to-b from-aqua-lite to-aqua px-3 py-3 text-center text-sm font-bold text-primary-foreground transition-transform hover:-translate-y-0.5"
             >
               ورود / ثبت‌نام
             </Link>

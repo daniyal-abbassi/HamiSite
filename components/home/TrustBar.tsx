@@ -14,7 +14,7 @@ export function TrustBar() {
           {trustFeatures.map((feature, index) => (
             <li key={feature.key} className="flex items-start gap-4">
               <Reveal delay={index * 70} className="flex items-start gap-4">
-                <span className="grid size-11 shrink-0 place-items-center rounded-2xl border border-gold/35 text-gold">
+                <span className="grid size-11 shrink-0 place-items-center rounded-2xl border border-aqua/35 text-aqua">
                   <TrustGlyph name={feature.key} />
                 </span>
                 <div>
@@ -39,9 +39,9 @@ export function MobileQuickRoutes() {
           href={route.href}
           className="glass flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold"
         >
-          <span className="font-mono text-[9px] text-gold">{String(index + 1).padStart(2, "0")}</span>
+          <span className="font-mono text-[9px] text-aqua">{String(index + 1).padStart(2, "0")}</span>
           {route.label}
-          <ArrowLeft className="size-3.5 text-gold" />
+          <ArrowLeft className="size-3.5 text-aqua" />
         </Link>
       ))}
     </nav>

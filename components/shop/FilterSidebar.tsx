@@ -12,7 +12,7 @@ import type { ShopBrand, ShopCategory } from "./types";
 const FILTER_KEYS = ["q", "category", "brand", "min", "max", "stock", "special"] as const;
 
 function SidebarHeading({ children }: { children: React.ReactNode }) {
-  return <h3 className="font-mono text-[10px] tracking-[0.08em] text-gold">{children}</h3>;
+  return <h3 className="font-mono text-[10px] tracking-[0.08em] text-aqua">{children}</h3>;
 }
 
 export function FilterSidebar({ categories, brands }: { categories: ShopCategory[]; brands: ShopBrand[] }) {
@@ -95,8 +95,8 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
                   className={cn(
                     "rounded-full border px-3.5 py-1 text-[11px] font-bold transition-colors",
                     active
-                      ? "border-gold bg-gold/10 text-gold"
-                      : "border-line text-foreground/70 hover:border-gold/50 hover:text-foreground",
+                      ? "border-aqua bg-aqua/10 text-aqua"
+                      : "border-line text-foreground/70 hover:border-aqua/50 hover:text-foreground",
                   )}
                 >
                   {category.name}
@@ -128,8 +128,8 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
                   className={cn(
                     "rounded-full border px-3.5 py-1 text-[11px] font-bold transition-colors",
                     active
-                      ? "border-gold bg-gold/10 text-gold"
-                      : "border-line text-foreground/70 hover:border-gold/50 hover:text-foreground",
+                      ? "border-aqua bg-aqua/10 text-aqua"
+                      : "border-line text-foreground/70 hover:border-aqua/50 hover:text-foreground",
                   )}
                 >
                   {brand.name}
@@ -214,7 +214,7 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
               else params.delete("special");
             })
           }
-          className="size-4 accent-gold"
+          className="size-4 accent-aqua"
         />
         فقط پیشنهادهای ویژه
       </label>
@@ -227,7 +227,7 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
             FILTER_KEYS.forEach((key) => params.delete(key));
           })
         }
-        className="flex w-full items-center justify-center gap-1.5 border-t border-line pt-4 text-[11px] font-bold text-foreground/60 transition-colors hover:text-gold"
+        className="flex w-full items-center justify-center gap-1.5 border-t border-line pt-4 text-[11px] font-bold text-foreground/60 transition-colors hover:text-aqua"
       >
         <X className="size-3.5" /> حذف همه فیلترها
       </button>

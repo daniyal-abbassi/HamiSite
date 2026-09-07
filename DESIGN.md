@@ -3,17 +3,19 @@ name: Hami Hamrah
 description: Persian (RTL) B2C+B2B mobile phone & accessories storefront — "Aura" world: near-black canvas, RAL 3004 oxblood atmosphere, muted antique gold, full glass/pill geometry
 colors:
   ral-3004-oxblood: "#640211"
-  oxblood-lite: "#9C0A22"
-  oxblood-mid: "#7D0417"
+  oxblood-lite: "#8E0A1E"
+  oxblood-mid: "#75040F"
   oxblood-deep: "#3A010A"
-  gold: "#C9A227"
-  gold-lite: "#F0DCA0"
-  gold-deep: "#8A6A15"
-  ink: "#0D0406"
-  ink-2: "#160709"
-  ink-3: "#1F0A0E"
-  foreground: "#F2F4ED"
-  success: "#3FBF7F"
+  bone: "#C9C2BE"
+  bone-lite: "#E8E4E1"
+  bone-deep: "#8B8482"
+  ink: "#1B0A0E"
+  ink-2: "#2A1116"
+  ink-3: "#3A1A20"
+  foreground: "#E2DEDB"
+  muted-foreground: "#A59E9C"
+  signal: "#E4573F"
+  success: "#6FBF9B"
 typography:
   display:
     fontFamily: "Vazirmatn, Tahoma, sans-serif"
@@ -37,11 +39,11 @@ typography:
     fontWeight: 500
     letterSpacing: "0.08em-0.14em"
 rounded:
-  sm: "12px"
-  md: "16px"
-  lg: "22px"
-  xl: "28px"
-  "2xl": "34px"
+  sm: "6px"
+  md: "8px"
+  lg: "12px"
+  xl: "14px"
+  "2xl": "18px"
   full: "9999px"
 spacing:
   section: "5rem"
@@ -86,22 +88,43 @@ Business facts stay exactly as confirmed (see `PRODUCT.md`) — this is a visual
 
 ## Colors
 
-Two-hue system on a near-black ground: oxblood as atmosphere and canvas-adjacent surfaces, muted gold as the singular accent.
+**One hue, and greys.** RAL 3004 is fixed, so instead of hunting an accent to
+pair with it, the whole page moved *inside* its hue: the ground is `#1B0A0E`, a
+burgundy darkened almost to black, and every surface above it is a step of the
+same wine. There is no second colour to clash with, because there is no second
+colour — the only other family is warm grey.
+
+This is the fourth palette attempt and the first that holds. Three accents were
+tried and rejected — champagne, antique gold, amber — all of which sat inside
+RAL 3004's own hue and muddied it. A cyan complement was tried next and rejected
+for the opposite reason: maximum separation on the wheel reads as a clash, not
+as harmony. The resolution was to stop looking for a partner hue at all.
+
+**The whites are not white.** Body text is `#E2DEDB` and the accent is `#C9C2BE`
+— warm greys, deliberately short of pure white. On a wine ground, true white
+glares and pulls the eye away from the brand red; grey lets the oxblood stay the
+brightest-feeling thing on the page even though it is darker than the text.
 
 ### Primary
-- **Muted Antique Gold** (`#C9A227`): The one accent — primary CTAs (as a full pill fill), prices, active states, eyebrow dots, icon glyphs. `--primary` resolves here now (it resolved to wine in the previous world's `.light` scope — that scope no longer exists).
-- **Gold Lite** (`#F0DCA0`) / **Gold Deep** (`#8A6A15`): Gradient stops for the gold button fill and the gradient-shimmer text.
+- **Bone** (`#C9C2BE`): The one accent — a warm grey, not a colour — primary CTAs (as a full pill fill), prices, active states, eyebrow dots, icon glyphs. `--primary` resolves here now (it resolved to wine in the previous world's `.light` scope — that scope no longer exists).
+- **Bone Lite** (`#E8E4E1`) / **Bone Deep** (`#8B8482`): Gradient stops for the gold button fill and the gradient-shimmer text.
 
 ### Secondary
-- **RAL 3004 Oxblood** (`#640211`) and its ramp — **Lite** (`#9C0A22`), **Mid** (`#7D0417`), **Deep** (`#3A010A`): The real brand hue, now used as atmosphere (radial-gradient glow layers), gradient-fill buttons (`variant="oxblood"`), and elevated dark surfaces — never as a flat full-bleed canvas fill.
+- **RAL 3004 Oxblood** (`#640211`) and its ramp — **Lite** (`#8E0A1E`), **Mid** (`#75040F`), **Deep** (`#3A010A`): The real brand hue, now used as atmosphere (radial-gradient glow layers), gradient-fill buttons (`variant="oxblood"`), and elevated dark surfaces — never as a flat full-bleed canvas fill.
+
+### Signal
+- **Signal Ember** (`#E4573F`): The red-noir second accent, adopted from a supplied reference. Deliberately **not** a replacement for RAL 3004 — oxblood remains the brand and the atmosphere. Signal is confined to *live* and *edge* treatments: the spinning conic rim on a primary conversion action (`.shiny-edge`), a pulsing "live" dot, and small emphases. Using it as a surface fill puts it in direct competition with the brand red, which is the failure mode this restriction exists to prevent.
 
 ### Neutral
-- **Ink** (`#0D0406`): The canvas — every page's base background.
-- **Ink 2** (`#160709`) / **Ink 3** (`#1F0A0E`): Elevated surfaces (popovers, footer, mobile dock) — one step lighter than canvas, still near-black.
-- **Foreground** (`#F2F4ED`): Primary text, consumed at reduced alpha for secondary/muted text (e.g. `text-foreground/60`) rather than a separate gray token.
+- **Ink** (`#1B0A0E`): The canvas — burgundy darkened to near-black, every page's base background.
+- **Ink 2** (`#2A1116`) / **Ink 3** (`#3A1A20`): Elevated surfaces (popovers, footer, mobile dock) — one step lighter than canvas, still near-black.
+- **Foreground** (`#E2DEDB`): Primary text — cool white. 16.9:1 on the canvas.
+- **Muted Foreground** (`#A59E9C`): A real cool grey for secondary text, 7.6:1 on the canvas. Previously this token just repeated the foreground at low alpha, which made secondary copy read as faded white instead of as its own tier.
 
 ### Named Rules
 **The Atmosphere-Not-Fill Rule.** Oxblood never owns a flat full-bleed background. It appears as radial-gradient glow (fixed behind the scroll, or local to a card/banner), as a gradient button fill, or as an elevated-surface tint — always graduated, never flat.
+
+**The Signal-Is-An-Edge Rule.** Signal red draws rims, dots and hairlines — never areas. If a block of `#ef233c` fills more than a few square pixels, the rule has been broken and the brand red has a rival.
 
 **The One Accent Rule (carried over).** Gold marks exactly one thing per view: the primary action or the price. Section labels/eyebrows use the dedicated `.eyebrow` pill treatment, not bare gold text — that's what keeps the accent legible as "the important thing" rather than decoration.
 
@@ -143,11 +166,37 @@ One curve (`cubic-bezier(0.2, 0.7, 0.3, 1)` — a livelier fast-out than the pre
 | `duration-slow` | 300ms | Larger movement — drawer slide-in, backdrop fade, scroll-reveal entrances. |
 
 ### Named Rules
-**The One Motion Signature Rule (carried over, curve updated).** Every transition uses the one curve above at one of the three named tiers — never a hardcoded per-component `duration-*`/`ease-*` pair. This was violated once already in this project's history (`Button.tsx` hardcoded `duration-200 ease-out`); check for the same class of drift after any future motion-adjacent edit.
+**The One Motion Signature Rule (carried over, curve updated).** Every CSS transition uses the one curve above at one of the three named tiers — never a hardcoded per-component `duration-*`/`ease-*` pair. This was violated once already in this project's history (`Button.tsx` hardcoded `duration-200 ease-out`); check for the same class of drift after any future motion-adjacent edit.
+
+**The PillNav exception (documented, bounded).** `components/layout/PillNav.tsx` drives its hover and entrance with GSAP on `power3.out`, `back.out(1.7)` and `elastic.out(1, 0.5)` — none of which are the site curve. This is a real exception, granted because those easings *are* the component's character: the rising circle and the settling logo read as mechanical on a plain fast-out curve.
+
+The exception is bounded to that one file. It does not license GSAP or off-scale easing anywhere else, and any new component reaching for a custom curve needs its own decision, not this precedent.
+
+### The red-noir depth stack
+
+Four fixed, inert layers sit beneath every `.wrap` section, painted back-to-front:
+
+| Layer | What it is | Where |
+|---|---|---|
+| Atmosphere | Four radial gradients — oxblood top-right (the brand light source, held at 0.42 so the cool canvas still reads), oxblood-lite upper-left, an aqua counter-light low-left, aqua floor glow | `body::before` |
+| Technical grid | 44px hairline grid, radially masked so it dissolves before the edges | `body::after` |
+| Starfield | Two `box-shadow` point layers drifting at 90s and 140s | `.noir-stars` |
+| Top scrim | Gradient + blur so the page dissolves into the header instead of sliding under a hard edge | `.gradient-blur` |
+
+None of them is a surface: they are all `pointer-events: none` and none introduces a flat fill, so the Atmosphere-Not-Fill rule still holds.
+
+Under `prefers-reduced-motion: reduce` the drift and the conic rim stop while the grid, the stars and the glow stay painted — the depth is the design, the movement is not. Note that the star animations are declared on `:nth-child` selectors, so the reduced-motion override must match that specificity or it silently loses.
 
 ## Shapes
 
-**Fully rounded — the opposite of the previous world's near-sharp language, and deliberately so.** Radius scale: `12px` (sm — chips, small icon tiles) → `16px` (md) → `22px` (lg, `--radius` root value — default cards) → `28px` (xl) → `34px` (2xl — large panels, CTA blocks) → `9999px` (full — every button, badge, and pill chip). Nothing in this world uses a 0-4px radius; that was the previous world's signature, not this one's.
+**Panels, not lozenges.** The radius scale was cut from 12/16/22/28/34 to
+6/8/12/14/18. Cards read as panels with defined edges; `rounded-full` still owns
+buttons, chips and the nav pills, so the interactive language stays soft while
+the content language turns architectural.
+
+**Full-bleed grids.** The trust bento, the hero credential row and the campaign
+banner span the viewport rather than sitting inside the 1280px container, and
+they are separated by hairlines instead of gaps. Previously: Radius scale: `12px` (sm — chips, small icon tiles) → `16px` (md) → `22px` (lg, `--radius` root value — default cards) → `28px` (xl) → `34px` (2xl — large panels, CTA blocks) → `9999px` (full — every button, badge, and pill chip). Nothing in this world uses a 0-4px radius; that was the previous world's signature, not this one's.
 
 ## Components
 
@@ -185,11 +234,56 @@ One curve (`cubic-bezier(0.2, 0.7, 0.3, 1)` — a livelier fast-out than the pre
 - **Do** round everything — `rounded-full` for interactive pills, `22px`+ for cards. A 0-4px radius appearing anywhere is a regression to the retired world.
 - **Do** use the `.eyebrow` pill above Persuade-mode section headings (home page) — but skip it on Operate-mode surfaces (shop, partners) per the mode-appropriateness principle; those need token consistency, not the full marketing device set.
 - **Do** reserve the gold gradient-shimmer (`.grad`) for exactly one word per heading — it's a signature move, not a default text-color replacement.
+- **Do** keep signal red on rims, dots and hairlines — `.shiny-edge` is the pattern; a filled `#ef233c` block is not.
 - **Do** tag any new full-bleed dark section consistently with the rest — there is no chapter system anymore, so no `data-chapter` attribute is needed on new sections.
 
 ### Don't:
 - **Don't** reintroduce the previous world's `.light`/paper chapter, the `HeaderChapterWatcher` scroll-recoloring header, or `data-chapter` attributes — all three were deliberately deleted, not just unused.
-- **Don't** hardcode a per-component `duration-*`/`ease-*` pair — same rule as before, now pointing at the new curve.
+- **Don't** hardcode a per-component `duration-*`/`ease-*` pair — same rule as before, now pointing at the new curve. PillNav's GSAP easings are a documented, file-scoped exception (see Motion Tiers), not an opening.
+- **Don't** let signal red grow into a surface colour, a text colour for body copy, or a second button fill. It has one job: marking the live edge.
 - **Don't** use `champagne`/`wine`/`paper`/`ink-dark` class names anywhere — they no longer exist as Tailwind tokens (renamed to `gold`/`oxblood`/`ink`/`foreground`). A build error on one of these names means a stale reference was missed.
 - **Don't** apply the full Persuade-mode device set (eyebrow, gradient text, floating glass stat cards) to Operate-mode utility surfaces (filters, forms, admin) — carry the palette and material, not every marketing flourish.
 - **Don't** state unconfirmed facts from the reference sample as real (e.g. its specific mall/address, its "12 years" claim, its fabricated partner-count stats) — the sample is a style reference, not a source of business facts. `PRODUCT.md` is the only source of truth for those.
+
+## Token naming
+
+The accent token is `aqua` everywhere — CSS variable `--aqua`, Tailwind
+`text-aqua` / `bg-aqua` / `border-aqua` / `shadow-glow-aqua`, plus `aqua-lite`
+and `aqua-deep`. It was renamed from `gold` across 62 files when the palette
+changed; a token named `gold` that renders cyan is worse than no token at all.
+
+**A trap this project has already fallen into twice:** changing the tokens is
+not enough. `globals.css` and `home.css` carried the original antique gold as
+hardcoded literals (`rgba(201, 162, 39, …)`, `#C9A227`, `#F0DCA0`) inside the
+eyebrow pill, the `.grad` shimmer sweep, the hairlines and the glass borders.
+Those are the most visible surfaces on the page, so two palette changes in a row
+looked far weaker than they should have until the literals were swept too. After
+any future palette change, grep the CSS for the old hex values before believing
+the result.
+
+## Card and page lightness must be paired
+
+Any surface whose background is `--card` must take its text from
+`--card-foreground`, never `--foreground`. While every palette kept both dark
+this never mattered; the moment a light-page/dark-chrome variant was tried, the
+nav label and both hero CTAs rendered invisible. `.shiny-edge` and the header
+now read `--card-foreground` for that reason. Check this pairing before shipping
+any palette where the card and the page differ in lightness.
+
+## The `duration-*` trap on animated components
+
+Tailwind's `duration-*` utilities set **`animation-duration` as well as
+`transition-duration`**, and the utilities layer outranks the components layer.
+Putting `duration-fast` on a `.shiny-edge` button — added there to time its
+hover lift — silently replaced the rim's `9s` sweep with `150ms`, spinning it
+about sixty times too fast. The CSS said one thing and the page did another, and
+no tooling flags it.
+
+Rule: never combine a `duration-*` utility with a component class that declares
+its own `animation`. Let the element inherit the default transition tier, or
+move the transition onto a wrapper.
+
+The rim itself follows the reference: a 2px border, one solid signal colour
+across a ~40% arc (not two alternating hues, which read as a flicker), a 9s
+linear sweep, and a soft outer glow so the colour bleeds past the edge instead
+of being trapped inside the line.

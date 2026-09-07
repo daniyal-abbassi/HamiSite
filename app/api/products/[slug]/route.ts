@@ -9,8 +9,9 @@ const querySchema = z.object({
   paymentTerm: z.string().optional(),
 });
 
-export async function GET(request: Request, { params }: { params: { slug: string } }) {
+export async function GET(request: Request, { params }: { params: Promise<{ slug: string }> }) {
   return withErrorHandling(async () => {
+    const { slug } = await params;
     const { searchParams } = new URL(request.url);
     const parsed = querySchema.safeParse(Object.fromEntries(searchParams.entries()));
 
@@ -22,7 +23,7 @@ export async function GET(request: Request, { params }: { params: { slug: string
     const paymentTerm = normalizePaymentTerm(parsed.data.paymentTerm ?? "CASH");
 
     const product = await prisma.product.findUnique({
-      where: { slug: params.slug },
+      where: { slug },
       include: {
         brand: { select: { id: true, name: true, slug: true } },
         mainCategory: { select: { id: true, name: true, slug: true } },

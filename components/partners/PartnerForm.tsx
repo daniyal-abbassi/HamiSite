@@ -115,7 +115,7 @@ function Field({
       <label htmlFor={id} className="block text-xs font-bold text-foreground/85">
         {label}
         {required && (
-          <span className="ms-1 text-gold" aria-hidden="true">
+          <span className="ms-1 text-aqua" aria-hidden="true">
             *
           </span>
         )}
@@ -187,7 +187,7 @@ function FileField({
       <div
         className={cn(
           "flex items-center gap-3 rounded-xl border border-dashed px-4 py-3",
-          error ? "border-destructive" : "border-gold/40",
+          error ? "border-destructive" : "border-aqua/40",
         )}
       >
         <input
@@ -201,7 +201,7 @@ function FileField({
           }}
         />
         <label htmlFor={id} className="flex flex-1 cursor-pointer items-center gap-3">
-          <UploadCloud className="size-5 shrink-0 text-gold" aria-hidden="true" />
+          <UploadCloud className="size-5 shrink-0 text-aqua" aria-hidden="true" />
           {fileName ? (
             <span className="min-w-0">
               <span className="block truncate text-xs font-bold">{fileName}</span>
@@ -217,7 +217,7 @@ function FileField({
           <button
             type="button"
             onClick={onClear}
-            className="text-[10px] font-bold text-foreground/50 hover:text-gold"
+            className="text-[10px] font-bold text-foreground/50 hover:text-aqua"
             aria-label={`حذف فایل ${label}`}
           >
             حذف
@@ -295,13 +295,13 @@ export function PartnerForm() {
 
   if (status.kind === "success") {
     return (
-      <div className="rounded-xl border border-gold/50 bg-card p-8 text-center shadow-card" role="status">
-        <Check className="mx-auto size-10 text-gold" strokeWidth={1.5} aria-hidden="true" />
+      <div className="rounded-xl border border-aqua/50 bg-card p-8 text-center shadow-card" role="status">
+        <Check className="mx-auto size-10 text-aqua" strokeWidth={1.5} aria-hidden="true" />
         <h2 className="mt-4 text-lg font-black">درخواست شما ثبت شد.</h2>
         <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-foreground/65">
           پس از بررسی مدارک، کارشناسان حامی همراه برای تکمیل مراحل همکاری با شما تماس می‌گیرند.
         </p>
-        <span className="mt-4 inline-block rounded-xl border border-line px-3 py-1.5 font-mono text-[11px] tracking-[0.08em] text-gold">
+        <span className="mt-4 inline-block rounded-xl border border-line px-3 py-1.5 font-mono text-[11px] tracking-[0.08em] text-aqua">
           {`Track / ${status.id}`}
         </span>
       </div>
@@ -333,7 +333,7 @@ export function PartnerForm() {
       {/* Entity toggle */}
       <div className="mt-6" role="radiogroup" aria-label="نوع شخصیت حقوقی">
         <p className="mb-2 text-xs font-bold text-foreground/85">
-          نوع فروشگاه <span className="ms-1 text-gold">*</span>
+          نوع فروشگاه <span className="ms-1 text-aqua">*</span>
         </p>
         <div className="grid grid-cols-2 gap-2 rounded-xl border border-line p-1">
           {partnerEntityOptions.map((option) => {
@@ -384,7 +384,7 @@ export function PartnerForm() {
         {/* Branch-specific fields */}
         <div className="md:col-span-2">
           <div className="border-t border-line pt-5">
-            <h3 className="font-mono text-[10px] tracking-[0.08em] text-gold">
+            <h3 className="font-mono text-[10px] tracking-[0.08em] text-aqua">
               {branchIsIndividual ? "INDIVIDUAL / حقیقی" : "LEGAL / حقوقی"}
             </h3>
             <div className="mt-4 grid gap-4 md:grid-cols-2">

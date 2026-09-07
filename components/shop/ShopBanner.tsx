@@ -47,7 +47,7 @@ export function ShopBanner() {
             </div>
             <h2 className="mt-4 text-xl font-black leading-9 md:text-2xl">
               پرچمداران جدید،
-              <em className="block font-black not-italic text-gold">با اطمینانِ مطمئن.</em>
+              <em className="block font-black not-italic text-aqua">با اطمینانِ مطمئن.</em>
             </h2>
             <p className="mt-3 text-xs leading-6 text-foreground/60">
               اصالت کالا، گارانتی رسمی و مشاوره تخصصی پیش از خرید.
@@ -70,15 +70,15 @@ export function ShopBanner() {
             <Link
               key={banner.href}
               href={banner.href}
-              className="group relative flex items-center gap-4 overflow-hidden rounded-xl glass p-5 shadow-card transition-colors hover:border-gold/50"
+              className="group relative flex items-center gap-4 overflow-hidden rounded-xl glass p-5 shadow-card transition-colors hover:border-aqua/50"
             >
               <div className="relative h-24 w-24 shrink-0">
                 <Image src={banner.src} alt="" width={240} height={240} className="size-full object-contain" />
               </div>
               <div>
-                <span className="font-mono text-[9px] tracking-[0.1em] text-gold/80">{banner.eyebrow}</span>
+                <span className="font-mono text-[9px] tracking-[0.1em] text-aqua/80">{banner.eyebrow}</span>
                 <h3 className="mt-1.5 text-sm font-extrabold leading-6">{banner.title}</h3>
-                <span className="mt-2 inline-flex items-center gap-1 text-[11px] font-bold text-gold">
+                <span className="mt-2 inline-flex items-center gap-1 text-[11px] font-bold text-aqua">
                   مشاهده <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
                 </span>
               </div>

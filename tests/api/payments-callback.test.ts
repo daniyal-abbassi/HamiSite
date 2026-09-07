@@ -5,7 +5,7 @@ import { POST as pay } from "@/app/api/orders/[id]/pay/route";
 import { GET as callback } from "@/app/api/payments/callback/route";
 import { GET as mockConfirm } from "@/app/api/payments/mock-confirm/route";
 import { prisma } from "@/lib/prisma";
-import { getRequest, jsonRequest, loginAs } from "../helpers/request";
+import { ctx, getRequest, jsonRequest, loginAs } from "../helpers/request";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
 
 let seed: SeedResult;
@@ -30,15 +30,12 @@ async function createRetailOrder() {
         items: [{ productId: seed.product.id, variantId: seed.variant.id, quantity: 1 }],
       },
       retailCookie,
-    ),
-  );
+    ), ctx());
   return (await orderRes.json()).data;
 }
 
 async function initiatePayment(orderId: number) {
-  const payRes = await pay(getRequest(`http://localhost/api/orders/${orderId}/pay`, retailCookie), {
-    params: { id: String(orderId) },
-  });
+  const payRes = await pay(getRequest(`http://localhost/api/orders/${orderId}/pay`, retailCookie), ctx({ id: String(orderId) }));
   if (payRes.status !== 200) {
     throw new Error(`pay failed with status ${payRes.status}`);
   }

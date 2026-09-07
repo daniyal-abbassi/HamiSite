@@ -26,7 +26,7 @@ export function CategoryTiles({
               aria-current={active || undefined}
               className={cn(
                 "group flex min-w-28 flex-col items-center gap-2.5 rounded-xl glass border-line p-4 text-center transition-colors",
-                active ? "border-gold" : "border-line hover:border-gold/50",
+                active ? "border-aqua" : "border-line hover:border-aqua/50",
               )}
             >
               <span className="relative grid size-14 place-items-center overflow-hidden rounded-xl bg-ink/40">

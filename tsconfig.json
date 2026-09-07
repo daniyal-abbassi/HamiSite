@@ -20,5 +20,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "docs/inspires"]
+  "exclude": ["node_modules", "docs/inspires", "premium-3d-mobile-commerce"]
 }

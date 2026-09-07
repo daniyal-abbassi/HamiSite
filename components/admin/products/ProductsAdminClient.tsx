@@ -125,7 +125,7 @@ export function ProductsAdminClient() {
                           />
                         </div>
                         <div className="min-w-0">
-                          <Link href={`/admin/products/${product.id}`} className="block truncate font-bold hover:text-gold">
+                          <Link href={`/admin/products/${product.id}`} className="block truncate font-bold hover:text-aqua">
                             {product.name}
                           </Link>
                           <span className="block truncate font-mono text-[10px] text-muted-foreground/70">{product.slug}</span>
@@ -151,7 +151,7 @@ export function ProductsAdminClient() {
                     </td>
                     <td className="hidden px-4 py-3 text-center sm:table-cell">
                       {product.specialOffer ? (
-                        <span className="rounded-full bg-oxblood/40 px-2.5 py-1 text-[10px] font-bold text-gold-lite">ویژه</span>
+                        <span className="rounded-full bg-oxblood/40 px-2.5 py-1 text-[10px] font-bold text-aqua-lite">ویژه</span>
                       ) : (
                         <span className="text-muted-foreground/40">—</span>
                       )}
@@ -160,7 +160,7 @@ export function ProductsAdminClient() {
                       <Link
                         href={`/admin/products/${product.id}?slug=${encodeURIComponent(product.slug)}`}
                         aria-label={`ویرایش ${product.name}`}
-                        className="inline-flex items-center gap-1 text-[12px] font-bold text-gold hover:underline"
+                        className="inline-flex items-center gap-1 text-[12px] font-bold text-aqua hover:underline"
                       >
                         <Pencil className="size-3.5" />
                         ویرایش

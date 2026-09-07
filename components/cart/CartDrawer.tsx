@@ -43,7 +43,7 @@ export function CartDrawer() {
       <aside className="glass absolute inset-y-3 end-3 flex w-96 max-w-[92vw] animate-slide-in-start flex-col rounded-2xl p-5 text-foreground shadow-deep">
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-2 text-base font-black">
-            <ShoppingBag className="size-5 text-gold" />
+            <ShoppingBag className="size-5 text-aqua" />
             سبد خرید
           </span>
           <button
@@ -73,7 +73,7 @@ export function CartDrawer() {
           </div>
         ) : !hasCart ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
-            <ShoppingBag className="size-10 text-gold/60" />
+            <ShoppingBag className="size-10 text-aqua/60" />
             <p className="text-sm leading-7 text-muted-foreground">
               برای مشاهده سبد خرید ابتدا وارد حساب خود شوید.
             </p>
@@ -83,7 +83,7 @@ export function CartDrawer() {
           </div>
         ) : !cart || cart.items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
-            <ShoppingBag className="size-10 text-gold/60" />
+            <ShoppingBag className="size-10 text-aqua/60" />
             <p className="text-sm text-muted-foreground">سبد خرید شما خالی است.</p>
             <Link href="/shop" onClick={closeDrawer}>
               <Button size="sm" variant="oxblood">
@@ -108,7 +108,7 @@ export function CartDrawer() {
 
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">جمع کل ({cart.itemCount.toLocaleString("fa-IR")} کالا)</span>
-              <strong className="text-base font-black text-gold">{formatToman(cart.subtotal)}</strong>
+              <strong className="text-base font-black text-aqua">{formatToman(cart.subtotal)}</strong>
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-2.5">

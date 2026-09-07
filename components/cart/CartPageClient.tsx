@@ -42,7 +42,7 @@ export function CartPageClient() {
   if (!hasCart) {
     return (
       <div className="glass mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
-        <ShoppingBag className="size-10 text-gold/60" />
+        <ShoppingBag className="size-10 text-aqua/60" />
         <h2 className="text-lg font-black">وارد حساب خود شوید</h2>
         <p className="text-sm leading-7 text-muted-foreground">
           سبد خرید شما به حساب کاربری متصل است تا در دستگاه‌های مختلف در دسترس بماند.
@@ -57,7 +57,7 @@ export function CartPageClient() {
   if (!cart || cart.items.length === 0) {
     return (
       <div className="glass mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
-        <ShoppingBag className="size-10 text-gold/60" />
+        <ShoppingBag className="size-10 text-aqua/60" />
         <h2 className="text-lg font-black">سبد خرید شما خالی است</h2>
         <p className="text-sm text-muted-foreground">هنوز محصولی انتخاب نکرده‌اید.</p>
         <Link href="/shop">
@@ -108,7 +108,7 @@ export function CartPageClient() {
           </div>
           <div className="flex items-center justify-between">
             <dt className="text-muted-foreground">جمع سبد</dt>
-            <dd className="font-black text-gold">{formatToman(cart.subtotal)}</dd>
+            <dd className="font-black text-aqua">{formatToman(cart.subtotal)}</dd>
           </div>
         </dl>
         <p className="mt-3 text-[11px] leading-6 text-muted-foreground/70">

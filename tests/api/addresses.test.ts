@@ -6,7 +6,7 @@ import {
   PATCH as patchAddress,
 } from "@/app/api/addresses/[id]/route";
 import { prisma } from "@/lib/prisma";
-import { getRequest, jsonRequest, loginAs } from "../helpers/request";
+import { ctx, getRequest, jsonRequest, loginAs } from "../helpers/request";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
 
 let seed: SeedResult;
@@ -26,8 +26,7 @@ async function createRetailAddress() {
       "POST",
       { userId: seed.wholesale.id, city: "Tehran", address: "123 Test St" },
       retailCookie,
-    ),
-  );
+    ), ctx());
   return res;
 }
 
@@ -41,7 +40,7 @@ describe("address authorization", () => {
 
   it("GET (list) ignores a spoofed userId query param", async () => {
     await createRetailAddress();
-    const res = await listAddresses(getRequest(`http://localhost/api/addresses?userId=${seed.wholesale.id}`, retailCookie));
+    const res = await listAddresses(getRequest(`http://localhost/api/addresses?userId=${seed.wholesale.id}`, retailCookie), ctx());
     const body = await res.json();
     expect(body.data).toHaveLength(1);
     expect(body.data[0].userId).toBe(seed.retail.id);
@@ -51,20 +50,16 @@ describe("address authorization", () => {
     const created = await (await createRetailAddress()).json();
     const id = created.data.id;
 
-    const getRes = await getAddress(getRequest(`http://localhost/api/addresses/${id}`, wholesaleCookie), {
-      params: { id: String(id) },
-    });
+    const getRes = await getAddress(getRequest(`http://localhost/api/addresses/${id}`, wholesaleCookie), ctx({ id: String(id) }));
     expect(getRes.status).toBe(404);
 
     const patchRes = await patchAddress(
       jsonRequest(`http://localhost/api/addresses/${id}`, "PATCH", { city: "Mashhad" }, wholesaleCookie),
-      { params: { id: String(id) } },
+      ctx({ id: String(id) }),
     );
     expect(patchRes.status).toBe(404);
 
-    const deleteRes = await deleteAddress(getRequest(`http://localhost/api/addresses/${id}`, wholesaleCookie), {
-      params: { id: String(id) },
-    });
+    const deleteRes = await deleteAddress(getRequest(`http://localhost/api/addresses/${id}`, wholesaleCookie), ctx({ id: String(id) }));
     expect(deleteRes.status).toBe(404);
 
     const stillThere = await prisma.address.findUnique({ where: { id } });
@@ -77,13 +72,11 @@ describe("address authorization", () => {
 
     const patchRes = await patchAddress(
       jsonRequest(`http://localhost/api/addresses/${id}`, "PATCH", { city: "Mashhad" }, retailCookie),
-      { params: { id: String(id) } },
+      ctx({ id: String(id) }),
     );
     expect(patchRes.status).toBe(200);
 
-    const deleteRes = await deleteAddress(getRequest(`http://localhost/api/addresses/${id}`, retailCookie), {
-      params: { id: String(id) },
-    });
+    const deleteRes = await deleteAddress(getRequest(`http://localhost/api/addresses/${id}`, retailCookie), ctx({ id: String(id) }));
     expect(deleteRes.status).toBe(200);
   });
 });

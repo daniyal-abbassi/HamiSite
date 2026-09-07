@@ -12,7 +12,7 @@ const stockLabels: Record<string, string> = {
 
 const stockTones: Record<string, string> = {
   unlimited: "text-emerald-400",
-  limited: "text-gold",
+  limited: "text-aqua",
   out_of_stock: "text-destructive",
   call: "text-muted-foreground/80",
 };
@@ -43,7 +43,7 @@ export function StatusBadge({ value, kind }: { value: string; kind: StatusKind }
         ? (paymentStatusTones[value] ?? "text-muted-foreground")
         : kind === "stock"
           ? (stockTones[value] ?? "text-muted-foreground")
-          : "text-gold";
+          : "text-aqua";
 
   return (
     <span
@@ -52,7 +52,7 @@ export function StatusBadge({ value, kind }: { value: string; kind: StatusKind }
         tone,
       )}
     >
-      <i className={cn("size-1.5 rounded-full", value === "COMPLETED" || value === "unlimited" ? "bg-emerald-400" : "bg-gold")} />
+      <i className={cn("size-1.5 rounded-full", value === "COMPLETED" || value === "unlimited" ? "bg-emerald-400" : "bg-aqua")} />
       {label}
     </span>
   );

@@ -37,7 +37,7 @@ export function CategoryHub() {
             </h2>
             <p className="mt-3 text-sm text-foreground/60">هر چیزی که برای تجربه بهتر موبایل نیاز داری</p>
           </div>
-          <Link href="/shop" className="inline-flex items-center gap-1.5 text-sm font-bold text-gold hover:underline">
+          <Link href="/shop" className="inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
             مشاهده همه <ArrowLeft className="size-4" />
           </Link>
         </div>
@@ -54,11 +54,11 @@ export function CategoryHub() {
                   <Icon className="size-12 md:size-14" strokeWidth={1.1} />
                 </div>
                 <div className="relative mt-auto w-full bg-gradient-to-t from-ink/95 via-ink/70 to-transparent p-4 pt-10">
-                  <span className="font-mono text-[10px] text-gold">{category.number}</span>
+                  <span className="font-mono text-[10px] text-aqua">{category.number}</span>
                   <small className="mt-0.5 block font-mono text-[8px] tracking-[0.1em] text-foreground/50">{category.eyebrow}</small>
                   <h3 className="mt-1 text-sm font-black md:text-base">{category.title}</h3>
                   <p className="mt-0.5 hidden text-[11px] text-foreground/55 md:block">{category.detail}</p>
-                  <b className="mt-2 flex items-center gap-1 text-[11px] font-bold text-gold">
+                  <b className="mt-2 flex items-center gap-1 text-[11px] font-bold text-aqua">
                     مشاهده <ArrowLeft className="size-3.5" />
                   </b>
                 </div>

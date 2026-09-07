@@ -17,7 +17,7 @@ export function OnlineServices() {
             <p className="mt-4 max-w-md text-sm leading-8 text-foreground/65">
               خدمات دیجیتال حامی همراه، برای نیازهایی که در جعبه گوشی جا نمی‌شوند.
             </p>
-            <Link href="/shop?category=online-services" className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-gold hover:underline">
+            <Link href="/shop?category=online-services" className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
               مشاهده خدمات آنلاین <ArrowLeft className="size-4" />
             </Link>
           </div>
@@ -26,12 +26,12 @@ export function OnlineServices() {
         <Reveal delay={100}>
           <article className="glass rounded-2xl p-7">
             <div className="flex items-center justify-between">
-              <span className="font-mono text-[10px] text-gold">{featuredOnlineService.index}</span>
+              <span className="font-mono text-[10px] text-aqua">{featuredOnlineService.index}</span>
               <small className="font-mono text-[9px] tracking-[0.1em] text-foreground/60">{featuredOnlineService.status}</small>
             </div>
             <p className="mt-5 font-mono text-[11px] tracking-[0.1em] text-foreground/55">{featuredOnlineService.label}</p>
             <h3 className="mt-1 text-2xl font-black">{featuredOnlineService.title}</h3>
-            <i className="my-4 block h-px w-16 bg-gold/60" aria-hidden="true" />
+            <i className="my-4 block h-px w-16 bg-aqua/60" aria-hidden="true" />
             <p className="text-sm leading-8 text-foreground/70">{featuredOnlineService.description}</p>
             <Link
               href={featuredOnlineService.href}
@@ -40,7 +40,7 @@ export function OnlineServices() {
               دریافت این خدمت <ArrowLeft className="size-3.5" />
             </Link>
             <small className="mt-4 flex items-center gap-1.5 text-[11px] text-foreground/55">
-              <ShieldCheck className="size-3.5 text-gold" /> {featuredOnlineService.trustCopy}
+              <ShieldCheck className="size-3.5 text-aqua" /> {featuredOnlineService.trustCopy}
             </small>
           </article>
         </Reveal>
@@ -48,13 +48,13 @@ export function OnlineServices() {
 
       <Reveal delay={140}>
         <div className="faq mt-12 grid gap-8 md:grid-cols-[0.6fr_1.4fr]">
-          <p className="m-0 font-mono text-[10px] tracking-[0.12em] text-gold">SHORT FAQ / سؤال‌های کوتاه</p>
+          <p className="m-0 font-mono text-[10px] tracking-[0.12em] text-aqua">SHORT FAQ / سؤال‌های کوتاه</p>
           <div>
             {onlineServiceFaqs.map((faq) => (
               <details key={faq.question}>
                 <summary>
                   {faq.question}
-                  <ChevronDown className="size-4 shrink-0 text-gold" />
+                  <ChevronDown className="size-4 shrink-0 text-aqua" />
                 </summary>
                 <p>{faq.answer}</p>
               </details>

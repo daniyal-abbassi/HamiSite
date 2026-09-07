@@ -50,7 +50,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <h3 className="truncate text-sm font-extrabold">
-              <Link href={`/shop/${item.product.slug}`} className="hover:text-gold">
+              <Link href={`/shop/${item.product.slug}`} className="hover:text-aqua">
                 {item.product.name}
               </Link>
             </h3>
@@ -71,7 +71,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
         </div>
 
         {item.priceChanged && (
-          <p className="mt-1.5 text-[11px] text-gold">
+          <p className="mt-1.5 text-[11px] text-aqua">
             قیمت به‌روزرسانی شده — اکنون {formatToman(item.currentUnitPrice)} است.
           </p>
         )}
@@ -100,7 +100,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
               <Plus className="size-3.5" />
             </button>
           </div>
-          <strong className="text-sm font-black text-gold">{formatToman(item.lineTotal)}</strong>
+          <strong className="text-sm font-black text-aqua">{formatToman(item.lineTotal)}</strong>
         </div>
       </div>
     </div>

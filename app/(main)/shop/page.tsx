@@ -20,7 +20,7 @@ export default function ShopPage() {
             <p>فروشگاه حامی همراه</p>
           </div>
           <h1 className="mt-4 text-2xl font-black tracking-tight md:text-3xl">
-            همه محصولات، <em className="font-black not-italic text-gold">یک‌جا.</em>
+            همه محصولات، <em className="font-black not-italic text-aqua">یک‌جا.</em>
           </h1>
         </header>
         {/* useSearchParams inside ShopClient requires a Suspense boundary for prerendering */}

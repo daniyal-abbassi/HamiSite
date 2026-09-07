@@ -1,6 +1,6 @@
 /* Home page bespoke editorial styles — the pieces Tailwind can't express
    cleanly. Repainted for the "Aura" world (near-black canvas, oxblood glow,
-   muted gold, full rounded geometry) — see the direction contract at the
+   muted aqua, full rounded geometry) — see the direction contract at the
    top of app/layout.tsx. */
 
 /* ---------- scroll reveal ---------- */
@@ -49,7 +49,7 @@
 }
 .cat-card:hover {
   transform: translateY(-4px);
-  border-color: rgba(201, 162, 39, 0.5);
+  border-color: rgba(214, 207, 203, 0.5);
 }
 .cat-card--mobile { grid-area: mobile; }
 .cat-card--audio { grid-area: audio; }
@@ -65,13 +65,13 @@
   display: grid;
   place-items: center;
   background:
-    radial-gradient(circle at 70% 30%, rgba(201, 162, 39, 0.16), transparent 55%),
+    radial-gradient(circle at 70% 30%, rgba(214, 207, 203, 0.16), transparent 55%),
     linear-gradient(150deg, rgba(156, 10, 34, 0.55), rgba(58, 1, 10, 0.85));
-  color: rgba(201, 162, 39, 0.75);
+  color: rgba(214, 207, 203, 0.75);
 }
 .cat-art i {
   position: absolute;
-  border: 1px solid rgba(201, 162, 39, 0.25);
+  border: 1px solid rgba(214, 207, 203, 0.25);
   border-radius: 50%;
 }
 .cat-art i:nth-child(1) { width: 46%; aspect-ratio: 1; }
@@ -91,7 +91,7 @@
 .store-architecture i {
   display: block;
   height: 2px;
-  background: rgba(201, 162, 39, 0.4);
+  background: rgba(214, 207, 203, 0.4);
 }
 .store-architecture i:nth-child(1) { width: 120px; }
 .store-architecture i:nth-child(2) { width: 88px; }
@@ -102,7 +102,7 @@
   font-family: var(--font-dm-mono), monospace;
   font-size: 11px;
   letter-spacing: 0.08em;
-  color: rgba(240, 220, 160, 0.85);
+  color: rgba(240, 237, 235, 0.85);
 }
 .brand-composition { text-align: center; }
 .b2b-route { text-align: center; }
@@ -111,14 +111,14 @@
   width: 64px;
   height: 1px;
   margin: 10px 0;
-  background: rgba(201, 162, 39, 0.6);
+  background: rgba(214, 207, 203, 0.6);
 }
 .b2b-route small {
   display: block;
   font-family: var(--font-dm-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.12em;
-  color: rgba(201, 162, 39, 0.7);
+  color: rgba(214, 207, 203, 0.7);
 }
 
 /* ---------- store experience photo slots ---------- */
@@ -140,15 +140,15 @@
 .store-slot > div > i {
   width: 90px;
   height: 1px;
-  background: rgba(201, 162, 39, 0.45);
+  background: rgba(214, 207, 203, 0.45);
 }
 .store-slot > div > i:nth-child(2) { width: 60px; }
 .store-slot > div > span {
   width: 34px;
   height: 46px;
   border-radius: 10px;
-  border: 1px solid rgba(201, 162, 39, 0.4);
-  background: rgba(201, 162, 39, 0.08);
+  border: 1px solid rgba(214, 207, 203, 0.4);
+  background: rgba(214, 207, 203, 0.08);
 }
 
 /* ---------- final conversion atmosphere ---------- */
@@ -171,7 +171,7 @@
   width: 1px;
   height: 160%;
   z-index: -1;
-  background: linear-gradient(to bottom, transparent, rgba(201, 162, 39, 0.55), transparent);
+  background: linear-gradient(to bottom, transparent, rgba(214, 207, 203, 0.55), transparent);
 }
 .final-conversion .glow {
   position: absolute;
@@ -201,7 +201,7 @@
   list-style: none;
 }
 .faq summary::-webkit-details-marker { display: none; }
-.faq details[open] summary { color: var(--gold); }
+.faq details[open] summary { color: var(--aqua); }
 .faq details > p {
   margin: 0 0 16px;
   font-size: 13px;

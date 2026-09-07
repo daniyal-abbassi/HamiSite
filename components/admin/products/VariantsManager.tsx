@@ -188,7 +188,7 @@ export function VariantsManager({
                   <div className="min-w-0">
                     <p className="text-[13px] font-bold">
                       {[variant.storage, variant.color].filter(Boolean).join(" — ") || "واریانت بدون نام"}
-                      {variant.isDefault && <span className="ms-2 rounded-full bg-gold/15 px-2 py-0.5 text-[10px] text-gold">پیش‌فرض</span>}
+                      {variant.isDefault && <span className="ms-2 rounded-full bg-aqua/15 px-2 py-0.5 text-[10px] text-aqua">پیش‌فرض</span>}
                     </p>
                     <p className="mt-0.5 font-mono text-[11px] text-muted-foreground">
                       {formatToman(variant.price)} · موجودی: {variant.stock.toLocaleString("fa-IR")} · {variant.stockType}

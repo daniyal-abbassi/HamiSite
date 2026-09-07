@@ -106,7 +106,7 @@ export function CouponsAdminClient() {
       {created.length === 0 ? <div className="rounded-2xl border border-dashed border-line p-12 text-center text-sm text-muted-foreground">هنوز کوپنی نساخته‌اید.</div> : (
         <div className="grid gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
           {created.map((coupon) => <div key={coupon.id} className="flex items-start justify-between gap-3 rounded-xl border border-line bg-ink/40 px-4 py-3.5">
-            <div className="flex min-w-0 items-start gap-2.5"><Tag className="mt-1 size-4 shrink-0 text-gold" /><div className="min-w-0"><p className="truncate text-[13px] font-bold">{coupon.name}</p><p className="font-mono text-[10px] text-muted-foreground/70">{coupon.code}</p></div></div>
+            <div className="flex min-w-0 items-start gap-2.5"><Tag className="mt-1 size-4 shrink-0 text-aqua" /><div className="min-w-0"><p className="truncate text-[13px] font-bold">{coupon.name}</p><p className="font-mono text-[10px] text-muted-foreground/70">{coupon.code}</p></div></div>
             <Button variant="ghost" size="sm" aria-label={`حذف ${coupon.name}`} onClick={() => persist(created.filter((item) => item.id !== coupon.id))}><Trash2 className="size-3.5" /></Button>
           </div>)}
         </div>

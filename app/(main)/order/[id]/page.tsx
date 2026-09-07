@@ -6,7 +6,8 @@ export const metadata: Metadata = {
   description: "پیگیری سفارش در فروشگاه حامی همراه.",
 };
 
-export default function OrderPage({ params }: { params: { id: string } }) {
+export default async function OrderPage({ params }: { params: Promise<{ id: string }> }) {
+  const { id } = await params;
   return (
     <div className="container py-10">
       <header className="mb-8">
@@ -16,10 +17,10 @@ export default function OrderPage({ params }: { params: { id: string } }) {
           <p>سفارش</p>
         </div>
         <h1 className="mt-4 text-2xl font-black tracking-tight md:text-3xl">
-          پیگیری <em className="font-black not-italic text-gold">سفارش.</em>
+          پیگیری <em className="font-black not-italic text-aqua">سفارش.</em>
         </h1>
       </header>
-      <OrderDetailClient orderId={params.id} />
+      <OrderDetailClient orderId={id} />
     </div>
   );
 }

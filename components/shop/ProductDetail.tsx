@@ -141,8 +141,8 @@ export function ProductDetail({ slug }: Props) {
         className={cn(
           "rounded-full border px-4 py-2 text-xs font-bold transition-all duration-fast",
           active
-            ? "border-gold bg-gold/15 text-gold shadow-glow-gold"
-            : "border-line bg-foreground/5 text-foreground/75 hover:border-gold/40 hover:text-foreground",
+            ? "border-aqua bg-aqua/15 text-aqua shadow-glow-aqua"
+            : "border-line bg-foreground/5 text-foreground/75 hover:border-aqua/40 hover:text-foreground",
         )}
       >
         {children}
@@ -198,13 +198,13 @@ export function ProductDetail({ slug }: Props) {
     <div>
       {/* Breadcrumb */}
       <nav aria-label="مسیر صفحه" className="mb-6 flex flex-wrap items-center gap-1.5 text-[11px] text-muted-foreground/70">
-        <Link href="/" className="transition-colors hover:text-gold">خانه</Link>
+        <Link href="/" className="transition-colors hover:text-aqua">خانه</Link>
         <span aria-hidden="true">/</span>
-        <Link href="/shop" className="transition-colors hover:text-gold">فروشگاه</Link>
+        <Link href="/shop" className="transition-colors hover:text-aqua">فروشگاه</Link>
         {product.mainCategory && (
           <>
             <span aria-hidden="true">/</span>
-            <Link href={`/shop?category=${product.mainCategory.slug}`} className="transition-colors hover:text-gold">
+            <Link href={`/shop?category=${product.mainCategory.slug}`} className="transition-colors hover:text-aqua">
               {product.mainCategory.name}
             </Link>
           </>
@@ -217,7 +217,7 @@ export function ProductDetail({ slug }: Props) {
         {/* Image */}
         <div className="relative aspect-square overflow-hidden rounded-2xl glass shadow-card">
           {product.specialOffer && (
-            <span className="absolute start-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-xl bg-oxblood/90 px-3 py-1.5 font-mono text-[9px] tracking-[0.12em] text-gold-lite">
+            <span className="absolute start-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-xl bg-oxblood/90 px-3 py-1.5 font-mono text-[9px] tracking-[0.12em] text-aqua-lite">
               <Sparkles className="size-3" />
               SPECIAL OFFER
             </span>
@@ -234,7 +234,7 @@ export function ProductDetail({ slug }: Props) {
 
         {/* Buy box */}
         <div>
-          <span className="font-mono text-[10px] tracking-[0.12em] text-gold/80">
+          <span className="font-mono text-[10px] tracking-[0.12em] text-aqua/80">
             {product.brand?.name ?? "—"}
             {product.englishName ? ` · ${product.englishName}` : ""}
           </span>
@@ -258,7 +258,7 @@ export function ProductDetail({ slug }: Props) {
                 {compareAtPrice != null && compareAtPrice > unitPrice && (
                   <del className="text-sm text-foreground/50">{formatToman(compareAtPrice)}</del>
                 )}
-                <strong className="text-2xl font-black text-gold" aria-live="polite">
+                <strong className="text-2xl font-black text-aqua" aria-live="polite">
                   {formatToman(unitPrice * quantity)}
                 </strong>
                 {quantity > 1 && (
@@ -269,13 +269,13 @@ export function ProductDetail({ slug }: Props) {
               </div>
             ) : (
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
-                <Phone className="size-4 text-gold" />
+                <Phone className="size-4 text-aqua" />
                 برای استعلام قیمت تماس بگیرید
               </div>
             )}
 
             {tierActive && tier && (
-              <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-gold/15 px-3 py-1.5 text-[11px] font-bold text-gold">
+              <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-aqua/15 px-3 py-1.5 text-[11px] font-bold text-aqua">
                 <Check className="size-3.5" />
                 قیمت عمده فعال شد
                 {tier.discountPercent ? ` — ${toFaDigits(tier.discountPercent)}٪ تخفیف` : ""}

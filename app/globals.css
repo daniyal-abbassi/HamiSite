@@ -6,7 +6,7 @@
  * HAMI brand tokens v2 — "Two Chapters" (flat wine canvas + paper trust
  * sections) retired. Current world, pinned by the user from a supplied
  * reference (aura-landingSample.html): near-black canvas throughout, RAL
- * 3004 oxblood as atmospheric glow (not a flat fill), muted antique gold as
+ * 3004 oxblood as atmospheric glow (not a flat fill), muted antique aqua as
  * the singular accent, full glass/pill geometry. See the direction contract
  * at the top of app/layout.tsx.
  */
@@ -50,8 +50,11 @@
 
 :root {
   /* RGB triplets (Tailwind consumes via `rgb(var(--x) / <alpha>)`) */
-  --background: 13 4 6;        /* #0D0406 — near-black ink canvas */
-  --foreground: 242 244 237;   /* #F2F4ED */
+  --background: 27 10 14;       /* #1B0A0E — burgundy ground: RAL 3004 darkened, so the
+                                  whole page sits inside the brand's own hue.
+                                  Nothing can clash with it because there is no
+                                  second hue — only warm greys. */
+  --foreground: 226 222 219;   /* #E2DEDB — warm grey-white, not pure white */
 
   /* Font stacks — consumed by tailwind.config.ts fontFamily. These custom
      properties were previously emitted by next/font/google; now declared
@@ -59,36 +62,51 @@
   --font-vazirmatn: "Vazirmatn Variable", "Vazirmatn", "Tahoma", sans-serif;
   --font-dm-mono: "DM Mono", ui-monospace, "Courier New", monospace;
 
-  --card: 22 7 9;              /* #160709 — ink-2, elevated surface */
-  --card-foreground: 242 244 237;
-  --popover: 31 10 14;         /* #1F0A0E — ink-3 */
-  --popover-foreground: 242 244 237;
+  --card: 42 17 22;            /* #2A1116 — wine surface, one step up from the ground */
+  --card-foreground: 226 222 219;
+  --popover: 58 26 32;         /* #1A1F2A */
+  --popover-foreground: 226 222 219;
 
-  --primary: 201 162 39;       /* #C9A227 muted antique gold */
-  --primary-foreground: 42 2 7; /* #2A0207 — near-black-oxblood, for text on gold */
+  --primary: 201 194 190;       /* #D6CFCB — aqua. Gold is gone entirely, in any
+                                  shade: three attempts at a warm metal accent
+                                  (champagne, antique gold, amber) all sat in
+                                  RAL 3004's own hue family and muddied it.
+                                  Cyan is the brand red's complement — maximum
+                                  separation on the wheel — so the oxblood now
+                                  reads at full strength. It also leaves green
+                                  free to mean "in stock", and reads as screen
+                                  light, which suits a phone retailer. */
+  --primary-foreground: 32 10 14; /* #03212B — for text on aqua */
 
-  --secondary: 22 7 9;
-  --secondary-foreground: 242 244 237;
+  --secondary: 42 17 22;
+  --secondary-foreground: 226 222 219;
 
-  --muted: 22 7 9;
-  --muted-foreground: 242 244 237; /* consumed at reduced alpha, e.g. text-muted-foreground/62 */
+  --muted: 42 17 22;
+  --muted-foreground: 165 158 156; /* #A59E9C — warm grey for secondary text */
 
   --accent: 100 2 17;          /* oxblood */
-  --accent-foreground: 240 217 171;
+  --accent-foreground: 165 243 252;
 
-  --destructive: 229 72 77;
+  --destructive: 255 77 109;
   --destructive-foreground: 255 245 245;
 
-  --border: 242 244 237;       /* hairline @ 10%, see --line below */
-  --input: 242 244 237;        /* @ 16% */
-  --ring: 201 162 39;          /* gold */
+  --border: 226 222 219;       /* hairline @ 10%, see --line below */
+  --input: 226 222 219;        /* @ 16% */
+  --ring: 201 194 190;          /* aqua */
 
-  --radius: 22px;
+  --radius: 12px;
 
   /* Literal hex, consumed directly (outline, gradients) rather than through
      rgb(var(--x)/alpha). */
-  --gold: #C9A227;
-  --line: rgba(242, 244, 237, 0.10);
+  --aqua: #C9C2BE;
+  --line: rgba(226, 222, 219, 0.12);
+
+  /* Signal red — the red-noir second accent. NOT a replacement for RAL 3004:
+     oxblood remains the brand and the atmosphere, aqua remains the primary
+     accent, and this tighter crimson is reserved for live/edge treatments
+     (the spinning conic border, the pulsing live dot, small emphases). Using
+     it as a surface fill would put it in competition with the brand red. */
+  --signal: #D9604A;
 }
 
 @layer base {
@@ -113,17 +131,35 @@
     pointer-events: none;
     z-index: 0;
     background:
-      radial-gradient(900px 520px at 88% -8%, rgba(100, 2, 17, 0.55), transparent 60%),
-      radial-gradient(700px 480px at 6% 12%, rgba(156, 10, 34, 0.22), transparent 62%),
-      radial-gradient(1000px 700px at 50% 108%, rgba(201, 162, 39, 0.10), transparent 60%);
+      radial-gradient(900px 520px at 84% -6%, rgba(142, 10, 30, 0.55), transparent 62%),
+      radial-gradient(720px 470px at 6% 10%, rgba(100, 2, 17, 0.45), transparent 64%),
+      radial-gradient(1000px 640px at 58% 106%, rgba(214, 207, 203, 0.05), transparent 62%);
   }
+  /* Red-noir depth, layered ON TOP of the oxblood atmosphere above (which is
+     untouched): a faint technical grid, radially masked so it fades out before
+     the edges, plus a slow starfield. Both are fixed, inert, and sit beneath
+     every .wrap section. */
+  body::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 0;
+    background-image:
+      linear-gradient(rgba(236, 238, 243, 0.030) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(236, 238, 243, 0.030) 1px, transparent 1px);
+    background-size: 44px 44px;
+    -webkit-mask-image: radial-gradient(circle at 50% 38%, #000 38%, transparent 82%);
+    mask-image: radial-gradient(circle at 50% 38%, #000 38%, transparent 82%);
+  }
+
   ::selection {
-    background: rgba(201, 162, 39, 0.35);
+    background: rgba(214, 207, 203, 0.30);
     color: #fff;
   }
-  /* gold focus ring — brand accessibility signature */
+  /* aqua focus ring — brand accessibility signature */
   :where(a, button, input, select, textarea):focus-visible {
-    outline: 2px solid var(--gold);
+    outline: 2px solid var(--aqua);
     outline-offset: 3px;
   }
 }
@@ -134,18 +170,18 @@
     position: relative;
     z-index: 2;
   }
-  /* thin gold hairline */
+  /* thin aqua hairline */
   .brand-hairline {
     @apply h-px w-full;
-    background: linear-gradient(to left, transparent, rgba(201, 162, 39, 0.55), transparent);
+    background: linear-gradient(to left, transparent, rgba(214, 207, 203, 0.55), transparent);
   }
   /* Frosted glass surface — the world's default elevated-content material.
-     Gradient-masked 1px border simulates a two-tone hairline (gold-lit on
+     Gradient-masked 1px border simulates a two-tone hairline (aqua-lit on
      one corner, oxblood-lit on the other) without an extra DOM layer. */
   .glass {
     position: relative;
     border-radius: var(--radius);
-    background: linear-gradient(180deg, rgba(242, 244, 237, 0.055), rgba(242, 244, 237, 0.02));
+    background: linear-gradient(180deg, rgba(228, 224, 222, 0.065), rgba(228, 224, 222, 0.022));
     border: 1px solid var(--line);
     backdrop-filter: blur(18px);
     -webkit-backdrop-filter: blur(18px);
@@ -157,7 +193,7 @@
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(140deg, rgba(201, 162, 39, 0.55), transparent 38%, transparent 62%, rgba(156, 10, 34, 0.55));
+    background: linear-gradient(140deg, rgba(214, 207, 203, 0.40), transparent 38%, transparent 62%, rgba(142, 10, 30, 0.55));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
@@ -170,23 +206,23 @@
      world itself changed, not because the old reasoning was wrong. */
   .eyebrow {
     @apply inline-flex items-center gap-2 rounded-full text-[12px] tracking-[0.14em];
-    color: var(--gold-lite, #F0DCA0);
-    border: 1px solid rgba(201, 162, 39, 0.32);
-    background: rgba(201, 162, 39, 0.07);
+    color: var(--aqua-lite, #F0EDEB);
+    border: 1px solid rgba(214, 207, 203, 0.32);
+    background: rgba(214, 207, 203, 0.07);
     padding: 7px 14px;
   }
   .eyebrow i {
     @apply block rounded-full;
     width: 6px;
     height: 6px;
-    background: var(--gold);
-    box-shadow: 0 0 10px var(--gold);
+    background: var(--aqua);
+    box-shadow: 0 0 10px var(--aqua);
   }
   /* Gradient-shimmer text — reserved for exactly one word per heading. This
      world explicitly wants it; craft-floor's blanket "no gradient text" ban
      is a default for the previous world, not a universal law. */
   .grad {
-    background: linear-gradient(100deg, #F0DCA0, #C9A227 40%, #fff 55%, #C9A227 70%, #8A6A15);
+    background: linear-gradient(100deg, #F0EDEB, #D6CFCB 38%, #F4FEFF 55%, #D6CFCB 72%, #8A8280);
     background-size: 220% auto;
     -webkit-background-clip: text;
     background-clip: text;
@@ -202,5 +238,162 @@
     -webkit-backdrop-filter: blur(20px);
     background: rgba(13, 4, 6, 0.72);
     border-bottom: 1px solid var(--line);
+  }
+}
+
+@layer components {
+  /* Top gradient scrim — the page fades into the fixed header instead of
+     sliding under a hard edge. Sits below the header (z-40) and above the
+     atmosphere. */
+  .gradient-blur {
+    position: fixed;
+    inset: 0 0 auto 0;
+    height: 110px;
+    z-index: 30;
+    pointer-events: none;
+    background: linear-gradient(to bottom, rgb(var(--background) / 0.85), transparent);
+    backdrop-filter: blur(7px);
+    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
+    mask-image: linear-gradient(to bottom, #000 55%, transparent);
+  }
+
+  /* Slow parallax starfield. Two layers at different speeds; box-shadow is the
+     cheapest way to place many points without extra DOM nodes. */
+  .noir-stars {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    overflow: hidden;
+  }
+  .noir-stars i {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+    width: 1px;
+    height: 1px;
+    background: transparent;
+    border-radius: 9999px;
+  }
+  .noir-stars i:nth-child(1) {
+    box-shadow:
+      234px 124px rgba(236,238,243,.55), 654px 345px rgba(236,238,243,.35), 876px 12px rgba(236,238,243,.45),
+      1200px 800px rgba(236,238,243,.30), 400px 1500px rgba(236,238,243,.40), 1800px 200px rgba(236,238,243,.35),
+      100px 1000px rgba(236,238,243,.30), 900px 1900px rgba(236,238,243,.45), 500px 600px rgba(236,238,243,.35),
+      1400px 100px rgba(236,238,243,.30), 300px 400px rgba(236,238,243,.40), 1600px 1200px rgba(236,238,243,.30);
+    animation: noir-drift 90s linear infinite;
+  }
+  .noir-stars i:nth-child(2) {
+    width: 2px;
+    height: 2px;
+    box-shadow:
+      123px 456px rgba(240, 237, 235,.35), 789px 234px rgba(236,238,243,.28), 456px 890px rgba(240, 237, 235,.30),
+      1100px 300px rgba(236,238,243,.25), 200px 1200px rgba(240, 237, 235,.32), 1500px 500px rgba(236,238,243,.22),
+      600px 1700px rgba(240, 237, 235,.30), 1300px 900px rgba(236,238,243,.25);
+    animation: noir-drift 140s linear infinite;
+  }
+
+  /* Spinning conic edge. The border is painted by a conic-gradient in
+     border-box while the fill stays flat in padding-box, so only the rim
+     animates. --edge-angle is registered below so the angle can tween at all. */
+  .shiny-edge {
+    position: relative;
+    isolation: isolate;
+    /* The fill is --card, so the label must follow --card-foreground. Using
+       --foreground here breaks the moment a palette makes cards and the page
+       different lightnesses (light page + dark chrome, or the inverse). */
+    color: rgb(var(--card-foreground));
+    /* 2px rim and one solid colour across the arc, matching the reference.
+       The previous version alternated signal -> accent -> signal inside a
+       narrow 32% arc, which read as a flicker rather than a travelling
+       highlight and made the rotation feel much faster than it was. */
+    border: 2px solid transparent;
+    border-radius: 9999px;
+    background:
+      linear-gradient(rgb(var(--card)), rgb(var(--card))) padding-box,
+      conic-gradient(
+        from var(--edge-angle),
+        transparent 0%,
+        var(--signal) 5%,
+        var(--signal) 15%,
+        var(--signal) 30%,
+        transparent 42%,
+        transparent 100%
+      ) border-box;
+    /* Was 3.5s. A slow sweep reads as a lit edge; a fast one reads as a
+       loading spinner, which is the wrong signal on a primary CTA.
+       NEVER put a Tailwind `duration-*` utility on a .shiny-edge element: those
+       utilities set animation-duration as well as transition-duration, and the
+       utilities layer outranks this one, so the class silently overrode this
+       value with 150ms and spun the rim ~60x too fast. */
+    animation: edge-spin 9s linear infinite;
+    /* The glow the rim was missing — colour bleeding off the edge rather than
+       being trapped inside a 2px line. */
+    box-shadow:
+      0 0 0 1px rgb(var(--card)),
+      0 6px 26px -8px var(--signal),
+      0 0 18px -10px var(--signal);
+  }
+
+  /* Fine dot texture from the reference, sitting under the label. */
+  .shiny-edge::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    background: radial-gradient(circle at 50% 50%, rgb(var(--card-foreground)) 0.5px, transparent 0);
+    background-size: 4px 4px;
+    opacity: 0.07;
+    pointer-events: none;
+  }
+
+  /* Oversized outlined wordmark — presence without ink. */
+  .text-stroke {
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(236, 238, 243, 0.12);
+  }
+}
+
+@property --edge-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+/* The rotating headline word. Enters from below and settles — deliberately not
+   a crossfade, so the eye reads it as one word replacing another rather than
+   two words overlapping. NOTE: never pair this class with a Tailwind
+   `duration-*` utility; those set animation-duration and outrank this layer. */
+@keyframes word-swap {
+  from { opacity: 0; transform: translateY(0.4em); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.word-swap {
+  animation: word-swap 460ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+
+@keyframes edge-spin {
+  to { --edge-angle: 360deg; }
+}
+
+@keyframes noir-drift {
+  from { transform: translateY(0); }
+  to { transform: translateY(-2000px); }
+}
+
+/* The atmosphere is decoration. Under reduced motion it holds still — the
+   depth remains, the drift and the spinning rim stop. */
+@media (prefers-reduced-motion: reduce) {
+  /* The star animations are declared on :nth-child selectors, so a plain
+     `.noir-stars i` override loses on specificity and the drift survives the
+     media query. Match the original selectors exactly. */
+  .noir-stars i:nth-child(1),
+  .noir-stars i:nth-child(2),
+  .shiny-edge,
+  .word-swap {
+    animation: none;
   }
 }

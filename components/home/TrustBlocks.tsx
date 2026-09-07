@@ -69,14 +69,14 @@ export function CustomerTrust() {
             {customerTrustSignals.map((signal) => (
               <span key={signal.label} className="flex items-center gap-2 text-xs text-foreground/70">
                 <BadgeCheck className="size-3.5 text-primary" aria-hidden="true" />
-                <Link href={signal.href} className="hover:text-gold">{signal.label}</Link>
+                <Link href={signal.href} className="hover:text-aqua">{signal.label}</Link>
               </span>
             ))}
           </div>
         </div>
         <div className="mt-8 text-center">
           <p className="m-0 text-sm text-foreground/60">برای شروع انتخاب، مسیر فروشگاه در دسترس است.</p>
-          <Link href="/shop" className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-glow-gold transition-transform hover:-translate-y-0.5">
+          <Link href="/shop" className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-glow-aqua transition-transform hover:-translate-y-0.5">
             شروع خرید <ArrowLeft className="size-4" />
           </Link>
         </div>
@@ -94,24 +94,24 @@ export function FinalConversion() {
       <div className="glow" aria-hidden="true" />
       <div className="container py-24 text-center">
         <Reveal>
-          <span className="font-mono text-[10px] tracking-[0.14em] text-gold/80">{finalConversionCopy.eyebrow}</span>
+          <span className="font-mono text-[10px] tracking-[0.14em] text-aqua/80">{finalConversionCopy.eyebrow}</span>
           <h2 id="final-conversion-title" className="mt-4 text-3xl font-black leading-[1.4] tracking-tight md:text-5xl md:leading-[1.35]">
             {finalConversionCopy.titleLead}،
-            <em className="block font-black not-italic text-gold">{finalConversionCopy.titleTail}</em>
+            <em className="block font-black not-italic text-aqua">{finalConversionCopy.titleTail}</em>
           </h2>
           <p className="mx-auto mt-5 max-w-lg text-sm leading-8 text-foreground/65">{finalConversionCopy.subtitle}</p>
           <div className="mt-8 flex flex-col items-center gap-4">
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-base font-bold text-primary-foreground shadow-glow-gold transition-transform hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-base font-bold text-primary-foreground shadow-glow-aqua transition-transform hover:-translate-y-0.5"
             >
               مشاهده محصولات <ArrowLeft className="size-4" />
             </Link>
             <div className="flex flex-wrap justify-center gap-x-6 gap-y-2">
-              <Link href="#store-experience" className="inline-flex items-center gap-1 text-xs font-bold text-foreground/70 hover:text-gold">
+              <Link href="#store-experience" className="inline-flex items-center gap-1 text-xs font-bold text-foreground/70 hover:text-aqua">
                 فروشگاه حضوری <ArrowLeft className="size-3.5" />
               </Link>
-              <Link href="/partners" className="inline-flex items-center gap-1 text-xs font-bold text-foreground/70 hover:text-gold">
+              <Link href="/partners" className="inline-flex items-center gap-1 text-xs font-bold text-foreground/70 hover:text-aqua">
                 همکاری با ما <ArrowLeft className="size-3.5" />
               </Link>
             </div>
@@ -131,12 +131,12 @@ export function MobileDock() {
     { href: "#contact", label: "تماس", Icon: Phone },
   ];
   return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-gold/20 bg-ink-2/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden" aria-label="ناوبری سریع فروشگاه">
+    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-aqua/20 bg-ink-2/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden" aria-label="ناوبری سریع فروشگاه">
       {items.map(({ href, label, Icon, active }) => (
         <Link
           key={label}
           href={href}
-          className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-bold ${active ? "text-gold" : "text-foreground/60"}`}
+          className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-bold ${active ? "text-aqua" : "text-foreground/60"}`}
           aria-current={active ? "page" : undefined}
         >
           <Icon className="size-[18px]" aria-hidden="true" />

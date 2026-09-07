@@ -116,7 +116,7 @@ export function BrandsAdminClient() {
             <div key={brand.id} className="flex items-center justify-between gap-3 rounded-xl border border-line bg-ink/40 px-4 py-3.5">
               <div className="flex min-w-0 items-center gap-2.5">
                 <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-foreground/5">
-                  <Building2 className="size-4 text-gold" />
+                  <Building2 className="size-4 text-aqua" />
                 </span>
                 <div className="min-w-0">
                   <p className="truncate text-[13px] font-bold">{brand.name}</p>

@@ -37,7 +37,7 @@ export function Footer() {
       <div className="container grid gap-10 py-16 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
           <div className="flex items-center gap-2.5">
-            <Image src={hamiMark} alt="" className="size-9 rounded-xl bg-white ring-1 ring-gold/45" />
+            <Image src={hamiMark} alt="" className="size-9 rounded-xl bg-white ring-1 ring-aqua/45" />
             <span className="text-base font-black">
               حامی همراه
               <span className="block font-mono text-[11px] font-normal text-muted-foreground/60">
@@ -53,7 +53,7 @@ export function Footer() {
 
         {footerGroups.map((group) => (
           <nav key={group.title} aria-label={group.title}>
-            <h3 className="m-0 font-mono text-[11px] font-medium tracking-[0.04em] text-gold">
+            <h3 className="m-0 font-mono text-[11px] font-medium tracking-[0.04em] text-aqua">
               {group.title}
             </h3>
             <ul className="mt-4 list-none space-y-2.5 p-0">
@@ -70,6 +70,14 @@ export function Footer() {
             </ul>
           </nav>
         ))}
+      </div>
+
+      {/* Oversized outlined wordmark — presence without ink. Decorative only,
+          so it is hidden from assistive tech and cannot be selected. */}
+      <div className="flex select-none justify-center overflow-hidden py-6" aria-hidden="true">
+        <span className="text-stroke whitespace-nowrap text-[15vw] font-black leading-none tracking-tighter">
+          حامی همراه
+        </span>
       </div>
 
       <div className="border-t border-line">

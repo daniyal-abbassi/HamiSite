@@ -6,10 +6,10 @@ import hamiMark from "@/public/brand/hami-mark.png";
 
 export function CampaignBanner() {
   return (
-    <section id="campaign" className="wrap container py-6" aria-labelledby="campaign-title">
+    <section id="campaign" className="wrap py-6" aria-labelledby="campaign-title">
       <Reveal>
         <div
-          className="relative overflow-hidden rounded-2xl border border-gold/20"
+          className="relative overflow-hidden border-y border-aqua/20"
           style={{ background: "linear-gradient(160deg, #7D0417 0%, #640211 52%, #3A010A 100%)" }}
         >
           <div className="pointer-events-none absolute inset-x-[12%] bottom-[10%] h-[34%] rounded-full bg-[radial-gradient(ellipse_at_center,rgba(201,162,39,0.22),transparent_70%)] blur-2xl" />
@@ -27,9 +27,9 @@ export function CampaignBanner() {
               </Button>
             </div>
             <div className="relative hidden aspect-square max-w-xs place-items-center justify-self-end md:grid" aria-hidden="true">
-              <i className="absolute inset-0 rounded-full border border-gold/25" />
-              <i className="absolute inset-6 rounded-full border border-gold/15" />
-              <Image src={hamiMark} alt="" className="relative size-24 rounded-2xl bg-white ring-1 ring-gold/45" />
+              <i className="absolute inset-0 rounded-full border border-aqua/25" />
+              <i className="absolute inset-6 rounded-full border border-aqua/15" />
+              <Image src={hamiMark} alt="" className="relative size-24 rounded-md bg-white/90 ring-1 ring-aqua/45" />
             </div>
           </div>
         </div>

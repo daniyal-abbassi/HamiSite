@@ -19,7 +19,7 @@ export function CartButton() {
       {itemCount > 0 && (
         <span
           aria-hidden="true"
-          className="absolute -end-0.5 -top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-gold px-1 font-mono text-[10px] font-bold text-primary-foreground"
+          className="absolute -end-0.5 -top-0.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-aqua px-1 font-mono text-[10px] font-bold text-primary-foreground"
         >
           {itemCount.toLocaleString("fa-IR")}
         </span>

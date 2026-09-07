@@ -9,17 +9,17 @@ const buttonVariants = cva(
     variants: {
       variant: {
         // Gold pill — the "money" CTA (signup, submit, place order). Maps to
-        // --primary, which resolves to gold in this world.
+        // --primary, which resolves to aqua in this world.
         default:
-          "bg-gradient-to-b from-gold-lite to-gold text-primary-foreground shadow-glow-gold hover:-translate-y-0.5 hover:shadow-[0_16px_42px_rgba(201,162,39,0.45)]",
+          "bg-gradient-to-b from-aqua-lite to-aqua text-primary-foreground shadow-glow-aqua hover:-translate-y-0.5 hover:shadow-[0_16px_42px_rgba(201,162,39,0.45)]",
         // Oxblood pill — the general primary action, used more often than
-        // gold in the reference world (e.g. the hero's main CTA).
+        // aqua in the reference world (e.g. the hero's main CTA).
         oxblood:
           "bg-gradient-to-b from-oxblood-lite to-oxblood text-white shadow-glow-oxblood hover:-translate-y-0.5 hover:shadow-[0_16px_42px_rgba(100,2,17,0.65)]",
-        outline: "border border-gold/60 bg-transparent text-gold hover:bg-gold/10",
+        outline: "border border-aqua/60 bg-transparent text-aqua hover:bg-aqua/10",
         secondary: "bg-secondary text-secondary-foreground hover:bg-accent",
         ghost: "border border-line bg-foreground/5 text-foreground hover:bg-foreground/10",
-        link: "rounded-none text-gold underline-offset-4 hover:underline",
+        link: "rounded-none text-aqua underline-offset-4 hover:underline",
         destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/90",
       },
       size: {
