@@ -19,6 +19,8 @@ export function ProductListRow({ product }: { product: ShopProduct }) {
           alt={product.name}
           width={320}
           height={320}
+          /* Fixed w-40 slot, and the row is hidden below md entirely. */
+          sizes="160px"
           className="size-full object-contain p-4"
         />
       </Link>

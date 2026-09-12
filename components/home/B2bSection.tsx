@@ -5,7 +5,7 @@ import { b2bFeatures, b2bSupplyAreas, b2bWorkflow } from "@/lib/content/home";
 
 export function B2bSection() {
   return (
-    <section id="b2b" className="wrap bg-ink/25 py-20" aria-labelledby="b2b-title">
+    <section id="b2b" className="wrap bg-ink/25 py-14" aria-labelledby="b2b-title">
       <div className="container">
       <Reveal>
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
@@ -29,7 +29,7 @@ export function B2bSection() {
             <div className="mt-7 flex flex-wrap gap-3">
               <Link
                 href="/partners/login"
-                className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-glow-aqua transition-transform hover:-translate-y-0.5"
+                className="inline-flex items-center gap-1.5 rounded-full bg-primary px-5 py-2.5 text-sm font-bold text-primary-foreground shadow-glow-cta transition-transform hover:-translate-y-0.5"
               >
                 ورود به پنل همکاری <ArrowUpLeft className="size-4" />
               </Link>

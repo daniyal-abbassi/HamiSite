@@ -58,48 +58,60 @@ const config: Config = {
         // Brand DNA v2 — literal hex so opacity modifiers (bg-oxblood/10) just
         // work. RAL 3004 (oxblood DEFAULT) is preserved as the real brand hue;
         // everything around it (canvas, aqua, radius, glass) changed.
+        // Brand DNA — Imperial Luxury
         oxblood: {
-          DEFAULT: "#640211", // RAL 3004 — the brand DNA, untouched
+          DEFAULT: "#640211", // RAL 3004 — the brand DNA
           lite: "#8E0A1E",
           mid: "#75040F",
-          deep: "#3A010A",
+          deep: "#3D020B",
+        },
+        champagne: {
+          DEFAULT: "#E5D3B3",
+          lite: "#F4EADB",
+          deep: "#C5A880",
         },
         aqua: {
-          DEFAULT: "#D6CFCB", // aqua — the brand red's complement. No gold in any shade.
-          lite: "#F0EDEB",
-          deep: "#8A8280",
+          DEFAULT: "#E5D3B3", // resolves to Champagne Gold for luxury consistency
+          lite: "#F4EADB",
+          deep: "#C5A880",
+        },
+        brass: {
+          DEFAULT: "#E5D3B3",
+          lite: "#F4EADB",
+          deep: "#C5A880",
         },
         ink: {
-          DEFAULT: "#080A0F", // cool near-black canvas
-          2: "#12151D",
-          3: "#1A1F2A",
+          DEFAULT: "#0B0204", // Obsidian Canvas
+          2: "#14060A",       // Smoked Obsidian Card
+          3: "#1E0A10",       // Elevated Surface
         },
-        success: "#6FBF9B",
-        // Red-noir second accent. Reserved for live/edge treatments; oxblood
-        // (RAL 3004) stays the brand red and aqua stays the primary accent.
-        signal: "#D9604A",
-        // Matches --line in globals.css — the world's default hairline.
-        line: "rgba(226, 222, 219, 0.12)",
+        success: "#4EAA86",
+        signal: "#E4573F",
+        line: "var(--line)",
+        // Contrast tokens for light‑ambient sections (WCAG‑AA)
+        contrastForeground: "#16080C",
+        contrastBackground: "#F5F5F0",
       },
       borderRadius: {
-        sm: "6px",
-        md: "8px",
-        lg: "var(--radius)", // 22px, see globals.css
-        xl: "14px",
-        "2xl": "16px",
+        sm: "8px",
+        md: "12px",
+        lg: "16px",
+        xl: "22px",
+        "2xl": "28px",
+        "3xl": "34px",
       },
       fontFamily: {
         sans: ["var(--font-vazirmatn)", "Tahoma", "sans-serif"],
         mono: ["var(--font-dm-mono)", "monospace"],
       },
       boxShadow: {
-        // Ambient shadow for glass/card surfaces on the near-black canvas —
-        // replaces the old flat-wine "card"/"seal" pair, which were tuned to
-        // a light-maroon background this world no longer has.
-        card: "0 8px 30px rgba(0, 0, 0, 0.45)",
-        deep: "0 40px 90px rgba(0, 0, 0, 0.6)",
-        "glow-oxblood": "0 10px 30px rgba(100, 2, 17, 0.55)",
-        "glow-aqua": "0 10px 30px rgba(34, 211, 238, 0.30)",
+        card: "0 10px 30px rgba(0, 0, 0, 0.5)",
+        deep: "0 40px 90px rgba(0, 0, 0, 0.75)",
+        monolith: "0 24px 60px -12px rgba(0, 0, 0, 0.8)",
+        "glow-oxblood": "0 12px 35px rgba(100, 2, 17, 0.45)",
+        "glow-gold": "0 8px 24px -4px rgba(229, 211, 179, 0.25)",
+        "glow-cta": "0 12px 32px rgba(229, 211, 179, 0.35)",
+        "glow-brass": "0 16px 42px rgba(229, 211, 179, 0.35)",
       },
       /* Motion duration tokens — design-system scale (instant/fast/normal/slow).
          Arbitrary durations outside this scale are not allowed. */

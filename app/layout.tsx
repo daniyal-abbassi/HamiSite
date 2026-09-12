@@ -1,5 +1,30 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
+
+/**
+ * Viewport and phone-browser chrome.
+ *
+ * `viewportFit: "cover"` is the load-bearing one. Several places already pad
+ * themselves with `env(safe-area-inset-bottom)` — the mobile dock and the
+ * footer's clearance above it — and **without `viewport-fit=cover` those env
+ * variables resolve to 0**, so that padding was doing nothing on exactly the
+ * notched devices it was written for. Setting it here is what switches the
+ * safe-area handling on.
+ *
+ * `themeColor` matches the top of the body gradient, so the browser's status
+ * bar continues the page instead of framing it in white.
+ *
+ * There is deliberately no `maximumScale` or `userScalable: false`. Blocking
+ * pinch-zoom is an accessibility failure, and it is not a price worth paying to
+ * stop an occasional input from zooming — the fix for that is 16px fields,
+ * which is handled directly.
+ */
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover",
+  themeColor: "#6A0F1E",
+};
 
 export const metadata: Metadata = {
   title: {

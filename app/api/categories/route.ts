@@ -1,59 +1,54 @@
-import { prisma } from "@/lib/prisma";
+import { listCategories } from "@/lib/catalog";
 import { ok, withErrorHandling } from "@/lib/http";
 
-function buildTree(rows: Array<{ id: number; parentId: number | null } & Record<string, unknown>>) {
-  const map = new Map<number, (typeof rows)[number] & { children: Array<Record<string, unknown>> }>();
+type Row = {
+  id: number;
+  name: string;
+  slug: string;
+  description: null;
+  parentId: number | null;
+  imageUrl: null;
+  imageAlt: null;
+  iconUrl: null;
+  level: number;
+  children?: Row[];
+};
 
-  for (const row of rows) {
-    map.set(row.id, { ...row, children: [] });
-  }
+/** Nest by parentId, keeping orphans at the root rather than dropping them. */
+function buildTree(rows: Row[]): Row[] {
+  const map = new Map<number, Row>();
+  for (const row of rows) map.set(row.id, { ...row, children: [] });
 
-  const roots: Array<Record<string, unknown>> = [];
+  const roots: Row[] = [];
   for (const row of map.values()) {
-    if (!row.parentId) {
-      roots.push(row);
-      continue;
-    }
-
-    const parent = map.get(row.parentId);
-    if (parent) {
-      parent.children.push(row);
-    } else {
-      roots.push(row);
-    }
+    const parent = row.parentId != null ? map.get(row.parentId) : undefined;
+    if (parent) parent.children!.push(row);
+    else roots.push(row);
   }
-
   return roots;
 }
 
+/**
+ * Categories, from the JSON catalogue export. See the brands route for why —
+ * the shop page's category filter was empty against the drained database.
+ */
 export async function GET(request: Request) {
   return withErrorHandling(async () => {
-    const { searchParams } = new URL(request.url);
-    const tree = searchParams.get("tree") === "true";
+    const tree = new URL(request.url).searchParams.get("tree") === "true";
 
-    const categories = await prisma.category.findMany({
-      where: { available: true },
-      orderBy: [{ level: "asc" }, { order: "asc" }, { name: "asc" }],
-      select: {
-        id: true,
-        name: true,
-        slug: true,
-        description: true,
-        parentId: true,
-        imageUrl: true,
-        imageAlt: true,
-        iconUrl: true,
-        seoTitle: true,
-        seoDescription: true,
-        level: true,
-        order: true,
-      },
-    });
+    const rows: Row[] = listCategories().map((c) => ({
+      id: c.id,
+      name: c.name,
+      slug: c.slug,
+      description: null,
+      parentId: c.parentId,
+      imageUrl: null,
+      imageAlt: null,
+      iconUrl: null,
+      level: c.level,
+    }));
 
-    if (tree) {
-      return ok(buildTree(categories), { total: categories.length, tree: true });
-    }
-
-    return ok(categories, { total: categories.length, tree: false });
+    const data = tree ? buildTree(rows) : rows;
+    return ok(data, { total: rows.length, tree });
   });
 }

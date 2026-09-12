@@ -11,7 +11,7 @@ const buttonVariants = cva(
         // Gold pill — the "money" CTA (signup, submit, place order). Maps to
         // --primary, which resolves to aqua in this world.
         default:
-          "bg-gradient-to-b from-aqua-lite to-aqua text-primary-foreground shadow-glow-aqua hover:-translate-y-0.5 hover:shadow-[0_16px_42px_rgba(201,162,39,0.45)]",
+          "bg-gradient-to-b from-aqua-lite to-aqua text-primary-foreground shadow-glow-cta hover:-translate-y-0.5 hover:shadow-glow-brass",
         // Oxblood pill — the general primary action, used more often than
         // aqua in the reference world (e.g. the hero's main CTA).
         oxblood:

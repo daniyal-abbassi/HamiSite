@@ -15,6 +15,22 @@ const PRODUCT_DIR = "/images/products";
 const CATEGORY_DIR = "/images/categories";
 
 export const PRODUCT_IMAGE_FAMILIES = {
+  /* Accessories. The 26 images ported from the techBazar template cover phones,
+     laptops, watches and audio and nothing else, so every charger and power bank
+     in this catalogue fell through to the `phone` fallback — a 45W power bank
+     was rendering an Apple Watch. These five were generated for this shop
+     (studio shots on white, keyed to transparent; raws in
+     assets/generated-products/) and deliberately carry no branding, because one
+     image stands in for several different makers' products. */
+  powerbank: [
+    "powerbank-compact.png",
+    "powerbank-mini.png",
+    "powerbank-elite.png",
+  ],
+  charger: [
+    "charger-gan.png",
+    "cable-braided.png",
+  ],
   watch: [
     "apple-watch-9-removebg-preview.png",
     "apple-watch-9-3-removebg-preview.png",
@@ -55,6 +71,11 @@ export type ProductImageFamily = keyof typeof PRODUCT_IMAGE_FAMILIES;
 
 /** Ordered rules — the first family whose keyword appears wins. */
 const NAME_RULES: Array<[ProductImageFamily, string[]]> = [
+  // Accessories first, and power banks before chargers: «شارژر همراه» is a
+  // common Persian name for a power bank, so a plain «شارژر» rule placed first
+  // would claim it.
+  ["powerbank", ["پاوربانک", "پاور بانک", "شارژر همراه", "powerbank", "power bank"]],
+  ["charger", ["شارژر", "کابل", "آداپتور", "charger", "cable", "adapter"]],
   ["watch", ["watch", "smartwatch", "ساعت"]],
   [
     "audio",
@@ -73,6 +94,8 @@ const BRAND_RULES: Array<[ProductImageFamily, string[]]> = [
 ];
 
 const CATEGORY_RULES: Array<[ProductImageFamily, string[]]> = [
+  ["powerbank", ["powerbank", "power-bank", "پاوربانک"]],
+  ["charger", ["charger", "cable", "شارژر", "کابل"]],
   ["watch", ["smartwatch", "watch"]],
   ["audio", ["audio", "headphone", "speaker", "airpod"]],
   ["laptop", ["laptop", "computer", "notebook", "tablet"]],
@@ -86,8 +109,12 @@ const CATEGORY_TILE_IMAGES: Array<[string, string[]]> = [
     ["audio", "headphone", "speaker", "airpod", "هندزفری", "هدفون", "اسپیکر", "ایرپاد"],
   ],
   [`${CATEGORY_DIR}/computer.png`, ["laptop", "computer", "notebook", "لپ", "کامپیوتر", "تبلت"]],
-  [`${CATEGORY_DIR}/home.png`, ["home", "خانگی", "خانه"]],
-  [`${CATEGORY_DIR}/tv.png`, ["tv", "television", "تلویزیون"]],
+  // `home.png` and `tv.png` were removed. Checked against the real catalogue:
+  // of its 32 categories, ZERO matched either keyword set — the shop sells
+  // phones and accessories, not televisions or home appliances, so both files
+  // were dead assets (one was a stock photo of a toaster oven). The three that
+  // remain cover 10 categories directly and `phone.png` serves the other 22 as
+  // the fallback, which is right when most of those 22 are phone brands.
 ];
 
 /** Lowercase + ZWNJ→space, so «لپ‌تاپ» and «لپ تاپ» both match. */
@@ -112,14 +139,36 @@ function pick(family: ProductImageFamily, seed: string): string {
 export type ProductImageSource = {
   name: string;
   englishName?: string | null;
-  /** Legacy image rows — accepted for call-site compatibility, intentionally unused. */
-  images?: unknown;
+  /** The shop's own photography, from the catalogue export. Preferred when present. */
+  images?: Array<{ url?: string | null; isDefault?: boolean }> | unknown;
   mainCategory?: { slug?: string | null; name?: string | null } | null;
   brand?: { slug?: string | null; name?: string | null } | null;
 };
 
-/** Resolve the local product image for a product (deterministic, offline-safe). */
+/**
+ * Resolve a product's image.
+ *
+ * **The product's own photograph wins.** The catalogue export carries the
+ * shop's real photography — 1570 images across 189 products — and a real
+ * picture of the thing being sold beats any stand-in. Everything below it is
+ * the fallback that used to be the only path: a deterministic pick from a local
+ * pack, matched by name, then brand, then category.
+ *
+ * The fallback is kept rather than deleted because it still earns its place —
+ * it covers a product added without a photo, a row whose image 404s, and any
+ * build that has to work offline.
+ */
 export function resolveProductImage(product: ProductImageSource): string {
+  const own = Array.isArray(product.images) ? (product.images as Array<{ url?: string | null; isDefault?: boolean }>) : null;
+  if (own && own.length > 0) {
+    const preferred = own.find((img) => img?.isDefault && img.url) ?? own.find((img) => img?.url);
+    if (preferred?.url) return preferred.url;
+  }
+  return resolveLocalProductImage(product);
+}
+
+/** The offline pack, matched by name then brand then category. */
+function resolveLocalProductImage(product: ProductImageSource): string {
   const nameText = normalize([product.name, product.englishName].filter(Boolean).join(" "));
   for (const [family, keywords] of NAME_RULES) {
     if (keywords.some((keyword) => nameText.includes(keyword))) return pick(family, product.name);

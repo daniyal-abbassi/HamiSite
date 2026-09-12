@@ -37,7 +37,7 @@ export function OrdersListClient() {
         });
       } catch (cause) {
         if (cause instanceof ApiClientError && (cause.code === "AUTH_REQUIRED" || cause.status === 401)) {
-          router.replace("/login?next=/orders");
+          router.replace(`/login?next=${encodeURIComponent("/orders")}`);
           return;
         }
         setFailed(true);
@@ -48,7 +48,7 @@ export function OrdersListClient() {
 
   useEffect(() => {
     if (status === "guest") {
-      router.replace("/login?next=/orders");
+      router.replace(`/login?next=${encodeURIComponent("/orders")}`);
       return;
     }
     if (status === "authenticated") void load(page);

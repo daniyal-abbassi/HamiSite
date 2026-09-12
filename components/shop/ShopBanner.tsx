@@ -37,7 +37,7 @@ export function ShopBanner() {
     <section className="container pt-10" aria-label="بنرهای فروشگاه">
       <div className="grid gap-4 lg:grid-cols-[1.7fr_1fr]">
         {/* Main banner */}
-        <div className="relative flex flex-col justify-between overflow-hidden rounded-xl glass p-6 shadow-card md:flex-row md:items-center md:gap-6 md:p-8">
+        <div className="relative flex flex-col justify-between overflow-hidden rounded-xl glass p-5 shadow-card md:flex-row md:items-center md:gap-6 md:p-8">
           <BlobDecor />
           <div className="relative max-w-sm">
             <div className="section-label">
@@ -47,7 +47,7 @@ export function ShopBanner() {
             </div>
             <h2 className="mt-4 text-xl font-black leading-9 md:text-2xl">
               پرچمداران جدید،
-              <em className="block font-black not-italic text-aqua">با اطمینانِ مطمئن.</em>
+              <em className="block font-black not-italic text-aqua">با خیالِ راحت.</em>
             </h2>
             <p className="mt-3 text-xs leading-6 text-foreground/60">
               اصالت کالا، گارانتی رسمی و مشاوره تخصصی پیش از خرید.
@@ -59,13 +59,25 @@ export function ShopBanner() {
               مشاهده موبایل‌ها <ArrowLeft className="size-4" />
             </Link>
           </div>
-          <div className="relative mt-6 h-44 md:mt-0 md:h-56 md:w-56 lg:w-64">
-            <Image src="/images/banners/iphone.png" alt="" width={520} height={520} className="size-full object-contain" />
+          <div className="relative mt-4 h-32 md:mt-0 md:h-56 md:w-56 lg:w-64">
+            <Image
+              src="/images/banners/iphone.png"
+              alt=""
+              width={520}
+              height={520}
+              sizes="(max-width: 768px) 60vw, (max-width: 1024px) 224px, 256px"
+              className="size-full object-contain"
+            />
           </div>
         </div>
 
-        {/* Side banners */}
-        <div className="grid gap-4">
+        {/* Side banners — hidden below md.
+            This whole banner block measured 794px on a 390px screen, sitting
+            between the shopper and the first product on a page whose entire job
+            is browsing products. These two are secondary merchandising and the
+            main banner above already carries the same message; on a phone they
+            are the first thing to go. */}
+        <div className="hidden gap-4 md:grid">
           {sideBanners.map((banner) => (
             <Link
               key={banner.href}
@@ -73,7 +85,7 @@ export function ShopBanner() {
               className="group relative flex items-center gap-4 overflow-hidden rounded-xl glass p-5 shadow-card transition-colors hover:border-aqua/50"
             >
               <div className="relative h-24 w-24 shrink-0">
-                <Image src={banner.src} alt="" width={240} height={240} className="size-full object-contain" />
+                <Image src={banner.src} alt="" width={240} height={240} sizes="96px" className="size-full object-contain" />
               </div>
               <div>
                 <span className="font-mono text-[9px] tracking-[0.1em] text-aqua/80">{banner.eyebrow}</span>

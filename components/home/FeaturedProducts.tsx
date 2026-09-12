@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Image from "next/image";
+import { motion } from "motion/react";
 import Link from "next/link";
-import { ArrowLeft, Heart } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { featuredTabs, type FeaturedTabKey } from "@/lib/content/home";
 import { apiGet } from "@/lib/api-client";
-import { resolveProductImage } from "@/lib/product-images";
 import { cn, formatToman } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Reveal } from "@/components/home/Reveal";
+import { type ProductCardData } from "@/components/shop/ProductCard";
+import { ProductRail } from "@/components/shop/ProductRail";
 
-type ProductCard = {
+type FeaturedProduct = {
   id: number;
   name: string;
   englishName: string | null;
@@ -23,26 +24,18 @@ type ProductCard = {
   stockType: string;
 };
 
-const stockLabels: Record<string, string> = {
-  unlimited: "موجود",
-  limited: "موجود محدود",
-  out_of_stock: "ناموجود",
-  call: "تماس بگیرید",
-};
-
 export function FeaturedProducts() {
   const [tab, setTab] = useState<FeaturedTabKey>("newest");
-  const [products, setProducts] = useState<ProductCard[] | null>(null);
+  const [products, setProducts] = useState<FeaturedProduct[] | null>(null);
   const [error, setError] = useState(false);
-  const [favorites, setFavorites] = useState<Set<number>>(() => new Set());
 
   useEffect(() => {
     let cancelled = false;
     setProducts(null);
     setError(false);
-    const params = new URLSearchParams({ pageSize: "4", includeVariants: "false" });
+    const params = new URLSearchParams({ pageSize: "6", includeVariants: "false" });
     if (tab === "special") params.set("specialOffer", "true");
-    apiGet<ProductCard[]>(`/api/products?${params}`)
+    apiGet<FeaturedProduct[]>(`/api/products?${params}`)
       .then((data) => {
         if (!cancelled) setProducts(data);
       })
@@ -56,151 +49,114 @@ export function FeaturedProducts() {
 
   const activeBadge = featuredTabs.find((t) => t.key === tab)?.badge ?? "";
 
-  const toggleFavorite = (id: number) =>
-    setFavorites((current) => {
-      const next = new Set(current);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
-
   return (
-    <section id="featured" className="wrap container py-20" aria-labelledby="featured-title">
-      <Reveal>
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <span className="eyebrow"><i /> ویترین منتخب</span>
-            <h2 id="featured-title" className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
-              محصولات <span className="grad">منتخب.</span>
-            </h2>
-            <p className="mt-3 max-w-md text-sm leading-7 text-foreground/60">
-              انتخابی از محبوب‌ترین و تازه‌ترین محصولات حامی همراه
-            </p>
-          </div>
-          <Link href="/shop" className="inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
-            مشاهده همه محصولات <ArrowLeft className="size-4" />
-          </Link>
-        </div>
-      </Reveal>
-
-      <Reveal delay={80}>
-        <div className="mt-10 flex gap-2 border-b border-line" role="tablist" aria-label="فیلتر محصولات منتخب">
-          {featuredTabs.map((t) => (
-            <button
-              key={t.key}
-              type="button"
-              role="tab"
-              aria-selected={tab === t.key}
-              onClick={() => setTab(t.key)}
-              className={cn(
-                "relative px-4 pb-3 text-sm font-bold transition-colors duration-normal",
-                tab === t.key ? "text-aqua" : "text-foreground/55 hover:text-foreground/80",
-              )}
-            >
-              {t.label}
-              {tab === t.key && <i className="absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-aqua" aria-hidden="true" />}
-            </button>
-          ))}
-        </div>
-      </Reveal>
-
-      {products === null && !error && (
-        <div className="mt-10 grid grid-cols-2 gap-5 lg:grid-cols-4" aria-busy="true">
-          {Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="space-y-3">
-              <Skeleton className="aspect-square w-full" />
-              <Skeleton className="h-3 w-1/3" />
-              <Skeleton className="h-4 w-3/4" />
-              <Skeleton className="h-4 w-1/2" />
+    <section id="featured" className="wrap py-14" aria-labelledby="featured-title">
+      <div className="container">
+        <Reveal>
+          <div className="flex flex-wrap items-end justify-between gap-6">
+            <div>
+              <span className="eyebrow"><i /> ویترین منتخب</span>
+              <h2 id="featured-title" className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
+                محصولات <span className="grad">منتخب.</span>
+              </h2>
+              <p className="mt-3 max-w-md text-sm leading-7 text-muted-foreground">
+                انتخابی از محبوب‌ترین و تازه‌ترین محصولات حامی همراه
+              </p>
             </div>
-          ))}
-        </div>
-      )}
-
-      {error && (
-        <div className="glass mt-10 rounded-2xl p-8 text-center" role="status">
-          <b className="block font-extrabold">دریافت محصولات موقتاً ممکن نیست.</b>
-          <p className="mt-2 text-sm text-foreground/60">می‌توانید کاتالوگ کامل را ببینید یا بعداً دوباره تلاش کنید.</p>
-          <div className="mt-5 flex justify-center gap-4">
-            <button type="button" onClick={() => setTab(tab)} className="rounded-full bg-primary px-4 py-2 text-xs font-bold text-primary-foreground">
-              تلاش دوباره
-            </button>
-            <Link href="/shop" className="inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
-              مشاهده همه محصولات <ArrowLeft className="size-3.5" />
+            <Link href="/shop" className="inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
+              مشاهده همه محصولات <ArrowLeft className="size-4" />
             </Link>
           </div>
-        </div>
-      )}
+        </Reveal>
+      </div>
 
-      {products !== null && !error && products.length === 0 && (
-        <div className="glass mt-10 rounded-2xl p-8 text-center" role="status">
-          <b className="block font-extrabold">محصولی برای نمایش در این انتخاب وجود ندارد.</b>
-          <p className="mt-2 text-sm text-foreground/60">محصولات جدید به‌زودی به این بخش اضافه می‌شوند.</p>
-          <Link href="/shop" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
-            مشاهده همه محصولات <ArrowLeft className="size-3.5" />
-          </Link>
-        </div>
-      )}
-
-      {products !== null && !error && products.length > 0 && (
-        <div className="mt-10 grid grid-cols-2 gap-5 lg:grid-cols-4">
-          {products.map((product) => {
-            const favorite = favorites.has(product.id);
-            return (
-              <article key={product.id} className="glass group flex flex-col overflow-hidden rounded-2xl transition-transform duration-slow hover:-translate-y-1.5">
-                <div className="relative aspect-square overflow-hidden bg-ink/40">
-                  <span className="absolute start-3 top-3 z-10 rounded-full bg-ink-2/85 px-2.5 py-1 font-mono text-[9px] tracking-[0.08em] text-aqua-lite">
-                    {activeBadge}
-                  </span>
+      {/* The field runs wider than the text column above it, so the tray reads
+          as a surface the goods are laid on rather than another content box.
+          `max-w` + padding rather than negative margins: a negative margin wide
+          enough to matter overflows the viewport at exactly the width where the
+          container stops growing, which is the horizontal-scrollbar trap this
+          hero has already hit twice. */}
+      <Reveal delay={80} className="mx-auto mt-10 w-full max-w-[1560px] px-3 sm:px-4">
+        <div className="tray-field">
+          <div className="flex justify-center sm:justify-start pb-6">
+            <div className="inline-flex items-center gap-1.5 p-1 rounded-full border border-champagne/25 bg-ink/70 backdrop-blur-md shadow-card" role="tablist" aria-label="فیلتر محصولات منتخب">
+              {featuredTabs.map((t) => {
+                const active = tab === t.key;
+                return (
                   <button
+                    key={t.key}
                     type="button"
-                    aria-label={favorite ? `حذف ${product.name} از علاقه‌مندی‌ها` : `افزودن ${product.name} به علاقه‌مندی‌ها`}
-                    aria-pressed={favorite}
-                    onClick={() => toggleFavorite(product.id)}
+                    role="tab"
+                    aria-selected={active}
+                    onClick={() => setTab(t.key)}
                     className={cn(
-                      "absolute end-3 top-3 z-10 grid size-8 place-items-center rounded-full border border-aqua/40 bg-ink-2/70 transition-colors duration-fast",
-                      favorite ? "text-aqua" : "text-foreground/60 hover:text-aqua",
+                      "relative rounded-full px-5 py-2 text-xs md:text-sm font-bold transition-colors duration-normal",
+                      active ? "text-[#110408]" : "text-foreground/70 hover:text-foreground",
                     )}
                   >
-                    <Heart className="size-4" fill={favorite ? "currentColor" : "none"} />
-                  </button>
-                  <Link href={`/shop/${product.slug}`} className="grid h-full place-items-center" aria-label={product.name}>
-                    <Image
-                      src={resolveProductImage(product)}
-                      alt={product.name}
-                      width={600}
-                      height={600}
-                      className="size-full object-contain p-5 transition-transform duration-slow group-hover:scale-105"
-                    />
-                  </Link>
-                </div>
-                <div className="flex flex-1 flex-col p-4">
-                  <span className="font-mono text-[9px] tracking-[0.1em] text-foreground/50">{product.brand?.name ?? "—"}</span>
-                  <h3 className="mt-1.5 text-sm font-extrabold leading-6">
-                    <Link href={`/shop/${product.slug}`} className="hover:text-aqua">{product.name}</Link>
-                  </h3>
-                  {product.mainCategory && <p className="mt-0.5 text-[11px] text-foreground/50">{product.mainCategory.name}</p>}
-                  <div className="mt-3 flex items-baseline gap-2">
-                    {product.compareAtPrice != null && product.compareAtPrice > 0 && (
-                      <del className="text-[11px] text-foreground/55">{formatToman(product.compareAtPrice)}</del>
+                    {active && (
+                      <motion.span
+                        layoutId="featured-tab-fill"
+                        aria-hidden="true"
+                        className="absolute inset-0 rounded-full bg-gradient-to-r from-[#FFFDF9] via-[#E5D3B3] to-[#C5A059] shadow-[0_2px_12px_rgba(229,211,179,0.35)]"
+                        transition={{ type: "spring", stiffness: 420, damping: 26, mass: 0.7 }}
+                      />
                     )}
-                    <strong className="text-sm font-black text-aqua-lite">{formatToman(product.displayPrice)}</strong>
-                  </div>
-                  <div className="mt-auto flex items-center justify-between border-t border-line pt-3">
-                    <span className="flex items-center gap-1.5 text-[11px] text-foreground/60">
-                      <i className={cn("size-1.5 rounded-full", product.stockType === "out_of_stock" ? "bg-destructive" : "bg-success")} aria-hidden="true" />
-                      {stockLabels[product.stockType] ?? "—"}
-                    </span>
-                    <Link href={`/shop/${product.slug}`} className="inline-flex items-center gap-1 text-[11px] font-bold text-aqua hover:underline">
-                      مشاهده <ArrowLeft className="size-3.5" />
-                    </Link>
-                  </div>
+                    <span className="relative z-10">{t.label}</span>
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {products === null && !error && (
+            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" aria-busy="true">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div key={i} className="space-y-3">
+                  <Skeleton className="aspect-square w-full" />
+                  <Skeleton className="h-3 w-1/3" />
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-4 w-1/2" />
                 </div>
-              </article>
-            );
-          })}
+              ))}
+            </div>
+          )}
+
+          {error && (
+            <div className="rounded-2xl border border-line bg-ink-3/80 p-8 text-center text-foreground" role="status">
+              <b className="block font-extrabold">دریافت محصولات موقتاً ممکن نیست.</b>
+              <p className="mt-2 text-sm text-muted-foreground">می‌توانید کاتالوگ کامل را ببینید یا بعداً دوباره تلاش کنید.</p>
+              <div className="mt-5 flex justify-center gap-4">
+                <button type="button" onClick={() => setTab(tab)} className="rounded-full bg-oxblood px-4 py-2 text-xs font-bold text-foreground">
+                  تلاش دوباره
+                </button>
+                <Link href="/shop" className="inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
+                  مشاهده همه محصولات <ArrowLeft className="size-3.5" />
+                </Link>
+              </div>
+            </div>
+          )}
+
+          {products !== null && !error && products.length === 0 && (
+            <div className="rounded-2xl border border-line bg-ink-3/80 p-8 text-center text-foreground" role="status">
+              <b className="block font-extrabold">محصولی برای نمایش در این انتخاب وجود ندارد.</b>
+              <p className="mt-2 text-sm text-muted-foreground">محصولات جدید به‌زودی به این بخش اضافه می‌شوند.</p>
+              <Link href="/shop" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
+                مشاهده همه محصولات <ArrowLeft className="size-3.5" />
+              </Link>
+            </div>
+          )}
+
+          {products !== null && !error && products.length > 0 && (
+            <div>
+              <ProductRail
+                products={products as ProductCardData[]}
+                label={featuredTabs.find((t) => t.key === tab)?.label ?? "محصولات"}
+              />
+            </div>
+          )}
         </div>
-      )}
+      </Reveal>
     </section>
   );
 }

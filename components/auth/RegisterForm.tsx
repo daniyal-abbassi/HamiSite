@@ -189,7 +189,7 @@ export function RegisterForm() {
             className={cn(
               "rounded-xl border p-3.5 text-start transition-all duration-fast",
               role === option.key
-                ? "border-aqua bg-aqua/10 shadow-glow-aqua"
+                ? "border-aqua bg-aqua/10 shadow-glow-cta"
                 : "border-line bg-foreground/5 hover:border-aqua/40",
             )}
           >

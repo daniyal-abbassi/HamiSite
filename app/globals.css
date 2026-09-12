@@ -33,6 +33,30 @@
   unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
     U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
+/* Estedad — the Persian face. Replaced Vazirmatn on the owner's call for
+   something different and more legible: Estedad has larger counters and a wider
+   set width, which holds up better at the small sizes this UI leans on (10-12px
+   mono labels sit next to it constantly). Same self-hosted, offline-safe
+   treatment as everything else here — variable weight 100-900, split by
+   unicode-range so Latin never pulls the Arabic subset. */
+@font-face {
+  font-family: "Estedad Variable";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/estedad-arabic-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0600-06FF, U+0750-077F, U+0870-088E, U+0890-0891, U+0897-08E1, U+08E3-08FF,
+    U+200C-200E, U+2010-2011, U+204F, U+2E41, U+FB50-FDFF, U+FE70-FE74, U+FE76-FEFC;
+}
+@font-face {
+  font-family: "Estedad Variable";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/estedad-latin-wght-normal.woff2") format("woff2-variations");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
+    U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
 @font-face {
   font-family: "DM Mono";
   font-style: normal;
@@ -50,63 +74,50 @@
 
 :root {
   /* RGB triplets (Tailwind consumes via `rgb(var(--x) / <alpha>)`) */
-  --background: 27 10 14;       /* #1B0A0E — burgundy ground: RAL 3004 darkened, so the
-                                  whole page sits inside the brand's own hue.
-                                  Nothing can clash with it because there is no
-                                  second hue — only warm greys. */
-  --foreground: 226 222 219;   /* #E2DEDB — warm grey-white, not pure white */
+  --background: 11 2 4;          /* #0B0204 — Obsidian Canvas */
+  --foreground: 240 236 233;    /* #F0ECE9 — Warm Platinum / Diamond White */
 
-  /* Font stacks — consumed by tailwind.config.ts fontFamily. These custom
-     properties were previously emitted by next/font/google; now declared
-     here alongside the self-hosted @font-face rules above. */
-  --font-vazirmatn: "Vazirmatn Variable", "Vazirmatn", "Tahoma", sans-serif;
+  --font-vazirmatn: "Estedad Variable", "Vazirmatn Variable", "Vazirmatn", "Tahoma", sans-serif;
   --font-dm-mono: "DM Mono", ui-monospace, "Courier New", monospace;
 
-  --card: 42 17 22;            /* #2A1116 — wine surface, one step up from the ground */
-  --card-foreground: 226 222 219;
-  --popover: 58 26 32;         /* #1A1F2A */
-  --popover-foreground: 226 222 219;
+  --card: 20 6 10;              /* #14060A — Smoked Obsidian Card */
+  --card-foreground: 240 236 233;
 
-  --primary: 201 194 190;       /* #D6CFCB — aqua. Gold is gone entirely, in any
-                                  shade: three attempts at a warm metal accent
-                                  (champagne, antique gold, amber) all sat in
-                                  RAL 3004's own hue family and muddied it.
-                                  Cyan is the brand red's complement — maximum
-                                  separation on the wheel — so the oxblood now
-                                  reads at full strength. It also leaves green
-                                  free to mean "in stock", and reads as screen
-                                  light, which suits a phone retailer. */
-  --primary-foreground: 32 10 14; /* #03212B — for text on aqua */
+  --edge-fill: 229 211 179;     /* #E5D3B3 — Champagne Gold */
+  --edge-ink: 17 4 8;
 
-  --secondary: 42 17 22;
-  --secondary-foreground: 226 222 219;
+  --popover: 30 10 16;          /* #1E0A10 — Elevated Panel */
+  --popover-foreground: 240 236 233;
 
-  --muted: 42 17 22;
-  --muted-foreground: 165 158 156; /* #A59E9C — warm grey for secondary text */
+  --primary: 229 211 179;        /* #E5D3B3 — Champagne Gold Primary Accent */
+  --primary-foreground: 45 4 8;  /* #2D0408 — Deep Oxblood Ink */
 
-  --accent: 100 2 17;          /* oxblood */
-  --accent-foreground: 165 243 252;
+  --secondary: 61 2 11;         /* #3D020B — Royal Deep Oxblood */
+  --secondary-foreground: 240 236 233;
 
-  --destructive: 255 77 109;
+  --muted: 30 10 16;
+  --muted-foreground: 169 158 156; /* #A99E9C — Silvery Muted Grey */
+
+  --accent: 100 2 17;           /* #640211 — Imperial Oxblood RAL 3004 */
+  --accent-foreground: 244 234 219;
+
+  --destructive: 228 87 63;
   --destructive-foreground: 255 245 245;
 
-  --border: 226 222 219;       /* hairline @ 10%, see --line below */
-  --input: 226 222 219;        /* @ 16% */
-  --ring: 201 194 190;          /* aqua */
+  --border: 229 211 179;        /* Champagne Hairline @ 12% */
+  --input: 229 211 179;
+  --ring: 229 211 179;
 
-  --radius: 12px;
+  --radius: 16px;
 
-  /* Literal hex, consumed directly (outline, gradients) rather than through
-     rgb(var(--x)/alpha). */
-  --aqua: #C9C2BE;
-  --line: rgba(226, 222, 219, 0.12);
-
-  /* Signal red — the red-noir second accent. NOT a replacement for RAL 3004:
-     oxblood remains the brand and the atmosphere, aqua remains the primary
-     accent, and this tighter crimson is reserved for live/edge treatments
-     (the spinning conic border, the pulsing live dot, small emphases). Using
-     it as a surface fill would put it in competition with the brand red. */
-  --signal: #D9604A;
+  /* Literal hex tokens */
+  --aqua: #E5D3B3;              /* Champagne Gold */
+  --champagne: #E5D3B3;
+  --gold: #E5D3B3;
+  --oxblood: #640211;
+  --line: rgba(229, 211, 179, 0.12);
+  --signal: #E4573F;
+  --page-ground: 11 2 4;
 }
 
 @layer base {
@@ -120,10 +131,17 @@
     @apply bg-background text-foreground font-sans antialiased;
     overflow-x: hidden;
   }
-  /* Atmospheric oxblood glow layer — the world's signature "material":
-     depth comes from layered radial gradients over a near-black canvas,
-     never a flat maroon fill. Fixed so it reads as one continuous
-     atmosphere behind the whole scroll, not a per-section background. */
+  /* Imperial Luxury Velvet Ground with Travelling Atmospheric Glow */
+  body {
+    background-color: #0B0204;
+    background-image:
+      radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), transparent 75%),
+      radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), transparent 70%),
+      radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), transparent 70%),
+      radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), transparent 75%),
+      radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), transparent 80%);
+    background-attachment: scroll;
+  }
   body::before {
     content: "";
     position: fixed;
@@ -131,27 +149,13 @@
     pointer-events: none;
     z-index: 0;
     background:
-      radial-gradient(900px 520px at 84% -6%, rgba(142, 10, 30, 0.55), transparent 62%),
-      radial-gradient(720px 470px at 6% 10%, rgba(100, 2, 17, 0.45), transparent 64%),
-      radial-gradient(1000px 640px at 58% 106%, rgba(214, 207, 203, 0.05), transparent 62%);
+      radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.20), transparent 72%),
+      radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), transparent 65%);
   }
-  /* Red-noir depth, layered ON TOP of the oxblood atmosphere above (which is
-     untouched): a faint technical grid, radially masked so it fades out before
-     the edges, plus a slow starfield. Both are fixed, inert, and sit beneath
-     every .wrap section. */
-  body::after {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    background-image:
-      linear-gradient(rgba(236, 238, 243, 0.030) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(236, 238, 243, 0.030) 1px, transparent 1px);
-    background-size: 44px 44px;
-    -webkit-mask-image: radial-gradient(circle at 50% 38%, #000 38%, transparent 82%);
-    mask-image: radial-gradient(circle at 50% 38%, #000 38%, transparent 82%);
-  }
+  /* No grid. The checkered ruling that used to live here was removed on
+     request — it read as technical clutter rather than depth, and the page has
+     travelling colour and per-section light to carry depth instead. The stars
+     stay; they are quiet. */
 
   ::selection {
     background: rgba(214, 207, 203, 0.30);
@@ -165,6 +169,66 @@
 }
 
 @layer components {
+  /* Light sources that pass as you scroll.
+     ------------------------------------------------------------------
+     The travelling base gradient fixes the colour standing still; this fixes
+     the *lighting* standing still. Every section carries its own soft glow,
+     thrown from alternating sides, so descending the page feels like walking
+     a room lit by lamps rather than staring at one wall.
+
+     Horizontal inset stays 0 on purpose. Bleeding these sideways is what put
+     a horizontal scrollbar on this page three times; the radial's own falloff
+     is enough, and costs nothing. */
+  main > section {
+    position: relative;
+    scroll-margin-top: 6rem;
+  }
+  main > section::before {
+    content: "";
+    position: absolute;
+    inset: -6rem 0;
+    z-index: -1;
+    pointer-events: none;
+  }
+  main > section:nth-of-type(odd)::before {
+    background: radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), transparent 72%);
+  }
+  main > section:nth-of-type(even)::before {
+    background: radial-gradient(60% 62% at 92% 36%, rgba(214, 46, 74, 0.24), transparent 72%);
+  }
+  /* ...but every wine chapter having the same lamp in the same corner is its
+     own kind of uniformity. These two alternate the side and the height, so
+     consecutive wine chapters are lit differently. Same specificity as the rule
+     above, so they win on source order — keep them after it. The `inset: -6rem`
+     on the shared ::before means each glow bleeds into its neighbours, which
+     softens the boundaries further. */
+  main > section:nth-of-type(4n + 2)::before {
+    background:
+      radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), transparent 70%),
+      radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), transparent 72%);
+  }
+  main > section:nth-of-type(4n)::before {
+    background:
+      radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), transparent 72%),
+      radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), transparent 70%);
+  }
+  /* Every third section goes properly dark, so the rhythm has a night as well
+     as a lit side. */
+  main > section:nth-of-type(3n)::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    background: linear-gradient(180deg, transparent, rgba(28, 4, 10, 0.40) 45%, transparent);
+  }
+
+  /* Category section local stage replaces generic section glow */
+  #categories::before,
+  #categories::after {
+    display: none !important;
+  }
+
   /* Every section's content sits above the fixed atmosphere layer. */
   .wrap {
     position: relative;
@@ -175,16 +239,114 @@
     @apply h-px w-full;
     background: linear-gradient(to left, transparent, rgba(214, 207, 203, 0.55), transparent);
   }
-  /* Frosted glass surface — the world's default elevated-content material.
-     Gradient-masked 1px border simulates a two-tone hairline (aqua-lit on
+  /* The product plinth. Goods are the one thing on this page that gets its own
+     light: a warm off-white stage, lit from above, so a phone or a power bank
+     reads as merchandise instead of dissolving into the wine ground. Same
+     off-white family as the trust band, so it belongs to the world rather than
+     escaping it.
+
+     The value this replaced was `bg-ink/40`, which measured 1.04:1 against the
+     page behind it — a shelf you could not see. If this ever goes back toward
+     the ground, measure it before believing it looks fine. */
+  .bg-product-stage {
+    background:
+      radial-gradient(120% 85% at 50% 8%, #EFEBE8 0%, #DCD6D2 52%, #C2BAB5 100%);
+  }
+
+  /* The product field.
+     ------------------------------------------------------------------
+     The ruled red ground the cards sit on. It used to hold a white tray with
+     the cards inside it; the tray is gone and the white cards now sit straight
+     on the ruling, which is a shorter path to the same idea — the goods are
+     the only light thing on the page. Runs wider than the text column so it
+     reads as a surface rather than another content box. */
+  .tray-field {
+    position: relative;
+    isolation: isolate;
+    /* Padding is what makes the field readable at all. Without it the tray
+       covers the whole box and the ruled red ground shows only as a sliver
+       above the tabs — the decoration exists but nobody sees it. */
+    padding: clamp(0.75rem, 1.5vw, 1.5rem);
+    border-radius: 34px;
+    /* The ruling below bleeds past this box on purpose, which put a horizontal
+       scrollbar on the document — the trap this page has now hit three times.
+       `clip` trims it sideways while leaving the vertical axis alone; `hidden`
+       cannot do that (it would force the other axis to scroll and would eat
+       the tray's drop shadow). */
+    overflow-x: clip;
+    overflow-y: visible;
+  }
+
+  /* The field has NO grid of its own, and that is the fix rather than an
+     omission.
+
+     It used to draw a second 44px lattice on top of the global one from
+     body::after. The two never coincided: body::after is a *fixed* element so
+     its grid is anchored to the viewport, while this one was anchored to its
+     own box. Measured in rendered pixels, the field showed lines at gaps of
+     16, 28, 16, 28... — two grids interleaved — against a clean 44, 44, 44 on
+     the page ground beside it.
+
+     `background-attachment: fixed` was tried and does not rescue it: the field
+     sits inside a Reveal wrapper, and a transformed ancestor makes a fixed
+     attachment resolve against that ancestor instead of the viewport. Rather
+     than fight for two lattices to agree, there is now one. The global grid
+     shows through, and its alpha was raised so the ruling still reads here.
+
+     If this region ever needs stronger ruling again, raise body::after's alpha
+     or mask — do not add a second grid. */
+
+  /* The product card carries its own light world.
+     ------------------------------------------------------------------
+     These token overrides used to live on a light tray the cards sat in.
+     The tray is gone and the cards now sit straight on the wine ground, so
+     they have to carry the overrides themselves — a white card inheriting the
+     page's light `--foreground` is white text on white, the invisible-text
+     failure this project has already hit twice. Self-contained also means the
+     card works anywhere: home grid, shop grid, any future surface. */
+  .product-card {
+    --background: 255 255 255;
+    --foreground: 30 12 16;
+    --muted: 240 237 236;
+    --muted-foreground: 106 62 70;
+    --border: 100 2 17;
+    --line: rgba(100, 2, 17, 0.12);
+
+    /* Floating. Warm and tinted with the ground's hue rather than the
+       near-black the dark world uses, which reads as dirt under a white card. */
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.18),
+      0 18px 34px -16px rgba(0, 0, 0, 0.55);
+  }
+  .product-card:hover {
+    box-shadow:
+      0 2px 4px rgba(0, 0, 0, 0.22),
+      0 34px 56px -20px rgba(0, 0, 0, 0.65);
+  }
+
+  /* Cards arrive one after another rather than snapping in as one block —
+     this is where a shopper dwells, and it should give the eye something to
+     follow. Decoration, so it stops under reduced motion. */
+  @keyframes tray-card-in {
+    from { opacity: 0; transform: translateY(14px) scale(0.985); }
+    to   { opacity: 1; transform: none; }
+  }
+  .product-card {
+    animation: tray-card-in 520ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
+    animation-delay: calc(var(--card-index, 0) * 70ms);
+  }
+
+  /* Frosted glass surface — Imperial Luxury Smoked Obsidian Glass.
+     Gradient-masked 1px border simulates a two-tone hairline (champagne-lit on
      one corner, oxblood-lit on the other) without an extra DOM layer. */
   .glass {
     position: relative;
     border-radius: var(--radius);
-    background: linear-gradient(180deg, rgba(228, 224, 222, 0.065), rgba(228, 224, 222, 0.022));
+    background: linear-gradient(180deg, rgba(20, 6, 10, 0.78), rgba(13, 3, 6, 0.68));
     border: 1px solid var(--line);
-    backdrop-filter: blur(18px);
-    -webkit-backdrop-filter: blur(18px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.65);
     overflow: hidden;
   }
   .glass::before {
@@ -193,23 +355,43 @@
     inset: 0;
     border-radius: inherit;
     padding: 1px;
-    background: linear-gradient(140deg, rgba(214, 207, 203, 0.40), transparent 38%, transparent 62%, rgba(142, 10, 30, 0.55));
+    background: linear-gradient(140deg, rgba(229, 211, 179, 0.35), transparent 38%, transparent 62%, rgba(100, 2, 17, 0.50));
     -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
     -webkit-mask-composite: xor;
     mask-composite: exclude;
     pointer-events: none;
   }
-  /* Eyebrow pill — reintroduced by this world's brief. A rounded, bordered,
-     dot-led label sitting above a heading. Do not use this pattern outside
-     this committed world; the previous world banned it for a reason that
-     held there (see DESIGN.md history) and stopped holding only because the
-     world itself changed, not because the old reasoning was wrong. */
+
+  .glass-smoked {
+    position: relative;
+    border-radius: var(--radius);
+    background: linear-gradient(180deg, rgba(20, 6, 10, 0.82), rgba(13, 3, 6, 0.72));
+    border: 1px solid rgba(229, 211, 179, 0.13);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.7);
+    transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1), border-color 300ms cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .glass-smoked:hover {
+    transform: translateY(-4px);
+    border-color: rgba(229, 211, 179, 0.28);
+    box-shadow: 0 24px 50px -12px rgba(0, 0, 0, 0.85), 0 0 22px -4px rgba(229, 211, 179, 0.12);
+  }
+
+  .gold-gradient-text {
+    background: linear-gradient(135deg, #F4EADB 0%, #E5D3B3 45%, #C5A880 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* Eyebrow pill — Imperial Luxury */
   .eyebrow {
     @apply inline-flex items-center gap-2 rounded-full text-[12px] tracking-[0.14em];
-    color: var(--aqua-lite, #F0EDEB);
-    border: 1px solid rgba(214, 207, 203, 0.32);
-    background: rgba(214, 207, 203, 0.07);
-    padding: 7px 14px;
+    color: var(--champagne, #E5D3B3);
+    border: 1px solid rgba(229, 211, 179, 0.25);
+    background: rgba(229, 211, 179, 0.06);
+    padding: 7px 16px;
+    box-shadow: 0 4px 16px -4px rgba(0, 0, 0, 0.4);
   }
   .eyebrow i {
     @apply block rounded-full;
@@ -293,6 +475,9 @@
       600px 1700px rgba(240, 237, 235,.30), 1300px 900px rgba(236,238,243,.25);
     animation: noir-drift 140s linear infinite;
   }
+}
+
+@layer components {
 
   /* Spinning conic edge. The border is painted by a conic-gradient in
      border-box while the fill stays flat in padding-box, so only the rim
@@ -300,40 +485,25 @@
   .shiny-edge {
     position: relative;
     isolation: isolate;
-    /* The fill is --card, so the label must follow --card-foreground. Using
-       --foreground here breaks the moment a palette makes cards and the page
-       different lightnesses (light page + dark chrome, or the inverse). */
-    color: rgb(var(--card-foreground));
-    /* 2px rim and one solid colour across the arc, matching the reference.
-       The previous version alternated signal -> accent -> signal inside a
-       narrow 32% arc, which read as a flicker rather than a travelling
-       highlight and made the rotation feel much faster than it was. */
+    color: #110408;
     border: 2px solid transparent;
     border-radius: 9999px;
     background:
-      linear-gradient(rgb(var(--card)), rgb(var(--card))) padding-box,
+      linear-gradient(135deg, #FFFDF9, #E5D3B3 60%, #D4AF37) padding-box,
       conic-gradient(
         from var(--edge-angle),
         transparent 0%,
-        var(--signal) 5%,
-        var(--signal) 15%,
-        var(--signal) 30%,
-        transparent 42%,
+        rgba(255, 255, 255, 0.95) 8%,
+        #D4AF37 18%,
+        #640211 32%,
+        transparent 45%,
         transparent 100%
       ) border-box;
-    /* Was 3.5s. A slow sweep reads as a lit edge; a fast one reads as a
-       loading spinner, which is the wrong signal on a primary CTA.
-       NEVER put a Tailwind `duration-*` utility on a .shiny-edge element: those
-       utilities set animation-duration as well as transition-duration, and the
-       utilities layer outranks this one, so the class silently overrode this
-       value with 150ms and spun the rim ~60x too fast. */
-    animation: edge-spin 9s linear infinite;
-    /* The glow the rim was missing — colour bleeding off the edge rather than
-       being trapped inside a 2px line. */
+    animation: edge-spin 8s linear infinite;
     box-shadow:
-      0 0 0 1px rgb(var(--card)),
-      0 6px 26px -8px var(--signal),
-      0 0 18px -10px var(--signal);
+      0 0 0 1px rgba(229, 211, 179, 0.4),
+      0 8px 30px -6px rgba(229, 211, 179, 0.35),
+      0 0 20px -8px rgba(100, 2, 17, 0.5);
   }
 
   /* Fine dot texture from the reference, sitting under the label. */
@@ -343,16 +513,15 @@
     inset: 0;
     z-index: -1;
     border-radius: inherit;
-    background: radial-gradient(circle at 50% 50%, rgb(var(--card-foreground)) 0.5px, transparent 0);
+    background: radial-gradient(circle at 50% 50%, rgb(var(--edge-ink)) 0.5px, transparent 0);
     background-size: 4px 4px;
     opacity: 0.07;
     pointer-events: none;
   }
 
-  /* Oversized outlined wordmark — presence without ink. */
   .text-stroke {
     color: transparent;
-    -webkit-text-stroke: 1px rgba(236, 238, 243, 0.12);
+    -webkit-text-stroke: 1px rgba(229, 211, 179, 0.16);
   }
 }
 
@@ -384,6 +553,48 @@
   to { transform: translateY(-2000px); }
 }
 
+/* The partner logo ticker (components/home/BrandTicker.tsx).
+   The track holds the mark list twice, so translating exactly -50% lands copy
+   two where copy one began and the loop has no seam. The -50% and the doubled
+   list are one mechanism: change either and the strip visibly jumps.
+   NOTE: never pair `.brand-ticker-track` with a Tailwind `duration-*` utility.
+   Those set animation-duration as well as transition-duration and outrank this
+   layer — the same trap that once spun `.shiny-edge` sixty times too fast. */
+@keyframes brand-ticker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.brand-ticker-track {
+  animation: brand-ticker 42s linear infinite;
+}
+
+/* Pause so a mark can actually be read. Focus counts as well as hover, or the
+   strip would be pausable with a mouse and not with a keyboard. */
+.brand-ticker:hover .brand-ticker-track,
+.brand-ticker:focus-within .brand-ticker-track {
+  animation-play-state: paused;
+}
+
+/* The edge fade. A mask rather than two gradient overlays painted in the band
+   colour, so it survives a palette change untouched. */
+.brand-ticker {
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 6rem,
+    #000 calc(100% - 6rem),
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent 0,
+    #000 6rem,
+    #000 calc(100% - 6rem),
+    transparent 100%
+  );
+}
+
 /* The atmosphere is decoration. Under reduced motion it holds still — the
    depth remains, the drift and the spinning rim stop. */
 @media (prefers-reduced-motion: reduce) {
@@ -393,7 +604,647 @@
   .noir-stars i:nth-child(1),
   .noir-stars i:nth-child(2),
   .shiny-edge,
-  .word-swap {
+  .word-swap,
+  .brand-ticker-track,
+  .product-card {
     animation: none;
+  }
+
+  /* With the loop stopped the second copy is dead weight past the right edge,
+     so hand the strip over as something that can be scrolled by hand instead. */
+  .brand-ticker {
+    overflow-x: auto;
+  }
+}
+
+
+/* ===========================================================================
+   IMPERIAL LUXURY ATMOSPHERE — Unified Obsidian Velvet & Royal Oxblood
+   ---------------------------------------------------------------------------
+   All sections live coherently on the #0B0204 obsidian canvas. No jarring
+   paper/wine striping. High-contrast typography, champagne gold accents,
+   and smoked glass vitrines.
+   =========================================================================== */
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 9999px;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  color: #E5D3B3;
+  background: rgba(229, 211, 179, 0.06);
+  border: 1px solid rgba(229, 211, 179, 0.22);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+}
+
+.grad {
+  background: linear-gradient(135deg, #FFFDF8 0%, #E5D3B3 50%, #C5A059 100%);
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.brand-hairline {
+  height: 1px;
+  width: 100%;
+  background: linear-gradient(to left, transparent, rgba(229, 211, 179, 0.35), transparent);
+}
+
+/* The trust band, inverted.
+   It was cream (#E2DEDB) with RAL 3004 marks, and that was right for as long as
+   the hero above it was dark — it was the one bright strip in a wine room. The
+   duo chapters made the hero paper (#F6F3F0), and cream on paper measures
+   1.21:1: the band still had its logos but had stopped being a band at all.
+   Flipping it restores the contract exactly. The marks keep their measured
+   legibility (10.08:1 cream-on-wine, against 10.1:1 wine-on-cream before), the
+   band now separates from the hero at 12.19:1, and it puts the brand colour back
+   into a hero that had gone entirely to paper.
+   Unlayered so it outranks the utilities in the markup, including the oxblood
+   hairlines and the muted claim text, which would otherwise be wine-on-wine. */
+.brand-ticker-band {
+  background: linear-gradient(90deg, rgba(16, 5, 8, 0.95) 0%, rgba(61, 2, 11, 0.75) 50%, rgba(16, 5, 8, 0.95) 100%);
+  color: #F0ECE9;
+  border-color: rgba(229, 211, 179, 0.2) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: 0 4px 24px -6px rgba(0, 0, 0, 0.6);
+}
+.brand-ticker-band [class*="border-oxblood"] {
+  border-color: rgba(229, 211, 179, 0.18) !important;
+}
+.brand-ticker-band [class*="text-oxblood"] {
+  color: #E5D3B3 !important;
+}
+
+/* ---------------------------------------------------------------------------
+   An alpha floor on secondary text.
+
+   The single largest source of low contrast on this page, and it has now bitten
+   in three separate grounds. `text-foreground/55` is comfortable on a near-black
+   canvas and fails everywhere else: measured 4.02:1 on paper, and
+   `text-foreground/40` on a white product card came out at 2.63:1.
+
+   Solved arithmetically rather than by taste. For 4.5:1 the minimum alpha is
+   0.58 on the white card, 0.59 on paper and 0.59 on the wine ground — so 0.72
+   is the floor, which lands at 7.67 / 7.13 / 6.14 respectively. Anything above
+   0.72 in the markup is left alone.
+
+   Unlayered on purpose: these have to outrank Tailwind's own utilities, and a
+   rule inside `@layer components` would lose regardless of specificity.
+   --------------------------------------------------------------------------- */
+[class~="text-foreground/40"],
+[class~="text-foreground/50"],
+[class~="text-foreground/55"],
+[class~="text-foreground/60"],
+[class~="text-foreground/65"],
+[class~="text-foreground/70"] {
+  color: rgb(var(--foreground) / 0.72);
+}
+
+[class~="text-muted-foreground/40"],
+[class~="text-muted-foreground/45"],
+[class~="text-muted-foreground/60"],
+[class~="text-muted-foreground/70"] {
+  color: rgb(var(--muted-foreground));
+}
+
+[class~="text-primary/60"],
+[class~="text-primary/70"] {
+  color: rgb(var(--primary) / 0.85);
+}
+
+
+
+/* ===========================================================================
+   THE PRODUCT CARD — four grounds x three frames
+   ---------------------------------------------------------------------------
+   Two independent axes. Colour says what the card is made of; frame says how
+   the product is presented. They combine, so twelve looks come from seven
+   classes rather than twelve designs.
+
+   What makes these read as expensive is the same in all of them, and none of it
+   is ornament: fewer elements, more space around the product, hairlines instead
+   of borders, a real contact shadow under the goods, and a price set large
+   enough to be the second thing you see after the product itself.
+
+   Each ground sets its own tokens. `--accent-ground` tells the component which
+   of the two brand-accent sets to draw from — the dark-ink accents measure
+   2.77:1 on obsidian and 1.98:1 on oxblood, so those two must not use them.
+   =========================================================================== */
+
+.lux-card {
+  /* Rounded and lifted, on the owner's call. The 4px corner was chosen to read
+     as "made" rather than templated; at 18px with a deep shadow the card reads
+     as an object sitting above the page instead, which is the note asked for. */
+  --lux-radius: 18px;
+  --lux-pad: clamp(1rem, 1.6vw, 1.35rem);
+
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  border-radius: var(--lux-radius);
+  background: rgb(var(--background));
+  color: rgb(var(--foreground));
+  transition: transform 320ms cubic-bezier(0.2, 0.7, 0.3, 1),
+              box-shadow 320ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.lux-card:hover { transform: translateY(-4px); }
+
+/* The hairline is drawn as an inset ring rather than a border, so it never
+   adds to the box and never thickens at a corner. */
+.lux-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: inset 0 0 0 1px var(--lux-rule);
+}
+
+/* --- A1. MUSEUM — ivory, restraint, one oxblood hairline ----------------- */
+.card-museum {
+  --background: 244 239 231;
+  --foreground: 28 20 18;
+  --muted-foreground: 104 84 74;
+  --lux-rule: rgba(100, 2, 17, 0.16);
+  --lux-price: #1C1412;
+  --lux-plinth: linear-gradient(180deg, #FBF8F3, #EFE8DC);
+  --accent-ground: light;
+  box-shadow: 0 1px 2px rgba(40, 24, 20, 0.10), 0 18px 40px -22px rgba(40, 24, 20, 0.45);
+}
+
+/* --- A2. OBSIDIAN — near-black, imperial oxblood edge-light, champagne gold hairline ---------- */
+.card-obsidian {
+  --background: 18 7 10;
+  --foreground: 245 240 236;
+  --muted-foreground: 186 170 164;
+  --line: rgba(229, 211, 179, 0.16);
+  --lux-rule: rgba(229, 211, 179, 0.28);
+  --lux-price: #E5D3B3;
+  --lux-plinth: linear-gradient(180deg, #FBF8F4, #E9E1D5);
+  --accent-ground: dark;
+  background: rgba(18, 7, 10, 0.88);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  box-shadow:
+    0 2px 4px rgba(0, 0, 0, 0.45),
+    0 14px 24px -10px rgba(0, 0, 0, 0.55),
+    0 40px 70px -30px rgba(0, 0, 0, 0.9);
+}
+.card-obsidian:hover {
+  --lux-rule: rgba(229, 211, 179, 0.55);
+  box-shadow:
+    0 4px 8px rgba(0, 0, 0, 0.5),
+    0 22px 40px -12px rgba(100, 2, 17, 0.45),
+    0 60px 100px -30px rgba(0, 0, 0, 0.95),
+    0 0 25px -5px rgba(229, 211, 179, 0.12);
+}
+.card-obsidian::before {
+  content: "";
+  position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(160deg, rgba(229, 211, 179, 0.45), rgba(190, 40, 66, 0.35) 40%, transparent 70%);
+  -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  padding: 1px;
+}
+
+/* --- A3. SAFFRON — warm ivory, brass accent, fine double rule ------------ */
+.card-saffron {
+  --background: 247 241 228;
+  --foreground: 38 26 16;
+  --muted-foreground: 116 92 62;
+  --lux-rule: rgba(150, 106, 40, 0.26);
+  --lux-price: #2A1B0E;
+  --lux-plinth: linear-gradient(180deg, #FDFAF1, #F0E7D2);
+  --accent-ground: light;
+  box-shadow: 0 1px 2px rgba(70, 48, 20, 0.10), 0 18px 40px -22px rgba(70, 48, 20, 0.42);
+}
+/* The second rule of the double — inset, warmer, and only on this variant. */
+.card-saffron .lux-body::before {
+  content: "";
+  display: block;
+  height: 1px;
+  margin-bottom: 0.9rem;
+  background: linear-gradient(to left, transparent, rgba(150, 106, 40, 0.45), transparent);
+}
+
+/* --- A4. OXBLOOD — the brand colour itself, cream text, gold hairline ---- */
+.card-oxblood {
+  --background: 90 12 24;
+  --foreground: 246 238 230;
+  --muted-foreground: 214 190 178;
+  --line: rgba(246, 238, 230, 0.16);
+  --lux-rule: rgba(214, 176, 108, 0.34);
+  --lux-price: #F8F2EA;
+  --lux-plinth: linear-gradient(180deg, #F6F1EA, #E4DACC);
+  --accent-ground: dark;
+  box-shadow: 0 1px 2px rgba(30, 4, 10, 0.5), 0 22px 46px -22px rgba(30, 4, 10, 0.75);
+}
+
+/* --- B1. PLINTH — the jeweller's vitrine --------------------------------- */
+.frame-plinth .lux-stage {
+  margin: var(--lux-pad) var(--lux-pad) 0;
+  border-radius: 2px;
+  background: var(--lux-plinth);
+}
+.frame-plinth .lux-stage img { padding: 12%; }
+/* The contact shadow sits under the goods, not behind the card. */
+.frame-plinth .lux-stage::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 9%;
+  width: 54%;
+  height: 5%;
+  transform: translateX(-50%);
+  border-radius: 50%;
+  background: radial-gradient(closest-side, rgba(30, 16, 14, 0.34), transparent);
+  filter: blur(3px);
+}
+
+/* --- B2. BLEED — edge to edge at the top -------------------------------- */
+.frame-bleed .lux-stage {
+  /* Follows the card's radius, or the image would square off the very corners
+     the card was just given. */
+  border-radius: var(--lux-radius) var(--lux-radius) 0 0;
+  /* Near-white rather than the warm ivory plinth. 142 of the 188 catalogue
+     photos are square and shot on white, so at zero padding they reach the card
+     edges and their own ground becomes the top of the card. The remaining 45 are
+     3:4 and letterbox against this — matching the photo white makes those bars
+     invisible instead of a visible second frame. */
+  background: linear-gradient(180deg, #FFFFFF, #F4F1EC);
+}
+/* A bleed with padding is not a bleed — it was 7%, which put each photo's own
+   white background inside the plinth as a second box, two lights in one card.
+   Zero padding with `contain` fills edge-to-edge on the square majority and
+   letterboxes the portrait ones without ever cropping a product. */
+.frame-bleed .lux-stage img { padding: 0; }
+.frame-bleed .lux-stage { box-shadow: none; }
+
+/* --- B3. MAT — a passepartout ------------------------------------------- */
+.frame-mat .lux-stage {
+  margin: calc(var(--lux-pad) * 1.15);
+  margin-bottom: 0;
+  border-radius: 1px;
+  background: var(--lux-plinth);
+  box-shadow: 0 0 0 1px var(--lux-rule), 0 0 0 10px rgb(var(--background));
+}
+.frame-mat .lux-stage img { padding: 15%; }
+
+.lux-stage {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1;
+  box-shadow: inset 0 0 0 1px rgba(40, 24, 20, 0.10);
+}
+.lux-stage img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  transition: transform 600ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.lux-card:hover .lux-stage img { transform: scale(1.04); }
+
+.lux-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  padding: var(--lux-pad);
+}
+
+/* ===========================================================================
+   THE SWAP STACK
+   ===========================================================================
+   Three cards, three grounds. Wine-on-wine was the problem with the first
+   placement — the cards were --card (#6A0F1E) on the wine ground and separated
+   from it by 1.18:1, so the whole stack read as one dark shape. Sitting inside
+   #categories now puts them on the paper chapter, and each card takes a
+   different ground so the depth is legible as *three* cards.
+
+   BRASS IS BACK, ON THE OWNER'S CALL. DESIGN.md records gold as removed
+   entirely — three attempts at a warm metal accent all sat in RAL 3004's own
+   hue family and muddied it. That finding still holds for a *tint on the wine
+   ground*, which is where it failed. Here it is a hairline and a small mark on
+   card faces that are themselves near-black or cream, so it never touches the
+   brand red. Scope it that way if it spreads.
+   =========================================================================== */
+
+.swap-card {
+  border: none;
+  box-shadow:
+    0 2px 4px rgba(30, 4, 10, 0.22),
+    0 30px 60px -28px rgba(30, 4, 10, 0.55);
+}
+
+/* 01 — obsidian with a brass rule. The darkest face, so it anchors the stack. */
+.swap-card-1 {
+  background: linear-gradient(155deg, #241016 0%, #15070B 62%, #1D0C12 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(198, 158, 92, 0.34),
+    0 2px 4px rgba(30, 4, 10, 0.24),
+    0 30px 60px -28px rgba(30, 4, 10, 0.6);
+}
+.swap-card-1 .swap-card-index { color: rgba(214, 176, 108, 0.9); }
+.swap-card-1 .swap-card-icon { color: #D6B06C; }
+.swap-card-1 .swap-card-title { color: #F4EEE8; }
+.swap-card-1 .swap-card-body { color: rgba(244, 238, 232, 0.72); }
+
+/* 02 — RAL 3004 itself. The brand card, and the middle of the stack. */
+.swap-card-2 {
+  background: linear-gradient(155deg, #7A1024 0%, #5A0C1A 58%, #450814 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(232, 200, 140, 0.30),
+    0 2px 4px rgba(30, 4, 10, 0.24),
+    0 30px 60px -28px rgba(30, 4, 10, 0.6);
+}
+.swap-card-2 .swap-card-index { color: rgba(240, 214, 168, 0.92); }
+.swap-card-2 .swap-card-icon { color: #EFD3A0; }
+.swap-card-2 .swap-card-title { color: #FBF4EC; }
+.swap-card-2 .swap-card-body { color: rgba(251, 244, 236, 0.78); }
+
+/* 03 — warm cream with wine ink. The light face, so the stack is not three
+   dark rectangles; it is what makes the depth obvious at a glance. */
+.swap-card-3 {
+  background: linear-gradient(155deg, #FBF6EE 0%, #F1E6D5 100%);
+  box-shadow:
+    inset 0 0 0 1px rgba(122, 16, 36, 0.16),
+    0 2px 4px rgba(30, 4, 10, 0.16),
+    0 30px 60px -28px rgba(30, 4, 10, 0.45);
+}
+.swap-card-3 .swap-card-index { color: #96702C; }
+.swap-card-3 .swap-card-icon { color: #8A651F; }
+.swap-card-3 .swap-card-title { color: #3A0A16; }
+.swap-card-3 .swap-card-body { color: rgba(58, 10, 22, 0.72); }
+
+/* ===========================================================================
+   MOBILE
+   ===========================================================================
+   Until this block existed, `globals.css` contained exactly one media query
+   (`prefers-reduced-motion`). Every value in this file — card padding, radii,
+   chapter fades, shadow depth — was a desktop value being served to phones,
+   and none of the standard mobile hygiene properties were set anywhere.
+
+   The breakpoint is 767px, matching Tailwind's `md`, so a rule here and a
+   `md:` utility in the markup always describe the same boundary. Never write a
+   mobile rule at a different width — two competing definitions of "mobile" is
+   how a layout ends up correct at 390 and broken at 700.
+   =========================================================================== */
+
+/* --- Hygiene. Applies everywhere; these are corrections, not adaptations. --- */
+
+html {
+  /* iOS inflates text in landscape unless this is pinned, which silently
+     breaks every size relationship established in this file. */
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  /* In-page anchors would otherwise land under the fixed header island. */
+  scroll-padding-top: 6.5rem;
+}
+
+/* The default tap flash is a grey-blue box that has nothing to do with this
+   palette and looks like a rendering fault on a dark wine ground. */
+:where(a, button, [role="button"], input, select, textarea, summary) {
+  -webkit-tap-highlight-color: rgba(190, 32, 58, 0.16);
+  /* Removes the legacy double-tap-to-zoom delay on controls. Deliberately not
+     applied to the document, because pinch-zoom on the page must keep working —
+     disabling it is an accessibility failure, not a polish item. */
+  touch-action: manipulation;
+}
+
+/* `viewport-fit=cover` (set in app/layout.tsx) is what makes the safe-area env
+   variables non-zero — before it they resolved to 0 and every `env(safe-area-*)`
+   in this project was silently doing nothing. It also lets content into the
+   cutout region, so the fixed chrome now has to pad past it.
+
+   NOT inside the mobile block on purpose: a notched phone in landscape is 844px
+   wide, which is above the `md` breakpoint, and landscape is exactly when a side
+   cutout eats into the bar. The vertical inset is handled where it occurs (the
+   dock, and the footer's clearance above it). */
+header[class*="fixed"] {
+  padding-left: max(1rem, env(safe-area-inset-left));
+  padding-right: max(1rem, env(safe-area-inset-right));
+}
+nav[aria-label="ناوبری سریع فروشگاه"] {
+  /* Raw env, not max(): this bar has no horizontal padding by design, and in
+     portrait the insets are 0, so this must add nothing there. */
+  padding-left: env(safe-area-inset-left);
+  padding-right: env(safe-area-inset-right);
+}
+
+@media (max-width: 767px) {
+
+
+  /* --- Type floor --------------------------------------------------------
+     Measured on the home page at 390px: 103 rendered elements below 11px — ten
+     at 8px, nineteen at 9px, seventy-four at 10px. 8px type on a phone is not
+     small, it is unreadable, and it was never a mobile decision: these are
+     desktop sizes reaching a phone because no breakpoint stood between them.
+
+     The two rules do different jobs, because the text is doing different jobs:
+
+     - **8 and 9px are decorative eyebrows** — `VERIFIED COMMUNITY / PENDING`,
+       index numerals, mono kickers. They carry no information a shopper needs
+       and there is no size at which they would earn their room on a 390px
+       screen. Hidden, on the owner's call. That also shortens a page that is
+       already 22 screens long.
+     - **10px is content** — brand, model code, stock state, the spec tail on a
+       product card. It cannot be hidden, so it is raised to 12px.
+
+     Attribute selectors rather than edits across 20 files, matching the pattern
+     this stylesheet already uses for `text-aqua` and the alpha floor. Unlayered,
+     so they outrank Tailwind's utilities. */
+  [class*="text-[8px]"],
+  [class*="text-[9px]"] {
+    display: none;
+  }
+  [class*="text-[10px]"] {
+    font-size: 12px;
+  }
+
+  /* --- Touch targets -----------------------------------------------------
+     Measured at 390px: 78 interactive elements rendered below 44×44.
+
+     Two different bars are in play and it is worth being precise about which.
+     WCAG 2.5.8 (AA) asks for 24×24 CSS px and explicitly exempts links inline
+     in a sentence. The 44×44 figure is Apple's HIG (and Material's 48dp) and
+     applies to *controls* — the things a thumb aims at. Holding every link in
+     the page to 44px would double the height of every link list on the site to
+     satisfy a rule that was never about them, so the two are treated
+     differently: controls get 44, prose links keep their layout.
+
+     Icon-only controls are the ones where a miss actually costs something, and
+     they are the smallest: 40px in the header, 36px in the accessory grid, 32px
+     in PillNav. This expands the *hit area* with a centred pseudo-element and
+     leaves the painted circle exactly where it is, so nothing reflows — the
+     alternative, growing the box, would push the header pill taller and change
+     the chrome to fix a problem the user cannot see.
+
+     `size-11` is already 44px and is deliberately not listed. */
+  :where(a, button, [role="button"], summary):is(
+    [class*="size-8"], [class*="size-9"], [class*="size-10"]
+  ) {
+    position: relative;
+  }
+  :where(a, button, [role="button"], summary):is(
+    [class*="size-8"], [class*="size-9"], [class*="size-10"]
+  )::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+    /* Hit area only — must never paint, and must not swallow the icon. */
+    background: none;
+    pointer-events: auto;
+  }
+
+  /* The two brand wordmarks with no licensed glyph (TCH, OAK) are set as text,
+     so their links are only as wide as the word — 35px. Everything else in that
+     grid is a symbol and already clears the minimum. */
+  #brands a,
+  #brands button {
+    min-width: 44px;
+  }
+
+  /* Text controls — tabs, pill CTAs and the «مشاهده همه» links, which render
+     between 16px and 42px tall. These are flex/inline-flex containers, so a
+     min-height actually applies to them; a bare prose link is inline and would
+     ignore it, which is exactly the distinction wanted here. Footer and nav
+     link lists are plain anchors and deliberately do not match — they are
+     spacing problems, not target problems, and are handled where they live. */
+  button:not([class*="size-"]),
+  [role="tab"],
+  a[class*="inline-flex"],
+  a[class*="rounded-full"] {
+    min-height: 44px;
+  }
+
+  /* --- The card at two-up width ------------------------------------------
+     At 45% of the rail a card is ~154px wide, so its body has ~124px of
+     content. The desktop internals do not survive that: the 26px price wraps
+     to three lines, and a 44px add-to-cart button beside it leaves ~67px for a
+     nine-figure toman figure. These are the compact settings for that width —
+     they are not "smaller because mobile", each one is sized to the box it now
+     has to fit in. */
+  .lux-card {
+    --lux-pad: 0.7rem;
+  }
+  /* The price is still the largest thing in the body — it just stops being
+     larger than the card can hold. */
+  /* The card becomes a query container so the price can be sized against the
+     card, not the viewport. */
+  .lux-card {
+    container-type: inline-size;
+  }
+  .lux-card .lux-buy strong {
+    /* «۱۱۵٬۰۰۰٬۰۰۰» is one unbreakable token — there is no break opportunity at
+       the Persian thousands separator — and with `tabular-nums` it measures
+       145px at 17px. The card body is 100px at 320px and 124px at 390px, so a
+       fixed 17px price spills out of the card at *every* mobile width. In RTL
+       that spill hangs to the LEFT, which is why it never showed up as document
+       overflow and passed the earlier check.
+       Sizing in `cqi` makes the price track the card: ~11.4px on a 130px card,
+       ~13.6px on a 154px one, capped at the design's 17px. The 11px floor is
+       the same one the mobile type floor uses. */
+    font-size: clamp(11px, 8.8cqi, 17px);
+    /* The break then lands between the number and «تومان», which is the
+       standard Persian price presentation; tight leading makes it read as one
+       deliberate block rather than an accident. */
+    line-height: 1.2;
+  }
+  .lux-card h3 a {
+    font-size: 14px;
+    line-height: 1.5;
+  }
+  /* Stack the transaction row. Side by side, the button and the price fight
+     over ~124px and the price loses; stacked, the price gets the full width
+     and the button becomes a full-width target, which is a better thumb
+     target than the 44px square it replaces. */
+  .lux-buy {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.5rem;
+  }
+  .lux-buy > button {
+    width: 100%;
+  }
+  /* The spec tail is the first thing to go at this width — it is the line a
+     shopper reads *after* deciding, and at 124px it truncates to noise. */
+  .lux-card .lux-body > p {
+    display: none;
+  }
+
+  /* The house wordmark is pinned to the card's bottom corner. On a full-width
+     card it sits in empty space; at 154px, with the buy button now full width,
+     it lands directly on top of the button. A maker's mark that collides with
+     the primary action is worse than no maker's mark. */
+  .lux-card > img[aria-hidden="true"] {
+    display: none;
+  }
+
+  /* «موجود محدود» plus the discount chip do not fit on one 124px line, and the
+     stock state was breaking mid-phrase across two lines. Keep each chip whole
+     and let the row wrap between them instead. */
+  .lux-stock {
+    flex-wrap: wrap;
+    row-gap: 0.25rem;
+  }
+  .lux-stock > span {
+    white-space: nowrap;
+  }
+
+  /* --- Product rail ------------------------------------------------------
+     The scrollbar is hidden but the region stays scrollable and focusable, so
+     this is a cosmetic change only — see components/shop/ProductRail.tsx for
+     why the keyboard affordance there is load-bearing.
+     `overscroll-behavior-x: contain` stops a horizontal swipe that reaches the
+     end of the rail from continuing into the browser's back-navigation gesture,
+     which is otherwise very easy to trigger by accident on iOS. */
+  .product-rail {
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    overscroll-behavior-x: contain;
+    scroll-padding-inline: 0;
+  }
+  .product-rail::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* --- Cards -------------------------------------------------------------
+     Tighter padding buys back horizontal room that matters much more at 390px
+     than at 1440px, and a slightly smaller radius keeps the card from reading
+     as a pill once it is nearly the full width of the screen. */
+  .lux-card {
+    --lux-pad: 0.95rem;
+    --lux-radius: 16px;
+  }
+
+  /* The three-layer desktop shadow is tuned for a card floating in a wide
+     field. At full-bleed width on a phone the long soft layer just muddies the
+     ground under it, so the contact layer does the work instead. */
+  .card-obsidian,
+  .card-oxblood,
+  .card-museum,
+  .card-saffron {
+    box-shadow:
+      0 1px 2px rgba(0, 0, 0, 0.38),
+      0 10px 20px -12px rgba(0, 0, 0, 0.55);
+  }
+
+  /* Hover lift is meaningless on touch and leaves cards stuck in the lifted
+     state after a tap, because :hover sticks until the next tap elsewhere. */
+  .lux-card:hover {
+    transform: none;
   }
 }

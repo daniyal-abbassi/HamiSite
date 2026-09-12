@@ -1,6 +1,9 @@
 # Hami Hamrah — Design System ("Aura")
 
-Persian (RTL) B2C + B2B mobile-phone storefront. Dark-only; there is no light theme.
+Persian (RTL) B2C + B2B mobile-phone storefront. **Not dark-only** — the page
+alternates paper and wine chapters. This line previously read "Dark-only; there
+is no light theme", which was retired after the uniform dark ground measured as
+tiring (mean luminance 70.9); see DESIGN.md.
 `<html lang="fa" dir="rtl">`, `color-scheme: dark`.
 
 ## North star

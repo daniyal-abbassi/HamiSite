@@ -64,7 +64,7 @@ export function LoginForm() {
         <span>ورود</span>
         <i />
       </div>
-      <h1 className="mt-3 text-xl font-black">خوش آمدید 👋</h1>
+      <h1 className="mt-3 text-xl font-black">خوش آمدید</h1>
       <p className="mt-1.5 text-[13px] leading-6 text-muted-foreground">
         با نام کاربری یا شماره موبایل وارد شوید.
       </p>

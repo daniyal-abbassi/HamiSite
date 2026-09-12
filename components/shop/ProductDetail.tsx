@@ -141,7 +141,7 @@ export function ProductDetail({ slug }: Props) {
         className={cn(
           "rounded-full border px-4 py-2 text-xs font-bold transition-all duration-fast",
           active
-            ? "border-aqua bg-aqua/15 text-aqua shadow-glow-aqua"
+            ? "border-aqua bg-aqua/15 text-aqua shadow-glow-cta"
             : "border-line bg-foreground/5 text-foreground/75 hover:border-aqua/40 hover:text-foreground",
         )}
       >
@@ -195,7 +195,9 @@ export function ProductDetail({ slug }: Props) {
   const variantTitle = [selectedVariant?.storage, selectedVariant?.color].filter(Boolean).join(" — ");
 
   return (
-    <div>
+    /* pb clears the sticky mobile buy bar *and* the dock under it. Without it
+       the tags row at the bottom of this page sits behind both. */
+    <div className="pb-[calc(7.5rem+env(safe-area-inset-bottom))] md:pb-0">
       {/* Breadcrumb */}
       <nav aria-label="مسیر صفحه" className="mb-6 flex flex-wrap items-center gap-1.5 text-[11px] text-muted-foreground/70">
         <Link href="/" className="transition-colors hover:text-aqua">خانه</Link>
@@ -215,10 +217,11 @@ export function ProductDetail({ slug }: Props) {
 
       <div className="grid gap-10 lg:grid-cols-2">
         {/* Image */}
-        <div className="relative aspect-square overflow-hidden rounded-2xl glass shadow-card">
+        {/* Image Vitrine */}
+        <div className="relative aspect-square overflow-hidden rounded-3xl glass-smoked border border-champagne/25 shadow-monolith">
           {product.specialOffer && (
-            <span className="absolute start-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-xl bg-oxblood/90 px-3 py-1.5 font-mono text-[9px] tracking-[0.12em] text-aqua-lite">
-              <Sparkles className="size-3" />
+            <span className="absolute start-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-champagne/30 bg-oxblood/90 px-3.5 py-1.5 font-mono text-[9px] tracking-[0.14em] text-champagne backdrop-blur-md shadow-glow-oxblood">
+              <Sparkles className="size-3 text-champagne" />
               SPECIAL OFFER
             </span>
           )}
@@ -227,38 +230,41 @@ export function ProductDetail({ slug }: Props) {
             alt={product.name}
             fill
             sizes="(min-width: 1024px) 40vw, 90vw"
-            className="object-contain p-8"
+            className="object-contain p-8 transition-transform duration-700 hover:scale-105"
             priority
           />
         </div>
 
         {/* Buy box */}
         <div>
-          <span className="font-mono text-[10px] tracking-[0.12em] text-aqua/80">
+          <span className="font-mono text-[10px] tracking-[0.14em] text-champagne">
             {product.brand?.name ?? "—"}
             {product.englishName ? ` · ${product.englishName}` : ""}
           </span>
-          <h1 className="mt-2 text-2xl font-black leading-snug md:text-3xl">{product.name}</h1>
+          <h1 className="mt-2 text-2xl font-black leading-snug md:text-3xl text-foreground">{product.name}</h1>
 
           <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
-            <span className={cn("inline-flex items-center gap-1.5 rounded-full border border-line bg-foreground/5 px-3 py-1", stockType === "out_of_stock" && "text-destructive")}>
+            <span className={cn("inline-flex items-center gap-1.5 rounded-full border border-champagne/20 bg-champagne/5 px-3 py-1", stockType === "out_of_stock" && "text-destructive")}>
               <i className={cn("size-1.5 rounded-full", stockType === "out_of_stock" ? "bg-destructive" : "bg-emerald-400")} aria-hidden="true" />
               {stockLabels[stockType] ?? "—"}
             </span>
             {selectedVariant?.guarantee && (
-              <span className="rounded-full border border-line bg-foreground/5 px-3 py-1 text-muted-foreground">
+              <span className="rounded-full border border-champagne/20 bg-champagne/5 px-3 py-1 text-muted-foreground">
                 گارانتی: {selectedVariant.guarantee}
               </span>
             )}
+            <span className="rounded-full border border-champagne/20 bg-champagne/5 px-3 py-1 font-mono text-[10px] text-champagne">
+              ضمانت اصالت ۱۰۰٪
+            </span>
           </div>
 
-          <div className="mt-6 rounded-2xl border border-line bg-ink/40 p-5">
+          <div className="mt-6 rounded-2xl glass-smoked border border-champagne/25 p-6 shadow-card">
             {unitPrice !== null ? (
               <div className="flex flex-wrap items-baseline gap-3">
                 {compareAtPrice != null && compareAtPrice > unitPrice && (
                   <del className="text-sm text-foreground/50">{formatToman(compareAtPrice)}</del>
                 )}
-                <strong className="text-2xl font-black text-aqua" aria-live="polite">
+                <strong className="text-3xl font-black text-champagne tracking-tight" aria-live="polite">
                   {formatToman(unitPrice * quantity)}
                 </strong>
                 {quantity > 1 && (
@@ -390,31 +396,70 @@ export function ProductDetail({ slug }: Props) {
       {/* Description / analysis / tags */}
       <div className="mt-12 grid gap-6 lg:grid-cols-2">
         {product.description && (
-          <section className="glass rounded-2xl p-6">
-            <h2 className="text-base font-black">توضیحات محصول</h2>
+          <section className="glass-smoked rounded-2xl p-7 border border-champagne/20 shadow-card">
+            <h2 className="text-base font-black text-foreground">توضیحات محصول</h2>
             <div className="brand-hairline my-3.5" />
-            <p className="whitespace-pre-line text-sm leading-8 text-muted-foreground">{product.description}</p>
+            <p className="whitespace-pre-line text-sm leading-8 text-foreground/75">{product.description}</p>
           </section>
         )}
         {product.analysis && (
-          <section className="glass rounded-2xl p-6">
-            <h2 className="text-base font-black">مشخصات و آنالیز</h2>
+          <section className="glass-smoked rounded-2xl p-7 border border-champagne/20 shadow-card">
+            <h2 className="text-base font-black text-foreground">مشخصات و آنالیز تخصصی</h2>
             <div className="brand-hairline my-3.5" />
-            <p className="whitespace-pre-line text-sm leading-8 text-muted-foreground">{product.analysis}</p>
+            <p className="whitespace-pre-line text-sm leading-8 text-foreground/75">{product.analysis}</p>
           </section>
         )}
       </div>
 
       {product.tags.length > 0 && (
         <div className="mt-8 flex flex-wrap items-center gap-2">
-          <span className="font-mono text-[10px] tracking-[0.1em] text-muted-foreground/70">برچسب‌ها:</span>
+          <span className="font-mono text-[10px] tracking-[0.12em] text-champagne">برچسب‌ها:</span>
           {product.tags.map((tag) => (
-            <span key={tag} className="rounded-full border border-line bg-foreground/5 px-3 py-1 font-mono text-[10px] text-foreground/70">
+            <span key={tag} className="rounded-full border border-champagne/15 bg-champagne/5 px-3 py-1 font-mono text-[10px] text-foreground/70">
               {tag}
             </span>
           ))}
         </div>
       )}
+
+      {/* ---------------------------------------------------------------
+          Sticky buy bar — mobile only.
+          Elevated to smoked obsidian glass with champagne gold accents. */}
+      <div className="fixed inset-x-0 bottom-[calc(3.75rem+env(safe-area-inset-bottom))] z-40 border-t border-champagne/25 bg-ink/90 px-4 py-3 backdrop-blur-xl shadow-monolith md:hidden">
+        <div className="flex items-center gap-3">
+          <div className="min-w-0 flex-1">
+            {unitPrice !== null ? (
+              <>
+                <span className="block font-mono text-[11px] text-champagne/75">قیمت نهایی</span>
+                <b className="block truncate text-base font-black leading-tight tabular-nums text-champagne">
+                  {formatToman(unitPrice * quantity)}
+                </b>
+              </>
+            ) : (
+              <b className="block text-sm font-black text-muted-foreground">تماس بگیرید</b>
+            )}
+          </div>
+          <Button
+            size="lg"
+            className="h-12 min-w-[9.5rem] shrink-0"
+            loading={addState === "loading"}
+            disabled={!purchasable || addState === "done"}
+            onClick={() => void handleAddToCart()}
+          >
+            {addState === "done" ? (
+              <>
+                <Check className="size-5" />
+                اضافه شد
+              </>
+            ) : (
+              <>
+                <ShoppingBag className="size-5" />
+                {purchasable ? "افزودن به سبد" : "ناموجود"}
+              </>
+            )}
+          </Button>
+        </div>
+      </div>
     </div>
   );
 }

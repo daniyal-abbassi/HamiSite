@@ -1,26 +1,26 @@
 import Link from "next/link";
 import { ArrowLeft, ChevronDown, ShieldCheck } from "lucide-react";
 import { Reveal } from "@/components/home/Reveal";
+import { SectionHead } from "@/components/home/SectionHead";
 import { featuredOnlineService, onlineServiceFaqs } from "@/lib/content/home";
 
 export function OnlineServices() {
   return (
-    <section id="online-services" className="bg-ink/25 py-20" aria-labelledby="online-services-title">
+    <section id="online-services" className="bg-ink/25 py-14" aria-labelledby="online-services-title">
       <div className="container">
       <div className="grid gap-10 lg:grid-cols-[1fr_1fr]">
         <Reveal>
-          <div>
-            <span className="eyebrow"><i /> خدمات دیجیتال</span>
-            <h2 id="online-services-title" className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
-              بیشتر از یک <span className="grad">فروشگاه.</span>
-            </h2>
-            <p className="mt-4 max-w-md text-sm leading-8 text-foreground/65">
-              خدمات دیجیتال حامی همراه، برای نیازهایی که در جعبه گوشی جا نمی‌شوند.
-            </p>
-            <Link href="/shop?category=online-services" className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
-              مشاهده خدمات آنلاین <ArrowLeft className="size-4" />
-            </Link>
-          </div>
+          <SectionHead
+            variant="display"
+            id="online-services-title"
+            title={<>بیشتر از یک فروشگاه.</>}
+            description="خدمات دیجیتال حامی همراه، برای نیازهایی که در جعبه گوشی جا نمی‌شوند."
+            action={
+              <Link href="/shop?category=online-services" className="inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
+                مشاهده خدمات آنلاین <ArrowLeft className="size-4" />
+              </Link>
+            }
+          />
         </Reveal>
 
         <Reveal delay={100}>

@@ -116,7 +116,7 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
 
       {/* Loading */}
       {products === null && !error && (
-        <div className={cn("mt-6", listView ? "space-y-4" : "grid grid-cols-2 gap-5 xl:grid-cols-3")} aria-busy="true">
+        <div className={cn("mt-6", listView ? "space-y-4" : "grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3")} aria-busy="true">
           {Array.from({ length: 6 }).map((_, index) => (
             <div key={index} className="space-y-3">
               <Skeleton className="aspect-square w-full" />
@@ -149,7 +149,13 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
               ))}
             </div>
           ) : (
-            <div className="mt-6 grid grid-cols-2 gap-5 xl:grid-cols-3">
+            /* Two-up on mobile, matching the home rails. This was the last
+               place still handing a phone one full-width card per row — on the
+               page whose entire job is browsing a 189-product catalogue, which
+               is where it hurt most. The compact card rules in the mobile block
+               of globals.css apply here unchanged, so the two surfaces cannot
+               drift apart. */
+            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3">
               {products.map((product) => (
                 <ProductCard key={product.id} product={product} />
               ))}

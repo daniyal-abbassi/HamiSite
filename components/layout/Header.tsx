@@ -1,11 +1,14 @@
+"use client";
+
+import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Input } from "@/components/ui/input";
-import { MobileNav } from "@/components/layout/MobileNav";
 import { CartButton } from "@/components/layout/CartButton";
 import { UserMenu } from "@/components/layout/UserMenu";
 import { PillNav, type PillNavItem } from "@/components/layout/PillNav";
 import hamiMark from "@/public/brand/hami-mark.png";
+import { cn } from "@/lib/utils";
 
 const navItems: PillNavItem[] = [
   { href: "/", label: "خانه" },
@@ -14,30 +17,74 @@ const navItems: PillNavItem[] = [
 ];
 
 /**
- * A floating navigation island, not a full-width bar.
- *
- * The header is fixed and its only child is one centred glass pill, matching
- * the reference layout. The credentials marquee that used to sit under it was
- * removed outright; the clearance it provided now lives on <main> in the
- * storefront layout.
- *
- * PillNav keeps its rising-circle hover but drops its own logo circle and
- * container fill here — the island already provides both, and nesting a pill
- * inside a pill reads as a mistake.
+ * Responsive luxury header:
+ * - At top of page: floating glass pill island
+ * - When scrolled: docked full-width obsidian glass bar with champagne hairline
+ *   border that cleanly masks content scrolling beneath it, preventing any
+ *   overlapping lines, text, or ghost borders.
  */
 export function Header() {
-  return (
-    <header className="fixed inset-x-0 top-0 z-50 px-4 pt-4 md:pt-6">
-      <nav className="mx-auto flex max-w-6xl items-center gap-3 rounded-full border border-line bg-card/70 px-3 py-2 shadow-deep backdrop-blur-xl">
-        <MobileNav links={[...navItems, { href: "/cart", label: "سبد خرید" }]} />
+  const [scrolled, setScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const lastScrollY = useRef(0);
 
+  useEffect(() => {
+    const handleScroll = () => {
+      const currentScrollY = window.scrollY;
+
+      // Scrolled past initial hero threshold
+      setScrolled(currentScrollY > 20);
+
+      // Smart auto-hide: hide on scroll down to leave reading view completely clean;
+      // reveal on scroll up for quick navigation; always reveal near the very top.
+      if (currentScrollY <= 40) {
+        setVisible(true);
+      } else if (currentScrollY > lastScrollY.current + 6) {
+        // Scrolling down
+        setVisible(false);
+      } else if (currentScrollY < lastScrollY.current - 6) {
+        // Scrolling up
+        setVisible(true);
+      }
+
+      lastScrollY.current = currentScrollY;
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  return (
+    <header
+      className={cn(
+        "fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-out",
+        visible ? "translate-y-0" : "-translate-y-full",
+        scrolled
+          ? "border-b border-champagne/15 bg-[#0B0204] py-2.5 px-4 shadow-monolith"
+          : "bg-transparent px-4 pt-4 md:pt-6"
+      )}
+    >
+      <nav
+        className={cn(
+          "mx-auto flex max-w-6xl items-center gap-2 transition-all duration-300 md:gap-3",
+          scrolled
+            ? "px-1 py-0"
+            : "rounded-full border border-champagne/20 bg-[#14060A] px-3 py-2 shadow-monolith backdrop-blur-2xl"
+        )}
+      >
         <Link
           href="/"
-          className="flex shrink-0 items-center gap-2.5 ps-1"
+          className="flex min-h-11 shrink-0 items-center gap-2.5 px-1 md:min-h-0 md:ps-1 md:pe-0"
           aria-label="حامی همراه — صفحه اصلی"
         >
-          <Image src={hamiMark} alt="" priority className="size-9 rounded-xl bg-white ring-1 ring-aqua/45" />
-          <span className="hidden text-[15px] font-black leading-tight text-card-foreground sm:block">
+          <Image
+            src={hamiMark}
+            alt=""
+            priority
+            sizes="36px"
+            className="size-9 rounded-xl bg-white/95 ring-1 ring-champagne/40"
+          />
+          <span className="hidden text-[15px] font-black tracking-tight text-foreground sm:block">
             حامی همراه
           </span>
         </Link>
@@ -54,29 +101,31 @@ export function Header() {
           hoveredPillTextColor="rgb(var(--primary-foreground))"
         />
 
-        <div className="ms-auto flex items-center gap-2">
-          <form action="/shop" role="search" className="hidden lg:block">
+        {/* On mobile this group takes the remaining width so the search field
+            can fill it; from md it collapses to its content and `ms-auto`
+            pushes it to the end, which is the desktop layout unchanged. */}
+        <div className="ms-auto flex min-w-0 flex-1 items-center gap-2 md:flex-none">
+          <form action="/shop" role="search" aria-label="جستجوی محصول" className="min-w-0 flex-1 md:flex-none">
             <Input
               type="search"
               name="q"
               placeholder="جستجوی محصول…"
               aria-label="جستجوی محصول"
-              className="h-9 w-48 rounded-full border-line bg-foreground/[0.04]"
+              className="h-11 w-full rounded-full border border-champagne/20 bg-ink/60 px-4 text-xs transition-colors placeholder:text-muted-foreground/60 focus:border-champagne/50 md:h-9 md:w-52"
             />
           </form>
 
-          <div className="flex items-center gap-1">
+          <div className="hidden items-center gap-1 md:flex">
             <UserMenu />
-            <CartButton />
           </div>
+          <CartButton />
 
-          {/* The one place signal red appears in the chrome. */}
           <Link
             href="/partners"
-            className="shiny-edge hidden h-10 items-center gap-2 px-5 text-sm font-bold transition-transform hover:-translate-y-0.5 active:scale-95 sm:inline-flex"
+            className="shiny-edge hidden h-10 items-center gap-2 px-5 text-xs font-black transition-transform hover:-translate-y-0.5 active:scale-95 sm:inline-flex"
           >
             ثبت‌نام همکار
-            <span className="size-1.5 rounded-full bg-signal" aria-hidden="true" />
+            <span className="size-1.5 rounded-full bg-signal shadow-sm" aria-hidden="true" />
           </Link>
         </div>
       </nav>

@@ -186,7 +186,7 @@ export function CheckoutClient() {
       }
     } catch (cause) {
       if (cause instanceof ApiClientError && cause.code === "AUTH_REQUIRED") {
-        router.replace("/login?next=/checkout");
+      router.replace(`/login?next=${encodeURIComponent("/checkout")}`);
         return;
       }
       setError(apiErrorToFa(cause));
@@ -251,7 +251,7 @@ export function CheckoutClient() {
                   <input
                     type="radio"
                     name="address"
-                    className="mt-1 accent-[#C9A227]"
+                    className="mt-1 accent-brass"
                     checked={addressMode === "saved" && selectedAddressId === address.id}
                     onChange={() => {
                       setAddressMode("saved");
@@ -305,7 +305,10 @@ export function CheckoutClient() {
               </div>
               <div className="sm:col-span-2">
                 <label htmlFor="co-postalCode" className="mb-1 block text-[11px] font-bold text-foreground/80">کد پستی</label>
-                <Input id="co-postalCode" className={inputClass} value={newAddress.postalCode} onChange={newAddressField("postalCode")} autoComplete="postal-code" />
+                {/* An Iranian postal code is ten digits. Without inputMode the
+                    phone opens a full alphabetic keyboard for a field that can
+                    only ever take numbers. */}
+                <Input id="co-postalCode" className={inputClass} inputMode="numeric" value={newAddress.postalCode} onChange={newAddressField("postalCode")} autoComplete="postal-code" />
               </div>
               {(addresses ?? []).length > 0 && (
                 <button
@@ -343,7 +346,7 @@ export function CheckoutClient() {
                   <input
                     type="radio"
                     name="shipping"
-                    className="accent-[#C9A227]"
+                    className="accent-brass"
                     checked={shippingKey === option.key}
                     onChange={() => setShippingKey(option.key)}
                   />
@@ -408,7 +411,7 @@ export function CheckoutClient() {
                     <input
                       type="radio"
                       name="paymentTerm"
-                      className="accent-[#C9A227]"
+                      className="accent-brass"
                       checked={paymentTerm === term}
                       onChange={() => setPaymentTerm(term)}
                     />
@@ -428,7 +431,14 @@ export function CheckoutClient() {
       </div>
 
       {/* Summary */}
-      <aside className="glass h-fit rounded-2xl p-6 lg:sticky lg:top-24">
+      {/* `order-first` on mobile only.
+          In the DOM the summary follows the form, which is right for a desktop
+          two-column layout where it sits in the right rail. Stacked on a phone
+          that puts the total and the item list *below* address, shipping and
+          payment — so the shopper fills in three sections without ever seeing
+          what they are paying. Source order stays as-is for screen readers and
+          desktop; only the visual order flips. */}
+      <aside className="glass order-first h-fit rounded-2xl p-6 lg:order-none lg:sticky lg:top-24">
         <h2 className="text-base font-black">سفارش شما</h2>
         <div className="brand-hairline my-4" />
         <ul className="max-h-52 space-y-2.5 overflow-y-auto pe-1">

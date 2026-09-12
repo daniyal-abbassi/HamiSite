@@ -35,6 +35,7 @@ export function CategoryTiles({
                   alt=""
                   width={56}
                   height={56}
+                  sizes="56px"
                   className="size-full object-contain p-1.5"
                 />
               </span>

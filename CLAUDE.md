@@ -46,3 +46,47 @@ Rules:
 `specs/` and `plans/` are the history of how this backend was built, phase by
 phase. They explain *why*. They are records, not instructions — read them before
 touching an area, but the code is the source of truth.
+
+## Dev server — the stale-build trap
+
+Symptom: the page loads and looks right, but nothing is interactive. No button
+works, no client state advances. `curl` returns 200, so the server looks fine.
+
+Cause: a `next start` production server is still holding port 3000 from an
+earlier run, and `.next` was rebuilt (or deleted) underneath it. It keeps
+serving HTML that references chunk filenames which no longer exist, so every
+`/_next/static/chunks/*.js` returns 400/404 and React never hydrates. A new
+`npm run dev` cannot bind 3000, prints one line about falling back to 3001, and
+you keep looking at the dead server on 3000.
+
+Two things make this easy to miss:
+
+- **`pkill -f "next start"` does not kill it.** The running process is named
+  `next-server`, so that pattern never matches. Kill by pid, or match
+  `next-server|next dev|next start`.
+- **A 200 from `curl` proves nothing here** — the HTML renders; only the client
+  bundle is broken.
+- **`npm run build` walks straight into this on its own.** It rewrites `.next`,
+  which is the same directory the running dev server is serving from, so a
+  routine "verify it still builds" leaves the dev server on 3000 returning 500
+  with no warning at all. Running a build while a dev server is up means
+  restarting that dev server afterwards, every time — treat the build as
+  destructive to it.
+
+Before trusting a dev server:
+
+```bash
+pgrep -af "next-server|next dev|next start"        # expect exactly one
+ss -ltnp | grep :3000                              # confirm who owns the port
+grep -E "Local:|Port .* is in use" <dev-log>       # confirm no fallback port
+```
+
+Diagnose in one shot — if this 400s, the build was swapped under the server:
+
+```bash
+CHUNK=$(curl -s localhost:3000/ | grep -oP '/_next/static/chunks/[^"]+\.js' | head -1)
+curl -s -o /dev/null -w "%{http_code}\n" "http://localhost:3000$CHUNK"
+```
+
+Recovery: kill every Next process by pid, `rm -rf .next`, then `npm run dev`.
+Never `rm -rf .next` while a server is serving from it.

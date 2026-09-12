@@ -6,6 +6,7 @@ import { ArrowLeft } from "lucide-react";
 import { accessoryCategories, type AccessoryCategoryKey } from "@/lib/content/home";
 import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/home/Reveal";
+import { SectionHead } from "@/components/home/SectionHead";
 
 /** Accessories universe — interactive focus list (hover/press switches the
  * featured category panel), ported from the reference section. */
@@ -14,12 +15,15 @@ export function AccessoryUniverse() {
   const current = accessoryCategories.find((c) => c.key === active) ?? accessoryCategories[0];
 
   return (
-    <section id="accessories" className="wrap container py-20" aria-labelledby="accessories-title">
+    <section id="accessories" className="wrap container py-14" aria-labelledby="accessories-title">
       <Reveal>
-        <span className="eyebrow"><i /> لوازم جانبی</span>
-        <h2 id="accessories-title" className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
-          لوازم جانبی، <span className="grad">دقیق انتخاب کنید.</span>
-        </h2>
+        <SectionHead
+          variant="rule"
+          id="accessories-title"
+          index="۰۳"
+          eyebrow="لوازم جانبی"
+          title={<>لوازم جانبی، دقیق انتخاب کنید.</>}
+        />
       </Reveal>
 
       <div className="mt-10 grid gap-8 md:grid-cols-[1fr_1.1fr]">

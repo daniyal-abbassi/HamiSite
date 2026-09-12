@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { apiGet, apiGetWithMeta } from "@/lib/api-client";
 import { SHOP_PAGE_SIZE } from "@/lib/content/shop";
 import { CategoryTiles } from "./CategoryTiles";
-import { FilterSidebar } from "./FilterSidebar";
+import { FilterSheet } from "./FilterSheet";
 import { ShopResults } from "./ShopResults";
 import type { ShopBrand, ShopCategory, ShopMeta, ShopProduct } from "./types";
 
@@ -109,8 +109,10 @@ export function ShopClient() {
     <div>
       {categories !== null && <CategoryTiles categories={categories} activeSlug={categorySlug} />}
 
+      {/* FilterSheet renders the sidebar inline from lg and as a bottom sheet
+          below it, so the results are the first thing a phone sees. */}
       <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
-        <FilterSidebar categories={categories ?? []} brands={brands ?? []} />
+        <FilterSheet categories={categories ?? []} brands={brands ?? []} />
         <ShopResults products={products} meta={meta} error={error} activeSort={activeSort} />
       </div>
     </div>

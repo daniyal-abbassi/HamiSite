@@ -1,17 +1,16 @@
 "use client";
 
 import { useCallback, useEffect, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft } from "lucide-react";
 import { apiGet } from "@/lib/api-client";
-import { resolveProductImage } from "@/lib/product-images";
+import { ProductCard, type ProductCardData } from "@/components/shop/ProductCard";
 import { formatToman } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Reveal } from "@/components/home/Reveal";
 
-type ProductCard = {
+type NewArrivalProduct = {
   id: number;
   name: string;
   slug: string;
@@ -22,12 +21,12 @@ type ProductCard = {
 export function NewArrivals() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", direction: "rtl", containScroll: "trimSnaps" });
   const [canNext, setCanNext] = useState(false);
-  const [products, setProducts] = useState<ProductCard[] | null>(null);
+  const [products, setProducts] = useState<NewArrivalProduct[] | null>(null);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    apiGet<ProductCard[]>("/api/products?pageSize=6&includeVariants=false")
+    apiGet<NewArrivalProduct[]>("/api/products?pageSize=6&includeVariants=false")
       .then((data) => !cancelled && setProducts(data))
       .catch(() => !cancelled && setError(true));
     return () => {
@@ -49,7 +48,7 @@ export function NewArrivals() {
   }, [emblaApi, onSelect]);
 
   return (
-    <section id="new-arrivals" className="wrap container py-20" aria-labelledby="new-arrivals-title">
+    <section id="new-arrivals" className="wrap container py-14" aria-labelledby="new-arrivals-title">
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
@@ -95,7 +94,7 @@ export function NewArrivals() {
 }
 
 type RailProps = {
-  products: ProductCard[] | null;
+  products: NewArrivalProduct[] | null;
   emblaRef: (node: HTMLElement | null) => void;
 };
 
@@ -105,7 +104,7 @@ function NewArrivalsRail({ products, emblaRef }: RailProps) {
       <div className="flex touch-pan-y gap-5">
         {products === null &&
           Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="min-w-0 flex-[0_0_78%] sm:flex-[0_0_42%] lg:flex-[0_0_28%]">
+            <div key={i} className="min-w-0 flex-[0_0_45%] sm:flex-[0_0_46%] lg:flex-[0_0_32%]">
               <div className="space-y-3">
                 <Skeleton className="aspect-[4/5] w-full" />
                 <Skeleton className="h-4 w-3/4" />
@@ -125,33 +124,12 @@ function NewArrivalsRail({ products, emblaRef }: RailProps) {
   );
 }
 
-function ArrivalCard({ product }: { product: ProductCard }) {
+/** The rail's slide is only a width; the card itself is the shared one, so a
+ *  product looks identical here and in the shop grid. */
+function ArrivalCard({ product }: { product: NewArrivalProduct }) {
   return (
-    <article className="min-w-0 flex-[0_0_78%] sm:flex-[0_0_42%] lg:flex-[0_0_28%]">
-      <div className="glass group overflow-hidden rounded-2xl transition-transform duration-slow hover:-translate-y-1.5">
-        <div className="relative aspect-[4/5] overflow-hidden bg-ink/40">
-          <span className="absolute start-3 top-3 z-10 rounded-full bg-aqua px-2.5 py-1 font-mono text-[9px] font-bold tracking-[0.08em] text-primary-foreground">
-            NEW
-          </span>
-          <Link href={`/shop/${product.slug}`} className="grid h-full place-items-center" aria-label={product.name}>
-            <Image
-              src={resolveProductImage(product)}
-              alt={product.name}
-              width={600}
-              height={750}
-              className="size-full object-contain p-6 transition-transform duration-slow group-hover:scale-105"
-            />
-          </Link>
-        </div>
-        <div className="p-4">
-          <span className="font-mono text-[9px] tracking-[0.1em] text-foreground/50">{product.brand?.name ?? "—"}</span>
-          <h3 className="mt-1 text-sm font-extrabold leading-6">
-            <Link href={`/shop/${product.slug}`} className="hover:text-aqua">{product.name}</Link>
-          </h3>
-          <strong className="mt-2 block text-sm font-black text-aqua">{formatToman(product.displayPrice)}</strong>
-        </div>
-      </div>
-    </article>
+    <div className="min-w-0 flex-[0_0_45%] sm:flex-[0_0_46%] lg:flex-[0_0_32%]">
+      <ProductCard product={product satisfies ProductCardData} />
+    </div>
   );
 }
-

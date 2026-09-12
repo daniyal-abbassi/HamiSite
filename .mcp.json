@@ -1,8 +1,41 @@
 {
   "mcpServers": {
+    "context7": {
+      "type": "streamableHttp",
+      "url": "https://mcp.context7.com/mcp",
+      "headers": {
+        "Authorization": "Bearer ctx7sk-a8d63d5a-d1ea-4d2c-bd62-923f0ecb4d23"
+      }
+    },
+    "exa": {
+      "type": "streamableHttp",
+      "url": "https://mcp.exa.ai/mcp?tools=web_search_exa,web_fetch_exa,agent_run,web_search_advanced_exa",
+      "headers": {
+        "x-api-key": "59adf118-dfa8-4a86-bb51-44e87274b1eb"
+      }
+    },
+    "playwright": {
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest", "--browser", "chrome", "--headless"]
+    },
+    "cloudflare-docs": {
+      "type": "streamableHttp",
+      "url": "https://docs.mcp.cloudflare.com/mcp"
+    },
     "graphify": {
-      "command": "C:/Users/SHETAB SYSTEM/.local/bin/graphify-mcp",
-      "args": ["G:/programmer/HAMI-SITE-2/hami2-p-main/graphify-out/graph.json"]
+      "command": "python3",
+      "args": ["-m", "graphify.mcp", "/home/lain/lain_projects/hami-site-2/HamiSite-basic-structure/graphify-out/graph.json"]
+    },
+    "codebase-memory-mcp": {
+      "command": "/home/lain/.local/bin/codebase-memory-mcp"
+    },
+    "pixel-bridge": {
+      "command": "/home/lain/.nvm/versions/node/v22.17.0/bin/node",
+      "args": ["/home/lain/pixel-bridge-mcp/dist/index.js"],
+      "env": {
+        "PIXEL_BRIDGE_CDP_URL": "http://127.0.0.1:9222",
+        "PIXEL_BRIDGE_BROWSER_CHANNEL": "chrome"
+      }
     }
   }
 }

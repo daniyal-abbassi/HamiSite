@@ -1,12 +1,12 @@
 import Link from "next/link";
-import { ArrowLeft, BadgeCheck, House, Phone, Store, UserRound } from "lucide-react";
+import { ArrowLeft, BadgeCheck } from "lucide-react";
 import { Reveal } from "@/components/home/Reveal";
 import { customerContentNote, customerJourney, customerTrustSignals, finalConversionCopy } from "@/lib/content/home";
 import { toFaDigits } from "@/lib/utils";
 
 export function CustomerTrust() {
   return (
-    <section id="customer-trust" className="wrap py-20" aria-labelledby="customer-trust-title">
+    <section id="customer-trust" className="wrap py-14" aria-labelledby="customer-trust-title">
       <div className="container">
       <Reveal>
         <span className="eyebrow"><i /> اعتماد مشتری</span>
@@ -76,7 +76,7 @@ export function CustomerTrust() {
         </div>
         <div className="mt-8 text-center">
           <p className="m-0 text-sm text-foreground/60">برای شروع انتخاب، مسیر فروشگاه در دسترس است.</p>
-          <Link href="/shop" className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-glow-aqua transition-transform hover:-translate-y-0.5">
+          <Link href="/shop" className="mt-4 inline-flex items-center gap-1.5 rounded-full bg-primary px-6 py-3 text-sm font-bold text-primary-foreground shadow-glow-cta transition-transform hover:-translate-y-0.5">
             شروع خرید <ArrowLeft className="size-4" />
           </Link>
         </div>
@@ -92,7 +92,7 @@ export function FinalConversion() {
     <section id="final-conversion" className="final-conversion mt-10" aria-labelledby="final-conversion-title">
       <div className="beam" aria-hidden="true" />
       <div className="glow" aria-hidden="true" />
-      <div className="container py-24 text-center">
+      <div className="container py-16 text-center">
         <Reveal>
           <span className="font-mono text-[10px] tracking-[0.14em] text-aqua/80">{finalConversionCopy.eyebrow}</span>
           <h2 id="final-conversion-title" className="mt-4 text-3xl font-black leading-[1.4] tracking-tight md:text-5xl md:leading-[1.35]">
@@ -103,7 +103,7 @@ export function FinalConversion() {
           <div className="mt-8 flex flex-col items-center gap-4">
             <Link
               href="/shop"
-              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-base font-bold text-primary-foreground shadow-glow-aqua transition-transform hover:-translate-y-0.5"
+              className="inline-flex items-center gap-2 rounded-full bg-primary px-8 py-3.5 text-base font-bold text-primary-foreground shadow-glow-cta transition-transform hover:-translate-y-0.5"
             >
               مشاهده محصولات <ArrowLeft className="size-4" />
             </Link>
@@ -119,30 +119,5 @@ export function FinalConversion() {
         </Reveal>
       </div>
     </section>
-  );
-}
-
-/** Fixed bottom dock — mobile only, mirrors the reference's mobile-shop-dock. */
-export function MobileDock() {
-  const items = [
-    { href: "/", label: "خانه", Icon: House, active: true },
-    { href: "/shop", label: "فروشگاه", Icon: Store },
-    { href: "/partners", label: "همکاری", Icon: UserRound },
-    { href: "#contact", label: "تماس", Icon: Phone },
-  ];
-  return (
-    <nav className="fixed inset-x-0 bottom-0 z-40 flex border-t border-aqua/20 bg-ink-2/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden" aria-label="ناوبری سریع فروشگاه">
-      {items.map(({ href, label, Icon, active }) => (
-        <Link
-          key={label}
-          href={href}
-          className={`flex flex-1 flex-col items-center gap-1 py-2.5 text-[10px] font-bold ${active ? "text-aqua" : "text-foreground/60"}`}
-          aria-current={active ? "page" : undefined}
-        >
-          <Icon className="size-[18px]" aria-hidden="true" />
-          {label}
-        </Link>
-      ))}
-    </nav>
   );
 }

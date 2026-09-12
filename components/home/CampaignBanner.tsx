@@ -29,7 +29,7 @@ export function CampaignBanner() {
             <div className="relative hidden aspect-square max-w-xs place-items-center justify-self-end md:grid" aria-hidden="true">
               <i className="absolute inset-0 rounded-full border border-aqua/25" />
               <i className="absolute inset-6 rounded-full border border-aqua/15" />
-              <Image src={hamiMark} alt="" className="relative size-24 rounded-md bg-white/90 ring-1 ring-aqua/45" />
+              <Image src={hamiMark} alt="" sizes="96px" className="relative size-24 rounded-md bg-white/90 ring-1 ring-aqua/45" />
             </div>
           </div>
         </div>

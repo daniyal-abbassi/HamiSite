@@ -21,12 +21,100 @@
   }
 }
 
-/* ---------- category mosaic ---------- */
+/* ---------- category mosaic & light atmosphere pop-out ---------- */
+#categories {
+  transition: color 0.5s ease;
+}
+
+#categories[data-ambience="light"],
+[data-ambience="light"]#categories {
+  --foreground: 22 8 12;
+  --muted-foreground: 105 75 80;
+  color: rgb(var(--foreground));
+}
+
+#categories[data-ambience="light"] h2,
+[data-ambience="light"]#categories h2 {
+  color: #16080C;
+}
+
+#categories[data-ambience="light"] h2 .grad,
+[data-ambience="light"]#categories h2 .grad {
+  background: linear-gradient(135deg, #640211 0%, #9E0E25 45%, #C5A059 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#categories[data-ambience="light"] p,
+[data-ambience="light"]#categories p {
+  color: rgba(22, 8, 12, 0.72) !important;
+}
+
+#categories[data-ambience="light"] .eyebrow,
+[data-ambience="light"]#categories .eyebrow {
+  color: #640211;
+  background: rgba(100, 2, 17, 0.07);
+  border-color: rgba(100, 2, 17, 0.22);
+  box-shadow: 0 2px 10px rgba(100, 2, 17, 0.08);
+}
+
+#categories[data-ambience="light"] .eyebrow i,
+[data-ambience="light"]#categories .eyebrow i {
+  background: #640211;
+  box-shadow: 0 0 8px rgba(100, 2, 17, 0.4);
+}
+
+#categories[data-ambience="light"] a.text-aqua,
+[data-ambience="light"]#categories a.text-aqua {
+  color: #640211 !important;
+}
+
+/* Scoped ambient vitrine stage inside categories */
+.cat-ambient-stage {
+  position: absolute;
+  inset: 0;
+  border-radius: 36px;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: -1;
+  background: rgba(18, 6, 9, 0.45);
+  border: 1px solid rgba(229, 211, 179, 0.14);
+  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7);
+  transition: border-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+#categories[data-ambience="light"] .cat-ambient-stage {
+  border-color: rgba(229, 211, 179, 0.35);
+  box-shadow: 0 25px 70px -18px rgba(0, 0, 0, 0.8), 0 0 35px -5px rgba(229, 211, 179, 0.15);
+}
+
+.cat-corner-glow {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background:
+    radial-gradient(circle 1400px at 0% 0%, #FAF8F5 0%, #F5F0E6 38%, #ECE4D6 65%, #DFD3BF 100%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 0 40px rgba(229, 211, 179, 0.35);
+  will-change: clip-path, opacity;
+}
+.cat-corner-glow::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(circle 700px at 4% 4%, rgba(255, 255, 255, 0.95), transparent 75%);
+  pointer-events: none;
+}
+
+
 .cat-grid {
   display: grid;
-  gap: 14px;
+  gap: 16px;
   grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: 200px;
+  grid-auto-rows: 205px;
 }
 @media (min-width: 768px) {
   .cat-grid {
@@ -35,21 +123,41 @@
       "mobile mobile audio charging"
       "mobile mobile watch power"
       "feature party party services";
-    grid-auto-rows: 230px;
+    grid-auto-rows: 235px;
   }
 }
 .cat-card {
+  --foreground: 240 236 233;
+  --muted-foreground: 186 170 164;
   position: relative;
   display: flex;
   overflow: hidden;
-  border-radius: 22px;
-  border: 1px solid var(--line);
-  background: var(--card);
-  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1), border-color 0.35s;
+  border-radius: 24px;
+  border: 1px solid rgba(229, 211, 179, 0.22);
+  background: linear-gradient(165deg, #18070B 0%, #0F0306 100%);
+  color: #F0ECE9;
+  box-shadow:
+    0 10px 25px -5px rgba(20, 5, 10, 0.28),
+    0 24px 52px -12px rgba(20, 5, 10, 0.22),
+    0 0 1px 1px rgba(229, 211, 179, 0.15);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s, box-shadow 0.35s;
+}
+.cat-card h3 {
+  color: #F0ECE9 !important;
+}
+.cat-card small {
+  color: rgba(240, 236, 233, 0.6) !important;
+}
+.cat-card p {
+  color: rgba(240, 236, 233, 0.65) !important;
 }
 .cat-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(214, 207, 203, 0.5);
+  transform: translateY(-8px) scale(1.012);
+  border-color: rgba(229, 211, 179, 0.65);
+  box-shadow:
+    0 18px 40px -8px rgba(20, 5, 10, 0.4),
+    0 38px 75px -16px rgba(20, 5, 10, 0.32),
+    0 0 24px -4px rgba(229, 211, 179, 0.3);
 }
 .cat-card--mobile { grid-area: mobile; }
 .cat-card--audio { grid-area: audio; }
@@ -65,13 +173,13 @@
   display: grid;
   place-items: center;
   background:
-    radial-gradient(circle at 70% 30%, rgba(214, 207, 203, 0.16), transparent 55%),
+    radial-gradient(circle at 70% 30%, rgba(229, 211, 179, 0.16), transparent 55%),
     linear-gradient(150deg, rgba(156, 10, 34, 0.55), rgba(58, 1, 10, 0.85));
-  color: rgba(214, 207, 203, 0.75);
+  color: rgba(229, 211, 179, 0.85);
 }
 .cat-art i {
   position: absolute;
-  border: 1px solid rgba(214, 207, 203, 0.25);
+  border: 1px solid rgba(229, 211, 179, 0.25);
   border-radius: 50%;
 }
 .cat-art i:nth-child(1) { width: 46%; aspect-ratio: 1; }
@@ -85,13 +193,13 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  border-bottom: 1px solid var(--line);
-  background: linear-gradient(150deg, rgba(156, 10, 34, 0.5), rgba(58, 1, 10, 0.75));
+  border-bottom: 1px solid rgba(229, 211, 179, 0.15);
+  background: linear-gradient(150deg, #7A0A1F, #3A010A);
 }
 .store-architecture i {
   display: block;
   height: 2px;
-  background: rgba(214, 207, 203, 0.4);
+  background: rgba(229, 211, 179, 0.4);
 }
 .store-architecture i:nth-child(1) { width: 120px; }
 .store-architecture i:nth-child(2) { width: 88px; }
@@ -102,7 +210,7 @@
   font-family: var(--font-dm-mono), monospace;
   font-size: 11px;
   letter-spacing: 0.08em;
-  color: rgba(240, 237, 235, 0.85);
+  color: #F0ECE9;
 }
 .brand-composition { text-align: center; }
 .b2b-route { text-align: center; }
@@ -111,14 +219,24 @@
   width: 64px;
   height: 1px;
   margin: 10px 0;
-  background: rgba(214, 207, 203, 0.6);
+  background: rgba(229, 211, 179, 0.6);
 }
 .b2b-route small {
   display: block;
   font-family: var(--font-dm-mono), monospace;
   font-size: 9px;
   letter-spacing: 0.12em;
-  color: rgba(214, 207, 203, 0.7);
+  color: rgba(229, 211, 179, 0.7);
+}
+/* The only font-size in this project declared in CSS rather than as a utility,
+   which is why it survived the mobile type floor in globals.css — that rule
+   keys off `text-[9px]` in the class attribute and this element has none.
+   Same decision applies: a 9px mono kicker is unreadable on a phone and carries
+   nothing a shopper needs. */
+@media (max-width: 767px) {
+  .b2b-route small {
+    display: none;
+  }
 }
 
 /* ---------- store experience photo slots ---------- */
@@ -208,3 +326,71 @@
   line-height: 2;
   color: rgb(var(--foreground) / 0.65);
 }
+
+/* ---------- store experience & trust light atmosphere ---------- */
+#store-experience,
+#trust {
+  transition: color 0.5s ease;
+}
+
+#store-experience[data-ambience="light"],
+#trust[data-ambience="light"] {
+  --foreground: 22 8 12;
+  --muted-foreground: 105 75 80;
+  color: rgb(var(--foreground));
+}
+
+#store-experience[data-ambience="light"] h2,
+#trust[data-ambience="light"] h2 {
+  color: #16080C;
+}
+
+#store-experience[data-ambience="light"] h2 .grad,
+#trust[data-ambience="light"] h2 .grad {
+  background: linear-gradient(135deg, #640211 0%, #9E0E25 45%, #C5A059 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+#store-experience[data-ambience="light"] p,
+#trust[data-ambience="light"] p {
+  color: rgba(22, 8, 12, 0.72) !important;
+}
+
+#store-experience[data-ambience="light"] .eyebrow,
+#trust[data-ambience="light"] .eyebrow {
+  color: #640211;
+  background: rgba(100, 2, 17, 0.07);
+  border-color: rgba(100, 2, 17, 0.22);
+}
+
+#store-experience[data-ambience="light"] .eyebrow i,
+#trust[data-ambience="light"] .eyebrow i {
+  background: #640211;
+  box-shadow: 0 0 8px rgba(100, 2, 17, 0.4);
+}
+
+#trust[data-ambience="light"] .glass-smoked {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(247, 242, 235, 0.78));
+  border: 1px solid rgba(100, 2, 17, 0.16);
+  box-shadow: 0 16px 40px -12px rgba(30, 8, 14, 0.14);
+  color: #1A080D;
+}
+
+#trust[data-ambience="light"] .glass-smoked blockquote p {
+  color: #16080C !important;
+}
+
+#trust[data-ambience="light"] .glass-smoked [class*="text-foreground"] {
+  color: #16080C !important;
+}
+
+#trust[data-ambience="light"] .glass-smoked [class*="text-champagne"] {
+  color: #640211 !important;
+}
+
+#trust[data-ambience="light"] .glass-smoked [class*="border-champagne"] {
+  border-color: rgba(100, 2, 17, 0.22) !important;
+}
+

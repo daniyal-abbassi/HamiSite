@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, type CSSProperties, type ReactNode } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 
@@ -12,11 +13,12 @@ import { gsap } from "gsap";
  * site below; the prop surface is unchanged apart from one addition
  * (`circleColor`) that defaults to the original single-colour behaviour.
  *
- * The original's built-in mobile dropdown is NOT ported. This project already
- * ships components/layout/MobileNav.tsx — an RTL slide-over that is used across
- * the site — and running two mobile navigations in one header would mean two
- * behaviours to keep in sync. PillNav renders the logo and the desktop pills;
- * the header supplies mobile navigation.
+ * The original's built-in mobile dropdown is NOT ported, and this component is
+ * `hidden md:block` in the header for the same reason: mobile navigation is the
+ * bottom dock (components/layout/MobileDock.tsx), not a second menu up here.
+ * The site previously ran both a slide-over drawer and the dock, which is two
+ * navigations to keep in sync and two answers to the same question; the drawer
+ * was removed. PillNav renders the desktop pills only.
  */
 
 export type PillNavItem = {
@@ -217,9 +219,8 @@ export function PillNav({
        rotation tween works the same whether a next/image element or an inline
        icon is passed in. */
     <span ref={logoMarkRef} className="grid place-items-center">
-      {typeof logo === "string" ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img src={logo} alt={logoAlt} className="size-8 object-contain" />
+      {typeof logo === "string" && logo ? (
+        <Image src={logo} alt={logoAlt} width={32} height={32} className="size-8 object-contain" />
       ) : (
         logo
       )}

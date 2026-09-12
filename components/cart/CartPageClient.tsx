@@ -47,7 +47,7 @@ export function CartPageClient() {
         <p className="text-sm leading-7 text-muted-foreground">
           سبد خرید شما به حساب کاربری متصل است تا در دستگاه‌های مختلف در دسترس بماند.
         </p>
-        <Link href="/login?next=/cart">
+        <Link href={`/login?next=${encodeURIComponent("/cart")}`}>
           <Button>ورود / ثبت‌نام</Button>
         </Link>
       </div>

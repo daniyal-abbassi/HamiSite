@@ -3,33 +3,43 @@
 import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import Image from "next/image";
 import { brandStories, brandWall, type BrandStoryKey } from "@/lib/content/home";
 import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/home/Reveal";
+import { SectionHead } from "@/components/home/SectionHead";
+import { ModernWhiteWave } from "@/components/home/ModernWhiteWave";
 
-/** Brand wordmark wall + story card. Reference used photos — missing, so the
- * visual side is a branded placeholder frame. */
+const brandVisuals: Record<string, { image: string; tag: string }> = {
+  apple: { image: "/images/banners/iphone.png", tag: "FLAGSHIP ECOSYSTEM" },
+  samsung: { image: "/images/banners/headphone.png", tag: "INNOVATION & AUDIO" },
+  xiaomi: { image: "/images/banners/gaming-laptop.png", tag: "PERFORMANCE & TECH" },
+};
+
+/** Brand wordmark wall + story card elevated to luxury showcase. */
 export function BrandShowcase() {
   const [active, setActive] = useState<BrandStoryKey>("apple");
   const story = brandStories.find((s) => s.key === active) ?? brandStories[0];
 
   return (
-    <section id="brands" className="wrap relative overflow-hidden py-20" aria-labelledby="brands-title">
-      <div className="pointer-events-none absolute -top-40 start-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-aqua/10 blur-3xl" aria-hidden="true" />
+    <section id="brands" className="wrap relative overflow-hidden pt-0 pb-14" aria-labelledby="brands-title">
+      {/* Modern White Wave — transitioning smoothly from the categories section */}
+      <ModernWhiteWave />
+
+      <div className="pointer-events-none absolute -top-40 start-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-champagne/10 blur-3xl" aria-hidden="true" />
       <div className="container relative">
         <Reveal>
-          <span className="eyebrow"><i /> برندها</span>
-          <h2 id="brands-title" className="mt-4 text-3xl font-black leading-[1.5] tracking-tight md:text-4xl md:leading-[1.5]">
-            برندهایی که می‌شناسید.
-            <span className="grad block">انتخاب‌هایی که به آن‌ها اعتماد دارید.</span>
-          </h2>
-          <p className="mt-3 max-w-lg text-sm leading-7 text-foreground/60">
-            مجموعه‌ای از برندهای معتبر موبایل، تکنولوژی و لوازم جانبی، در یک تجربهٔ خرید واحد.
-          </p>
+          <SectionHead
+            variant="split"
+            id="brands-title"
+            eyebrow="برندها"
+            title={<>برندهایی که می‌شناسید، انتخاب‌هایی که به آن‌ها اعتماد دارید.</>}
+            description="مجموعه‌ای از برندهای معتبر موبایل، تکنولوژی و لوازم جانبی، در یک تجربهٔ خرید واحد."
+          />
         </Reveal>
 
         <Reveal delay={80}>
-          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4 border-y border-border py-6" role="list" aria-label="برندهای منتخب حامی همراه">
+          <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-4 border-y border-champagne/15 py-6" role="list" aria-label="برندهای منتخب حامی همراه">
             {brandWall.map((brand) => {
               const isActive = brand.story === active;
               return (
@@ -45,8 +55,8 @@ export function BrandShowcase() {
                   onFocus={() => brand.story && setActive(brand.story)}
                   className={cn(
                     "font-mono text-lg tracking-[0.04em] transition-colors md:text-xl",
-                    isActive ? "text-aqua" : "text-foreground/60",
-                    brand.story ? "hover:text-aqua/80 cursor-pointer" : "cursor-default",
+                    isActive ? "text-champagne font-bold drop-shadow-[0_0_12px_rgba(229,211,179,0.4)]" : "text-foreground/55",
+                    brand.story ? "hover:text-champagne/80 cursor-pointer" : "cursor-default",
                   )}
                 >
                   {brand.name}
@@ -57,19 +67,30 @@ export function BrandShowcase() {
         </Reveal>
 
         <Reveal delay={120}>
-          <article className="glass mt-10 grid overflow-hidden rounded-2xl md:grid-cols-[0.9fr_1.1fr]" aria-live="polite">
-            <div className="relative grid min-h-64 place-items-center bg-ink/50">
-              <span className="absolute start-4 top-4 font-mono text-[9px] tracking-[0.1em] text-aqua-lite/70">01 / BRAND STORY</span>
-              <div className="text-center" aria-hidden="true">
-                <b className="block font-mono text-4xl tracking-[0.08em] text-aqua/80">{story.name}</b>
-                <span className="mt-2 block font-mono text-[9px] tracking-[0.14em] text-foreground/55">BRAND VISUAL / PENDING ASSET</span>
+          <article className="glass-smoked mt-10 grid overflow-hidden rounded-3xl border border-champagne/25 shadow-monolith md:grid-cols-[0.9fr_1.1fr]" aria-live="polite">
+            <div className="relative grid min-h-64 place-items-center bg-gradient-to-br from-oxblood/30 via-ink/80 to-ink p-8">
+              <span className="absolute start-5 top-5 font-mono text-[10px] tracking-[0.14em] text-champagne">
+                01 / {story.name}
+              </span>
+              <div className="relative aspect-square w-44 sm:w-52">
+                <Image
+                  src={brandVisuals[story.key]?.image ?? "/images/banners/iphone.png"}
+                  alt={story.name}
+                  fill
+                  className="object-contain drop-shadow-[0_20px_35px_rgba(0,0,0,0.85)]"
+                />
+              </div>
+              <div className="absolute bottom-4 flex items-center gap-2 rounded-full border border-champagne/25 bg-black/60 px-3.5 py-1 backdrop-blur-md">
+                <span className="font-mono text-[9px] font-bold tracking-wider text-champagne">
+                  {brandVisuals[story.key]?.tag ?? "OFFICIAL PARTNER"}
+                </span>
               </div>
             </div>
-            <div className="flex flex-col justify-center p-8 md:p-10">
-              <p className="m-0 font-mono text-[10px] tracking-[0.1em] text-aqua">{story.name}</p>
-              <h3 className="mt-2 text-2xl font-black tracking-tight">{story.title}</h3>
-              <p className="mt-3 text-sm leading-8 text-foreground/65">{story.text}</p>
-              <Link href={story.href} className="mt-5 inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
+            <div className="flex flex-col justify-center p-8 md:p-12">
+              <span className="font-mono text-[11px] font-bold tracking-[0.16em] text-champagne">{story.name}</span>
+              <h3 className="mt-2 text-2xl font-black tracking-tight text-foreground md:text-3xl">{story.title}</h3>
+              <p className="mt-3 text-sm leading-8 text-foreground/75">{story.text}</p>
+              <Link href={story.href} className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-champagne hover:underline w-fit">
                 مشاهده محصولات {story.name} <ArrowLeft className="size-4" />
               </Link>
             </div>
