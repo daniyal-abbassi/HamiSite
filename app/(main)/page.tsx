@@ -118,10 +118,12 @@ function Hero() {
               مشاهده محصولات
               <ArrowLeft className="size-4" />
             </Link>
-            <Link href="/partners" className="flex">
-              <Button size="lg" variant="ghost" className="h-12 w-full rounded-full border border-champagne/25 bg-champagne/5 px-8 text-champagne hover:bg-champagne/15 sm:w-auto">
-                شروع همکاری <ArrowUpLeft className="ms-1 size-4" />
-              </Button>
+            <Link
+              href="/partners"
+              className="shiny-edge inline-flex h-12 items-center gap-2 px-8 text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-95"
+            >
+              شروع همکاری
+              <ArrowLeft className="size-4" />
             </Link>
           </div>
 
@@ -153,7 +155,7 @@ function Hero() {
             established in PRODUCT.md and inventing one here would be exactly
             the drift DESIGN.md warns about. */}
         <Reveal delay={150} className="mt-14 w-full">
-          <p className="mb-3 text-center font-mono text-[10px] tracking-[0.14em] text-muted-foreground/60">
+          <p className="mb-3 text-center font-mono text-xs tracking-[0.14em] text-muted-foreground/60">
             HAMI HAMRAH / BRANDS
           </p>
           <BrandTicker />
