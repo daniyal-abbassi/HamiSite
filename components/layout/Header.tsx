@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
+import { ArrowLeft } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { CartButton } from "@/components/layout/CartButton";
 import { UserMenu } from "@/components/layout/UserMenu";
@@ -29,29 +30,47 @@ export function Header() {
   const lastScrollY = useRef(0);
 
   useEffect(() => {
+    /* One rAF per burst of scroll events instead of one handler per event:
+       the listener only schedules a frame, so a fast flick costs a single
+       layout read and at most one state update per frame — not per pixel.
+       setState with an unchanged value bails out before re-rendering, so the
+       steady-state cost while scrolling is zero renders. */
+    let frame = 0;
     const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+      if (frame) return;
+      frame = requestAnimationFrame(() => {
+        frame = 0;
+        const currentScrollY = window.scrollY;
 
-      // Scrolled past initial hero threshold
-      setScrolled(currentScrollY > 20);
+        // Scrolled past initial hero threshold
+        setScrolled(currentScrollY > 20);
 
-      // Smart auto-hide: hide on scroll down to leave reading view completely clean;
-      // reveal on scroll up for quick navigation; always reveal near the very top.
-      if (currentScrollY <= 40) {
-        setVisible(true);
-      } else if (currentScrollY > lastScrollY.current + 6) {
-        // Scrolling down
-        setVisible(false);
-      } else if (currentScrollY < lastScrollY.current - 6) {
-        // Scrolling up
-        setVisible(true);
-      }
+        // Smart auto-hide: hide on scroll down to leave reading view completely clean;
+        // reveal on scroll up for quick navigation; always reveal near the very top.
+        if (currentScrollY <= 40) {
+          setVisible(true);
+        } else if (currentScrollY > lastScrollY.current + 6) {
+          // Scrolling down
+          setVisible(false);
+        } else if (currentScrollY < lastScrollY.current - 6) {
+          // Scrolling up
+          setVisible(true);
+        }
 
-      lastScrollY.current = currentScrollY;
+        lastScrollY.current = currentScrollY;
+      });
     };
 
+    // Restored scroll (a reload or back-forward navigation) can land mid-page;
+    // without this the floating pill rendered over deep content until the
+    // first scroll event — exactly the «header floating over sections» capture.
+    setScrolled(window.scrollY > 20);
+
     window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      if (frame) cancelAnimationFrame(frame);
+    };
   }, []);
 
   return (
@@ -122,10 +141,10 @@ export function Header() {
 
           <Link
             href="/partners"
-            className="shiny-edge hidden h-10 items-center gap-2 px-5 text-xs font-black transition-transform hover:-translate-y-0.5 active:scale-95 sm:inline-flex"
+            className="shiny-edge inline-flex h-12 items-center gap-2 px-8 text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-95"
           >
-            ثبت‌نام همکار
-            <span className="size-1.5 rounded-full bg-signal shadow-sm" aria-hidden="true" />
+            شروع همکاری
+            <ArrowLeft className="size-4" />
           </Link>
         </div>
       </nav>
