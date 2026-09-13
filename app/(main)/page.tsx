@@ -19,7 +19,7 @@ import {
   Watch,
   type LucideIcon,
 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Reveal } from "@/components/home/Reveal";
 import { ShopWindow } from "@/components/home/ShopWindow";
 import { BrandTicker } from "@/components/home/BrandTicker";
@@ -111,10 +111,7 @@ function Hero() {
           </p>
 
           <div className="mt-7 flex flex-col items-stretch gap-3 sm:mt-9 sm:flex-row sm:items-center" aria-label="مسیرهای اصلی">
-            <Link
-              href="/shop"
-              className="shiny-edge inline-flex h-12 items-center gap-2 px-8 text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-95"
-            >
+            <Link href="/shop" className={buttonVariants({ variant: "oxblood", size: "default" })}>
               مشاهده محصولات
             </Link>
             <Link
