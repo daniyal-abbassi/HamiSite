@@ -615,6 +615,23 @@
   .brand-ticker {
     overflow-x: auto;
   }
+
+  /* Everything interactive follows suit: transitions collapse to their end
+     state and loops run once, so reveal/hover/drawer/dock motion never moves
+     for users who opted out. This is the floor the per-rule blocks above
+     specialise; keeping both means a new animation is covered even if its
+     author forgets the media query. */
+  *,
+  ::before,
+  ::after {
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+
+  html {
+    scroll-behavior: auto !important;
+  }
 }
 
 
@@ -633,7 +650,7 @@
   padding: 0.35rem 0.85rem;
   border-radius: 9999px;
   font-family: var(--font-dm-mono), monospace;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   color: #E5D3B3;
   background: rgba(229, 211, 179, 0.06);
@@ -647,6 +664,17 @@
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+}
+
+/* Forced-contrast users get the gradient collapsed to a solid near-white:
+   background-clip:text paints per-pixel stops that a forced palette can
+   invert against, and audit tools read `color: transparent` as a 1:1
+   contrast. A solid glyph is legible everywhere and loses only the shimmer. */
+@media (prefers-contrast: more) {
+  .grad {
+    background: none;
+    color: #F5EFE4;
+  }
 }
 
 .brand-hairline {
@@ -711,6 +739,27 @@
 [class~="text-muted-foreground/60"],
 [class~="text-muted-foreground/70"] {
   color: rgb(var(--muted-foreground));
+}
+
+/* ===========================================================================
+   LUMINANCE HAND-OFF — the page ends in its darkest band
+   ---------------------------------------------------------------------------
+   A faint champagne halo rises from the footer seam so the final screens do
+   not read as dead black, and the smoked footer surface lifts the very
+   bottom. Pure decoration: pointer-events none, zero layout impact.
+   =========================================================================== */
+.site-footer {
+  position: relative;
+}
+
+.site-footer::before {
+  content: "";
+  position: absolute;
+  top: -140px;
+  inset-inline: 0;
+  height: 140px;
+  background: radial-gradient(58% 100% at 50% 100%, rgba(229, 211, 179, 0.07), transparent 72%);
+  pointer-events: none;
 }
 
 [class~="text-primary/60"],
@@ -949,9 +998,10 @@
 .swap-card-1 {
   background: linear-gradient(155deg, #241016 0%, #15070B 62%, #1D0C12 100%);
   box-shadow:
-    inset 0 0 0 1px rgba(198, 158, 92, 0.34),
+    inset 0 0 0 1px rgba(198, 158, 92, 0.5),
     0 2px 4px rgba(30, 4, 10, 0.24),
-    0 30px 60px -28px rgba(30, 4, 10, 0.6);
+    0 30px 60px -28px rgba(30, 4, 10, 0.6),
+    0 48px 90px -40px rgba(0, 0, 0, 0.8);
 }
 .swap-card-1 .swap-card-index { color: rgba(214, 176, 108, 0.9); }
 .swap-card-1 .swap-card-icon { color: #D6B06C; }
@@ -962,9 +1012,10 @@
 .swap-card-2 {
   background: linear-gradient(155deg, #7A1024 0%, #5A0C1A 58%, #450814 100%);
   box-shadow:
-    inset 0 0 0 1px rgba(232, 200, 140, 0.30),
+    inset 0 0 0 1px rgba(232, 200, 140, 0.46),
     0 2px 4px rgba(30, 4, 10, 0.24),
-    0 30px 60px -28px rgba(30, 4, 10, 0.6);
+    0 30px 60px -28px rgba(30, 4, 10, 0.6),
+    0 48px 90px -40px rgba(0, 0, 0, 0.8);
 }
 .swap-card-2 .swap-card-index { color: rgba(240, 214, 168, 0.92); }
 .swap-card-2 .swap-card-icon { color: #EFD3A0; }
@@ -978,12 +1029,33 @@
   box-shadow:
     inset 0 0 0 1px rgba(122, 16, 36, 0.16),
     0 2px 4px rgba(30, 4, 10, 0.16),
-    0 30px 60px -28px rgba(30, 4, 10, 0.45);
+    0 30px 60px -28px rgba(30, 4, 10, 0.45),
+    0 48px 90px -40px rgba(0, 0, 0, 0.8);
 }
 .swap-card-3 .swap-card-index { color: #96702C; }
 .swap-card-3 .swap-card-icon { color: #8A651F; }
 .swap-card-3 .swap-card-title { color: #3A0A16; }
 .swap-card-3 .swap-card-body { color: rgba(58, 10, 22, 0.72); }
+
+/* ===========================================================================
+   SOFT-EDGED FULL-BLEED BANDS
+   ===========================================================================
+   #b2b and #online-services are the page's only darkened stretches. They
+   used to paint a flat `bg-ink/25` whose top/bottom edges met the canvas in
+   razor-sharp horizontal lines (and #b2b was additionally inset with `wrap`,
+   so two of its edges floated mid-air as hard vertical seams — the
+   fix-mix-pverLay / fix-inconsistancy captures). This fades the band's
+   ambience in and out instead; the edges stop existing.
+   =========================================================================== */
+.band-soft {
+  background: linear-gradient(
+    180deg,
+    rgba(11, 2, 4, 0) 0%,
+    rgba(11, 2, 4, 0.5) 12%,
+    rgba(11, 2, 4, 0.5) 88%,
+    rgba(11, 2, 4, 0) 100%
+  );
+}
 
 /* ===========================================================================
    MOBILE
@@ -1204,6 +1276,30 @@ nav[aria-label="ناوبری سریع فروشگاه"] {
     white-space: nowrap;
   }
 
+  /* --- Product rail ------------------------------------------------------
+
+  /* Brand ticker: floated and highlighted for emphasis. Moves up to overlap
+     the hero and uses the champagne/aqua token for a contrasting surface.
+     Kept lightweight and layer-isolated so it can be removed easily if the
+     palette changes. */
+  .brand-ticker-band {
+    position: relative;
+    z-index: 20;
+    transform: translateY(-1.6rem);
+    margin-bottom: -1.6rem;
+    background: linear-gradient(90deg, var(--aqua), rgba(229,211,179,0.95));
+    color: rgb(var(--secondary-foreground));
+    border: none !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,0.65);
+    padding-inline: clamp(0.75rem, 2vw, 2rem);
+    border-radius: 14px;
+    overflow: visible;
+  }
+  .brand-ticker-band [class*="border-oxblood"] { border-color: transparent !important; }
+  .brand-ticker-band [class*="text-oxblood"] { color: rgb(var(--secondary-foreground)); }
+  .brand-ticker-band .brand-ticker { background: transparent; }
+
+  /* Keep the rail rules below unchanged */
   /* --- Product rail ------------------------------------------------------
      The scrollbar is hidden but the region stays scrollable and focusable, so
      this is a cosmetic change only — see components/shop/ProductRail.tsx for
