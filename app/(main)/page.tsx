@@ -116,7 +116,6 @@ function Hero() {
               className="shiny-edge inline-flex h-12 items-center gap-2 px-8 text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-95"
             >
               مشاهده محصولات
-              <ArrowLeft className="size-4" />
             </Link>
             <Link
               href="/partners"
