@@ -1279,24 +1279,24 @@ nav[aria-label="ناوبری سریع فروشگاه"] {
   /* --- Product rail ------------------------------------------------------
 
   /* Brand ticker: floated and highlighted for emphasis. Moves up to overlap
-     the hero and uses the champagne/aqua token for a contrasting surface.
-     Kept lightweight and layer-isolated so it can be removed easily if the
-     palette changes. */
+     the hero but keeps the original contrast: oxblood band with cream marks.
+     This restores high legibility while preserving the floating treatment. */
   .brand-ticker-band {
     position: relative;
     z-index: 20;
     transform: translateY(-1.6rem);
     margin-bottom: -1.6rem;
-    background: linear-gradient(90deg, var(--aqua), rgba(229,211,179,0.95));
-    color: rgb(var(--secondary-foreground));
+    background: linear-gradient(90deg, var(--oxblood), rgba(100,2,17,0.92));
+    color: var(--aqua);
     border: none !important;
-    box-shadow: 0 12px 30px rgba(0,0,0,0.65);
+    box-shadow: 0 10px 28px rgba(0,0,0,0.6);
     padding-inline: clamp(0.75rem, 2vw, 2rem);
-    border-radius: 14px;
+    border-radius: 12px;
     overflow: visible;
   }
-  .brand-ticker-band [class*="border-oxblood"] { border-color: transparent !important; }
-  .brand-ticker-band [class*="text-oxblood"] { color: rgb(var(--secondary-foreground)); }
+  /* Keep the cream/oxblood contrast for child elements so marks render in cream. */
+  .brand-ticker-band [class*="border-oxblood"] { border-color: rgba(229,211,179,0.12) !important; }
+  .brand-ticker-band [class*="text-oxblood"] { color: var(--aqua) !important; }
   .brand-ticker-band .brand-ticker { background: transparent; }
 
   /* Keep the rail rules below unchanged */
