@@ -502,32 +502,69 @@ confirm nothing about the scroll changed.
   that shows easing at all. A first probe measured `scrollY` alone and reported "not eased" on a build
   that was demonstrably easing, because `scrollY` is the driver ScrollSmoother does not delay.
 - [ ] T021 ~~Measure scroll cost on a production build~~ **Retained and now urgent** — see T047.
-- [x] T043 Create `components/atmosphere/ScrollSmooth.tsx`: `ScrollSmoother` at `smooth: 1.5`, gated on
-  `(pointer: fine)` and not `(any-pointer: coarse)` and not `(prefers-reduced-motion: reduce)`.
-  **`smoothTouch` is deliberately not passed** — `ScrollSmoother.js:121` makes an unset value parse to
-  `0`, so touch stays native by the library's own default. Passing it is how that would break silently.
-- [x] T044 Restructure `app/(main)/layout.tsx` so every fixed layer — `PageGround`, `.noir-stars`,
-  `.gradient-blur`, `Header`, `MobileDock` — is a **sibling** of `#smooth-wrapper`, with only `<main>`
-  and `<Footer>` inside it. A transformed ancestor captures `position: fixed`, so a fixed element left
-  inside the wrapped subtree scrolls with the page and looks correct in any static screenshot.
-- [x] T045 **BROWSER** Prove the easing and the boundary. *(behaviour only — the fps numbers from this machine were withdrawn; see T047)* Desktop: one `wheel(0,1200)` produces a peak
-  850px lag between `scrollY` (1200 at once) and the content transform (350), settling to 0 by ~1080ms.
+- [x] T043 ~~Create `components/atmosphere/ScrollSmooth.tsx`: `ScrollSmoother` at `smooth: 1.5`~~ **Built,
+  then replaced by T050 the same day.** The gate survives unchanged — `(pointer: fine)` and not
+  `(any-pointer: coarse)` and not `(prefers-reduced-motion: reduce)`. What did not survive is the library:
+  `smoothTouch` was the guard that kept touch native under ScrollSmoother, and under Lenis the equivalent
+  is `syncTouch: false`, which is the library's default.
+- [x] T044 ~~Restructure `app/(main)/layout.tsx` so every fixed layer is a sibling of `#smooth-wrapper`~~
+  **Reverted by T050.** The restructure existed only because ScrollSmoother transformed `#smooth-content`
+  and a transformed ancestor captures `position: fixed`. Lenis animates the document itself and creates no
+  containing block, so the layout is back to its pre-T044 shape and `<ScrollSmooth />` renders `null`
+  wherever it is mounted. D3's reason for mounting `PageGround` in the layout still stands — `Reveal`
+  transforms section wrappers independently of any scroll library.
+- [x] T045 **BROWSER** Prove the easing and the boundary. *(behaviour only — the fps numbers from this
+  machine were withdrawn; see T047. Re-run against Lenis under T050; `notes/scroll-easing.md` is now
+  labelled as a ScrollSmoother record.)* Desktop: one `wheel(0,1200)` produces a peak 850px lag between
+  `scrollY` (1200 at once) and the content transform (350), settling to 0 by ~1080ms.
   Touch (iPhone 13 emulation): the smoother is never created, `#smooth-content` computes
   `transform: none`, `scrollTo` lands instantly. Reduced motion: identical to touch. Fixed layers:
   ground and blur hold at viewport top 0 with content at 4000px. `--hami-ground` still tracks
   (`#180205` → `#0e0205`). Record in `notes/scroll-easing.md`.
 - [ ] T046 **BROWSER** Anchor jumps, in-page navigation, `End`-key jumps and reload-at-scrolled-position
-  now all resolve through the lerp. Confirm each lands on the right destination and that the ground's
-  stage is correct on the first rendered frame — FR-007 and contract P5 still apply, and the smoother is
-  new evidence against them.
-- [ ] T047 **BROWSER — production build. NOT MEASURED — the first attempt is withdrawn, see `notes/scroll-cost.md`.** A permanently-running rAF lerp over a 19,134px
-  document is exactly the change that must be re-measured rather than assumed cheap. Feature 004 recorded
-  33.3ms median frames here; anything materially worse needs the `smooth` value lowered or the feature
-  stood down on mid-range hardware. FR-014, FR-015, SC-006.
-- [ ] T048 Re-check FR-008 and every contrast measurement: the ground now tracks a *rendered* position
-  that lags the document, so the tone at a given `scrollY` and the tone behind the pixels on screen can
-  disagree mid-settle. Measure contrast at intermediate points of the settle, not only at rest.
+  ~~now all resolve through the lerp~~ — under the shipped mechanism a key press or a fragment jump moves
+  the document directly and Lenis re-syncs via `onNativeScroll` (`research.md` D10), so most of what this
+  task was written to defend against no longer exists. **What is still open:** confirm each lands on the
+  right destination, and that the ground's stage is correct on the first rendered frame after a
+  reload-at-offset — FR-007 and contract P5 still apply, and `--hami-ground` is known to be empty at
+  `scrollY: 0` on a fresh load because the hook's first write rides the `load` event, which usually fires
+  before hydration.
+- [ ] T047 **BROWSER — production build. NOT MEASURED — the first attempt is withdrawn, see
+  `notes/scroll-cost.md`, and it measured a library that has since been replaced.** Re-run against Lenis:
+  a permanently-running rAF that writes one `scrollTo` per frame is a different cost shape from writing a
+  transform over a 12,554px subtree, so the withdrawn numbers are not even a baseline. Feature 004 recorded
+  33.3ms median frames here; anything materially worse needs the `lerp` lowered or the easing stood down on
+  mid-range hardware. **Must be judged on hardware that means something, not the owner's PC.**
+  FR-014, FR-015, SC-006.
+- [ ] T048 Re-check FR-008 and every contrast measurement ~~because the ground lags the document~~ —
+  that premise was ScrollSmoother's and is false now: there is one position, so no lag and no disagreement
+  to chase. **Still open for the original reason:** contrast at the *intermediate points of the ground's
+  own stage transitions*, and the footer seam. FR-015.
 - [ ] T049 Decide, with the owner, what happens to **FR-005**. It still fails as measured
   (`notes/busyness.md`), and easing the scroll does not touch it — that gate was about the background.
   The Q2 = B/A/C question is still open and is now the only thing standing between this feature and
   completion.
+- [x] T050 **Swap the easing mechanism: `gsap/ScrollSmoother` → `lenis@1.3.26`.** Triggered by the owner
+  naming https://nocturne-label.vercel.app/ as the target feel and authorising the change; the reference
+  runs Lenis at defaults. Rewrite `components/atmosphere/ScrollSmooth.tsx` to construct
+  `new Lenis({ allowNestedScroll: true })` behind the existing gate and drive it from its own rAF
+  (`autoRaf` is `false` by default), render `null`, revert T044's layout restructure, and record the
+  decision as `research.md` D10. `allowNestedScroll` is the one deliberate departure from the reference
+  config: the reference is a brochure, this is a shop with a cart drawer, a filter sheet and a checkout
+  address list, and with the library default a wheel over any of them scrolls the page behind the panel.
+  **Verified in headed Chromium, behaviour only:** 400px wheel walks
+  0→38→72→132→201→237→253→280→301→319→334→346→400; nested `overflow-y:auto` box keeps the page at 0 and
+  scrolls itself, and hands back to the page at its end; `overscroll-behavior: contain` variant defers
+  too; no `#smooth-wrapper` remains and `main` computes `transform: none`; fixed layers hold at viewport
+  top 0 at `scrollY: 1500`; `--hami-ground` resolves mid-page; no `lenis` class in a 390×844 touch context
+  or under `prefers-reduced-motion`; feature 005's carousel still drags to a new active department, still
+  passes a vertical wheel to the page, and is not captured by a horizontal one.
+- [ ] T051 **Owner judgement, on a real trackpad.** The shipped `lerp: 0.1` is the reference site's value,
+  not a tuned one, and "smooth and heavy" is the brief. If it reads too light, lower `lerp` (or switch to
+  `duration` + `easing`); an agent must not pick this number from a headless browser on a machine that
+  cannot render the page honestly.
+- [x] T052 Re-audit the notes that were written about ScrollSmoother: searched `notes/`, `contracts/`,
+  `quickstart.md` and `plan.md` for "rendered position", "lag behind", `smooth: 1.5` and
+  "ScrollSmoother". **Two hits, both already labelled** — `notes/scroll-easing.md` and
+  `notes/scroll-cost.md` — and no other 002 artifact reasons from the two-position model. Nothing else to
+  correct before US2.

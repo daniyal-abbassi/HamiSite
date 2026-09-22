@@ -206,7 +206,7 @@ this feature introduces or fixes.
 
 ---
 
-## D9 — Scroll easing: GSAP ScrollSmoother, desktop-only (added 2026-09-22 for Resolved Q1 = C)
+## D9 — Scroll easing: GSAP ScrollSmoother, desktop-only **(SUPERSEDED by D10, kept as the record of why)**
 
 **Decision**: `components/atmosphere/ScrollSmooth.tsx` wraps `<main>` and `<Footer>` in
 `#smooth-wrapper` / `#smooth-content` and creates `ScrollSmoother` with `smooth: 1.5`, gated on
@@ -260,3 +260,87 @@ production build under CPU throttle; a permanently-running lerp on a 19,134px do
 change that has to be re-measured rather than assumed cheap, and that measurement is an open task.
 FR-005's busyness finding is untouched by all of this — it was about the background, it still fails as
 measured, and easing the scroll does not make the glow field quieter.
+
+---
+
+## D10 — Scroll easing: Lenis replaces ScrollSmoother (added 2026-09-22, same day as D9)
+
+**Decision**: `components/atmosphere/ScrollSmooth.tsx` constructs `new Lenis({ allowNestedScroll: true })`
+inside the same desktop-only gate D9 used, driven by its own rAF loop, and renders **nothing**.
+`gsap/ScrollSmoother` is gone; `app/(main)/layout.tsx` is back to the flat structure it had before D9.
+`gsap` itself stays — `CardSwap` and `PillNav` use the core tweening API, which was never in question.
+
+**Why the first mechanism was thrown away.** The owner named a target:
+*"اسکرول افکتی که میخوام دقیقا مثل اسکرول افکت این سایته: https://nocturne-label.vercel.app/"* — the feel
+they want is a specific site's feel, and they then authorised the swap explicitly. That site runs **Lenis**
+at its defaults (`new Lenis({ autoRaf: false })`; in 1.3.26 `autoRaf: false` is itself the default, so the
+config is just `new Lenis()`). Its bundle contains **zero `translate3d`** and six `scrollTo`/`scrollTop`
+sites, which is the fingerprint of a library that moves the document rather than a container. D9 was not
+wrong about ScrollSmoother; it was answering a different question than "what does this feel like".
+
+**The mechanisms are not equivalent, and the difference is not cosmetic.**
+
+| | ScrollSmoother (D9) | Lenis (shipped) |
+|---|---|---|
+| What is animated | a `transform` on `#smooth-content` | the real document scroll, one `window.scrollTo({behavior:"instant"})` per frame (`lenis.mjs:532`) |
+| `window.scrollY` during a gesture | the **target**, ahead of what is on screen | the **position on screen** |
+| Scrollbar | native, at the target | native, at the rendered position |
+| `getBoundingClientRect()`, IntersectionObserver | see the pre-settle position | see what the shopper sees |
+| `position: fixed` | **broken by the transformed ancestor** — needed the layout surgery D9 describes | unaffected; no containing block is created |
+| Keyboard | eased (the transform is input-agnostic) | instant — Lenis binds no key handler, so `onNativeScroll` re-syncs |
+| Layout cost of adopting | a wrapper threaded through the root layout | none; the component returns `null` |
+
+That second row is the one that should change how later features think about this. Under D9 the page had
+two positions and every consumer had to know which one it was reading — the trap `notes/scroll-easing.md`
+fell into. Under Lenis there is one position, so FR-010's "the ground must not lag the content" stopped
+being a property to prove and became structural.
+
+**One deliberate deviation from the reference config.** `allowNestedScroll` is left `false` by the library
+and is set `true` here. The reference site is a brochure with nothing scrollable inside it; this is a shop
+with a cart line-items list (`components/cart/CartDrawer.tsx:96`), a filter sheet body
+(`components/shop/FilterSheet.tsx:143`) and a saved-addresses list on checkout
+(`components/checkout/CheckoutClient.tsx:444`). With the default, a wheel gesture landing on any of those
+is captured and scrolls the page *behind* the open panel. Measured 2026-09-22 against synthetic overlays
+on the live homepage, cursor inside the box, 300px gesture:
+
+| Case | page `scrollY` | box `scrollTop` |
+|---|---|---|
+| `overflow-y: auto`, mid-list | **0** | 300 |
+| same, box already at its end | **300** | 1400 (max) |
+| `overscroll-behavior: contain` (as `FilterSheet` uses) | **0** | 300 |
+
+Lenis consults `hasNestedScroll()` (`lenis.mjs:858`) before capturing, stands down while the box can
+consume the delta, honours `contain` at the boundary, and hands the gesture back to the page once the
+inner box is spent — which is the third row's result and the correct native-chaining semantics.
+
+**Verification, 2026-09-22, headed Chromium at 1280×800 against `localhost:3000`.** Behaviour only; the
+owner's machine is not a performance instrument and no frame-rate claim is made here (see
+`notes/scroll-cost.md`).
+
+- **Easing is real.** A 400px wheel over page content walks the document
+  0→38→72→132→201→237→253→280→301→319→334→346→…→400 — a deceleration ramp, not a jump.
+- **The layout is clean.** No `#smooth-wrapper`/`#smooth-content` remains; `main` computes
+  `transform: none`; `header`, `.noir-stars` and `.gradient-blur` stay `position: fixed` at viewport top
+  `0` while the document sits at `scrollY: 1500`.
+- **The ground still tracks.** `--hami-ground` resolves to `#210307` mid-page. (Unrelated pre-existing
+  gap, recorded not fixed: the property is empty at `scrollY: 0` because the hook's first write is
+  scheduled from the `load` event, which has usually fired before hydration. The CSS fallback paints
+  correctly; it is not a regression from this change.)
+- **Touch and reduced-motion never construct it.** In a 390×844 `hasTouch` context, and in a 1280×800
+  `reducedMotion: "reduce"` context, `<html>` carries no `lenis` class even after the page is scrolled —
+  while in the desktop control the class does appear. FR-011a holds.
+- **Feature 005's carousel is unaffected.** Dragging the categories carousel left moved the active
+  department (گوشی موبایل → خدمات آنلاین); a vertical wheel over it still moved the page
+  (2846 → 3246 for a 400px gesture); a horizontal wheel (300, 0) left the page exactly where it was,
+  because `gestureOrientation` is `vertical` and such a gesture returns before any capture.
+
+**What this does not settle.** D9's `smooth: 1.5` was a guess, and Lenis's `lerp: 0.1` is now the shipped
+value purely because it is what the reference site uses. Whether it reads "heavy" enough on a real
+trackpad is the owner's call and cannot be measured here. T047 (what the easing costs) is still open and
+still needs hardware that means something; T046 (anchor jump and restore through the smoothing window) was
+written against ScrollSmoother's two-position model and needs re-reading before it is attempted, because
+the thing it was worried about may no longer exist.
+
+**And one thing the swap fixed by accident.** `notes/scroll-easing.md`'s 850px lag table is not a verdict
+about eased scrolling in general — it is a measurement of the two-position model. It stays as recorded,
+labelled as such.

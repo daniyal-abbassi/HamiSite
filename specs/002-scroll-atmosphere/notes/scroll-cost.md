@@ -1,5 +1,12 @@
 # T047 — Production cost of the scroll easing: **UNMEASURED** (the first verdict was invalid)
 
+> **Second status change, same day: the thing this page was measuring no longer exists.** ScrollSmoother
+> was replaced by Lenis before this task was re-attempted (`research.md` D10), so every number here
+> describes a build that has shipped to nobody. T047 stays open and now has to be run against Lenis, on
+> hardware that means something. Note that the cost model changed shape, not just size: the concern named
+> in the last section — a fresh transform on a container holding the whole document — is structurally gone,
+> because Lenis animates the document's own scroll position instead.
+
 > **The verdict on this page was withdrawn on 2026-09-22.** It read "FAILS FR-009 / FR-015" and it was
 > wrong to draw that conclusion, for a reason the owner supplied: **the machine it was measured on is too
 > weak to be a benchmark.** Every frame-time number below is a property of that hardware, not of the

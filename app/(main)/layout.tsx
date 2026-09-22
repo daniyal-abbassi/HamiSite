@@ -11,20 +11,14 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       {/* CartProvider depends on AuthProvider: the server cart API is withAuth */}
       <CartProvider>
         <div className="site-shell flex min-h-screen flex-col relative">
-          {/*
-            Everything above this comment is fixed, and it is fixed *outside* the scroll smoother on
-            purpose. ScrollSmoother animates by transforming `#smooth-content`, and a transformed
-            ancestor becomes the containing block for `position: fixed` descendants — so any fixed
-            element placed inside the wrapped subtree stops sticking to the viewport and starts
-            travelling with the page. That is the same mechanism behind `PageGround` being mounted here
-            rather than in the page (research D3) and behind the note on `.tray-field` about
-            `background-attachment: fixed` failing inside a `Reveal` wrapper.
-
-            Rule for anyone editing this file: document flow goes inside `<ScrollSmooth>`, fixed
-            overlays do not. It will look correct in a static screenshot either way.
-          */}
+          {/* Desktop wheel/trackpad easing. Renders nothing and wraps nothing: Lenis animates the
+              real document scroll, so unlike ScrollSmoother it creates no containing block and the
+              fixed layers below need no special placement — see components/atmosphere/ScrollSmooth.tsx */}
+          <ScrollSmooth />
           {/* The scroll-driven ground, first so `.noir-stars` and the content still sit above it.
-              It renders nothing off the homepage. */}
+              It is here rather than in the page because a transformed ancestor captures
+              `position: fixed`, and every homepage section is wrapped in `Reveal` — see
+              components/atmosphere/PageGround.tsx. It renders nothing off the homepage. */}
           <PageGround />
           {/* Red-noir depth layers. Both are fixed, inert and sit beneath every
               .wrap section; they add atmosphere without touching content. */}
@@ -34,16 +28,12 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           </div>
           <div className="gradient-blur" aria-hidden="true" />
           <Header />
-
-          <ScrollSmooth>
-            {/* The credentials marquee used to sit here and carried the padding
-                that cleared the fixed header island. With it gone that clearance
-                moves onto <main>, or the first section slides under the nav. */}
-            <main className="flex-1 pt-24 md:pt-28 relative z-10">{children}</main>
-            <Footer />
-          </ScrollSmooth>
-
-          {/* Mobile primary navigation. Lives here, not a page, so the whole
+          {/* The credentials marquee used to sit here and carried the padding
+              that cleared the fixed header island. With it gone that clearance
+              moves onto <main>, or the first section slides under the nav. */}
+          <main className="flex-1 pt-24 md:pt-28 relative z-10">{children}</main>
+          <Footer />
+          {/* Mobile primary navigation. Lives here, not in a page, so the whole
               buying path has it — it previously rendered only on the home page. */}
           <MobileDock />
         </div>

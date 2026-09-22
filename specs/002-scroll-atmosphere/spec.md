@@ -4,13 +4,13 @@
 
 **Created**: 2026-09-20
 
-**Status**: Draft — amended twice, 2026-09-22. See the Amendment Record.
+**Status**: Draft — amended three times, 2026-09-22. See the Amendment Record.
 
 **Input**: User description: "On scrolling on first page, the main background should change on different sections - not so messy, but a coherent, luxury color change on scrolling, also, the changing should be smooth - also i want the scrolling be extra smooth and calm (fell luxery)"
 
 ## Amendment Record
 
-Both amendments were made on 2026-09-22 at the owner's instruction. Neither was made to make a failing
+All three amendments were made on 2026-09-22 at the owner's instruction. None was made to make a failing
 check pass; in each case a requirement written under one reading of the brief was contradicted by the
 owner's actual intent, and the requirement moved rather than the measurement.
 
@@ -18,6 +18,7 @@ owner's actual intent, and the requirement moved rather than the measurement.
 |---|---|---|---|---|
 | 1 | **MINOR** | FR-010, FR-011; new FR-011a; Resolved Q1 | Q1 re-answered **A → C**. FR-010's "scrolling stays native" clause and FR-011's "key press MUST produce immediate movement" withdrawn; FR-011a added to pin the touch boundary. | The owner clarified the ask was scroll *physics* — "smooth and heavy" — which option A had explicitly excluded. FR-010 as written mandated the opposite of the feature. |
 | 2 | **MINOR** | FR-005 | Second clause waived: the progression need not read *calmer than the existing glow field*. First clause — must not increase busyness — stands. | Resolved Q2 = C keeps the glow field untouched. That field paints at `z-10`, above the ground layer at `z-0`, so no opacity on the layer can damp it; measured across α = 0.2/0.5/0.85 the rendered asymmetry does not move (`notes/busyness.md`). The owner chose to keep the field and accept the consequence rather than to reduce it (option B) or replace it (option A). |
+| 3 | **CORRECTION** | FR-011, FR-011a | FR-011's amendment claimed "the rendered content settles toward [a key press] over the smoothing window". **That was a property of ScrollSmoother, not of the easing as such, and it is false for the mechanism now shipped** — see correction note under FR-011. | The easing mechanism was swapped the same day (GSAP ScrollSmoother → Lenis, `research.md` D10) because the owner named a reference site whose feel they wanted. Lenis animates the real document scroll and binds no key handler, so a key press moves the document and the visible page with it, with no settle. The requirement's substance — never blocked or redirected, `prefers-reduced-motion` restores instant movement — is unchanged and still met. |
 
 **What is explicitly not amended**: the measurements. `notes/busyness.md` stands as recorded — rendered
 left/right asymmetry 7.05 without the layer and 6.90 with it at the draft alpha, direction-reversal count
@@ -261,18 +262,37 @@ no change to the progression design.
   half of the requirement: the ground is driven by the *rendered* position, so it must track the eased
   content rather than the raw scroll target. The second sentence is withdrawn — the scroll physics are
   now exactly what changes, on desktop.
+  **Harder under the first mechanism than under the shipped one.** ScrollSmoother kept two positions
+  (the document at the target, the content at a lerped offset), which is what made this sentence a real
+  test. Lenis animates the single document position (`research.md` D10), so the ground's input and the
+  content's position are the same number by construction. Verified holding on 2026-09-22: `--hami-ground`
+  resolves to a stage colour mid-scroll, and the page eases 0→38→72→132→201→237→253→280→301→319→334→346
+  toward a 400px wheel target with no snap.
 - **FR-011**: ~~A shopper's keyboard navigation MUST NOT be delayed, intercepted or substituted for, and
   a key press MUST produce immediate movement.~~
-  **Amended 2026-09-22 for Resolved Q1 = C.** On desktop the easing is input-agnostic, so a key press
+  **Amended 2026-09-22 for Resolved Q1 = C.** ~~On desktop the easing is input-agnostic, so a key press
   moves the document immediately and the rendered content settles toward it over the smoothing window —
-  that lag is the requested effect, not a defect. What MUST hold is that keyboard navigation is never
-  *blocked or redirected*: every key that worked before still reaches every position, and
-  `prefers-reduced-motion` restores instant movement with no easing at all. On touch, where this feature
-  does not engage, key behaviour is unchanged.
+  that lag is the requested effect, not a defect.~~ **Corrected same day (Amendment 3):** that sentence
+  described ScrollSmoother. The shipped mechanism binds no key handler, so a key press moves the document
+  and everything rendered on it together, with no settle and no lag to defend. What MUST hold is that
+  keyboard navigation is never *blocked or redirected*: every key that worked before still reaches every
+  position, and `prefers-reduced-motion` restores instant movement with no easing at all. On touch, where
+  this feature does not engage, key behaviour is unchanged.
+  Measured 2026-09-22: PageDown from the top reached 492px within 120ms and 609px when settled — the
+  document moved, nothing intercepted it. The ramp between those two readings is the pre-existing
+  `html { scroll-behavior: smooth }` (`app/globals.css:127`), not the new easing; it predates this
+  feature. It does not fight the easing either, because Lenis writes each frame with an explicit
+  `behavior: "instant"` (`lenis.mjs:532`), which overrides the CSS.
 - **FR-011a (new)**: Touch scrolling MUST remain native. The easing engages only on precision-pointer
   devices; a phone, tablet or touchscreen laptop keeps its operating system's own momentum, flick
   deceleration and stop-mid-gesture behaviour. This is the boundary that makes Q1 = C different from B,
   and it is the reason mobile-first survives a change whose benefit is a desktop one.
+  **Holds on the shipped mechanism for two independent reasons.** Lenis's `syncTouch` default is `false`
+  and its handler returns before touching a touch event unless that flag is set (`lenis.mjs:434`,
+  `lenis.mjs:617`); and the gate in `components/atmosphere/ScrollSmooth.tsx` refuses to construct an
+  instance at all when `(any-pointer: coarse)` matches. Verified 2026-09-22: in a 390x844 touch context the
+  `<html>` element never receives Lenis's class even after the page is scrolled, and the same is true
+  under `prefers-reduced-motion: reduce` at desktop width.
 - **FR-012**: Whatever is done to scroll feel MUST NOT interfere with touch gestures, including flick
   deceleration and stopping mid-gesture, and MUST remain correct for a right-to-left document. (Constitution II)
 - **FR-013**: If the shopper's scrolling is ever programmatic rather than direct, stopping that movement

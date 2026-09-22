@@ -7,75 +7,77 @@
  * scrolling should be smooth and heavy — not the background." That is scroll *physics*, and the answer
  * chosen (C) eases the desktop wheel and trackpad while leaving touch native.
  *
- * **Touch stays native by default, and that is a property of the library rather than a guard in this
- * file.** `node_modules/gsap/ScrollSmoother.js:121` computes the smoothing duration as
- * `isTouch === 1 ? parseFloat(smoothTouch) || 0 : parseFloat(smooth) || 0.8` — an unset `smoothTouch`
- * parses to `0`, so on a touch device the lerp is zero and the browser's own momentum scroll is
- * untouched. That matters because a phone already runs OS-level momentum tuned per device, and a JS
- * lerp layered over it usually reads as slushy and late rather than expensive. C is therefore the
- * option that buys the desktop quality without spending the mobile one, which is also what the
- * standing mobile-first instruction requires.
+ * ## Why Lenis and not ScrollSmoother
  *
- * ## The constraint that shapes the whole layout
+ * The first build used `gsap/ScrollSmoother`. It was replaced on 2026-09-22 after the owner named a
+ * reference site (nocturne-label.vercel.app) whose scroll they wanted; the reference runs Lenis at its
+ * defaults, and the two mechanisms are not equivalent:
  *
- * ScrollSmoother animates by writing a `transform` to `#smooth-content`. A transformed ancestor becomes
- * the containing block for `position: fixed` descendants, so **every fixed element inside the content
- * would start scrolling with the page instead of staying put.** This is the same mechanism that made
- * feature 002's ground layer need mounting outside `<main>` (research D3) and the reason `.tray-field`
- * documents `background-attachment: fixed` not working inside a `Reveal` wrapper.
+ * - ScrollSmoother animates a **transform on `#smooth-content`** while the document itself jumps
+ *   straight to the target. The visible page and the scrollbar are two different positions.
+ * - Lenis animates the **real document scroll** (`setScroll` calls `window.scrollTo({behavior:"instant"})`
+ *   once per frame at a lerped value, `node_modules/lenis/dist/lenis.mjs:532`). `window.scrollY`, the
+ *   scrollbar, `getBoundingClientRect()`, IntersectionObserver and the browser's own anchor handling all
+ *   report the position the shopper is actually looking at.
  *
- * So the fixed layers — the page ground, the star field, the blur, the header island and the mobile
- * dock — are siblings of `#smooth-wrapper`, not children of it. Only document flow goes inside. This
- * is not a stylistic preference: if anything fixed is moved into the wrapped subtree it will silently
- * begin scrolling, and it will look fine on a static screenshot, which is how this class of bug ships.
+ * The second consequence is the one that matters for this codebase: a transformed ancestor becomes the
+ * containing block for `position: fixed` descendants, so ScrollSmoother forced the ground layer, star
+ * field, blur, header and mobile dock out of the wrapped subtree, and required `#smooth-wrapper` to be
+ * threaded through `app/(main)/layout.tsx`. Lenis creates no containing block, so **nothing in the
+ * layout has to know it exists** — which is also why this component returns `null` and takes no children.
  *
- * ## What this does to the rest of the spec
+ * ## What is deliberately left alone
  *
- * It replaces the "scrolling stays completely native" clause that Resolved Q1 = A wrote into FR-010 and
- * FR-011. Easing the scroll means a key press no longer moves the document instantly on desktop — the
- * lerp is input-agnostic. That is the requested behaviour, and the requirements were amended to match
- * rather than left contradicting the build.
+ * `syncTouch` is `false` by default (`lenis.mjs:434`), so touch input never reaches Lenis's animation:
+ * a phone keeps its per-device OS momentum, and FR-011a holds because of the library's default rather
+ * than a guard in this file. The gate below still refuses to construct an instance on a coarse-pointer
+ * device, so a mobile visitor does not pay for the module at all.
+ *
+ * Keyboard is not eased either — Lenis binds no `keydown` handler, so PageDown and End move the document
+ * instantly and `onNativeScroll` re-syncs the animation to where the shopper put them. WCAG-wise that is
+ * an improvement over the previous mechanism, and it means the "no key press is instant" reading of
+ * FR-010/FR-011 in the spec's first amendment was describing ScrollSmoother, not this build.
+ *
+ * Every other option is left at its default — `lerp 0.1`, `smoothWheel true`, `wheelMultiplier 1`,
+ * `overscroll true`, `respectReducedMotion true`. Starting from the reference site's own tuning is the
+ * point of copying the reference site; re-tune from measurement and feel, not from guesswork.
+ *
+ * **One default is deliberately turned off: `allowNestedScroll`.** With the library's default of `false`,
+ * a vertical wheel gesture is captured wherever it lands, so scrolling the cart line-items list
+ * (`components/cart/CartDrawer.tsx:96`), the shop filter sheet body
+ * (`components/shop/FilterSheet.tsx:143`) or the saved-addresses list on checkout
+ * (`components/checkout/CheckoutClient.tsx:444`) would move the page *behind* the open panel instead of
+ * the panel. `allowNestedScroll: true` makes Lenis consult `hasNestedScroll()` before capturing
+ * (`lenis.mjs:609`, helper at `lenis.mjs:858`): it stands down while the element under the cursor can
+ * consume the delta, honours `overscroll-behavior: contain` at the boundary, and hands the gesture back
+ * to the page once the inner box is spent. The reference site is a brochure with no scrollable overlays,
+ * so copying it exactly here would import a bug rather than a look.
  */
 
-import { useEffect, useRef, type ReactNode } from "react";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { ScrollSmoother } from "gsap/ScrollSmoother";
+import { useEffect } from "react";
+
+type LenisModule = typeof import("lenis").default;
+
+let loading: Promise<LenisModule> | null = null;
 
 /**
- * Lerp time in seconds. 1.5 is deliberately weighty — the brief is "smooth and heavy", and the common
- * failure is to set this so low the effect is inaudible, or so high the page feels like it is dragging
- * through wet sand and a shopper overshoots the row they were aiming at. Review on a real trackpad,
- * not on a screenshot.
+ * Imported dynamically rather than at module scope: this mounts in the layout every visitor loads, and
+ * the easing is refused outright on touch devices, so they should not have to parse it.
  */
-const SMOOTH_SECONDS = 1.5;
-
-let registration: Promise<typeof import("gsap").default> | null = null;
-/**
- * The plugins are imported dynamically rather than at module scope. This component is mounted inside a
- * client boundary that every visitor loads, and ScrollSmoother should not be parsed on a phone where
- * `shouldEase()` will refuse it anyway.
- */
-function ensureRegistered(): Promise<typeof import("gsap").default> {
-  if (!registration) {
-    registration = (async () => {
-      const { default: gsap } = await import("gsap");
-      await import("gsap/ScrollTrigger");
-      await import("gsap/ScrollSmoother");
-      // ScrollSmoother is a ScrollTrigger plugin; registering it alone leaves the scroller unmeasured.
-      gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
-      return gsap;
-    })();
+function ensureLenis(): Promise<LenisModule> {
+  if (!loading) {
+    loading = import("lenis").then((m) => m.default);
   }
-  return registration;
+  return loading;
 }
 
 /**
  * Desktop-only, and deliberately not a `min-width` test. A touchscreen laptop is wide and would be
- * caught by a viewport query while wanting native touch scrolling; `pointer: fine` and the absence of
- * `any-pointer: coarse` ask the question actually being posed — is this a precision-pointer device?
+ * caught by a viewport query while wanting native touch scrolling; `pointer: fine` plus the absence of
+ * `any-pointer: coarse` asks the question actually being posed — is this a precision-pointer device?
  *
- * `prefers-reduced-motion` opts out entirely: an eased scroll *is* motion the shopper did not initiate,
- * and the page stays fully usable natively, so nothing is withheld by standing down.
+ * `prefers-reduced-motion` opts out here as well as inside Lenis. An eased scroll is motion the shopper
+ * did not ask for, and standing down costs nothing: the page still scrolls natively.
  */
 function shouldEase(): boolean {
   if (typeof window === "undefined" || !window.matchMedia) return false;
@@ -85,42 +87,30 @@ function shouldEase(): boolean {
   return mq("(pointer: fine)");
 }
 
-export function ScrollSmooth({ children }: { children: ReactNode }) {
-  const wrapper = useRef<HTMLDivElement>(null);
-  const content = useRef<HTMLDivElement>(null);
-
+export function ScrollSmooth() {
   useEffect(() => {
-    if (!shouldEase() || !wrapper.current || !content.current) return;
+    if (!shouldEase()) return;
     let cancelled = false;
-    let instance: { kill: () => void; refresh: (soft?: boolean, force?: boolean) => void } | null = null;
+    let frame = 0;
+    let lenis: InstanceType<LenisModule> | null = null;
 
-    void ensureRegistered().then(() => {
-      if (cancelled || !wrapper.current || !content.current) return;
-      instance = ScrollSmoother.create({
-        wrapper: wrapper.current,
-        content: content.current,
-        smooth: SMOOTH_SECONDS,
-        // Left unset on purpose: the default is what keeps touch native (see the file header).
-        effects: false,
-        normalizeScroll: false,
-        ignoreMobileResize: true,
-      });
-      // Layout that depends on measured positions — the categories arc and the ground's stage
-      // boundaries — has to be re-taken once the smoother owns the scroll position.
-      requestAnimationFrame(() => instance?.refresh(true));
+    void ensureLenis().then((Lenis) => {
+      if (cancelled) return;
+      // `autoRaf` is false by default, which is why the loop below is mandatory and not an optimisation.
+      lenis = new Lenis({ allowNestedScroll: true });
+      const raf = (time: number) => {
+        lenis?.raf(time);
+        frame = requestAnimationFrame(raf);
+      };
+      frame = requestAnimationFrame(raf);
     });
 
     return () => {
       cancelled = true;
-      instance?.kill();
+      cancelAnimationFrame(frame);
+      lenis?.destroy();
     };
   }, []);
 
-  return (
-    <div id="smooth-wrapper" ref={wrapper}>
-      <div id="smooth-content" ref={content}>
-        {children}
-      </div>
-    </div>
-  );
+  return null;
 }

@@ -1,5 +1,11 @@
 # T045 — Scroll easing: measured, and where the first measurement was wrong
 
+> **Superseded on 2026-09-22 by `research.md` D10.** Everything below measures ScrollSmoother's
+> two-position model — document at the target, rendered content behind it. That mechanism was replaced by
+> Lenis the same day, which animates the single real document position, so there is no longer a gap
+> between `scrollY` and what is on screen to measure. The table stands as a record of ScrollSmoother and
+> the trap it set; it is not a description of the shipped build.
+
 **Run**: 2026-09-22, headless Chromium via Playwright. Resolved Question 1 = C.
 
 ## The signal, and a trap
