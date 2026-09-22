@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Check, Minus, Phone, Plus, RotateCcw, ShoppingBag, Sparkles, TriangleAlert } from "lucide-react";
+import { Check, Copy, Minus, Phone, Plus, RotateCcw, ShoppingBag, Sparkles, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/components/providers/AuthProvider";
@@ -14,10 +14,49 @@ import { apiErrorToFa } from "@/lib/api-error-fa";
 import { paymentTermLabels } from "@/lib/content/order";
 import { stockLabels } from "@/lib/content/shop";
 import { resolveProductImage } from "@/lib/product-images";
+import { storeContact } from "@/lib/content/contact";
 import { cn, formatToman, toFaDigits } from "@/lib/utils";
-import type { ProductDetail as ProductData } from "@/types/store";
+import { compareAtOf, isPurchasable, unitPriceOf } from "@/lib/product-identity";
+import { storeWarranty } from "@/lib/content/verified-facts";
+/*
+ * `CatalogProduct` is `ReturnType<typeof serializeProduct>` — the shape the seam
+ * actually emits. This component used to be typed by `apiGet<ProductDetail>`
+ * against `types/store.ts`, which still describes the pre-seam Prisma payload:
+ * that unchecked cast is what let `selectedVariant.unitPrice` compile while the
+ * server sent no such key, and every product page printed «قیمت فروشگاه».
+ * Importing the real shape makes the next such rename a build error.
+ *
+ * `types/store.ts` is deliberately left alone: the admin product form still
+ * reads the old shape and the back office is out of scope.
+ */
+import type { CatalogProduct as ProductData } from "@/lib/catalog";
 
 type Props = { slug: string };
+
+/**
+ * The number as text a shopper can take with them. FR-039: the contact action
+ * MUST work on a device where placing a call is not possible, and until this
+ * existed the digits were only ever renderable, never copyable.
+ */
+function CopyPhoneButton() {
+  const [copied, setCopied] = useState(false);
+  return (
+    <button
+      type="button"
+      onClick={() => {
+        // The international form, because that is what a dialer or another shop
+        // needs; `phoneDisplay` is the Persian-digit reading of the same number.
+        void navigator.clipboard?.writeText(storeContact.phoneHref.replace("tel:", "+"));
+        setCopied(true);
+        window.setTimeout(() => setCopied(false), 1800);
+      }}
+      className="inline-flex items-center gap-1.5 rounded-xl border border-champagne/25 px-4 py-3 text-xs font-bold text-foreground/80 transition-colors hover:border-champagne/50"
+    >
+      {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
+      {copied ? "کپی شد" : "کپی شماره"}
+    </button>
+  );
+}
 
 /** B2B payment-term selector values (the API only accepts these two). */
 const PAYMENT_TERMS = ["CASH", "CREDIT_60_DAYS"] as const;
@@ -30,6 +69,7 @@ export function ProductDetail({ slug }: Props) {
   const [product, setProduct] = useState<ProductData | null>(null);
   const [loading, setLoading] = useState(true);
   const [failed, setFailed] = useState(false);
+  const [missing, setMissing] = useState(false);
   const [reloadKey, setReloadKey] = useState(0);
 
   const [selectedVariantId, setSelectedVariantId] = useState<number | null>(null);
@@ -47,6 +87,7 @@ export function ProductDetail({ slug }: Props) {
   useEffect(() => {
     let cancelled = false;
     setFailed(false);
+    setMissing(false);
     setActionError(null);
     setLoading((prev) => prev || product === null);
 
@@ -63,8 +104,13 @@ export function ProductDetail({ slug }: Props) {
             : (data.variants.find((variant) => variant.isDefault)?.id ?? data.variants[0]?.id ?? null),
         );
       })
-      .catch(() => {
-        if (!cancelled) setFailed(true);
+      .catch((cause) => {
+        if (cancelled) return;
+        /* "There is no such product" and "we could not load it" are different
+           statements, and FR-046 requires them to look different: a network blip
+           used to render as a claim about the catalogue. */
+        if (cause instanceof ApiClientError && cause.status === 404) setMissing(true);
+        else setFailed(true);
       })
       .finally(() => {
         if (!cancelled) setLoading(false);
@@ -91,9 +137,12 @@ export function ProductDetail({ slug }: Props) {
     return [...new Set(product.variants.map((variant) => variant.storage).filter((storage): storage is string => Boolean(storage)))];
   }, [product]);
 
-  const stockType = selectedVariant?.stockType ?? product?.stockType ?? "limited";
-  const maxQuantity = stockType === "limited" ? (selectedVariant?.stock ?? product?.stock ?? null) : null;
-  const purchasable = stockType !== "out_of_stock" && stockType !== "call";
+  const stockType = selectedVariant?.stockType ?? product?.stockType ?? "call";
+  const maxQuantity = stockType === "limited" ? (selectedVariant?.stock ?? null) : null;
+  /* The merchant's own `purchasable` field, not the shelf label: 16 records read
+     "limited" while saying they cannot sell, and `product?.stock` never existed
+     on the serialized row at all. */
+  const purchasable = isPurchasable({ available: product?.available, stockType });
 
   async function handleAddToCart() {
     if (!product) return;
@@ -165,12 +214,27 @@ export function ProductDetail({ slug }: Props) {
     );
   }
 
+  if (missing && !product) {
+    return (
+      <div className="glass mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
+        <TriangleAlert className="size-9 text-destructive" />
+        <h2 className="text-lg font-black">این محصول دیگر در فروشگاه نیست</h2>
+        <p className="text-sm text-muted-foreground">
+          اگر آدرس این صفحه را از جای دیگری گرفته‌اید، ممکن است حذف یا جایگزین شده باشد.
+        </p>
+        <Link href="/shop">
+          <Button size="sm" variant="oxblood">بازگشت به فروشگاه</Button>
+        </Link>
+      </div>
+    );
+  }
+
   if (failed && !product) {
     return (
       <div className="glass mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
         <TriangleAlert className="size-9 text-destructive" />
-        <h2 className="text-lg font-black">محصول پیدا نشد</h2>
-        <p className="text-sm text-muted-foreground">در بارگذاری این محصول مشکلی پیش آمد.</p>
+        <h2 className="text-lg font-black">بارگذاری محصول انجام نشد</h2>
+        <p className="text-sm text-muted-foreground">اتصال به سرور برقرار نشد. دوباره تلاش کنید.</p>
         <div className="flex gap-2">
           <Button variant="ghost" size="sm" onClick={() => setReloadKey((key) => key + 1)}>
             <RotateCcw className="size-4" />
@@ -188,10 +252,8 @@ export function ProductDetail({ slug }: Props) {
 
   if (!product) return null;
 
-  const unitPrice = selectedVariant ? selectedVariant.unitPrice : null;
-  const compareAtPrice = selectedVariant?.compareAtPrice ?? null;
-  const tier = selectedVariant?.matchedTier ?? null;
-  const tierActive = Boolean(tier && tier.minQuantity > 1 && quantity >= tier.minQuantity && tier.calculatedPrice !== null && unitPrice !== tier.calculatedPrice);
+  const unitPrice = unitPriceOf(selectedVariant?.price, product?.displayPrice);
+  const compareAtPrice = compareAtOf(unitPrice, selectedVariant?.compareAtPrice ?? product?.compareAtPrice);
   const variantTitle = [selectedVariant?.storage, selectedVariant?.color].filter(Boolean).join(" — ");
 
   return (
@@ -248,13 +310,12 @@ export function ProductDetail({ slug }: Props) {
               <i className={cn("size-1.5 rounded-full", stockType === "out_of_stock" ? "bg-destructive" : "bg-emerald-400")} aria-hidden="true" />
               {stockLabels[stockType] ?? "—"}
             </span>
-            {selectedVariant?.guarantee && (
-              <span className="rounded-full border border-champagne/20 bg-champagne/5 px-3 py-1 text-muted-foreground">
-                گارانتی: {selectedVariant.guarantee}
-              </span>
-            )}
-            <span className="rounded-full border border-champagne/20 bg-champagne/5 px-3 py-1 font-mono text-xs text-champagne">
-              ضمانت اصالت ۱۰۰٪
+            /* Owner-confirmed 2026-09-23, and a storefront-wide fact: the export
+               holds no guarantee field, so this must not look per-product. The
+               «ضمانت اصالت ۱۰۰٪» badge that sat here asserted a percentage nobody
+               measured and came out with it. */
+            <span className="rounded-full border border-champagne/20 bg-champagne/5 px-3 py-1 text-muted-foreground">
+              {storeWarranty.label}
             </span>
           </div>
 
@@ -280,13 +341,6 @@ export function ProductDetail({ slug }: Props) {
               </div>
             )}
 
-            {tierActive && tier && (
-              <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-aqua/15 px-3 py-1.5 text-xs font-bold text-aqua">
-                <Check className="size-3.5" />
-                قیمت عمده فعال شد
-                {tier.discountPercent ? ` — ${toFaDigits(tier.discountPercent)}٪ تخفیف` : ""}
-              </p>
-            )}
           </div>
 
           {/* Variant selection */}
@@ -331,7 +385,25 @@ export function ProductDetail({ slug }: Props) {
             </div>
           )}
 
-          {/* Quantity + add to cart */}
+          {/* Quantity + the one action this record supports. An out-of-stock or
+              call-for-price product gets the phone, not a dead button: FR-037
+              asks for one unambiguous action per state and FR-039 for reaching a
+              human in a single interaction, including where dialing is not
+              possible — hence the copy control beside the tel: link. */}
+          {!purchasable && (
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <a
+                href={storeContact.phoneHref}
+                className="inline-flex min-w-52 flex-1 items-center justify-center gap-2 rounded-xl bg-oxblood px-6 py-3 text-sm font-bold text-white transition-opacity hover:opacity-90"
+              >
+                <Phone className="size-4" />
+                تماس برای اطلاع از موجودی
+              </a>
+              <CopyPhoneButton />
+            </div>
+          )}
+
+          {purchasable && (
           <div className="mt-7 flex flex-wrap items-center gap-3">
             <div className="inline-flex items-center gap-1 rounded-full border border-line bg-ink/40 p-1.5">
               <button
@@ -377,8 +449,9 @@ export function ProductDetail({ slug }: Props) {
               )}
             </Button>
           </div>
+          )}
 
-          {maxQuantity !== null && purchasable && (
+          {maxQuantity !== null && maxQuantity > 0 && purchasable && (
             <p className="mt-2.5 text-xs text-muted-foreground/70">
               حداکثر {toFaDigits(maxQuantity)} عدد در انبار موجود است.
             </p>
@@ -399,14 +472,10 @@ export function ProductDetail({ slug }: Props) {
           <section className="glass-smoked rounded-2xl p-7 border border-champagne/20 shadow-card">
             <h2 className="text-base font-black text-foreground">توضیحات محصول</h2>
             <div className="brand-hairline my-3.5" />
-            <p className="whitespace-pre-line text-sm leading-8 text-foreground/75">{product.description}</p>
-          </section>
-        )}
-        {product.analysis && (
-          <section className="glass-smoked rounded-2xl p-7 border border-champagne/20 shadow-card">
-            <h2 className="text-base font-black text-foreground">مشخصات و آنالیز تخصصی</h2>
-            <div className="brand-hairline my-3.5" />
-            <p className="whitespace-pre-line text-sm leading-8 text-foreground/75">{product.analysis}</p>
+            {/* `descriptionText`, not `description`: the latter is the export's
+               raw HTML, so 147 records were printing literal <p> tags and
+               &zwnj; entities to shoppers. */}
+            <p className="whitespace-pre-line text-sm leading-8 text-foreground/75">{product.descriptionText}</p>
           </section>
         )}
       </div>

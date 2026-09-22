@@ -7,9 +7,11 @@ function ProofMedia({ media }: { media: string }) {
   if (media === "store-photo-pending") {
     return (
       <div className="store-architecture text-center" aria-hidden="true">
+        {/* The frame is decorative architecture, nothing more. It used to print
+            «تصویر واقعی فروشگاه در انتظار افزودن» at shoppers — an apology for
+            content that never arrived, on a page that already showed a store
+            photograph twice elsewhere. FR-008: an empty place stays empty. */}
         <i /><i /><i />
-        <span className="mt-3 block font-mono text-xs tracking-[0.12em] text-primary/70">PHYSICAL PRESENCE</span>
-        <b className="mt-1 block text-xs font-bold text-foreground/70">تصویر واقعی فروشگاه در انتظار افزودن</b>
       </div>
     );
   }
@@ -62,7 +64,9 @@ export function WhyHamiProofs() {
                 <span className="font-mono text-xs tracking-[0.12em] text-primary">{proof.eyebrow}</span>
                 <h3 className="mt-2 text-base font-black">{proof.title}</h3>
                 <p className="mt-2 text-[13px] leading-7 text-foreground/65">{proof.description}</p>
-                <small className="mt-1 text-xs text-foreground/60">{proof.mediaNote}</small>
+                {proof.mediaNote && (
+                  <small className="mt-1 text-xs text-foreground/60">{proof.mediaNote}</small>
+                )}
                 <Link href={proof.href} className="mt-auto inline-flex items-center gap-1.5 pt-4 text-xs font-bold text-primary hover:underline">
                   {proof.cta} <ArrowLeft className="size-3.5" />
                 </Link>

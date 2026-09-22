@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Reveal } from "@/components/home/Reveal";
+import { storeWarranty } from "@/lib/content/verified-facts";
 import { ShopWindow } from "@/components/home/ShopWindow";
 import { BrandTicker } from "@/components/home/BrandTicker";
 import { FlipWords } from "@/components/ui/flip-words";
@@ -38,7 +39,7 @@ import { FinalConversion } from "@/components/home/TrustBlocks";
 import type { TrustFeatureKey } from "@/lib/content/home";
 import "./home.css";
 
-/** The headline's cycling tail. Each has to complete "بهترین قیمت برای …". */
+/** The headline's cycling tail. Each has to complete «قیمت روزِ بازار، مستقیم از مشهد برای …». */
 const HERO_ROTATING_WORDS = ["موبایل", "لوازم جانبی", "ساعت هوشمند", "خرید عمده"] as const;
 
 
@@ -78,12 +79,12 @@ function Hero() {
             className="mt-6 max-w-xl text-balance text-[2rem] font-black leading-[1.35] tracking-tight md:mt-7 md:text-[2.6rem] md:leading-[1.3] xl:text-5xl"
           >
             <span className="block text-foreground/90">حامی همراه؛ بیست سال اعتماد در بازار مشهد.</span>
-            {/* nowrap only from md up: below that "بهترین قیمت برای" plus the
-                rotator's widest word cannot fit one line, and forcing it pushes
-                the grid past the viewport and gives the page a horizontal
-                scrollbar. */}
+            {/* FR-017 allows the price-leadership position, not a comparative
+                nobody can substantiate — «بهترین» went. nowrap only from md up:
+                below that the lead-in plus the rotator's widest word cannot fit
+                one line, and forcing it pushes the grid past the viewport. */}
             <span className="mt-3 block md:whitespace-nowrap">
-              بهترین قیمت برای{" "}
+              قیمت روزِ بازار، مستقیم از مشهد برای{" "}
               <span className="relative inline-block">
                 <FlipWords words={HERO_ROTATING_WORDS} className="grad font-extrabold" />
                 {/* Hand-drawn swash, sized to the rotator's widest word so it
@@ -101,12 +102,12 @@ function Hero() {
           </h1>
 
           <p className="mt-6 max-w-none text-pretty text-[15px] leading-8 text-foreground/75 md:mt-8 md:text-base md:leading-9">
-            از فروش حضوری در قلب بازار مشهد تا پخش عمده سراسری برای همکاران — کالای اصل با گارانتی
-            رسمی و قیمتی بی‌رقیب.
+            از فروش حضوری در قلب بازار مشهد تا پخش عمده برای همکاران — با{" "}
+            {storeWarranty.label}.
           </p>
           <p className="mt-2 max-w-none text-pretty text-sm leading-7 text-muted-foreground/80 md:mt-3 md:leading-9">
-            چه یک دستگاه بخواهید و چه صد دستگاه، همان قیمت منصفانه و همان
-            پشتیبانی؛ از انتخاب تا تحویل، کنار شما هستیم.
+            برای یک دستگاه یا برای خرید عمده، موجودی و قیمت روز را کارشناس فروشگاه
+            تلفنی اعلام می‌کند.
           </p>
 
           <div className="mt-7 flex flex-col items-stretch gap-3 sm:mt-9 sm:flex-row sm:items-center" aria-label="مسیرهای اصلی">
@@ -122,8 +123,11 @@ function Hero() {
             </Link>
           </div>
 
+          {/* FR-006 admits four trust facts and no others. «اصالت کالا» was a
+              fifth with nothing behind it, so the row now reads straight from the
+              verified list instead of a per-component array. */}
           <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2" role="list" aria-label="نشانه‌های اعتماد حامی همراه">
-            {["اصالت کالا", "گارانتی رسمی", "سابقه بیست ساله"].map((item) => (
+            {[storeWarranty.label, "بیست سال سابقه در بازار مشهد", "فروشگاه حضوری در مشهد"].map((item) => (
               <span key={item} role="listitem" className="flex items-center gap-1.5 text-xs text-foreground/60">
                 <BadgeCheck className="size-4 text-aqua" /> {item}
               </span>

@@ -421,7 +421,12 @@ export function CheckoutClient() {
               ))}
             </div>
           ) : (
-            <p className="text-[13px] text-muted-foreground">پرداخت آنلاین از طریق درگاه امن انجام می‌شود.</p>
+            /* The spec is explicit that no payment capability is confirmed for
+               this business, so nothing may promise one. The form itself is
+               frozen backend work and stays exactly as it is. */
+            <p className="text-[13px] text-muted-foreground">
+              پرداخت آنلاین در این فروشگاه فعال نیست؛ زمان و شیوهٔ پرداخت پس از تماس با فروشگاه مشخص می‌شود.
+            </p>
           )}
           <div className="mt-4">
             <label htmlFor="co-note" className="mb-1 block text-xs font-bold text-foreground/80">یادداشت سفارش (اختیاری)</label>

@@ -26,7 +26,7 @@ decision — band 0 changes what those surfaces *claim*, never how they work.
 **Purpose**: nothing downstream can be executed cleanly without the owner's eight answers and a set of
 before-images.
 
-- [ ] T001 Remove the committed live-reload script from `app/layout.tsx:69` — `<script
+- [x] T001 Remove the committed live-reload script from `app/layout.tsx:69` — `<script
   src="http://localhost:8400/live.js?token=…">` sits inside the root `<body>` on every page for every
   visitor, fails to resolve in production, and delays the `load` event that
   `components/atmosphere/useAtmosphereGround.ts:102` depends on. Delete the
@@ -49,7 +49,7 @@ before-images.
   purchase path, (5) whether the atmosphere extends past `/`, (6) whether SC-007 reaches merchant-authored
   product names, (7) the human panel, (8) the data refresh. **T018, T019, T020, T030, T052 and every band-3
   task that touches trust copy depend on this.** An unanswered claim stays out of the interface.
-- [ ] T004 Create `specs/001-premium-rtl-storefront/notes/findings.md` as the running record for this
+- [x] T004 Create `specs/001-premium-rtl-storefront/notes/findings.md` as the running record for this
   feature, with one section per band, so verification is written down as it happens rather than
   reconstructed at the end.
 
@@ -65,112 +65,112 @@ before-images.
 
 ### Tests, written first so they fail
 
-- [ ] T005 [P] [US3] Seam-shape guard in `tests/unit/catalog-seam-shape.test.ts`: for every record from
+- [x] T005 [P] [US3] Seam-shape guard in `tests/unit/catalog-seam-shape.test.ts`: for every record from
   `lib/catalog.ts`, assert that each field `components/shop/ProductDetail.tsx` reads actually exists on the
   serialized product and on each variant. Quote `contracts/catalog-seam.md`: "A consumer MUST read a field
   listed above, and MUST NOT invent a name for a concept it needs." This is the test that would have caught
   the price defect.
-- [ ] T006 [P] [US4] Obtainability guard in `tests/unit/obtainability.test.ts`: no record with
+- [x] T006 [P] [US4] Obtainability guard in `tests/unit/obtainability.test.ts`: no record with
   `purchasable === false` may resolve to an obtainable label or an enabled cart control, and no record whose
   `stockType` is `call` or `out_of_stock` may resolve to either. Assert against the real export, and per
   `contracts/honest-states.md`: "unknown, unreadable, empty, or newly-seen availability ⇒ «تماس بگیرید»".
-- [ ] T007 [P] [US3] Price-state guard in `tests/unit/price-state.test.ts`: `priceOf() === 0` renders no
+- [x] T007 [P] [US3] Price-state guard in `tests/unit/price-state.test.ts`: `priceOf() === 0` renders no
   numeral and no bare currency word on any surface, and a discount requires strictly
   `compareAtPrice > price` at **both** product and variant level — quote FR-004: "A discount MUST be
   displayed only where the previous price is strictly higher than the current price."
-- [ ] T008 [P] [US1] Admissible-claim guard in `tests/unit/admissible-claims.test.ts`: assert the DOM
+- [x] T008 [P] [US1] Admissible-claim guard in `tests/unit/admissible-claims.test.ts`: assert the DOM
   string sources contain no warranty, authenticity-percentage, "unrivaled/best price", partner-brand,
   street-address or email claim beyond the four facts FR-006 permits and the phone in
   `lib/content/contact.ts`. Encode the forbidden list verbatim from `contracts/honest-states.md`.
 
 ### The price defect, and the reads that hid it
 
-- [ ] T009 [US3] Fix the unit-price read in `components/shop/ProductDetail.tsx:191` — replace
+- [x] T009 [US3] Fix the unit-price read in `components/shop/ProductDetail.tsx:191` — replace
   `selectedVariant.unitPrice` with the field `lib/catalog.ts:171` actually emits (`variant.price`), falling
   back to `product.displayPrice` (`lib/catalog.ts:216`) so the 84 variant-less **priced** products stop
   printing «برای استعلام قیمت تماس بگیرید». Verify against `data/hami-products.json` for one variant
   product, one variant-less product and one unpriced product.
-- [ ] T010 [US3] Repair the discount block at `components/shop/ProductDetail.tsx:262-281`: compare the real
+- [x] T010 [US3] Repair the discount block at `components/shop/ProductDetail.tsx:262-281`: compare the real
   variant price so `compareAtPrice > unitPrice` can be true, and confirm a genuine per-variant discount
   (e.g. ۱۱۵,۰۰۰,۰۰۰ vs ۵۲,۳۰۰,۰۰۰) renders as a comparison, per FR-034: "the discount treatment MUST be
   legible as a comparison rather than decoration."
-- [ ] T011 [US3] Move the compare-at gate into the seam at `lib/catalog.ts:172` so variants cannot emit a
+- [x] T011 [US3] Move the compare-at gate into the seam at `lib/catalog.ts:172` so variants cannot emit a
   non-greater `compareAtPrice` — 40 of 311 currently do, and `audits/01` records the product-level gate at
   `:114-120` as the only enforcement.
-- [ ] T012 [US3] Delete the dead bulk-tier branch: `selectedVariant?.matchedTier` at
+- [x] T012 [US3] Delete the dead bulk-tier branch: `selectedVariant?.matchedTier` at
   `components/shop/ProductDetail.tsx:193-194` and its UI, given `lib/catalog.ts:185` always emits
   `matchedTier: null` and `:179` documents that the export has no B2B tiers.
-- [ ] T013 [US3] Remove the dead `product.analysis` block at `components/shop/ProductDetail.tsx:405-411`;
+- [x] T013 [US3] Remove the dead `product.analysis` block at `components/shop/ProductDetail.tsx:405-411`;
   the serializer emits no such field, so it reads as a section that silently never appears.
-- [ ] T014 [US3] Switch the description render at `components/shop/ProductDetail.tsx:398-403` from
+- [x] T014 [US3] Switch the description render at `components/shop/ProductDetail.tsx:398-403` from
   `product.description` (raw `description_html`, `lib/catalog.ts:195`) to `product.descriptionText`
   (`:196`). 147 records currently show literal `<p>` tags and `&zwnj;` to shoppers.
-- [ ] T015 [US2] Add the missing price guard to the list view at `components/shop/ProductListRow.tsx:59-64`:
+- [x] T015 [US2] Add the missing price guard to the list view at `components/shop/ProductListRow.tsx:59-64`:
   it calls `formatToman(displayPrice)` with no `priceState()` check, so the 5 unpriced records print «۰
   تومان» — the exact rendering FR-003 forbids.
 
 ### Manufactured positives
 
-- [ ] T016 [US4] Change the availability fallback at `components/shop/ProductDetail.tsx:94` from
+- [x] T016 [US4] Change the availability fallback at `components/shop/ProductDetail.tsx:94` from
   `?? "limited"` to `?? "call"`, per `contracts/honest-states.md`: "Every fallback in the chain resolves to
   `call`… never to a positive state."
-- [ ] T017 [US4] Change `serializeStockType`'s `default: return "limited"` in `lib/serializers.ts:13-26` to
+- [x] T017 [US4] Change `serializeStockType`'s `default: return "limited"` in `lib/serializers.ts:13-26` to
   the contact fallback, and note the reach: it feeds shopper-visible cart labels through `lib/cart.ts:71,81`.
-- [ ] T018 [US4] Make the product page consume the merchant's own signal: derive the purchasable test at
+- [x] T018 [US4] Make the product page consume the merchant's own signal: derive the purchasable test at
   `components/shop/ProductDetail.tsx:96` from `product.available` (`lib/catalog.ts:200`) instead of
   `stockType !== "out_of_stock" && stockType !== "call"`, which currently makes all 16
   `limited`+`purchasable:false` records buyable. Label wording is fixed by decisions 1 and 4 («تماس بگیرید» plus tap-to-call); the
   gate itself needs no decision.
-- [ ] T019 [US4] Gate the card's cart control in `components/shop/ProductCard.tsx:109,221-231` on the same
+- [x] T019 [US4] Gate the card's cart control in `components/shop/ProductCard.tsx:109,221-231` on the same
   `available` flag — it tests only `out_of_stock` today, which is why 22 unsellable records carry a live
   «افزودن به سبد خرید» (FR-002, FR-037).
-- [ ] T020 [US4] Give each availability state one unambiguous action per FR-037: an out-of-stock product
+- [x] T020 [US4] Give each availability state one unambiguous action per FR-037: an out-of-stock product
   must offer the contact route, not only a disabled «ناموجود»
   (`components/shop/ProductDetail.tsx:360-378`, `components/shop/AddToCartButton.tsx:37-49`), and a
   `call`-state record must not show an order-shaped CTA at all (FR-038).
-- [ ] T021 [US4] Fix the contradictory quantity line at `components/shop/ProductDetail.tsx:381-385`, which
+- [x] T021 [US4] Fix the contradictory quantity line at `components/shop/ProductDetail.tsx:381-385`, which
   prints «حداکثر ۰ عدد در انبار موجود است» while offering the buy button.
 
 ### Claims that have no fact behind them
 
-- [ ] T022 [US3] **Changed by decision 1, not deleted.** Source the warranty once and render it
+- [x] T022 [US3] **Changed by decision 1, not deleted.** Source the warranty once and render it
   everywhere: add «گارانتی ۱۸ ماهه شرکتی» as a verified merchant fact in the facts module beside
   `lib/content/contact.ts` (not in JSX), and have `components/shop/ProductCard.tsx:191-193` and
   `components/shop/ProductDetail.tsx:256-258` read it from there. The current «گارانتی رسمی» wording still
   goes — it named no provider and no period. Do NOT make `lib/catalog.ts:170`'s `guarantee` field look
   per-product: the export holds no guarantee data, so this is a storefront-wide fact and must not read as
   record data. See `notes/owner-decisions.md` §1.
-- [ ] T023 [P] [US3] Remove «ضمانت اصالت ۱۰۰٪» from `components/shop/ProductDetail.tsx:256-258` — the owner
+- [x] T023 [P] [US3] Remove «ضمانت اصالت ۱۰۰٪» from `components/shop/ProductDetail.tsx:256-258` — the owner
   was offered the chance to confirm it in decision 1 and did not, so FR-001 applies
   (`notes/owner-decisions.md` §1).
-- [ ] T024 [P] [US1] Remove «تضمین ۱۰۰٪ اصالت» and the accompanying authorization phrasing from
+- [x] T024 [P] [US1] Remove «تضمین ۱۰۰٪ اصالت» and the accompanying authorization phrasing from
   `components/layout/Footer.tsx:57,62,69`, leaving only the four FR-006 facts.
-- [ ] T025 [P] [US1] Rewrite the hero claims at `app/(main)/page.tsx:86,103-106,108-109`: «بهترین قیمت
+- [x] T025 [P] [US1] Rewrite the hero claims at `app/(main)/page.tsx:86,103-106,108-109`: «بهترین قیمت
   برای», «قیمتی بی‌رقیب» and «همان قیمت منصفانه» at one and a hundred units all fail FR-017 and FR-059.
   State the price-leadership position without an unspecificable comparative, and drop the quantity-1-and-100
   equivalence entirely.
 - [ ] T026 [P] [US1] Remove «انتخاب‌های بی‌نهایت» from `components/home/BrandShowcase.tsx:50` and audit the
   remaining home copy in `lib/content/home.ts:12-18,211,212,220` for the same pattern — FR-059 bans
   "superlatives with no measurement behind them" and the padding constructions named in `audits/04`.
-- [ ] T027 [P] [US1] Re-label or reduce the six-logo wall so it no longer asserts partnership it does not
+- [x] T027 [P] [US1] Re-label or reduce the six-logo wall so it no longer asserts partnership it does not
   have: `components/home/BrandTicker.tsx:48` `aria-label="برندهای همکار"`, per FR-006 (only the Redmi and
   TCH relationships are verified).
-- [ ] T028 [US1] Delete the fabricated email at `app/(main)/partners/page.tsx:67-68`. FR-007: "Until each is
+- [x] T028 [US1] Delete the fabricated email at `app/(main)/partners/page.tsx:67-68`. FR-007: "Until each is
   actually supplied and confirmed it MUST NOT appear anywhere in the interface, including as an obviously
   placeholder value."
-- [ ] T029 [US1] Remove or substantiate the venue line «مشهد • مجتمع تجاری موبایل» at
+- [x] T029 [US1] Remove or substantiate the venue line «مشهد • مجتمع تجاری موبایل» at
   `components/home/StoreExperience.tsx:98` — it is not in `lib/content/contact.ts`, which names the phone as
   the repo's only verified contact fact.
-- [ ] T030 [US1] **Decision 2: removed everywhere.** Take the AI re-lit store photograph out of its trust role: `components/home/ShopWindow.tsx`
+- [x] T030 [US1] **Decision 2: removed everywhere.** Take the AI re-lit store photograph out of its trust role: `components/home/ShopWindow.tsx`
   (lines 4–20 document the re-light derivation) and `components/home/StoreExperience.tsx:41,60-62` caption it
   «فضای واقعی مجموعه» and badge it `MASHHAD FLAGSHIP`. FR-006 forbids store imagery outright and research D5
   decides it comes out. The slot stays **empty** rather than filled with something nearby — FR-008 and
   `notes/owner-decisions.md` §2. This also retires the radial "light thrown onto the wall" at
   `ShopWindow.tsx:25-35`, which decorates an image that is leaving.
-- [ ] T031 [P] [US1] Delete the «تصویر واقعی فروشگاه در انتظار افزودن» placeholder and its `mediaNote`
+- [x] T031 [P] [US1] Delete the «تصویر واقعی فروشگاه در انتظار افزودن» placeholder and its `mediaNote`
   apology from `components/home/WhyHami.tsx:12,65` and `lib/content/home.ts:221-222` — FR-008: a place with
   nothing true to say stays empty; it does not advertise the gap.
-- [ ] T032 [P] [US2] Remove the «لپ‌تاپ برای کار و بازی» banner from `components/shop/ShopBanner.tsx:21-33`
+- [x] T032 [P] [US2] Remove the «لپ‌تاپ برای کار و بازی» banner from `components/shop/ShopBanner.tsx:21-33`
   (the catalog holds no laptop kind, and it links to `/shop?sort=price-asc` — the whole catalog under a
   laptop label) and audit the other two non-catalogue images at `:23-65` against FR-001.
 - [ ] T033 [US1] Remove the three CSS-composition filler panels with pseudo-English labels at
@@ -178,25 +178,29 @@ before-images.
 
 ### FR-040: capability honesty, and the 404 that is not
 
-- [ ] T034 [US4] **Wording fixed by decision 4: "call us instead."** Browsing and the cart stay; the
+- [x] T034 [US4] **Wording fixed by decision 4: "call us instead."** Browsing and the cart stay; the
   purchase claim goes. State plainly where a purchase capability cannot be honoured and remove controls that
   merely appear to work: `app/(main)/checkout/page.tsx:22-26` and `components/checkout/CheckoutClient.tsx:424`
   («پرداخت آنلاین از طریق درگاه امن انجام می‌شود»), `components/cart/CartPageClient.tsx:99-122` («ادامه و
   تسویه حساب»). **Do not change cart/checkout logic** — Constitution III freezes it. Copy and affordance
   only. Put tap-to-call plus a copy-the-number control where a buy button stood (lands with T068), per
   `notes/owner-decisions.md` §4.
-- [ ] T035 [US3] Make an unknown product slug return a real 404: `app/(main)/shop/[slug]/page.tsx` never
+- [x] T035 [US3] Make an unknown product slug return a real 404: `app/(main)/shop/[slug]/page.tsx` never
   calls `notFound()`, so a missing product currently serves HTTP 200 (US3 scenario 9 and SC-014).
-- [ ] T036 [P] [US3] Create `app/not-found.tsx` with the storefront chrome, RTL, Persian copy and a route
+- [x] T036 [P] [US3] Create `app/not-found.tsx` with the storefront chrome, RTL, Persian copy and a route
   back to `/shop` — none exists today, so the footer's dead links currently land on Next's unstyled English
   page.
-- [ ] T037 [US3] Separate the two failure states in `components/shop/ProductDetail.tsx:66-68,168-186`: the
+- [x] T037 [US3] Separate the two failure states in `components/shop/ProductDetail.tsx:66-68,168-186`: the
   same `catch` labels a network failure «محصول پیدا نشد», which is a false statement about the catalog.
   FR-046 requires loading, empty, error and success to be distinct.
 
-**Checkpoint — the gate**: T005–T008 pass; the §2 sweep in `quickstart.md` finds no fabricated value; the
-copy greps return only claims traceable to a record or the four verified facts. **Do not start band 1 with
-this checkpoint unmet** — decoration added on top of a lying price screen makes the defect easier to miss.
+**Checkpoint — the gate: MET 2026-09-23, with three items left open on purpose.** All four guard tests pass
+alongside the existing suite (170 tests, 18 files), `tsc --noEmit` and `npm run build` are both clean, and
+the price fix is confirmed per record class in a browser rather than inferred from source — evidence in
+`notes/findings.md`. Still open: **T026** (FR-059's bureaucratic padding at `lib/content/home.ts:211,212`
+survives — the superlatives went, the filler did not), **T033** (the three CSS-composition filler panels are
+band 3's to rebuild), **T002** (no 13-surface baseline). `/cart` and `/checkout` copy is source-verified
+only: both routes demand a session, and the unit suite wipes the accounts that would provide one.
 
 ---
 

@@ -242,3 +242,65 @@ export function discountPercent(displayPrice: number, compareAtPrice?: number | 
   const off = Math.round(((compareAtPrice - displayPrice) / compareAtPrice) * 100);
   return off > 0 ? off : null;
 }
+
+/* ------------------------------------------------------------------------- *
+ * Sellability — what the merchant can actually hand over today
+ * ------------------------------------------------------------------------- */
+
+export type SellabilityInput = {
+  /** `p.stock.purchasable` in the export — the merchant's own field. */
+  available?: boolean | null;
+  /** Normalized in `lib/catalog.ts`; unreadable states already resolve to "call". */
+  stockType?: string | null;
+};
+
+/**
+ * Whether a cart control may be offered at all.
+ *
+ * Both halves are required, and that is the whole point. `stockType` describes
+ * how the *shelf* looks; `available` is what the merchant says they can sell.
+ * Reading the label alone turned sixteen unsellable records into live buy
+ * buttons, and reading `available` alone would let an unrecognised future stock
+ * state through as obtainable — the exact claim Constitution I has no exception
+ * path for, in both directions.
+ */
+const OBTAINABLE_STATES = new Set(["unlimited", "limited"]);
+
+export function isPurchasable(product: SellabilityInput): boolean {
+  return product.available === true && OBTAINABLE_STATES.has(product.stockType ?? "");
+}
+
+/** The one action a product surface may offer. FR-037. */
+export type ProductAction = "add-to-cart" | "contact";
+
+export function productAction(product: SellabilityInput): ProductAction {
+  return isPurchasable(product) ? "add-to-cart" : "contact";
+}
+
+/* ------------------------------------------------------------------------- *
+ * Price reads — the seam's vocabulary, resolved in one place
+ * ------------------------------------------------------------------------- */
+
+/**
+ * The unit price for a record, or null when there is nothing to quote.
+ *
+ * `displayPrice` is 0 for call-for-price rows because `priceOf()` coerces a
+ * missing price to 0 so sorting has something to compare. Zero is therefore
+ * "unpriced", never "free" — FR-003 — and every display path must re-derive
+ * null from it rather than trust the number. A variant's own price wins when it
+ * has one, and the product-level price covers the 84 records with no variants.
+ */
+export function unitPriceOf(variantPrice: number | null | undefined, displayPrice: number | null | undefined): number | null {
+  const value = variantPrice ?? displayPrice ?? 0;
+  return value > 0 ? value : null;
+}
+
+/**
+ * A comparison price, or null unless it is *strictly* above the price — FR-004.
+ * The product level is gated in the seam; the variant level is not, and 40 of
+ * 311 variants carry a compare-at that is equal to or lower than the price.
+ */
+export function compareAtOf(price: number | null, compareAt: number | null | undefined): number | null {
+  if (price == null || compareAt == null) return null;
+  return compareAt > price ? compareAt : null;
+}

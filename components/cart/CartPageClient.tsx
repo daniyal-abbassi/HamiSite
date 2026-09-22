@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ShoppingBag } from "lucide-react";
+import { ArrowLeft, Phone, ShoppingBag } from "lucide-react";
 import { CartLine } from "@/components/cart/CartLine";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,6 +10,7 @@ import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { formatToman } from "@/lib/utils";
+import { storeContact } from "@/lib/content/contact";
 
 export function CartPageClient() {
   const { status } = useAuth();
@@ -112,11 +113,22 @@ export function CartPageClient() {
           </div>
         </dl>
         <p className="mt-3 text-xs leading-6 text-muted-foreground/70">
-          هزینه ارسال و تخفیف کوپن در مرحله بعد محاسبه می‌شود.
+          پرداخت آنلاین در این فروشگاه فعال نیست. برای تأیید قیمت و موجودی تماس بگیرید؛ هزینهٔ ارسال و
+          تخفیف در همان تماس مشخص می‌شود.
         </p>
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <a
+            href={storeContact.phoneHref}
+            dir="ltr"
+            className="inline-flex items-center gap-2 rounded-xl bg-oxblood px-4 py-2.5 text-xs font-bold text-white transition-opacity hover:opacity-90"
+          >
+            <Phone className="size-4" aria-hidden="true" />
+            {storeContact.phoneDisplay}
+          </a>
+        </div>
         <Link href="/checkout" className="mt-5 block">
-          <Button className="w-full" size="lg">
-            ادامه و تسویه حساب
+          <Button className="w-full" size="lg" variant="ghost">
+            ادامه با فرم سفارش
             <ArrowLeft className="size-4" />
           </Button>
         </Link>

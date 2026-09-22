@@ -4,6 +4,7 @@ import { ArrowLeft } from "lucide-react";
 import { resolveProductImage } from "@/lib/product-images";
 import { cn, formatToman } from "@/lib/utils";
 import { stockLabels } from "@/lib/content/shop";
+import { compareAtOf, priceState, unitPriceOf } from "@/lib/product-identity";
 import type { ShopProduct } from "./types";
 
 export function ProductListRow({ product }: { product: ShopProduct }) {
@@ -53,10 +54,24 @@ export function ProductListRow({ product }: { product: ShopProduct }) {
             {stockLabels[product.stockType] ?? "—"}
           </span>
           <div className="flex items-baseline gap-2">
-            {product.compareAtPrice != null && product.compareAtPrice > 0 && (
-              <del className="text-xs text-foreground/55">{formatToman(product.compareAtPrice)}</del>
-            )}
-            <strong className="text-sm font-black text-aqua">{formatToman(product.displayPrice)}</strong>
+            {(() => {
+              /* `displayPrice` is 0 for call-for-price rows, so it goes through
+                 `unitPriceOf` rather than straight to `formatToman` — printing
+                 «۰ تومان» is exactly what FR-003 forbids. The strike gets the
+                 same treatment: FR-004 allows it only above the real price. */
+              const price = unitPriceOf(null, product.displayPrice);
+              const compareAt = compareAtOf(price, product.compareAtPrice);
+              return (
+                <>
+                  {compareAt != null && <del className="text-xs text-foreground/55">{formatToman(compareAt)}</del>}
+                  {price === null ? (
+                    <strong className="text-sm font-bold text-muted-foreground">تماس بگیرید</strong>
+                  ) : (
+                    <strong className="text-sm font-black text-aqua">{formatToman(price)}</strong>
+                  )}
+                </>
+              );
+            })()}
           </div>
           <Link href={`/shop/${product.slug}`} className="inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
             مشاهده جزئیات <ArrowLeft className="size-3.5" />

@@ -45,7 +45,9 @@ export function BrandTicker() {
 
         <ul
           className="m-0 flex min-w-0 flex-1 list-none flex-wrap items-center justify-around gap-x-8 gap-y-4 p-0 sm:justify-between sm:border-s sm:border-oxblood/15 sm:px-8"
-          aria-label="برندهای همکار"
+          /* «همکار» claimed a commercial partnership FR-006 does not admit for
+             these six; that the shop *sells* them is supported by the export. */
+          aria-label="برندهای موجود در فروشگاه"
         >
           {partnerMarks.map((mark) => (
             <li key={mark.name} className="flex h-8 items-center gap-2 opacity-90">

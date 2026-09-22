@@ -42,7 +42,7 @@ export function BrandShowcase() {
         <Reveal delay={160}>
           <div className="mt-14 flex flex-wrap items-baseline justify-center gap-3 text-center">
             <p className="m-0 text-lg text-foreground/60">یک مقصد.</p>
-            <strong className="text-2xl font-black text-aqua">انتخاب‌های بی‌نهایت.</strong>
+            <strong className="text-2xl font-black text-aqua">همه‌اش در مشهد.</strong>
             <span className="font-mono text-xs tracking-[0.12em] text-foreground/60">HAMI HAMRAH</span>
           </div>
         </Reveal>

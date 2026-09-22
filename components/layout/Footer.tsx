@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Phone } from "lucide-react";
 import { categoryLinks } from "@/lib/content/home";
 import { storeContact } from "@/lib/content/contact";
+import { storeWarranty } from "@/lib/content/verified-facts";
 import hamiMark from "@/public/brand/hami-mark.png";
 
 const footerGroups = [
@@ -54,19 +55,19 @@ export function Footer() {
             <span className="text-base font-black text-foreground">
               حامی همراه
               <span className="block font-mono text-xs font-medium text-champagne/80">
-                پخش رسمی تلفن همراه — مشهد
+                فروشگاه و پخش تلفن همراه — مشهد
               </span>
             </span>
           </div>
           <p className="mt-4 max-w-xs text-[13px] leading-7 text-muted-foreground">
-            تامین و پخش مستقیم معتبرترین برندهای تلفن همراه، ساعت‌های هوشمند و اکسسوری در مشهد و سراسر کشور؛ با تضمین ۱۰۰٪ اصالت و گارانتی معتبر شرکتی.
+            فروش و پخش تلفن همراه، ساعت‌های هوشمند و اکسسوری در مشهد؛ با {storeWarranty.label}.
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
             <span className="inline-flex items-center gap-1 rounded-full border border-champagne/20 bg-champagne/5 px-2.5 py-1 font-mono text-xs text-champagne">
               ۲۰ سال سابقه در بازار مشهد
             </span>
             <span className="inline-flex items-center gap-1 rounded-full border border-champagne/20 bg-champagne/5 px-2.5 py-1 font-mono text-xs text-champagne">
-              ضمانت اصالت شرکتی
+              {storeWarranty.label}
             </span>
           </div>
           {/* The store's confirmed phone number (lib/content/contact.ts is the

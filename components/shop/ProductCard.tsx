@@ -8,9 +8,11 @@ import {
   brandAccent,
   brandLabel,
   discountPercent,
+  isPurchasable,
   priceState,
   splitProductName,
 } from "@/lib/product-identity";
+import { storeWarranty } from "@/lib/content/verified-facts";
 import { cn, formatToman } from "@/lib/utils";
 
 /**
@@ -106,7 +108,12 @@ export function ProductCard({
   const { label, model, specs } = splitProductName(product.name);
   const state = priceState(product.displayPrice, product.compareAtPrice);
   const off = discountPercent(product.displayPrice, product.compareAtPrice);
-  const soldOut = product.stockType === "out_of_stock";
+  /* The shelf label is not the merchant's answer. Sixteen records read
+     «موجود محدود» while `purchasable` says they cannot be sold, and every one of
+     them carried a live cart control. */
+  const buyable = isPurchasable(product);
+  // The dot and its colour track the *label*, which is a different question.
+  const outOfStock = product.stockType === "out_of_stock";
   const href = `/shop/${product.slug}`;
 
   return (
@@ -170,7 +177,7 @@ export function ProductCard({
             <div className="flex items-center gap-2">
               <span
                 className="inline-flex items-center gap-1.5"
-                style={{ color: soldOut ? undefined : accent }}
+                style={{ color: outOfStock ? undefined : accent }}
               >
                 <i
                   className="inline-block size-1.5 rounded-full"
@@ -189,7 +196,7 @@ export function ProductCard({
               )}
             </div>
             <span className="hidden sm:inline-flex items-center gap-1 font-sans text-xs text-foreground/50 border border-champagne/15 rounded-full px-2 py-0.5">
-              گارانتی رسمی
+              {storeWarranty.label}
             </span>
           </div>
 
@@ -220,7 +227,7 @@ export function ProductCard({
 
             <AddToCartButton
               productId={product.id}
-              disabled={soldOut || state === "unavailable"}
+              disabled={!buyable || state === "unavailable"}
               iconOnly
               className="size-11 shrink-0 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
               style={{

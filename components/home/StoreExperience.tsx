@@ -1,10 +1,9 @@
-import Image from "next/image";
 import Link from "next/link";
-import storePhoto from "@/public/store/shop.jpg";
 import { ArrowLeft, Headphones, ShieldCheck, Smartphone } from "lucide-react";
 import { Reveal } from "@/components/home/Reveal";
 import { buttonVariants } from "@/components/ui/button";
 import { storeContact } from "@/lib/content/contact";
+import { storeWarranty } from "@/lib/content/verified-facts";
 import { storeExperiencePoints, storeExperienceSlots, storeExperienceStatement } from "@/lib/content/home";
 
 const pointIcons = [Smartphone, Headphones, ShieldCheck];
@@ -23,47 +22,13 @@ export function StoreExperience() {
         </div>
       </Reveal>
 
-      {/* The real store, wide. This was a "REAL PHOTO SLOT" placeholder sitting
-          in the darkest, emptiest stretch of the page — the single dullest
-          screen a visitor scrolled through. The photograph exists (see
-          public/store/), so the slot is filled rather than styled.
-
-          Cropped wide with `object-cover`: the source is portrait, and
-          letterboxing it here would put the dead space straight back. */}
-      <Reveal delay={80}>
-        <figure className="relative mt-10 overflow-hidden rounded-3xl">
-          {/* 21:9 is a cinematic ratio for a wide screen and a 390x167 sliver on a
-              phone — the shop interior becomes an unreadable band. 4:3 on mobile
-              gives the room enough height to actually be a photograph. */}
-          <div className="relative aspect-[4/3] w-full sm:aspect-[16/9] lg:aspect-[21/9]">
-            <Image
-              src={storePhoto}
-              alt="فروشگاه حامی همراه در مشهد — نمای کلی سالن، ویترین‌ها و قفسه‌ها"
-              fill
-              sizes="(max-width: 768px) 100vw, 1200px"
-              placeholder="blur"
-              className="object-cover object-[50%_42%]"
-            />
-            <div
-              aria-hidden="true"
-              className="absolute inset-0"
-              style={{
-                background:
-                  "linear-gradient(180deg, rgba(13,5,7,0.45) 0%, transparent 34%, transparent 52%, rgba(13,5,7,0.86) 100%)",
-              }}
-            />
-          </div>
-          <figcaption className="absolute inset-x-0 bottom-0 flex flex-wrap items-end justify-between gap-2 p-4 sm:gap-3 sm:p-6">
-            <div>
-              <span className="block font-mono text-xs tracking-[0.14em] text-aqua/80">HAMI HAMRAH / MASHHAD</span>
-              <b className="mt-1 block text-lg font-black">نمای کلی فروشگاه</b>
-              <small className="mt-0.5 block text-[12px] text-foreground/70">
-                نور، ویترین، قفسه‌ها و فضای واقعی مجموعه
-              </small>
-            </div>
-          </figcaption>
-        </figure>
-      </Reveal>
+      /*
+       * A wide photograph of the store used to sit here, captioned «نور، ویترین،
+       * قفسه‌ها و فضای واقعی مجموعه». It was an AI re-lit derivative, and FR-006
+       * admits no store imagery as proof — owner's decision, 2026-09-23: removed
+       * everywhere. The slot is left empty rather than filled with something
+       * nearby; the facts below are what the business can stand behind.
+       */
 
       <div className="mt-10 grid gap-5 sm:grid-cols-3" aria-label="اجزای تجربه خرید حضوری">
         {storeExperiencePoints.map((point, index) => {
@@ -86,16 +51,16 @@ export function StoreExperience() {
           <div className="glass-smoked relative flex flex-col justify-between overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:border-champagne/40">
             <div className="flex items-center justify-between">
               <span className="font-mono text-xs tracking-wider text-champagne">AUTHENTIC SHOWCASE</span>
-              <span className="rounded-full border border-champagne/20 bg-champagne/10 px-2.5 py-0.5 font-sans text-xs text-champagne">تضمین ۱۰۰٪ اصالت</span>
+              <span className="rounded-full border border-champagne/20 bg-champagne/10 px-2.5 py-0.5 font-sans text-xs text-champagne">{storeWarranty.label}</span>
             </div>
             <div className="my-6">
-              <h4 className="text-base font-extrabold text-foreground">ویترین رسمی برندهای برتر</h4>
+              <h4 className="text-base font-extrabold text-foreground">فروشگاه حضوری در مشهد</h4>
               <p className="mt-2 text-xs leading-6 text-foreground/70">
-                ارائه جدیدترین پرچمداران سامسونگ، اپل و شیائومی همراه با بسته‌بندی پلمپ کارخانه و گارانتی رسمی شرکتی در سالن اصلی فروشگاه.
+                برای دیدن محصولات و دریافت {storeWarranty.label}، به فروشگاه حضوری مراجعه کنید.
               </p>
             </div>
             <div className="flex items-center gap-2 border-t border-champagne/10 pt-3 text-xs text-champagne font-bold">
-              <span>مشهد • مجتمع تجاری موبایل</span>
+              <span>مشهد • فروشگاه حضوری حامی همراه</span>
             </div>
           </div>
         </Reveal>
@@ -103,12 +68,12 @@ export function StoreExperience() {
           <div className="glass-smoked relative flex flex-col justify-between overflow-hidden rounded-2xl p-6 transition-all duration-300 hover:border-champagne/40">
             <div className="flex items-center justify-between">
               <span className="font-mono text-xs tracking-wider text-champagne">HANDS-ON EXPERIENCE</span>
-              <span className="rounded-full border border-champagne/20 bg-champagne/10 px-2.5 py-0.5 font-sans text-xs text-champagne">میز تست صدا و کاربری</span>
+              <span className="rounded-full border border-champagne/20 bg-champagne/10 px-2.5 py-0.5 font-sans text-xs text-champagne">مشاوره حضوری</span>
             </div>
             <div className="my-6">
               <h4 className="text-base font-extrabold text-foreground">مشاوره تخصصی و تجربه مستقیم</h4>
               <p className="mt-2 text-xs leading-6 text-foreground/70">
-                امکان تست و بررسی انواع هدفون، ساعت هوشمند و اکسسوری‌های اورجینال قبل از خرید با همراهی کارشناسان باسابقه حامی همراه.
+                امکان دیدن و بررسی هدفون، ساعت هوشمند و اکسسوری قبل از خرید، با راهنمایی کارشناس فروشگاه.
               </p>
             </div>
             <div className="flex items-center gap-2 border-t border-champagne/10 pt-3 text-xs text-champagne font-bold">

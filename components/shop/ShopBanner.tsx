@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { categoryLinks } from "@/lib/content/home";
+import { storeWarranty } from "@/lib/content/verified-facts";
 
 /** Decorative blob from the reference shapes, rendered via CSS (no <img>). */
 function BlobDecor() {
@@ -19,12 +20,6 @@ function BlobDecor() {
 }
 
 const sideBanners = [
-  {
-    src: "/images/banners/gaming-laptop.png",
-    eyebrow: "SHOP / 02",
-    title: "لپ‌تاپ برای کار و بازی",
-    href: "/shop?sort=price-asc",
-  },
   {
     src: "/images/banners/headphone.png",
     eyebrow: "SHOP / 03",
@@ -51,7 +46,7 @@ export function ShopBanner() {
               <em className="block font-black not-italic text-aqua">با خیالِ راحت.</em>
             </h2>
             <p className="mt-3 text-xs leading-6 text-foreground/60">
-              اصالت کالا، گارانتی رسمی و مشاوره تخصصی پیش از خرید.
+              {storeWarranty.label}، همراه با راهنمایی پیش از خرید.
             </p>
             <Link
               href={categoryLinks.mobile}

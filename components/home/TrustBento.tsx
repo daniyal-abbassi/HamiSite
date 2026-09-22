@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, BadgeCheck } from "lucide-react";
 import { Reveal } from "@/components/home/Reveal";
+import { storeWarranty } from "@/lib/content/verified-facts";
 import { buttonVariants } from "@/components/ui/button";
 import { WhyHamiProofs } from "@/components/home/WhyHami";
 import { TrustGlyph } from "@/components/home/primitives";
@@ -97,7 +98,7 @@ export function TrustBento() {
               <BadgeCheck className="mt-4 size-7 text-champagne" strokeWidth={1.5} aria-hidden="true" />
               <h3 className="mt-3 text-base font-black">رضایت و اعتماد ماندگار</h3>
               <p className="mt-2 text-xs leading-6 text-foreground/65">
-                با بیش از ۲۰ سال سابقه تخصصی در بازار موبایل مشهد، گارانتی رسمی و پشتیبانی واقعی تعهد همیشگی ما به شماست.
+                بیش از بیست سال سابقه در بازار موبایل مشهد، و {storeWarranty.label} روی کالاهای فروشگاه.
               </p>
             </article>
           </Reveal>

@@ -169,7 +169,11 @@ function serializeProduct(p: RawProduct, includeVariants: boolean) {
         storage: v.options?.["حافظه"] ?? null,
         guarantee: null,
         price: v.price ?? price,
-        compareAtPrice: v.compare_at_price ?? null,
+        // Same rule as `compareAtOf` above, applied per variant: 40 of the 311
+        // variants carry a compare-at equal to or below their own price, and a
+        // strike that is not a saving is a false discount (FR-004).
+        compareAtPrice:
+          v.compare_at_price != null && v.compare_at_price > (v.price ?? price) ? v.compare_at_price : null,
         stock: v.stock ?? 0,
         stockType: stockTypeOf(p),
         barcode: v.barcode ?? null,

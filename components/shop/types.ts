@@ -23,6 +23,12 @@ export type ShopProduct = {
   displayPrice: number;
   compareAtPrice: number | null;
   stockType: string;
+  /**
+   * `p.stock.purchasable` in the export — the merchant's own word on whether they
+   * can sell it today. `stockType` says how the shelf looks; this says whether a
+   * cart control is honest. 16 records are "limited" with this false.
+   */
+  available: boolean;
 };
 
 export type ShopMeta = {

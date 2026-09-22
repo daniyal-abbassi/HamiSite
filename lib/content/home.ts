@@ -14,7 +14,7 @@ export const tickerItems = [
   "پشتیبانی خرید عمده برای همکاران (B2C + B2B)",
   "نمایندگی رسمی برند TCH",
   "همکار معتبر Redmi در مشهد",
-  "گارانتی و اصالت کالا",
+  "گارانتی ۱۸ ماهه شرکتی",
 ] as const;
 
 export const featuredTabs = [
@@ -26,9 +26,9 @@ export type FeaturedTabKey = (typeof featuredTabs)[number]["key"];
 
 export const trustFeatures = [
   { key: "store", title: "فروش حضوری", description: "تجربه خرید حضوری از فروشگاه حامی همراه" },
-  { key: "wholesale", title: "پخش عمده", description: "قیمت و تأمین ویژه برای همکاران" },
+  { key: "wholesale", title: "پخش عمده", description: "تأمین عمده برای همکاران" },
   { key: "assortment", title: "تنوع محصولات", description: "موبایل، لوازم جانبی و محصولات دیجیتال" },
-  { key: "assurance", title: "خرید مطمئن", description: "اصالت کالا و تجربه خرید قابل اعتماد" },
+  { key: "assurance", title: "خرید مطمئن", description: "گارانتی ۱۸ ماهه شرکتی و تجربه خریدی روشن" },
 ] as const;
 
 export type TrustFeatureKey = (typeof trustFeatures)[number]["key"];
@@ -219,7 +219,7 @@ export const whyHamiProofs = [
     title: "حضوری هم کنار شما هستیم.",
     description: "برای دیدن محصولات و دریافت راهنمایی، مسیر حضوری نیز در کنار تجربه آنلاین در دسترس است.",
     media: "store-photo-pending",
-    mediaNote: "تصویر واقعی فروشگاه پس از دریافت، در همین قاب قرار می‌گیرد.",
+    mediaNote: "",
     href: "#store-experience",
     cta: "اطلاعات فروشگاه",
   },

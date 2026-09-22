@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { PartnerForm } from "@/components/partners/PartnerForm";
+import { Phone } from "lucide-react";
 import { partnerPageCopy } from "@/lib/content/partners";
+import { storeContact } from "@/lib/content/contact";
 
 export const metadata: Metadata = {
   title: "همکاری عمده",
@@ -64,9 +66,14 @@ export default function PartnersPage() {
             <p className="mt-2 text-xs leading-6 text-foreground/60">
               کارشناسان همکاری در ساعت کاری فروشگاه پاسخگوی شما هستند.
             </p>
-            <span className="mt-3 inline-block rounded-xl border border-aqua/40 px-3 py-1.5 font-mono text-xs tracking-[0.06em] text-aqua" dir="ltr">
-              info@hamihamrah.ir
-            </span>
+            <a
+              href={storeContact.phoneHref}
+              dir="ltr"
+              className="mt-3 inline-flex items-center gap-2 rounded-xl border border-aqua/40 px-3 py-1.5 font-mono text-xs tracking-[0.06em] text-aqua transition-colors hover:bg-aqua/10"
+            >
+              <Phone className="size-3.5" aria-hidden="true" />
+              {storeContact.phoneDisplay}
+            </a>
           </div>
         </aside>
       </div>
