@@ -131,7 +131,7 @@ export function UsersAdminClient() {
                         </span>
                         <span className="font-mono text-[10px] text-muted-foreground/70">
                           @{u.username}
-                          {u.id === currentUser?.id && <span className="ms-1.5 rounded-full bg-aqua/15 px-1.5 py-0.5 text-[9px] text-aqua">شما</span>}
+                          {u.id === currentUser?.id && <span className="ms-1.5 rounded-full bg-aqua/15 px-1.5 py-0.5 text-xs text-aqua">شما</span>}
                         </span>
                       </div>
                     </td>

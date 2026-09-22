@@ -12,7 +12,7 @@ export function UserMenu() {
   const { user, status, logout } = useAuth();
 
   if (status === "loading") {
-    return <Skeleton className="size-10 rounded-full" aria-hidden="true" />;
+    return <Skeleton className="size-11 rounded-full" aria-hidden="true" />;
   }
 
   if (!user) {
@@ -20,7 +20,7 @@ export function UserMenu() {
       <Link
         href="/login"
         aria-label="ورود به حساب"
-        className="grid size-10 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground"
+        className="grid size-11 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground"
       >
         <UserRound className="size-[18px]" />
       </Link>
@@ -41,7 +41,7 @@ export function UserMenu() {
       <Link
         href="/orders"
         aria-label="حساب کاربری"
-        className="grid size-10 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground sm:hidden"
+        className="grid size-11 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground sm:hidden"
       >
         <UserRound className="size-[18px]" />
       </Link>
@@ -49,7 +49,7 @@ export function UserMenu() {
         type="button"
         onClick={() => void logout()}
         aria-label="خروج از حساب"
-        className="grid size-10 place-items-center rounded-full text-foreground/50 transition-colors hover:bg-foreground/10 hover:text-foreground"
+        className="grid size-11 place-items-center rounded-full text-foreground/50 transition-colors hover:bg-foreground/10 hover:text-foreground"
       >
         <LogOut className="size-4" />
       </button>

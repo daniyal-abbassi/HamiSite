@@ -3,7 +3,7 @@ import { PartnerForm } from "@/components/partners/PartnerForm";
 import { partnerPageCopy } from "@/lib/content/partners";
 
 export const metadata: Metadata = {
-  title: "همکاری با حامی همراه | ثبت درخواست همکاری",
+  title: "همکاری عمده",
   description:
     "همکاری عمده، فروشگاه یا مجموعه فعال در حوزه موبایل و لوازم جانبی — فرم ثبت درخواست همکاری حامی همراه را تکمیل کنید.",
 };
@@ -64,7 +64,7 @@ export default function PartnersPage() {
             <p className="mt-2 text-xs leading-6 text-foreground/60">
               کارشناسان همکاری در ساعت کاری فروشگاه پاسخگوی شما هستند.
             </p>
-            <span className="mt-3 inline-block rounded-xl border border-aqua/40 px-3 py-1.5 font-mono text-[11px] tracking-[0.06em] text-aqua" dir="ltr">
+            <span className="mt-3 inline-block rounded-xl border border-aqua/40 px-3 py-1.5 font-mono text-xs tracking-[0.06em] text-aqua" dir="ltr">
               info@hamihamrah.ir
             </span>
           </div>

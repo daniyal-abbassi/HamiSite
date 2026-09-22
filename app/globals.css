@@ -400,16 +400,12 @@
     background: var(--aqua);
     box-shadow: 0 0 10px var(--aqua);
   }
-  /* Gradient-shimmer text — reserved for exactly one word per heading. This
-     world explicitly wants it; craft-floor's blanket "no gradient text" ban
-     is a default for the previous world, not a universal law. */
-  .grad {
-    background: linear-gradient(100deg, #F0EDEB, #D6CFCB 38%, #F4FEFF 55%, #D6CFCB 72%, #8A8280);
-    background-size: 220% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
+  /* Gradient-shimmer text (.grad) — reserved for exactly one word per
+     heading. This world explicitly wants it; craft-floor's blanket "no
+     gradient text" ban is a default for the previous world, not a universal
+     law. Its single live implementation is the champagne sweep in the
+     "Aura" section further down this file, where the prefers-contrast
+     fallback sits beside it. */
   /* sticky glass nav — static, no scroll-based recoloring. The previous
      world's chapter-matching header (HeaderChapterWatcher) is retired along
      with the light/dark chapter system it served: this world has no light
@@ -553,47 +549,15 @@
   to { transform: translateY(-2000px); }
 }
 
-/* The partner logo ticker (components/home/BrandTicker.tsx).
-   The track holds the mark list twice, so translating exactly -50% lands copy
-   two where copy one began and the loop has no seam. The -50% and the doubled
-   list are one mechanism: change either and the strip visibly jumps.
-   NOTE: never pair `.brand-ticker-track` with a Tailwind `duration-*` utility.
-   Those set animation-duration as well as transition-duration and outrank this
-   layer — the same trap that once spun `.shiny-edge` sixty times too fast. */
-@keyframes brand-ticker {
-  from { transform: translateX(0); }
-  to   { transform: translateX(-50%); }
-}
-
-.brand-ticker-track {
-  animation: brand-ticker 42s linear infinite;
-}
-
-/* Pause so a mark can actually be read. Focus counts as well as hover, or the
-   strip would be pausable with a mouse and not with a keyboard. */
-.brand-ticker:hover .brand-ticker-track,
-.brand-ticker:focus-within .brand-ticker-track {
-  animation-play-state: paused;
-}
-
-/* The edge fade. A mask rather than two gradient overlays painted in the band
-   colour, so it survives a palette change untouched. */
-.brand-ticker {
-  -webkit-mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    #000 6rem,
-    #000 calc(100% - 6rem),
-    transparent 100%
-  );
-  mask-image: linear-gradient(
-    to right,
-    transparent 0,
-    #000 6rem,
-    #000 calc(100% - 6rem),
-    transparent 100%
-  );
-}
+/* The partner logo band (components/home/BrandTicker.tsx) is static. It used to
+   carry a 42s seamless loop — keyframes, a doubled `w-max` track translating
+   -50%, a hover/focus pause and an edge mask — all removed under feature 004's
+   Q3 = C, which keeps the page's brand story in the rows below and this band
+   still. Only the band's colour is pinned here now; see BrandTicker for why.
+   NOTE: if a moving element is ever reintroduced, never pair it with a Tailwind
+   `duration-*` utility — those set animation-duration as well as
+   transition-duration and outrank this layer. That trap once spun
+   `.shiny-edge` sixty times too fast. */
 
 /* The atmosphere is decoration. Under reduced motion it holds still — the
    depth remains, the drift and the spinning rim stop. */
@@ -605,15 +569,8 @@
   .noir-stars i:nth-child(2),
   .shiny-edge,
   .word-swap,
-  .brand-ticker-track,
   .product-card {
     animation: none;
-  }
-
-  /* With the loop stopped the second copy is dead weight past the right edge,
-     so hand the strip over as something that can be scrolled by hand instead. */
-  .brand-ticker {
-    overflow-x: auto;
   }
 
   /* Everything interactive follows suit: transitions collapse to their end
@@ -658,12 +615,18 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 }
 
-.grad {
-  background: linear-gradient(135deg, #FFFDF8 0%, #E5D3B3 50%, #C5A059 100%);
-  background-size: 200% auto;
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+/* The single .grad implementation (text shimmer, champagne sweep). Moved
+   into @layer components at the top of the file — it previously lived here
+   UNLAYERED while a competing silver-ice copy sat inside @layer components,
+   and cascade order picked this one by accident of file position. */
+@layer components {
+  .grad {
+    background: linear-gradient(135deg, #FFFDF8 0%, #E5D3B3 50%, #C5A059 100%);
+    background-size: 200% auto;
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
 }
 
 /* Forced-contrast users get the gradient collapsed to a solid near-white:
@@ -1283,7 +1246,8 @@ nav[aria-label="ناوبری سریع فروشگاه"] {
      This restores high legibility while preserving the floating treatment. */
   .brand-ticker-band {
     position: relative;
-    z-index: 20;
+    /* lower stacking so following sections (like #categories) remain fully visible on mobile */
+    z-index: 1;
     transform: translateY(-1.6rem);
     margin-bottom: -1.6rem;
     background: linear-gradient(90deg, var(--oxblood), rgba(100,2,17,0.92));
@@ -1297,7 +1261,36 @@ nav[aria-label="ناوبری سریع فروشگاه"] {
   /* Keep the cream/oxblood contrast for child elements so marks render in cream. */
   .brand-ticker-band [class*="border-oxblood"] { border-color: rgba(229,211,179,0.12) !important; }
   .brand-ticker-band [class*="text-oxblood"] { color: var(--aqua) !important; }
-  .brand-ticker-band .brand-ticker { background: transparent; }
+
+  /* Nav + featured union: visually tie the mobile route chips and the featured
+     products tray so they read as a single band. A subtle white wash fades in
+     as the band scrolls into view; the JS sets --nf-white (0..0.12). */
+  .nav-featured-union {
+    position: relative;
+    z-index: 18;
+  }
+  .nav-featured-union::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    /* gentle white overlay that grows with --nf-white (set by the client
+       wrapper). Kept very low to avoid washing out the page: max ~0.12. */
+    background: rgba(255,255,255,var(--nf-white,0));
+    transition: background-color 160ms linear;
+    mix-blend-mode: screen;
+  }
+  /* ensure children (nav, featured) sit above the overlay */
+  .nav-featured-union > * {
+    position: relative;
+    z-index: 1;
+  }
+  /* desktop: effect disabled by default (desktop layout already separates
+     nav/featured visually); keep it mobile-first */
+  @media (min-width: 768px) {
+    .nav-featured-union { --nf-white: 0; }
+  }
 
   /* Keep the rail rules below unchanged */
   /* --- Product rail ------------------------------------------------------

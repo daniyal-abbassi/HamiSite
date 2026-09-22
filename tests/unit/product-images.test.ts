@@ -1,4 +1,7 @@
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
+import { listCategories } from "@/lib/catalog";
 import { PRODUCT_IMAGE_FAMILIES, categoryImageFor, resolveProductImage } from "@/lib/product-images";
 
 function isFromFamily(src: string, family: keyof typeof PRODUCT_IMAGE_FAMILIES) {
@@ -67,8 +70,36 @@ describe("categoryImageFor", () => {
     expect(categoryImageFor("mobile", "موبایل")).toBe("/images/categories/phone.png");
     expect(categoryImageFor("audio", "صوتی")).toBe("/images/categories/headphone.png");
     expect(categoryImageFor("laptop", "لپ تاپ")).toBe("/images/categories/computer.png");
-    expect(categoryImageFor("home", "خانگی")).toBe("/images/categories/home.png");
-    expect(categoryImageFor("tv", "تلویزیون")).toBe("/images/categories/tv.png");
+  });
+
+  /**
+   * There is no home or tv tile in the mapping. These two cases used to assert that
+   * `categoryImageFor` returned `/images/categories/home.png` and `tv.png`, which is why
+   * they failed: the expectation was stale, not the mapping. `lib/product-images.ts`
+   * documents the catalogue check that dropped both keyword sets. The PNGs are still on
+   * disk but unreferenced by any code path — deleting them is a separate call, so this
+   * test does not assert their absence.
+   */
+  it("has no home or tv tile, and falls through for those keywords", () => {
+    expect(categoryImageFor("home", "خانگی")).toBe("/images/categories/phone.png");
+    expect(categoryImageFor("tv", "تلویزیون")).toBe("/images/categories/phone.png");
+  });
+
+  it("still has no catalogue category matching the deleted tiles", () => {
+    const orphaned = listCategories().filter((category) => {
+      const image = categoryImageFor(category.slug, category.name);
+      return image === "/images/categories/phone.png" && /home|tv|خانگی|تلویزیون|household/i.test(`${category.slug} ${category.name}`);
+    });
+    expect(orphaned).toEqual([]);
+  });
+
+  /** A mapping that points at a file that is not there renders as a broken tile. */
+  it("only names tile files that exist", () => {
+    const seen = new Set(listCategories().map((c) => categoryImageFor(c.slug, c.name)));
+    expect(seen.size).toBeGreaterThan(0);
+    for (const image of seen) {
+      expect(existsSync(join(process.cwd(), "public", image.replace(/^\//, "")))).toBe(true);
+    }
   });
 
   it("falls back to the phone tile for unknown categories", () => {

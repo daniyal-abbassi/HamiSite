@@ -41,7 +41,7 @@ export function ShopWindow() {
             <span className="absolute inline-flex size-full animate-ping rounded-full bg-emerald-400 opacity-75" />
             <span className="relative inline-flex size-2 rounded-full bg-emerald-400" />
           </span>
-          <span className="font-mono text-[10px] font-bold tracking-wider text-champagne">MASHHAD FLAGSHIP</span>
+          <span className="font-mono text-xs font-bold tracking-wider text-champagne">MASHHAD FLAGSHIP</span>
         </div>
 
         {/* The opening itself. */}
@@ -85,7 +85,7 @@ export function ShopWindow() {
 
         {/* Sill. */}
         <div className="flex items-center justify-between border-t border-champagne/20 bg-ink/95 px-6 py-3.5 text-foreground">
-          <span className="font-mono text-[10px] font-bold tracking-[0.16em] text-champagne">
+          <span className="font-mono text-xs font-bold tracking-[0.16em] text-champagne">
             SHOWROOM
           </span>
           <span className="text-[12px] font-medium text-foreground/85">فروش حضوری در مشهد</span>

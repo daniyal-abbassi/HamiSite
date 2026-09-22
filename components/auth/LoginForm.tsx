@@ -84,7 +84,7 @@ export function LoginForm() {
             aria-invalid={Boolean(fieldErrors.identifier)}
             placeholder="مثلاً ۰۹۱۲۱۱۱۲۲۳۳"
           />
-          {fieldErrors.identifier && <p className="mt-1 text-[11px] text-destructive">{fieldErrors.identifier}</p>}
+          {fieldErrors.identifier && <p className="mt-1 text-xs text-destructive">{fieldErrors.identifier}</p>}
         </div>
 
         <div>
@@ -101,7 +101,7 @@ export function LoginForm() {
             onChange={(event) => setPassword(event.target.value)}
             aria-invalid={Boolean(fieldErrors.password)}
           />
-          {fieldErrors.password && <p className="mt-1 text-[11px] text-destructive">{fieldErrors.password}</p>}
+          {fieldErrors.password && <p className="mt-1 text-xs text-destructive">{fieldErrors.password}</p>}
         </div>
 
         {error && (

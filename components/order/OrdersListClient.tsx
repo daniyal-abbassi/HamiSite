@@ -100,9 +100,9 @@ export function OrdersListClient() {
           >
             <span className="min-w-0">
               <span className="block font-mono text-sm font-black text-aqua">{order.orderNumber}</span>
-              <span className="mt-1 block text-[11px] text-muted-foreground">{formatFaDate(order.createdAt)}</span>
+              <span className="mt-1 block text-xs text-muted-foreground">{formatFaDate(order.createdAt)}</span>
             </span>
-            <span className="flex flex-wrap items-center gap-2 text-[11px]">
+            <span className="flex flex-wrap items-center gap-2 text-xs">
               <span className={`rounded-full border border-line bg-foreground/5 px-3 py-1 font-bold ${orderStatusTone(order.status)}`}>
                 {orderStatusLabels[order.status] ?? order.status}
               </span>

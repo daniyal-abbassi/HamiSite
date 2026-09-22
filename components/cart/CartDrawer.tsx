@@ -50,7 +50,7 @@ export function CartDrawer() {
             type="button"
             onClick={closeDrawer}
             aria-label="بستن سبد خرید"
-            className="grid size-9 place-items-center rounded-full transition-colors duration-fast hover:bg-foreground/10"
+            className="grid size-11 place-items-center rounded-full transition-colors duration-fast hover:bg-foreground/10"
           >
             <X className="size-5" />
           </button>

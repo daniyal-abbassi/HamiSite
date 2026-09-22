@@ -2,9 +2,11 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ShopBanner } from "@/components/shop/ShopBanner";
 import { ShopClient } from "@/components/shop/ShopClient";
+import { stockedRootCategorySlugs } from "@/lib/shop-category-tiles";
 
 export const metadata: Metadata = {
-  title: "فروشگاه | حامی همراه",
+/* The template in app/layout.tsx appends the brand: «فروشگاه | حامی همراه». */
+  title: "فروشگاه",
   description: "خرید موبایل، لوازم جانبی و محصولات دیجیتال از فروشگاه حامی همراه — آنلاین و حضوری.",
 };
 
@@ -25,7 +27,7 @@ export default function ShopPage() {
         </header>
         {/* useSearchParams inside ShopClient requires a Suspense boundary for prerendering */}
         <Suspense fallback={null}>
-          <ShopClient />
+          <ShopClient tileSlugs={stockedRootCategorySlugs()} />
         </Suspense>
       </div>
     </>

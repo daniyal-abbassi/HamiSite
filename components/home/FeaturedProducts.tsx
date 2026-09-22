@@ -24,23 +24,74 @@ type FeaturedProduct = {
   stockType: string;
 };
 
+function ProductSkeletonCard() {
+  return (
+    <article className="lux-card product-card card-obsidian frame-bleed">
+      <div className="lux-stage block">
+        <Skeleton className="aspect-[4/5] w-full rounded-b-none" />
+      </div>
+      <div className="lux-body">
+        <div className="flex items-baseline justify-between gap-3">
+          <Skeleton className="h-3 w-14" />
+          <Skeleton className="h-3 w-12" />
+        </div>
+
+        <Skeleton className="mt-2.5 h-5 w-3/4" />
+        <Skeleton className="mt-2 h-4 w-full" />
+
+        <div className="mt-auto pt-5">
+          <div className="lux-stock flex items-center justify-between gap-2 text-xs font-bold tracking-[0.05em]">
+            <div className="flex items-center gap-2">
+              <Skeleton className="h-3 w-12" />
+              <Skeleton className="h-3 w-10" />
+            </div>
+            <Skeleton className="hidden h-5 w-16 sm:block" />
+          </div>
+
+          <div className="lux-buy mt-2 flex items-end justify-between gap-3">
+            <div className="min-w-0">
+              <Skeleton className="h-4 w-20" />
+            </div>
+            <Skeleton className="h-10 w-24 rounded-full" />
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
 export function FeaturedProducts() {
   const [tab, setTab] = useState<FeaturedTabKey>("newest");
   const [products, setProducts] = useState<FeaturedProduct[] | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(false);
 
   useEffect(() => {
     let cancelled = false;
-    setProducts(null);
+    setIsLoading(true);
     setError(false);
-    const params = new URLSearchParams({ pageSize: "6", includeVariants: "false" });
-    if (tab === "special") params.set("specialOffer", "true");
+    // The default tab must NOT duplicate NewArrivals, which fetches the same
+    // bare newest-six query two sections below. «جدیدترین‌ها» here means
+    // newest *special offers* — a curation, not a second copy of the feed.
+    const params = new URLSearchParams({
+      pageSize: "6",
+      includeVariants: "false",
+      specialOffer: "true",
+      sort: "newest",
+    });
+    if (tab === "special") params.set("sort", "special");
     apiGet<FeaturedProduct[]>(`/api/products?${params}`)
       .then((data) => {
-        if (!cancelled) setProducts(data);
+        if (!cancelled) {
+          setProducts(data);
+          setIsLoading(false);
+        }
       })
       .catch(() => {
-        if (!cancelled) setError(true);
+        if (!cancelled) {
+          setError(true);
+          setIsLoading(false);
+        }
       });
     return () => {
       cancelled = true;
@@ -48,9 +99,10 @@ export function FeaturedProducts() {
   }, [tab]);
 
   const activeBadge = featuredTabs.find((t) => t.key === tab)?.badge ?? "";
+  const showSkeletons = isLoading && products === null;
 
   return (
-    <section id="featured" className="wrap py-14" aria-labelledby="featured-title">
+    <section id="featured" className="wrap py-16 md:py-20" aria-labelledby="featured-title">
       <div className="container">
         <Reveal>
           <div className="flex flex-wrap items-end justify-between gap-6">
@@ -109,15 +161,10 @@ export function FeaturedProducts() {
             </div>
           </div>
 
-          {products === null && !error && (
+          {showSkeletons && !error && (
             <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" aria-busy="true">
               {Array.from({ length: 6 }).map((_, i) => (
-                <div key={i} className="space-y-3">
-                  <Skeleton className="aspect-square w-full" />
-                  <Skeleton className="h-3 w-1/3" />
-                  <Skeleton className="h-4 w-3/4" />
-                  <Skeleton className="h-4 w-1/2" />
-                </div>
+                <ProductSkeletonCard key={i} />
               ))}
             </div>
           )}

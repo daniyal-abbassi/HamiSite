@@ -16,6 +16,12 @@ type ShopResultsProps = {
   meta: ShopMeta | null;
   error: boolean;
   activeSort: string;
+  /**
+   * A brand or category slug that matched nothing in the catalogue. Distinct from an
+   * empty result set on purpose: "we don't carry that" and "nothing matches your
+   * filters" are different facts, and conflating them is how a broken link survives.
+   */
+  unknownFilter?: string | null;
 };
 
 function pageWindow(page: number, totalPages: number): number[] {
@@ -26,7 +32,7 @@ function pageWindow(page: number, totalPages: number): number[] {
   return Array.from({ length: end - start + 1 }, (_, index) => start + index);
 }
 
-export function ShopResults({ products, meta, error, activeSort }: ShopResultsProps) {
+export function ShopResults({ products, meta, error, activeSort, unknownFilter = null }: ShopResultsProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -57,7 +63,7 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl glass px-4 py-3">
         <p className="text-xs text-foreground/60" aria-live="polite">
-          {error ? "—" : products === null ? "در حال بارگذاری…" : `${toFaDigits(meta?.total ?? products.length)} محصول`}
+          {error || unknownFilter ? "—" : products === null ? "در حال بارگذاری…" : `${toFaDigits(meta?.total ?? products.length)} محصول`}
         </p>
         <div className="flex items-center gap-2">
           <label className="sr-only" htmlFor="shop-sort">مرتب‌سازی</label>
@@ -65,7 +71,7 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
             id="shop-sort"
             value={activeSort}
             onChange={(event) => changeSort(event.target.value)}
-            className="rounded-xl border border-input bg-background/40 px-2.5 py-1.5 text-[11px] font-bold"
+            className="h-11 rounded-xl border border-input bg-background/40 px-3 py-0 text-xs font-bold md:h-9"
           >
             <option value="">مرتب‌سازی: پیش‌فرض</option>
             {sortOptions.map((option) => (
@@ -81,7 +87,7 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
               aria-label="نمایش شبکه‌ای"
               onClick={() => setListView(false)}
               className={cn(
-                "grid size-8 place-items-center",
+                "grid size-11 place-items-center",
                 !listView ? "bg-aqua/15 text-aqua" : "text-foreground/50 hover:text-foreground",
               )}
             >
@@ -93,7 +99,7 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
               aria-label="نمایش فهرستی"
               onClick={() => setListView(true)}
               className={cn(
-                "grid size-8 place-items-center border-s border-line",
+                "grid size-11 place-items-center border-s border-line",
                 listView ? "bg-aqua/15 text-aqua" : "text-foreground/50 hover:text-foreground",
               )}
             >
@@ -103,8 +109,20 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
         </div>
       </div>
 
+      {/* Unrecognised brand or category — never an unfiltered catalogue */}
+      {unknownFilter && (
+        <div className="mt-6 rounded-xl glass p-12 text-center" role="status">
+          <PackageSearch className="mx-auto size-10 text-aqua/60" aria-hidden="true" />
+          <b className="mt-4 block font-extrabold">«{unknownFilter}» در برندها یا دسته‌بندی‌های ما پیدا نشد.</b>
+          <p className="mt-2 text-sm text-foreground/60">این پیوند ممکن است قدیمی باشد؛ فهرست کامل محصولات را ببینید.</p>
+          <Link href="/shop" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
+            مشاهده همه محصولات
+          </Link>
+        </div>
+      )}
+
       {/* Error */}
-      {error && (
+      {!unknownFilter && error && (
         <div className="mt-6 rounded-xl glass p-10 text-center" role="status">
           <b className="block font-extrabold">دریافت محصولات موقتاً ممکن نیست.</b>
           <p className="mt-2 text-sm text-foreground/60">اتصال خود را بررسی کنید و دوباره تلاش کنید.</p>
@@ -115,7 +133,7 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
       )}
 
       {/* Loading */}
-      {products === null && !error && (
+      {!unknownFilter && products === null && !error && (
         <div className={cn("mt-6", listView ? "space-y-4" : "grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3")} aria-busy="true">
           {Array.from({ length: 6 }).map((_, index) => (
             <div key={index} className="space-y-3">
@@ -128,7 +146,7 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
       )}
 
       {/* Empty */}
-      {products !== null && !error && products.length === 0 && (
+      {!unknownFilter && products !== null && !error && products.length === 0 && (
         <div className="mt-6 rounded-xl glass p-12 text-center" role="status">
           <PackageSearch className="mx-auto size-10 text-aqua/60" aria-hidden="true" />
           <b className="mt-4 block font-extrabold">محصولی با این فیلترها پیدا نشد.</b>
@@ -140,7 +158,7 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
       )}
 
       {/* Results + pagination */}
-      {products !== null && !error && products.length > 0 && (
+      {!unknownFilter && products !== null && !error && products.length > 0 && (
         <>
           {listView ? (
             <div className="mt-6 space-y-4">
@@ -169,7 +187,7 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
                 disabled={page <= 1}
                 onClick={() => goToPage(page - 1)}
                 aria-label="صفحه قبل"
-                className="grid size-9 place-items-center rounded-xl border border-line text-foreground/70 transition-colors hover:border-aqua/50 disabled:opacity-30"
+                className="grid size-11 place-items-center rounded-xl border border-line text-foreground/70 transition-colors hover:border-aqua/50 disabled:opacity-30"
               >
                 <ChevronRight className="size-4" />
               </button>
@@ -180,7 +198,7 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
                   onClick={() => goToPage(target)}
                   aria-current={target === page ? "page" : undefined}
                   className={cn(
-                    "grid size-9 place-items-center rounded-xl border text-xs font-bold transition-colors",
+                    "grid size-11 place-items-center rounded-xl border text-xs font-bold transition-colors",
                     target === page
                       ? "border-aqua bg-aqua/15 text-aqua"
                       : "border-line text-foreground/70 hover:border-aqua/50",
@@ -194,7 +212,7 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
                 disabled={page >= totalPages}
                 onClick={() => goToPage(page + 1)}
                 aria-label="صفحه بعد"
-                className="grid size-9 place-items-center rounded-xl border border-line text-foreground/70 transition-colors hover:border-aqua/50 disabled:opacity-30"
+                className="grid size-11 place-items-center rounded-xl border border-line text-foreground/70 transition-colors hover:border-aqua/50 disabled:opacity-30"
               >
                 <ChevronLeft className="size-4" />
               </button>

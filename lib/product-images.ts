@@ -109,12 +109,12 @@ const CATEGORY_TILE_IMAGES: Array<[string, string[]]> = [
     ["audio", "headphone", "speaker", "airpod", "هندزفری", "هدفون", "اسپیکر", "ایرپاد"],
   ],
   [`${CATEGORY_DIR}/computer.png`, ["laptop", "computer", "notebook", "لپ", "کامپیوتر", "تبلت"]],
-  // `home.png` and `tv.png` were removed. Checked against the real catalogue:
-  // of its 32 categories, ZERO matched either keyword set — the shop sells
-  // phones and accessories, not televisions or home appliances, so both files
-  // were dead assets (one was a stock photo of a toaster oven). The three that
-  // remain cover 10 categories directly and `phone.png` serves the other 22 as
-  // the fallback, which is right when most of those 22 are phone brands.
+  // No home or tv entry, deliberately. Checked against the real catalogue: of its 32
+  // categories, ZERO matched either keyword set — the shop sells phones and accessories,
+  // not televisions or home appliances (tests/unit/product-images.test.ts re-runs that
+  // check so it gets revisited if the stock ever changes). `public/images/categories/
+  // home.png` and `tv.png` are therefore unreferenced by any code path but still on disk;
+  // deleting them is the owner's call, not this file's.
 ];
 
 /** Lowercase + ZWNJ→space, so «لپ‌تاپ» and «لپ تاپ» both match. */
@@ -161,7 +161,14 @@ export type ProductImageSource = {
 export function resolveProductImage(product: ProductImageSource): string {
   const own = Array.isArray(product.images) ? (product.images as Array<{ url?: string | null; isDefault?: boolean }>) : null;
   if (own && own.length > 0) {
-    const preferred = own.find((img) => img?.isDefault && img.url) ?? own.find((img) => img?.url);
+    // Local only. `lib/catalog.ts` mirrors every product's primary image into `public/`
+    // and keeps the origin URL for the rest of the gallery, so a bare `img.url` here is
+    // usually the live shop's host — which measured 5.8-7.5s per image and made
+    // next/image 500 about as often as it succeeded. That is the failure the mirror was
+    // built to escape, so an unmirrored product falls through to the offline pack rather
+    // than back onto the network.
+    const isLocal = (url: string | null | undefined): url is string => !!url && url.startsWith("/");
+    const preferred = own.find((img) => img?.isDefault && isLocal(img.url)) ?? own.find((img) => isLocal(img.url));
     if (preferred?.url) return preferred.url;
   }
   return resolveLocalProductImage(product);

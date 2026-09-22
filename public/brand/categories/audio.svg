@@ -1,0 +1,37 @@
+<svg width="800" height="960" viewBox="0 0 800 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-audio" x1="120" y1="60" x2="680" y2="880" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#14080B"/>
+      <stop offset="0.48" stop-color="#2B050D"/>
+      <stop offset="1" stop-color="#09070A"/>
+    </linearGradient>
+    <radialGradient id="glow-audio" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(210 180) rotate(42) scale(430 420)">
+      <stop stop-color="#F6E5C5" stop-opacity="0.32"/>
+      <stop offset="0.4" stop-color="#C11E3A" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="960" rx="40" fill="url(#bg-audio)"/>
+  <rect width="800" height="960" rx="40" fill="url(#glow-audio)"/>
+  <circle cx="122" cy="120" r="140" fill="#C11E3A" fill-opacity="0.12"/>
+  <circle cx="660" cy="720" r="180" fill="#F6E5C5" fill-opacity="0.08"/>
+  <path d="M80 790C180 705 263 670 403 670C534 670 634 708 720 790V960H80V790Z" fill="rgba(255,255,255,0.04)"/>
+  
+        <g opacity="0.95">
+          <path d="M245 520c0-96 78-174 174-174s174 78 174 174v86c0 56-45 101-101 101h-26c-56 0-101-45-101-101v-86Z" fill="rgba(255,255,255,0.10)" stroke="rgba(245,228,196,0.35)" stroke-width="4"/>
+          <circle cx="286" cy="515" r="72" fill="rgba(136,12,34,0.65)" stroke="rgba(245,228,196,0.25)" stroke-width="4"/>
+          <circle cx="514" cy="515" r="72" fill="rgba(136,12,34,0.65)" stroke="rgba(245,228,196,0.25)" stroke-width="4"/>
+          <path d="M286 445v70M514 445v70" stroke="#f5e4c4" stroke-width="10" stroke-linecap="round" opacity="0.75"/>
+          <path d="M250 620h300" stroke="rgba(245,228,196,0.2)" stroke-width="4" stroke-linecap="round"/>
+        </g>
+        
+  <g>
+    <text x="52" y="86" fill="#F5E4C4" font-family="Tahoma, sans-serif" font-size="22" font-weight="700" letter-spacing="6">HAMI HAMRAH</text>
+    <text x="52" y="124" fill="rgba(245,228,196,0.76)" font-family="Tahoma, sans-serif" font-size="18" letter-spacing="8">AUDIO</text>
+  </g>
+  <g transform="translate(52 800)">
+    <image href="/brand/hami-mark-alpha.png" x="0" y="0" width="72" height="72" preserveAspectRatio="xMidYMid meet"/>
+    <text x="92" y="46" fill="#F5E4C4" font-family="Tahoma, sans-serif" font-size="30" font-weight="700">حامی همراه</text>
+  </g>
+  <text x="52" y="760" fill="rgba(245,228,196,0.85)" font-family="Tahoma, sans-serif" font-size="38" font-weight="700">ایرپاد</text>
+</svg>

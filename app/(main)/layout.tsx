@@ -1,6 +1,7 @@
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileDock } from "@/components/layout/MobileDock";
+import { PageGround } from "@/components/atmosphere/PageGround";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { CartProvider } from "@/components/providers/CartProvider";
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -9,6 +10,11 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       {/* CartProvider depends on AuthProvider: the server cart API is withAuth */}
       <CartProvider>
         <div className="site-shell flex min-h-screen flex-col relative">
+          {/* The scroll-driven ground, first so `.noir-stars` and the content still sit above it.
+              It is here rather than in the page because a transformed ancestor captures
+              `position: fixed`, and every homepage section is wrapped in `Reveal` — see
+              components/atmosphere/PageGround.tsx. It renders nothing off the homepage. */}
+          <PageGround />
           {/* Red-noir depth layers. Both are fixed, inert and sit beneath every
               .wrap section; they add atmosphere without touching content. */}
           <div className="noir-stars" aria-hidden="true">

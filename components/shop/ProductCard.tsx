@@ -132,7 +132,7 @@ export function ProductCard({
             announce. */}
         <div className="flex items-baseline justify-between gap-3">
           <span
-            className="font-mono text-[10px] font-bold tracking-[0.18em]"
+            className="font-mono text-xs font-bold tracking-[0.18em]"
             style={{ color: accent }}
           >
             {brandLabel(product.brand?.name)}
@@ -140,27 +140,33 @@ export function ProductCard({
           {model && (
             <span
               dir="ltr"
-              className="truncate font-mono text-[10px] tracking-[0.06em] opacity-55"
+              className="truncate font-mono text-xs tracking-[0.06em] text-foreground/70"
             >
               {model}
             </span>
           )}
         </div>
 
-        <h3 className="mt-2.5">
-          <Link href={href} className="line-clamp-2 text-[16px] font-bold leading-7">
+        <h3 className="mt-2.5 text-base">
+          <Link
+            href={href}
+            /* The painted text is 28px tall per line; the ::after inset grows
+               the *hit area* to 44+ without repainting anything (WCAG 2.5.8).
+               The overlap lands on the non-interactive spec line below. */
+            className="relative line-clamp-2 font-bold leading-7 after:absolute after:inset-x-[-8px] after:inset-y-[-8px] after:content-['']"
+          >
             {label}
           </Link>
         </h3>
 
         {specs && (
-          <p className="mt-1 line-clamp-1 text-[11px] leading-5 text-muted-foreground">{specs}</p>
+          <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{specs}</p>
         )}
 
         {/* Everything below is the transaction, held to the bottom so cards in a
             row align on their prices however long the names run. */}
         <div className="mt-auto pt-5">
-          <div className="lux-stock flex items-center justify-between gap-2 text-[10px] font-bold tracking-[0.05em]">
+          <div className="lux-stock flex items-center justify-between gap-2 text-xs font-bold tracking-[0.05em]">
             <div className="flex items-center gap-2">
               <span
                 className="inline-flex items-center gap-1.5"
@@ -182,7 +188,7 @@ export function ProductCard({
                 </>
               )}
             </div>
-            <span className="hidden sm:inline-flex items-center gap-1 font-sans text-[9px] text-foreground/50 border border-champagne/15 rounded-full px-2 py-0.5">
+            <span className="hidden sm:inline-flex items-center gap-1 font-sans text-xs text-foreground/50 border border-champagne/15 rounded-full px-2 py-0.5">
               گارانتی رسمی
             </span>
           </div>
@@ -194,7 +200,7 @@ export function ProductCard({
           <div className="lux-buy mt-2 flex items-end justify-between gap-3">
             <div className="min-w-0">
               {state === "sale" && product.compareAtPrice != null && (
-                <del className="block text-[11px] leading-4 text-muted-foreground">
+                <del className="block text-xs leading-4 text-muted-foreground">
                   {formatToman(product.compareAtPrice)}
                 </del>
               )}

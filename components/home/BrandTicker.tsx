@@ -1,109 +1,57 @@
 import { partnerMarks } from "@/components/brand/BrandMarks";
 
 /**
- * The trust band under the hero: the twenty-year claim pinned at the reading
- * start, and the partner logos running past it on a seamless loop.
+ * The trust band under the hero: the twenty-year claim pinned at the reading start, and
+ * the six partner marks standing still beside it.
  *
- * This replaced a seven-panel static grid. The grid gave every brand an equal
- * box and a repeated "برند همکار" caption, which read as a specification table;
- * a moving strip of marks reads as a shop that carries them. The claim is
- * pinned rather than scrolled because it is the one item with no logo, and
- * because a number that keeps sliding out of view stops being a claim.
+ * **It used to run.** This was a seamless 42s loop — the mark list rendered twice inside a
+ * `w-max` track translating -50%, with a `min-w-[100vw]` guard so no blank swept through at
+ * the end of a cycle, an edge mask instead of tinted overlays, and a pause on hover *and*
+ * focus. All of that machinery is gone, for one reason: feature 004 resolved its Question 3
+ * as **C — adopt the brand rows and rework this band into something non-moving** (FR-021).
+ * The page's brand chapter is now a stack of rows the shopper chooses, so a strip of the
+ * same six marks scrolling past underneath the hero was a second, louder presentation of the
+ * same fact, and the only perpetual animation on a page whose whole brief is calm. One
+ * travelling element per region, and here there are now none.
  *
- * **Inverted on purpose, and the direction of the inversion has flipped once.**
- * The band's job is to be the one surface that contrasts with the hero around
- * it — a printed strip laid over the room. While the hero was dark this meant a
- * cream band with RAL 3004 marks. The duo chapters made the hero paper, cream
- * on paper measured 1.21:1, and the band quietly stopped being a band. It is now
- * RAL 3004 with cream marks: 12.19:1 against the hero, and the marks themselves
- * hold 10.08:1 — the same legibility the cream version had, in the other
- * direction. The colours are pinned in `globals.css` rather than left to the
- * chapter tokens, precisely so a future palette move cannot silently repeat
- * this.
+ * **Do not rebuild this as a grid of equal boxes.** The version before the loop was exactly
+ * that — seven panels, each with a repeated «برند همکار» caption — and it read as a
+ * specification table. What keeps this off that rock is that the marks carry no boxes, no
+ * captions and no dividers between them; they are simply set in a line, and the claim is
+ * separated from them by one rule.
  *
- * Three mechanics, all in CSS so nothing here needs to be a client component:
+ * The contrast decision survives untouched: RAL 3004 band with cream marks, pinned in
+ * `globals.css` rather than left to the chapter tokens, because the last time the palette
+ * moved this band quietly dropped to 1.21:1 and stopped being a band.
  *
- * - **Seamless loop.** The list is rendered twice inside one `w-max` track and
- *   the track translates exactly -50%. At the end of the cycle copy two sits
- *   precisely where copy one started, so the reset is invisible. This only
- *   holds while both copies are identical — do not filter one of them.
- *
- *   The `min-w-[100vw]` on each copy is load-bearing, and the reason is worth
- *   keeping: six marks come to ~843px, but the strip on a desktop is ~1235px.
- *   Once the track has travelled its -50%, everything past the second copy is
- *   empty, so ~390px of blank band swept through at the end of every cycle.
- *   Forcing each copy to at least a viewport guarantees one copy is never
- *   narrower than the strip that shows it, at any width. It has to be `vw` and
- *   not `100%` — a percentage on a flex item inside a `w-max` track resolves
- *   against an indefinite size, and `translateX(-50%)` resolves against the
- *   track's own box, so the two would not agree.
- * - **Hover/focus pause.** `animation-play-state: paused`, so a visitor can
- *   stop the strip to read a mark. Focus counts too: a keyboard user tabbing
- *   into the band gets the same pause a mouse user gets.
- * - **Edge fade.** A mask, not a pair of gradient overlays painted in the band
- *   colour. Overlays have to be re-tinted by hand every time the palette moves
- *   and they silently rot when it does — this project has already been bitten
- *   three times by exactly that. A mask fades to transparent whatever the
- *   background happens to be.
- *
- * `dir="ltr"` goes on the **strip**, not just the track, and that placement is
- * the whole fix for a bug this had. Under the page's RTL direction, a child
- * that overflows its `overflow-hidden` box hangs off to the *left* — so the
- * track sat at -1645px, the strip was already showing copy two at rest, and
- * translating further left marched the marks out of frame until the band was
- * empty. Making the clipping box itself LTR puts the track's origin back at the
- * strip's left edge, where `0 -> -50%` means what every ticker recipe says it
- * means. The marks are Latin and their order carries no meaning, so pinning the
- * axis costs nothing.
+ * The marks are now the only copy in the document, so they are exposed as a real list with
+ * each brand's Persian name attached, instead of a duplicated `aria-hidden` strip with a
+ * screen-reader-only list underneath it.
  */
 export function BrandTicker() {
   return (
     <div className="brand-ticker-band border-y border-oxblood/15">
-      <div className="flex flex-col items-stretch sm:flex-row">
-        {/* The pinned claim. */}
-        <div className="flex shrink-0 items-center justify-center gap-3 px-6 py-4 sm:border-s sm:border-oxblood/15">
+      <div className="flex flex-col items-stretch gap-y-4 py-4 sm:flex-row sm:items-center sm:gap-y-0">
+        {/* The pinned claim — the one item with no logo, and the reason the band is not
+            simply a row of marks. */}
+        <div className="flex shrink-0 items-center justify-center gap-3 px-6">
           <b className="text-2xl font-black leading-none">۲۰ سال</b>
-          <span className="text-[11px] leading-tight text-oxblood/70">
-            سابقه
-            <br />
-            در بازار مشهد
+          {/* One continuous phrase, not «سابقه<br/>در بازار…» — the <br/> made
+              copy/SR read it as «سابقه‌در». The wrap point is left to the box. */}
+          <span className="max-w-24 text-xs font-medium leading-snug text-oxblood">
+            سابقه در بازار مشهد
           </span>
         </div>
 
-        {/* The strip. The whole moving track is hidden from assistive tech and
-            the partner list is exposed once, statically, below it. Marks are
-            repeated for the loop, so anything that reads the track reads the
-            same six brands over and over. */}
-        <div
-          className="brand-ticker relative min-w-0 flex-1 overflow-hidden border-t border-oxblood/15 py-5 sm:border-t-0"
-          dir="ltr"
-          aria-hidden="true"
+        <ul
+          className="m-0 flex min-w-0 flex-1 list-none flex-wrap items-center justify-around gap-x-8 gap-y-4 p-0 sm:justify-between sm:border-s sm:border-oxblood/15 sm:px-8"
+          aria-label="برندهای همکار"
         >
-          <div className="brand-ticker-track flex w-max items-center">
-            {[0, 1].map((copy) => (
-              <ul
-                key={copy}
-                className="m-0 flex min-w-[100vw] shrink-0 list-none items-center justify-around p-0"
-              >
-                {/* The list twice inside each copy, so a wide viewport gets a
-                    strip of logos rather than four marks adrift in white. Both
-                    copies stay identical, which is what the -50% relies on. */}
-                {[...partnerMarks, ...partnerMarks].map((mark, i) => (
-                  <li
-                    key={`${mark.name}-${i}`}
-                    className="flex h-8 items-center px-8 opacity-90 sm:px-11"
-                  >
-                    {mark.node}
-                  </li>
-                ))}
-              </ul>
-            ))}
-          </div>
-        </div>
-
-        <ul className="sr-only" aria-label="برندهای همکار">
           {partnerMarks.map((mark) => (
-            <li key={mark.name}>{mark.label}</li>
+            <li key={mark.name} className="flex h-8 items-center gap-2 opacity-90">
+              {mark.node}
+              <span className="sr-only">{mark.label}</span>
+            </li>
           ))}
         </ul>
       </div>

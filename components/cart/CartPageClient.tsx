@@ -111,7 +111,7 @@ export function CartPageClient() {
             <dd className="font-black text-aqua">{formatToman(cart.subtotal)}</dd>
           </div>
         </dl>
-        <p className="mt-3 text-[11px] leading-6 text-muted-foreground/70">
+        <p className="mt-3 text-xs leading-6 text-muted-foreground/70">
           هزینه ارسال و تخفیف کوپن در مرحله بعد محاسبه می‌شود.
         </p>
         <Link href="/checkout" className="mt-5 block">

@@ -2,6 +2,10 @@ import { defineConfig } from "vitest/config";
 import path from "node:path";
 
 export default defineConfig({
+  // tsconfig sets `jsx: "preserve"` for Next, which leaves JSX untransformed and makes
+  // the transform emit invalid JS the moment a test imports a component. The brand-row
+  // drift guard imports components/brand/BrandMarks.tsx, so JSX is compiled here.
+  oxc: { jsx: { runtime: "automatic" } },
   test: {
     environment: "node",
     // Scope discovery to this app. Without it, vitest's default glob sweeps the

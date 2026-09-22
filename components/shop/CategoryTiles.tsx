@@ -7,11 +7,17 @@ import type { ShopCategory } from "./types";
 export function CategoryTiles({
   categories,
   activeSlug,
+  tileSlugs,
 }: {
   categories: ShopCategory[];
   activeSlug: string | null;
+  /** Root categories with at least one product, resolved server-side. See
+   *  `lib/shop-category-tiles.ts` — a tile that leads to an empty listing is worse
+   *  than one fewer tile. */
+  tileSlugs: string[];
 }) {
-  const roots = categories.filter((category) => category.parentId === null).slice(0, 6);
+  const bySlug = new Map(categories.filter((c) => c.parentId === null).map((c) => [c.slug, c]));
+  const roots = tileSlugs.map((slug) => bySlug.get(slug)).filter((c): c is ShopCategory => !!c);
   if (roots.length === 0) return null;
 
   return (
@@ -39,7 +45,7 @@ export function CategoryTiles({
                   className="size-full object-contain p-1.5"
                 />
               </span>
-              <span className="text-[11px] font-bold leading-5">{category.name}</span>
+              <span className="text-xs font-bold leading-5">{category.name}</span>
             </Link>
           );
         })}

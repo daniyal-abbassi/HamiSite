@@ -1,0 +1,3479 @@
+{
+ "360px": {
+  "docHeight": 16566,
+  "sectionOrder": [
+   "top",
+   "featured",
+   "categories",
+   "brands",
+   "new-arrivals",
+   "b2b",
+   "accessories",
+   "online-services",
+   "store-experience",
+   "trust",
+   "final-conversion"
+  ],
+  "frames": [
+   {
+    "file": "pos-00-y0.png",
+    "scrollY": 0,
+    "progress": 0,
+    "points": [
+     {
+      "name": "start-gutter",
+      "bare": false
+     },
+     {
+      "name": "end-gutter",
+      "bare": false
+     }
+    ],
+    "pixels": {
+     "note": "no bare atmosphere point at this position"
+    },
+    "ground": {
+     "scrollY": 0,
+     "docHeight": 16566,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-01-y1741.png",
+    "scrollY": 1741,
+    "progress": 0.1111,
+    "points": [
+     {
+      "name": "start-gutter",
+      "bare": false
+     },
+     {
+      "name": "end-gutter",
+      "bare": false
+     }
+    ],
+    "pixels": {
+     "note": "no bare atmosphere point at this position"
+    },
+    "ground": {
+     "scrollY": 1741,
+     "docHeight": 16566,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-02-y3481.png",
+    "scrollY": 3481,
+    "progress": 0.2222,
+    "points": [
+     {
+      "name": "start-gutter",
+      "x": 6,
+      "y": 315,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "name": "end-gutter",
+      "x": 353,
+      "y": 315,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     }
+    ],
+    "pixels": {
+     "start-gutter": "#28070b",
+     "end-gutter": "#150105"
+    },
+    "ground": {
+     "scrollY": 3481,
+     "docHeight": 16566,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-03-y5222.png",
+    "scrollY": 5222,
+    "progress": 0.3333,
+    "points": [
+     {
+      "name": "start-gutter",
+      "x": 6,
+      "y": 315,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "name": "end-gutter",
+      "x": 353,
+      "y": 315,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     }
+    ],
+    "pixels": {
+     "start-gutter": "#1a0206",
+     "end-gutter": "#150105"
+    },
+    "ground": {
+     "scrollY": 5222,
+     "docHeight": 16566,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-04-y6963.png",
+    "scrollY": 6963,
+    "progress": 0.4445,
+    "points": [
+     {
+      "name": "start-gutter",
+      "x": 6,
+      "y": 315,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "name": "end-gutter",
+      "x": 353,
+      "y": 315,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     }
+    ],
+    "pixels": {
+     "start-gutter": "#460912",
+     "end-gutter": "#1f0107"
+    },
+    "ground": {
+     "scrollY": 6963,
+     "docHeight": 16566,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-05-y8703.png",
+    "scrollY": 8703,
+    "progress": 0.5555,
+    "points": [
+     {
+      "name": "start-gutter",
+      "bare": false
+     },
+     {
+      "name": "end-gutter",
+      "bare": false
+     }
+    ],
+    "pixels": {
+     "note": "no bare atmosphere point at this position"
+    },
+    "ground": {
+     "scrollY": 8703,
+     "docHeight": 16566,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-06-y10444.png",
+    "scrollY": 10444,
+    "progress": 0.6667,
+    "points": [
+     {
+      "name": "start-gutter",
+      "x": 6,
+      "y": 720,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "name": "end-gutter",
+      "x": 353,
+      "y": 720,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     }
+    ],
+    "pixels": {
+     "start-gutter": "#0a0103",
+     "end-gutter": "#1d040a"
+    },
+    "ground": {
+     "scrollY": 10444,
+     "docHeight": 16566,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-07-y12185.png",
+    "scrollY": 12185,
+    "progress": 0.7778,
+    "points": [
+     {
+      "name": "start-gutter",
+      "bare": false
+     },
+     {
+      "name": "end-gutter",
+      "bare": false
+     }
+    ],
+    "pixels": {
+     "note": "no bare atmosphere point at this position"
+    },
+    "ground": {
+     "scrollY": 12185,
+     "docHeight": 16566,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-08-y13925.png",
+    "scrollY": 13925,
+    "progress": 0.8889,
+    "points": [
+     {
+      "name": "start-gutter",
+      "bare": false
+     },
+     {
+      "name": "end-gutter",
+      "bare": false
+     }
+    ],
+    "pixels": {
+     "note": "no bare atmosphere point at this position"
+    },
+    "ground": {
+     "scrollY": 13925,
+     "docHeight": 16566,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-09-y15666.png",
+    "scrollY": 15666,
+    "progress": 1,
+    "points": [
+     {
+      "name": "start-gutter",
+      "bare": false
+     },
+     {
+      "name": "end-gutter",
+      "bare": false
+     }
+    ],
+    "pixels": {
+     "note": "no bare atmosphere point at this position"
+    },
+    "ground": {
+     "scrollY": 15666,
+     "docHeight": 16566,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   }
+  ]
+ },
+ "1280px": {
+  "docHeight": 12630,
+  "sectionOrder": [
+   "top",
+   "featured",
+   "categories",
+   "brands",
+   "new-arrivals",
+   "b2b",
+   "accessories",
+   "online-services",
+   "store-experience",
+   "trust",
+   "final-conversion"
+  ],
+  "frames": [
+   {
+    "file": "pos-00-y0.png",
+    "scrollY": 0,
+    "progress": 0,
+    "points": [
+     {
+      "name": "start-gutter",
+      "x": 6,
+      "y": 180,
+      "bare": true,
+      "on": "section.relative",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "name": "end-gutter",
+      "x": 1273,
+      "y": 180,
+      "bare": true,
+      "on": "section.relative",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     }
+    ],
+    "pixels": {
+     "start-gutter": "#0b0204",
+     "end-gutter": "#0b0103"
+    },
+    "ground": {
+     "scrollY": 0,
+     "docHeight": 12630,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-01-y1295.png",
+    "scrollY": 1295,
+    "progress": 0.1111,
+    "points": [
+     {
+      "name": "start-gutter",
+      "bare": false
+     },
+     {
+      "name": "end-gutter",
+      "bare": false
+     }
+    ],
+    "pixels": {
+     "note": "no bare atmosphere point at this position"
+    },
+    "ground": {
+     "scrollY": 1295,
+     "docHeight": 12630,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-02-y2591.png",
+    "scrollY": 2591,
+    "progress": 0.2222,
+    "points": [
+     {
+      "name": "start-gutter",
+      "x": 6,
+      "y": 180,
+      "bare": true,
+      "on": "main.flex-1",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "name": "end-gutter",
+      "x": 1273,
+      "y": 180,
+      "bare": true,
+      "on": "main.flex-1",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     }
+    ],
+    "pixels": {
+     "start-gutter": "#0b0204",
+     "end-gutter": "#0b0103"
+    },
+    "ground": {
+     "scrollY": 2591,
+     "docHeight": 12630,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-03-y3886.png",
+    "scrollY": 3886,
+    "progress": 0.3333,
+    "points": [
+     {
+      "name": "start-gutter",
+      "bare": false
+     },
+     {
+      "name": "end-gutter",
+      "bare": false
+     }
+    ],
+    "pixels": {
+     "note": "no bare atmosphere point at this position"
+    },
+    "ground": {
+     "scrollY": 3886,
+     "docHeight": 12630,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-04-y5182.png",
+    "scrollY": 5182,
+    "progress": 0.4445,
+    "points": [
+     {
+      "name": "start-gutter",
+      "x": 6,
+      "y": 315,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "name": "end-gutter",
+      "x": 1273,
+      "y": 315,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     }
+    ],
+    "pixels": {
+     "start-gutter": "#0b0204",
+     "end-gutter": "#110104"
+    },
+    "ground": {
+     "scrollY": 5182,
+     "docHeight": 12630,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-05-y6477.png",
+    "scrollY": 6477,
+    "progress": 0.5555,
+    "points": [
+     {
+      "name": "start-gutter",
+      "x": 6,
+      "y": 315,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "name": "end-gutter",
+      "x": 1273,
+      "y": 315,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     }
+    ],
+    "pixels": {
+     "start-gutter": "#0b0204",
+     "end-gutter": "#110104"
+    },
+    "ground": {
+     "scrollY": 6477,
+     "docHeight": 12630,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-06-y7773.png",
+    "scrollY": 7773,
+    "progress": 0.6667,
+    "points": [
+     {
+      "name": "start-gutter",
+      "bare": false
+     },
+     {
+      "name": "end-gutter",
+      "bare": false
+     }
+    ],
+    "pixels": {
+     "note": "no bare atmosphere point at this position"
+    },
+    "ground": {
+     "scrollY": 7773,
+     "docHeight": 12630,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-07-y9068.png",
+    "scrollY": 9068,
+    "progress": 0.7778,
+    "points": [
+     {
+      "name": "start-gutter",
+      "x": 6,
+      "y": 450,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     },
+     {
+      "name": "end-gutter",
+      "x": 1273,
+      "y": 450,
+      "bare": true,
+      "on": "section.wrap",
+      "onBackground": "rgba(0, 0, 0, 0)"
+     }
+    ],
+    "pixels": {
+     "start-gutter": "#0b0204",
+     "end-gutter": "#2f060d"
+    },
+    "ground": {
+     "scrollY": 9068,
+     "docHeight": 12630,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-08-y10364.png",
+    "scrollY": 10364,
+    "progress": 0.8889,
+    "points": [
+     {
+      "name": "start-gutter",
+      "bare": false
+     },
+     {
+      "name": "end-gutter",
+      "bare": false
+     }
+    ],
+    "pixels": {
+     "note": "no bare atmosphere point at this position"
+    },
+    "ground": {
+     "scrollY": 10364,
+     "docHeight": 12630,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   },
+   {
+    "file": "pos-09-y11659.png",
+    "scrollY": 11659,
+    "progress": 1,
+    "points": [
+     {
+      "name": "start-gutter",
+      "bare": false
+     },
+     {
+      "name": "end-gutter",
+      "bare": false
+     }
+    ],
+    "pixels": {
+     "note": "no bare atmosphere point at this position"
+    },
+    "ground": {
+     "scrollY": 11659,
+     "docHeight": 12630,
+     "sectionOrder": [
+      "top",
+      "featured",
+      "categories",
+      "brands",
+      "new-arrivals",
+      "b2b",
+      "accessories",
+      "online-services",
+      "store-experience",
+      "trust",
+      "final-conversion"
+     ],
+     "layers": [
+      {
+       "layer": "body",
+       "backgroundColor": "rgb(11, 2, 4)",
+       "backgroundImage": "radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), rgba(0, 0, 0, 0) 75%), radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), rgba(0, 0, 0, 0) 70%), radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), rgba(0, 0, 0, 0) 70%), radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), rgba(0, 0, 0, 0) 75%), radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), rgba(0, 0, 0, 0) 80%)"
+      },
+      {
+       "layer": "body::before",
+       "position": "fixed",
+       "backgroundImage": "radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.2), rgba(0, 0, 0, 0) 72%), radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), rgba(0, 0, 0, 0) 65%)"
+      },
+      {
+       "layer": "main > section#top::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#top::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#featured::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#featured::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#categories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#categories::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#brands::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#brands::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#new-arrivals::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#new-arrivals::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#b2b::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#b2b::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#accessories::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#accessories::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#online-services::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), rgba(0, 0, 0, 0) 72%), radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), rgba(0, 0, 0, 0) 70%)"
+      },
+      {
+       "layer": "main > section#online-services::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#store-experience::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#store-experience::after",
+       "position": "absolute",
+       "backgroundImage": "linear-gradient(rgba(0, 0, 0, 0), rgba(28, 4, 10, 0.4) 45%, rgba(0, 0, 0, 0))"
+      },
+      {
+       "layer": "main > section#trust::before",
+       "position": "absolute",
+       "inset": "-96px 0px",
+       "backgroundImage": "radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), rgba(0, 0, 0, 0) 70%), radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#trust::after",
+       "position": "static",
+       "backgroundImage": "none"
+      },
+      {
+       "layer": "main > section#final-conversion::before",
+       "position": "absolute",
+       "inset": "0px",
+       "backgroundImage": "radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), rgba(0, 0, 0, 0) 72%)"
+      },
+      {
+       "layer": "main > section#final-conversion::after",
+       "position": "static",
+       "backgroundImage": "none"
+      }
+     ]
+    }
+   }
+  ]
+ }
+}

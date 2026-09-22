@@ -1,5 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import { Phone } from "lucide-react";
+import { categoryLinks } from "@/lib/content/home";
+import { storeContact } from "@/lib/content/contact";
 import hamiMark from "@/public/brand/hami-mark.png";
 
 const footerGroups = [
@@ -7,9 +10,9 @@ const footerGroups = [
     title: "فروشگاه",
     links: [
       { href: "/shop", label: "همه محصولات" },
-      { href: "/shop?category=mobile", label: "موبایل" },
-      { href: "/shop?category=headphones", label: "ایرپاد و هدفون" },
-      { href: "/shop?category=smartwatch", label: "ساعت هوشمند" },
+      { href: categoryLinks.mobile, label: "موبایل" },
+      { href: categoryLinks.audio, label: "ایرپاد و هدفون" },
+      { href: categoryLinks.watch, label: "ساعت هوشمند" },
     ],
   },
   {
@@ -38,7 +41,7 @@ export function Footer() {
          footer's last 58px sat under the dock regardless. 5.25rem is the
          dock's measured 58px plus 26px of breathing room, and the inset matches
          the one the dock itself adds on notched devices. */
-      className="relative z-[2] mt-20 border-t border-line bg-ink-2/60 pb-[calc(5.25rem+env(safe-area-inset-bottom))] md:pb-0"
+      className="site-footer relative z-[2] mt-20 border-t border-line bg-ink-2/60 pb-[calc(5.25rem+env(safe-area-inset-bottom))] md:pb-0"
     >
       <div className="brand-hairline" />
       {/* Mobile rhythm is tighter than desktop's: this block measured 804px on a
@@ -50,7 +53,7 @@ export function Footer() {
             <Image src={hamiMark} alt="حامی همراه" sizes="40px" className="size-10 rounded-xl bg-gradient-to-br from-[#FFFDF9] to-[#E5D3B3] p-1 ring-1 ring-champagne/40 shadow-sm" />
             <span className="text-base font-black text-foreground">
               حامی همراه
-              <span className="block font-mono text-[11px] font-medium text-champagne/80">
+              <span className="block font-mono text-xs font-medium text-champagne/80">
                 پخش رسمی تلفن همراه — مشهد
               </span>
             </span>
@@ -59,13 +62,24 @@ export function Footer() {
             تامین و پخش مستقیم معتبرترین برندهای تلفن همراه، ساعت‌های هوشمند و اکسسوری در مشهد و سراسر کشور؛ با تضمین ۱۰۰٪ اصالت و گارانتی معتبر شرکتی.
           </p>
           <div className="mt-5 flex flex-wrap gap-2">
-            <span className="inline-flex items-center gap-1 rounded-full border border-champagne/20 bg-champagne/5 px-2.5 py-1 font-mono text-[10px] text-champagne">
+            <span className="inline-flex items-center gap-1 rounded-full border border-champagne/20 bg-champagne/5 px-2.5 py-1 font-mono text-xs text-champagne">
               ۲۰ سال سابقه در بازار مشهد
             </span>
-            <span className="inline-flex items-center gap-1 rounded-full border border-champagne/20 bg-champagne/5 px-2.5 py-1 font-mono text-[10px] text-champagne">
+            <span className="inline-flex items-center gap-1 rounded-full border border-champagne/20 bg-champagne/5 px-2.5 py-1 font-mono text-xs text-champagne">
               ضمانت اصالت شرکتی
             </span>
           </div>
+          {/* The store's confirmed phone number (lib/content/contact.ts is the
+              single source of truth). Dialable on mobile, visible on desktop —
+              a real contact fact instead of a dead /contact route. */}
+          <a
+            href={storeContact.phoneHref}
+            dir="ltr"
+            className="mt-4 inline-flex items-center gap-2 font-mono text-sm font-bold text-foreground/85 transition-colors hover:text-champagne"
+          >
+            <Phone className="size-4 text-champagne" aria-hidden="true" />
+            {storeContact.phoneDisplay}
+          </a>
         </div>
 
         {/* Two columns on a phone, one per column from md.
@@ -76,7 +90,7 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-x-4 gap-y-7 md:contents">
           {footerGroups.map((group) => (
             <nav key={group.title} aria-label={group.title}>
-              <h3 className="m-0 font-mono text-[11px] font-medium tracking-[0.04em] text-aqua">
+              <h3 className="m-0 font-mono text-xs font-medium tracking-[0.04em] text-aqua">
                 {group.title}
               </h3>
               {/* No space-y on mobile: the rows carry their own 44px height, so

@@ -231,7 +231,7 @@ export function CheckoutClient() {
         {/* ۱ — آدرس */}
         <section className="glass rounded-2xl p-6">
           <header className="flex items-center gap-2.5">
-            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-[11px] font-bold text-aqua">۱</span>
+            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-xs font-bold text-aqua">۱</span>
             <h2 className="text-base font-black">اطلاعات تماس و آدرس</h2>
           </header>
           <div className="brand-hairline my-4" />
@@ -261,7 +261,7 @@ export function CheckoutClient() {
                   <span className="min-w-0 text-[13px] leading-6">
                     <strong className="block">
                       {address.firstName || user?.firstName} {address.lastName || user?.lastName} — {address.city}
-                      {address.isDefault && <span className="ms-2 rounded-full bg-aqua/15 px-2 py-0.5 text-[10px] text-aqua">پیش‌فرض</span>}
+                      {address.isDefault && <span className="ms-2 rounded-full bg-aqua/15 px-2 py-0.5 text-xs text-aqua">پیش‌فرض</span>}
                     </strong>
                     <span className="block text-muted-foreground">{address.address}</span>
                   </span>
@@ -280,31 +280,31 @@ export function CheckoutClient() {
           {(addressMode === "new" || (addresses ?? []).length === 0) && (
             <div className="grid gap-3.5 sm:grid-cols-2">
               <div>
-                <label htmlFor="co-firstName" className="mb-1 block text-[11px] font-bold text-foreground/80">نام</label>
+                <label htmlFor="co-firstName" className="mb-1 block text-xs font-bold text-foreground/80">نام</label>
                 <Input id="co-firstName" className={inputClass} value={newAddress.firstName} onChange={newAddressField("firstName")} autoComplete="given-name" />
               </div>
               <div>
-                <label htmlFor="co-lastName" className="mb-1 block text-[11px] font-bold text-foreground/80">نام خانوادگی</label>
+                <label htmlFor="co-lastName" className="mb-1 block text-xs font-bold text-foreground/80">نام خانوادگی</label>
                 <Input id="co-lastName" className={inputClass} value={newAddress.lastName} onChange={newAddressField("lastName")} autoComplete="family-name" />
               </div>
               <div>
-                <label htmlFor="co-phone" className="mb-1 block text-[11px] font-bold text-foreground/80">شماره تماس *</label>
+                <label htmlFor="co-phone" className="mb-1 block text-xs font-bold text-foreground/80">شماره تماس *</label>
                 <Input id="co-phone" className={inputClass} value={newAddress.phone} onChange={newAddressField("phone")} type="tel" autoComplete="tel" />
               </div>
               <div>
-                <label htmlFor="co-city" className="mb-1 block text-[11px] font-bold text-foreground/80">شهر *</label>
+                <label htmlFor="co-city" className="mb-1 block text-xs font-bold text-foreground/80">شهر *</label>
                 <Input id="co-city" className={inputClass} value={newAddress.city} onChange={newAddressField("city")} autoComplete="address-level2" />
               </div>
               <div className="sm:col-span-2">
-                <label htmlFor="co-province" className="mb-1 block text-[11px] font-bold text-foreground/80">استان</label>
+                <label htmlFor="co-province" className="mb-1 block text-xs font-bold text-foreground/80">استان</label>
                 <Input id="co-province" className={inputClass} value={newAddress.province} onChange={newAddressField("province")} autoComplete="address-level1" />
               </div>
               <div className="sm:col-span-2">
-                <label htmlFor="co-addressText" className="mb-1 block text-[11px] font-bold text-foreground/80">نشانی کامل *</label>
+                <label htmlFor="co-addressText" className="mb-1 block text-xs font-bold text-foreground/80">نشانی کامل *</label>
                 <Input id="co-addressText" className={inputClass} value={newAddress.addressText} onChange={newAddressField("addressText")} autoComplete="street-address" />
               </div>
               <div className="sm:col-span-2">
-                <label htmlFor="co-postalCode" className="mb-1 block text-[11px] font-bold text-foreground/80">کد پستی</label>
+                <label htmlFor="co-postalCode" className="mb-1 block text-xs font-bold text-foreground/80">کد پستی</label>
                 {/* An Iranian postal code is ten digits. Without inputMode the
                     phone opens a full alphabetic keyboard for a field that can
                     only ever take numbers. */}
@@ -326,7 +326,7 @@ export function CheckoutClient() {
         {/* ۲ — ارسال */}
         <section className="glass rounded-2xl p-6">
           <header className="flex items-center gap-2.5">
-            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-[11px] font-bold text-aqua">۲</span>
+            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-xs font-bold text-aqua">۲</span>
             <h2 className="flex items-center gap-2 text-base font-black">
               <Truck className="size-4 text-aqua" />
               روش ارسال
@@ -352,10 +352,10 @@ export function CheckoutClient() {
                   />
                   <strong className="text-[13px]">{option.label}</strong>
                 </span>
-                <span className="mt-2 block font-mono text-[11px] text-aqua">
+                <span className="mt-2 block font-mono text-xs text-aqua">
                   {option.price === 0 ? "رایگان" : formatToman(option.price)}
                 </span>
-                <span className="mt-1 block text-[11px] text-muted-foreground">{option.note}</span>
+                <span className="mt-1 block text-xs text-muted-foreground">{option.note}</span>
               </label>
             ))}
           </div>
@@ -364,7 +364,7 @@ export function CheckoutClient() {
         {/* ۳ — کوپن */}
         <section className="glass rounded-2xl p-6">
           <header className="flex items-center gap-2.5">
-            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-[11px] font-bold text-aqua">۳</span>
+            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-xs font-bold text-aqua">۳</span>
             <h2 className="flex items-center gap-2 text-base font-black">
               <BadgePercent className="size-4 text-aqua" />
               کد تخفیف
@@ -393,7 +393,7 @@ export function CheckoutClient() {
         {/* ۴ — پرداخت */}
         <section className="glass rounded-2xl p-6">
           <header className="flex items-center gap-2.5">
-            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-[11px] font-bold text-aqua">۴</span>
+            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-xs font-bold text-aqua">۴</span>
             <h2 className="text-base font-black">پرداخت</h2>
           </header>
           <div className="brand-hairline my-4" />
@@ -424,7 +424,7 @@ export function CheckoutClient() {
             <p className="text-[13px] text-muted-foreground">پرداخت آنلاین از طریق درگاه امن انجام می‌شود.</p>
           )}
           <div className="mt-4">
-            <label htmlFor="co-note" className="mb-1 block text-[11px] font-bold text-foreground/80">یادداشت سفارش (اختیاری)</label>
+            <label htmlFor="co-note" className="mb-1 block text-xs font-bold text-foreground/80">یادداشت سفارش (اختیاری)</label>
             <Input id="co-note" className={inputClass} value={note} onChange={(event) => setNote(event.target.value)} placeholder="مثلاً زمان مناسب تحویل…" />
           </div>
         </section>
@@ -446,7 +446,7 @@ export function CheckoutClient() {
             <li key={item.id} className="flex items-start justify-between gap-2 text-[12px]">
               <span className="min-w-0">
                 <span className="block truncate font-bold">{item.product.name}</span>
-                <span className="font-mono text-[10px] text-muted-foreground">
+                <span className="font-mono text-xs text-muted-foreground">
                   {[item.variant?.storage, item.variant?.color].filter(Boolean).join(" — ") || "—"} ×{" "}
                   {item.quantity.toLocaleString("fa-IR")}
                 </span>
@@ -489,7 +489,7 @@ export function CheckoutClient() {
           <Check className="size-5" />
           ثبت نهایی سفارش
         </Button>
-        <p className="mt-3 text-center text-[10px] leading-5 text-muted-foreground/70">
+        <p className="mt-3 text-center text-xs leading-5 text-muted-foreground/70">
           با ثبت سفارش، موجودی رزرو و در صورت لغو به انبار بازگردانده می‌شود.
         </p>
       </aside>

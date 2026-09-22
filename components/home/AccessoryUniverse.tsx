@@ -15,7 +15,7 @@ export function AccessoryUniverse() {
   const current = accessoryCategories.find((c) => c.key === active) ?? accessoryCategories[0];
 
   return (
-    <section id="accessories" className="wrap container py-14" aria-labelledby="accessories-title">
+    <section id="accessories" className="wrap container py-16 md:py-20" aria-labelledby="accessories-title">
       <Reveal>
         <SectionHead
           variant="rule"
@@ -45,14 +45,14 @@ export function AccessoryUniverse() {
                       isActive ? "text-aqua" : "text-foreground/60 hover:text-foreground/90",
                     )}
                   >
-                    <span className="font-mono text-[10px]">{category.index}</span>
+                    <span className="font-mono text-xs">{category.index}</span>
                     <b className="text-sm font-extrabold">{category.label}</b>
-                    <small className="hidden text-[11px] text-foreground/60 sm:block">{category.detail}</small>
+                    <small className="hidden text-xs text-foreground/60 sm:block">{category.detail}</small>
                   </button>
                   <Link
                     href={category.href}
                     aria-label={`مشاهدهٔ دسته ${category.title}`}
-                    className="grid size-9 place-items-center rounded-xl text-foreground/55 transition-colors duration-fast hover:bg-aqua/10 hover:text-aqua"
+                    className="grid size-11 place-items-center rounded-xl text-foreground/55 transition-colors duration-fast hover:bg-aqua/10 hover:text-aqua"
                   >
                     <ArrowLeft className="size-4" />
                   </Link>
@@ -66,7 +66,7 @@ export function AccessoryUniverse() {
           <div className="glass relative grid min-h-72 place-items-center overflow-hidden rounded-2xl shadow-deep">
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_var(--lx,50%)_var(--ly,40%),rgba(201,162,39,0.14),transparent_55%)]" aria-hidden="true" />
             <div className="relative p-10 text-center" aria-live="polite">
-              <span className="font-mono text-[10px] tracking-[0.14em] text-aqua">{current.label}</span>
+              <span className="font-mono text-xs tracking-[0.14em] text-aqua">{current.label}</span>
               <b className="mt-3 block text-5xl font-black tracking-tight text-foreground">{current.title}</b>
               <p className="mt-3 text-sm text-foreground/60">{current.detail}</p>
               <Link href={current.href} className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-aqua/50 px-4 py-2 text-xs font-bold text-aqua transition-colors duration-fast hover:bg-aqua/10">

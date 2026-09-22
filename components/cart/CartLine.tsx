@@ -55,7 +55,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
               </Link>
             </h3>
             {variantLabel(item) && (
-              <p className="mt-0.5 font-mono text-[10px] tracking-[0.06em] text-muted-foreground/70">
+              <p className="mt-0.5 font-mono text-xs tracking-[0.06em] text-muted-foreground/70">
                 {variantLabel(item)}
               </p>
             )}
@@ -64,14 +64,14 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
             type="button"
             onClick={() => onRemove(item.id)}
             aria-label={`حذف ${item.product.name} از سبد`}
-            className="grid size-8 shrink-0 place-items-center rounded-full text-foreground/50 transition-colors duration-fast hover:bg-destructive/10 hover:text-destructive"
+            className="grid size-11 shrink-0 place-items-center rounded-full text-foreground/50 transition-colors duration-fast hover:bg-destructive/10 hover:text-destructive"
           >
             <Trash2 className="size-4" />
           </button>
         </div>
 
         {item.priceChanged && (
-          <p className="mt-1.5 text-[11px] text-aqua">
+          <p className="mt-1.5 text-xs text-aqua">
             قیمت به‌روزرسانی شده — اکنون {formatToman(item.currentUnitPrice)} است.
           </p>
         )}

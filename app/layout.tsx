@@ -65,7 +65,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     /* Fonts are self-hosted (see globals.css @font-face) — the font variables
        live on :root there, so no next/font className is needed here. */
     <html lang="fa" dir="rtl">
-      <body>{children}</body>
+      <body>{children}{/* impeccable-live-start */}
+<script src="http://localhost:8400/live.js?token=7474863f-b569-4b06-80bc-9c5f620b0c5e"></script>
+{/* impeccable-live-end */}
+</body>
     </html>
   );
 }

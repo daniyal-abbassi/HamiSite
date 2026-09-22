@@ -6,7 +6,7 @@ import { mobileQuickRoutes, trustFeatures } from "@/lib/content/home";
 
 export function TrustBar() {
   return (
-    <section id="trust" className="wrap border-b border-line" aria-labelledby="trust-bar-title">
+    <section id="trust-bar" className="wrap border-b border-line" aria-labelledby="trust-bar-title">
       <div className="container py-12">
         <h2 id="trust-bar-title" className="text-2xl font-black tracking-tight md:text-3xl">چهار دلیل برای اعتماد به حامی همراه</h2>
         <p className="mt-2 text-sm text-foreground/55">فروش حضوری، پخش عمده و اکوسیستم موبایل</p>
@@ -18,7 +18,7 @@ export function TrustBar() {
                   <TrustGlyph name={feature.key} />
                 </span>
                 <div>
-                  <h3 className="m-0 text-sm font-extrabold">{feature.title}</h3>
+                  <h3 className="m-0 text-base font-black">{feature.title}</h3>
                   <p className="mt-1 text-xs leading-6 text-foreground/55">{feature.description}</p>
                 </div>
               </Reveal>
@@ -32,14 +32,14 @@ export function TrustBar() {
 
 export function MobileQuickRoutes() {
   return (
-    <nav className="container flex gap-3 overflow-x-auto py-6 md:hidden" aria-label="مسیرهای سریع موبایل">
+    <nav className="container flex gap-3 overflow-x-hidden py-6 md:hidden" aria-label="مسیرهای سریع موبایل">
       {mobileQuickRoutes.map((route, index) => (
         <Link
           key={route.key}
           href={route.href}
           className="glass flex shrink-0 items-center gap-2 rounded-full px-4 py-2.5 text-xs font-bold"
         >
-          <span className="font-mono text-[9px] text-aqua">{String(index + 1).padStart(2, "0")}</span>
+          <span className="font-mono text-xs text-aqua">{String(index + 1).padStart(2, "0")}</span>
           {route.label}
           <ArrowLeft className="size-3.5 text-aqua" />
         </Link>

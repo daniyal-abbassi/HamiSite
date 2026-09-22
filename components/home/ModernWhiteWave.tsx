@@ -19,7 +19,7 @@ export function ModernWhiteWave() {
 
       {/* SVG Multi-Layered Modern Wave */}
       <svg
-        className="relative block w-full h-24 sm:h-32 md:h-44 lg:h-52 drop-shadow-[0_10px_30px_rgba(255,255,255,0.12)]"
+        className="relative block w-full h-40 sm:h-44 md:h-52 lg:h-56 drop-shadow-[0_10px_30px_rgba(255,255,255,0.12)]"
         viewBox="0 0 1440 220"
         fill="none"
         preserveAspectRatio="none"

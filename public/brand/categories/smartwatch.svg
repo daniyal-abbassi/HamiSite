@@ -1,0 +1,38 @@
+<svg width="800" height="960" viewBox="0 0 800 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-smartwatch" x1="120" y1="60" x2="680" y2="880" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#14080B"/>
+      <stop offset="0.48" stop-color="#2B050D"/>
+      <stop offset="1" stop-color="#09070A"/>
+    </linearGradient>
+    <radialGradient id="glow-smartwatch" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(210 180) rotate(42) scale(430 420)">
+      <stop stop-color="#F6E5C5" stop-opacity="0.32"/>
+      <stop offset="0.4" stop-color="#C11E3A" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="960" rx="40" fill="url(#bg-smartwatch)"/>
+  <rect width="800" height="960" rx="40" fill="url(#glow-smartwatch)"/>
+  <circle cx="122" cy="120" r="140" fill="#C11E3A" fill-opacity="0.12"/>
+  <circle cx="660" cy="720" r="180" fill="#F6E5C5" fill-opacity="0.08"/>
+  <path d="M80 790C180 705 263 670 403 670C534 670 634 708 720 790V960H80V790Z" fill="rgba(255,255,255,0.04)"/>
+  
+        <g opacity="0.95">
+          <circle cx="402" cy="430" r="172" fill="rgba(255,255,255,0.08)" stroke="rgba(245,228,196,0.38)" stroke-width="5"/>
+          <circle cx="402" cy="430" r="130" fill="#0d1115" stroke="rgba(245,228,196,0.25)"/>
+          <path d="M402 270v78M402 430l62 36M402 430l-68-44" stroke="#f5e4c4" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+          <rect x="288" y="172" width="228" height="122" rx="24" fill="rgba(169,25,52,0.74)"/>
+          <rect x="290" y="668" width="224" height="110" rx="26" fill="rgba(255,255,255,0.06)" stroke="rgba(245,228,196,0.25)"/>
+          <path d="M350 724h104" stroke="#f5e4c4" stroke-width="12" stroke-linecap="round" opacity="0.8"/>
+        </g>
+        
+  <g>
+    <text x="52" y="86" fill="#F5E4C4" font-family="Tahoma, sans-serif" font-size="22" font-weight="700" letter-spacing="6">HAMI HAMRAH</text>
+    <text x="52" y="124" fill="rgba(245,228,196,0.76)" font-family="Tahoma, sans-serif" font-size="18" letter-spacing="8">WATCH</text>
+  </g>
+  <g transform="translate(52 800)">
+    <image href="/brand/hami-mark-alpha.png" x="0" y="0" width="72" height="72" preserveAspectRatio="xMidYMid meet"/>
+    <text x="92" y="46" fill="#F5E4C4" font-family="Tahoma, sans-serif" font-size="30" font-weight="700">حامی همراه</text>
+  </g>
+  <text x="52" y="760" fill="rgba(245,228,196,0.85)" font-family="Tahoma, sans-serif" font-size="38" font-weight="700">ساعت هوشمند</text>
+</svg>

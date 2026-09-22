@@ -92,7 +92,7 @@ export function AdminSidebar() {
       <div className="sticky top-0 z-30 border-b border-line bg-ink-2/90 backdrop-blur-md lg:hidden">
         <div className="flex items-center gap-1 overflow-x-auto p-2">
           <Link href="/" className="me-auto shrink-0" aria-label="فروشگاه">
-            <span className="grid size-9 place-items-center rounded-xl bg-aqua/15 font-mono text-[9px] font-bold text-aqua">
+            <span className="grid size-9 place-items-center rounded-xl bg-aqua/15 font-mono text-xs font-bold text-aqua">
               ADMIN
             </span>
           </Link>

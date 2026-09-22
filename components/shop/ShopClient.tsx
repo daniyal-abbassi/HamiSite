@@ -4,19 +4,11 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { apiGet, apiGetWithMeta } from "@/lib/api-client";
 import { SHOP_PAGE_SIZE } from "@/lib/content/shop";
+import { flattenTree, resolveFilter } from "@/lib/shop-filters";
 import { CategoryTiles } from "./CategoryTiles";
 import { FilterSheet } from "./FilterSheet";
 import { ShopResults } from "./ShopResults";
 import type { ShopBrand, ShopCategory, ShopMeta, ShopProduct } from "./types";
-
-function findCategory(list: ShopCategory[], slug: string): ShopCategory | undefined {
-  for (const category of list) {
-    if (category.slug === slug) return category;
-    const child = category.children ? findCategory(category.children, slug) : undefined;
-    if (child) return child;
-  }
-  return undefined;
-}
 
 function normalizeMeta(meta: Record<string, unknown> | undefined): ShopMeta | null {
   if (!meta) return null;
@@ -28,13 +20,14 @@ function normalizeMeta(meta: Record<string, unknown> | undefined): ShopMeta | nu
   };
 }
 
-export function ShopClient() {
+export function ShopClient({ tileSlugs }: { tileSlugs: string[] }) {
   const searchParams = useSearchParams();
   const [categories, setCategories] = useState<ShopCategory[] | null>(null);
   const [brands, setBrands] = useState<ShopBrand[] | null>(null);
   const [products, setProducts] = useState<ShopProduct[] | null>(null);
   const [meta, setMeta] = useState<ShopMeta | null>(null);
   const [error, setError] = useState(false);
+  const [unknownFilter, setUnknownFilter] = useState<string | null>(null);
 
   const categorySlug = searchParams.get("category");
   const brandSlug = searchParams.get("brand");
@@ -71,13 +64,29 @@ export function ShopClient() {
     setProducts(null);
     setError(false);
 
+    // An unrecognised slug used to be dropped, which left the request unfiltered and
+    // showed the whole catalogue behind a link that looked like it had worked. Resolve
+    // explicitly and stop instead.
+    const categoryOutcome = resolveFilter(flattenTree(categories ?? []), categorySlug);
+    const brandOutcome = resolveFilter(brands ?? [], brandSlug);
+    const unresolved =
+      categoryOutcome.status === "unknown" ? categoryOutcome.requested
+      : brandOutcome.status === "unknown" ? brandOutcome.requested
+      : null;
+
+    if (unresolved !== null) {
+      setUnknownFilter(unresolved);
+      setMeta(null);
+      setProducts([]);
+      return;
+    }
+    setUnknownFilter(null);
+
     const params = new URLSearchParams({ pageSize: String(SHOP_PAGE_SIZE), includeVariants: "false" });
     const q = searchParams.get("q");
     if (q) params.set("q", q);
-    const categoryId = categorySlug ? findCategory(categories ?? [], categorySlug)?.id : undefined;
-    if (categoryId) params.set("categoryId", String(categoryId));
-    const brandId = brandSlug ? (brands ?? []).find((brand) => brand.slug === brandSlug)?.id : undefined;
-    if (brandId) params.set("brandId", String(brandId));
+    if (categoryOutcome.status === "resolved") params.set("categoryId", String(categoryOutcome.item.id));
+    if (brandOutcome.status === "resolved") params.set("brandId", String(brandOutcome.item.id));
     const min = searchParams.get("min");
     if (min) params.set("minPrice", min);
     const max = searchParams.get("max");
@@ -107,13 +116,13 @@ export function ShopClient() {
 
   return (
     <div>
-      {categories !== null && <CategoryTiles categories={categories} activeSlug={categorySlug} />}
+      {categories !== null && <CategoryTiles categories={categories} activeSlug={categorySlug} tileSlugs={tileSlugs} />}
 
       {/* FilterSheet renders the sidebar inline from lg and as a bottom sheet
           below it, so the results are the first thing a phone sees. */}
       <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
         <FilterSheet categories={categories ?? []} brands={brands ?? []} />
-        <ShopResults products={products} meta={meta} error={error} activeSort={activeSort} />
+        <ShopResults products={products} meta={meta} error={error} activeSort={activeSort} unknownFilter={unknownFilter} />
       </div>
     </div>
   );

@@ -156,7 +156,7 @@ export function RegisterForm() {
           onChange={setField(field)}
           aria-invalid={Boolean(fieldErrors[field])}
         />
-        {fieldErrors[field] && <p className="mt-1 text-[11px] text-destructive">{fieldErrors[field]}</p>}
+        {fieldErrors[field] && <p className="mt-1 text-xs text-destructive">{fieldErrors[field]}</p>}
       </div>
     );
   }
@@ -194,7 +194,7 @@ export function RegisterForm() {
             )}
           >
             <span className={cn("block text-sm font-black", role === option.key && "text-aqua")}>{option.title}</span>
-            <span className="mt-1 block text-[11px] text-muted-foreground">{option.note}</span>
+            <span className="mt-1 block text-xs text-muted-foreground">{option.note}</span>
           </button>
         ))}
       </div>

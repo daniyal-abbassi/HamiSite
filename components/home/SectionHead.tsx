@@ -58,7 +58,7 @@ export function SectionHead({
       >
         <div className="lg:max-w-xl">
           {eyebrow && (
-            <span className="mb-3 block font-mono text-[11px] tracking-[0.18em] text-aqua/70">{eyebrow}</span>
+            <span className="mb-3 block font-mono text-xs tracking-[0.18em] text-aqua/70">{eyebrow}</span>
           )}
           <h2 id={id} className="text-3xl font-black leading-[1.35] tracking-tight md:text-[2.6rem]">
             {title}
@@ -78,9 +78,9 @@ export function SectionHead({
     return (
       <div className={cn("", className)}>
         <div className="flex items-center gap-4">
-          {index && <span className="font-mono text-[11px] tracking-[0.2em] text-aqua/70">{index}</span>}
+          {index && <span className="font-mono text-xs tracking-[0.2em] text-aqua/70">{index}</span>}
           {eyebrow && (
-            <span className="font-mono text-[11px] tracking-[0.18em] text-muted-foreground">{eyebrow}</span>
+            <span className="font-mono text-xs tracking-[0.18em] text-muted-foreground">{eyebrow}</span>
           )}
           <i className="h-px flex-1 bg-line" aria-hidden="true" />
           {action}

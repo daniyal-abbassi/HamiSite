@@ -105,9 +105,15 @@ const config: Config = {
         mono: ["var(--font-dm-mono)", "monospace"],
       },
       boxShadow: {
-        card: "0 10px 30px rgba(0, 0, 0, 0.5)",
-        deep: "0 40px 90px rgba(0, 0, 0, 0.75)",
-        monolith: "0 24px 60px -12px rgba(0, 0, 0, 0.8)",
+        /* Layered ambient shadows — a hairline contact line, a mid falloff,
+           and a wide low-opacity ambient pool. A single dark blur reads as a
+           smudge under the card; three shallow layers read as light. Every
+           opacity stays ≤ 0.5 so the pools never go muddy on the obsidian
+           canvas. Consumers (shadow-card / shadow-deep / shadow-monolith)
+           are unchanged. */
+        card: "0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 20px -8px rgba(0, 0, 0, 0.38)",
+        deep: "0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 28px -12px rgba(0, 0, 0, 0.45), 0 32px 72px -28px rgba(0, 0, 0, 0.5)",
+        monolith: "0 1px 2px rgba(0, 0, 0, 0.35), 0 10px 24px -10px rgba(0, 0, 0, 0.4), 0 28px 64px -30px rgba(0, 0, 0, 0.5)",
         "glow-oxblood": "0 12px 35px rgba(100, 2, 17, 0.45)",
         "glow-gold": "0 8px 24px -4px rgba(229, 211, 179, 0.25)",
         "glow-cta": "0 12px 32px rgba(229, 211, 179, 0.35)",

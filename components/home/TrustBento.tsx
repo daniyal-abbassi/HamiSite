@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft, BadgeCheck } from "lucide-react";
 import { Reveal } from "@/components/home/Reveal";
+import { buttonVariants } from "@/components/ui/button";
 import { WhyHamiProofs } from "@/components/home/WhyHami";
 import { TrustGlyph } from "@/components/home/primitives";
 import { toFaDigits } from "@/lib/utils";
@@ -28,7 +29,7 @@ import {
  */
 export function TrustBento() {
   return (
-    <section id="trust" className="wrap py-14" aria-labelledby="trust-title">
+    <section id="trust" className="wrap py-16 md:py-20" aria-labelledby="trust-title">
       <div className="px-4">
         <Reveal>
           <div className="container mx-auto max-w-2xl text-center">
@@ -59,7 +60,7 @@ export function TrustBento() {
                         <TrustGlyph name={feature.key} />
                       </span>
                       <div>
-                        <h3 className="m-0 text-sm font-extrabold">{feature.title}</h3>
+                        <h3 className="m-0 text-base font-black">{feature.title}</h3>
                         <p className="mt-1 text-xs leading-6 text-foreground/65">{feature.description}</p>
                       </div>
                     </li>
@@ -76,7 +77,7 @@ export function TrustBento() {
 
           <Reveal delay={80} className="lg:col-span-2">
             <article className="glass-smoked h-full rounded-2xl p-8 transition-all duration-300 hover:border-champagne/40">
-              <span className="font-mono text-[9px] tracking-[0.14em] text-champagne">CUSTOMER JOURNEY</span>
+              <span className="font-mono text-xs tracking-[0.14em] text-champagne">CUSTOMER JOURNEY</span>
               <h3 className="mt-3 text-base font-black">ارتباط بعد از خرید تمام نمی‌شود.</h3>
               <ol className="m-0 mt-5 list-none space-y-3 p-0">
                 {customerJourney.map((step, index) => (
@@ -92,9 +93,9 @@ export function TrustBento() {
 
           <Reveal delay={140}>
             <article className="glass-smoked h-full rounded-2xl p-6 transition-all duration-300 hover:border-champagne/40">
-              <span className="font-mono text-[9px] tracking-[0.14em] text-champagne">VERIFIED TRUST</span>
+              <span className="font-mono text-xs tracking-[0.14em] text-champagne">VERIFIED TRUST</span>
               <BadgeCheck className="mt-4 size-7 text-champagne" strokeWidth={1.5} aria-hidden="true" />
-              <h3 className="mt-3 text-sm font-black">رضایت و اعتماد ماندگار</h3>
+              <h3 className="mt-3 text-base font-black">رضایت و اعتماد ماندگار</h3>
               <p className="mt-2 text-xs leading-6 text-foreground/65">
                 با بیش از ۲۰ سال سابقه تخصصی در بازار موبایل مشهد، گارانتی رسمی و پشتیبانی واقعی تعهد همیشگی ما به شماست.
               </p>
@@ -104,13 +105,13 @@ export function TrustBento() {
           <Reveal delay={200}>
             <article className="glass-smoked flex h-full flex-col justify-between rounded-2xl p-6 transition-all duration-300 hover:border-champagne/40">
               <div>
-                <span className="font-mono text-[9px] tracking-[0.14em] text-champagne">TRUST SIGNALS</span>
+                <span className="font-mono text-xs tracking-[0.14em] text-champagne">TRUST SIGNALS</span>
                 <div className="mt-4 flex flex-wrap gap-x-3 gap-y-2">
                   {customerTrustSignals.map((signal) => (
                     <Link
                       key={signal.label}
                       href={signal.href}
-                      className="flex min-h-11 items-center gap-1.5 text-[11px] text-foreground/70 hover:text-champagne transition-colors md:min-h-0"
+                      className="flex min-h-11 items-center gap-1.5 text-xs text-foreground/70 hover:text-champagne transition-colors md:min-h-0"
                     >
                       <BadgeCheck className="size-3.5 text-champagne" aria-hidden="true" />
                       {signal.label}
@@ -118,9 +119,12 @@ export function TrustBento() {
                   ))}
                 </div>
               </div>
+              {/* The champagne fill is the money CTA — buying starts here —
+                  so it maps to the Button system's default variant instead of
+                  a one-off hand-rolled pill. */}
               <Link
                 href="/shop"
-                className="mt-6 inline-flex items-center justify-center gap-1.5 rounded-full bg-champagne px-5 py-3 text-sm font-bold text-ink shadow-glow-cta transition-transform duration-fast hover:-translate-y-0.5 active:scale-95"
+                className={buttonVariants({ variant: "default", className: "mt-6" })}
               >
                 شروع خرید <ArrowLeft className="size-4" />
               </Link>

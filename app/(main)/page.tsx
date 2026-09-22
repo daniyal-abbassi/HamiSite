@@ -31,7 +31,6 @@ import { AccessoryUniverse } from "@/components/home/AccessoryUniverse";
 import { MobileQuickRoutes } from "@/components/home/TrustBar";
 import { TrustBento } from "@/components/home/TrustBento";
 import { CategoryHub } from "@/components/home/CategoryHub";
-import { CampaignBanner } from "@/components/home/CampaignBanner";
 import { B2bSection } from "@/components/home/B2bSection";
 import { OnlineServices } from "@/components/home/OnlineServices";
 import { StoreExperience } from "@/components/home/StoreExperience";
@@ -178,7 +177,9 @@ export default function HomePage() {
       <FeaturedProducts />
       <CategoryHub />
       <BrandShowcase />
-      <CampaignBanner />
+      {/* CampaignBanner removed (distill): it sold no offer, product, or
+          urgency — generic ad copy plus the logo in the page's most expensive
+          slot. Restore it only when there is a real campaign to carry. */}
       <NewArrivals />
       <B2bSection />
       <AccessoryUniverse />

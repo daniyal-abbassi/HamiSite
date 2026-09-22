@@ -122,7 +122,7 @@ function Field({
       </label>
       {children}
       {error && (
-        <p className="text-[11px] font-medium text-destructive" role="alert">
+        <p className="text-xs font-medium text-destructive" role="alert">
           {error}
         </p>
       )}
@@ -206,7 +206,7 @@ function FileField({
             <span className="min-w-0">
               <span className="block truncate text-xs font-bold">{fileName}</span>
               {fileSize !== null && (
-                <span className="mt-0.5 block text-[10px] text-foreground/50">{formatFileSize(fileSize)}</span>
+                <span className="mt-0.5 block text-xs text-foreground/50">{formatFileSize(fileSize)}</span>
               )}
             </span>
           ) : (
@@ -217,7 +217,7 @@ function FileField({
           <button
             type="button"
             onClick={onClear}
-            className="text-[10px] font-bold text-foreground/50 hover:text-aqua"
+            className="text-xs font-bold text-foreground/50 hover:text-aqua"
             aria-label={`حذف فایل ${label}`}
           >
             حذف
@@ -301,7 +301,7 @@ export function PartnerForm() {
         <p className="mx-auto mt-2 max-w-md text-sm leading-7 text-foreground/65">
           پس از بررسی مدارک، کارشناسان حامی همراه برای تکمیل مراحل همکاری با شما تماس می‌گیرند.
         </p>
-        <span className="mt-4 inline-block rounded-xl border border-line px-3 py-1.5 font-mono text-[11px] tracking-[0.08em] text-aqua">
+        <span className="mt-4 inline-block rounded-xl border border-line px-3 py-1.5 font-mono text-xs tracking-[0.08em] text-aqua">
           {`Track / ${status.id}`}
         </span>
       </div>
@@ -354,7 +354,7 @@ export function PartnerForm() {
                 )}
               >
                 {option.label}
-                <span className="block text-[10px] font-medium opacity-70">{option.hint}</span>
+                <span className="block text-xs font-medium opacity-70">{option.hint}</span>
               </button>
             );
           })}
@@ -384,7 +384,7 @@ export function PartnerForm() {
         {/* Branch-specific fields */}
         <div className="md:col-span-2">
           <div className="border-t border-line pt-5">
-            <h3 className="font-mono text-[10px] tracking-[0.08em] text-aqua">
+            <h3 className="font-mono text-xs tracking-[0.08em] text-aqua">
               {branchIsIndividual ? "INDIVIDUAL / حقیقی" : "LEGAL / حقوقی"}
             </h3>
             <div className="mt-4 grid gap-4 md:grid-cols-2">
@@ -420,7 +420,7 @@ export function PartnerForm() {
         </div>
       </div>
 
-      <p className="mt-5 text-[11px] leading-5 text-foreground/50">{partnerFileTypesNote}</p>
+      <p className="mt-5 text-xs leading-5 text-foreground/50">{partnerFileTypesNote}</p>
 
       <div className="mt-6 flex flex-wrap items-center gap-3 border-t border-line pt-6">
         <Button type="submit" size="lg" disabled={status.kind === "submitting"}>
@@ -432,7 +432,7 @@ export function PartnerForm() {
             "ثبت درخواست همکاری"
           )}
         </Button>
-        <span className="text-[11px] text-foreground/50">پس از ارسال، مدارک بررسی و با شما تماس گرفته می‌شود.</span>
+        <span className="text-xs text-foreground/50">پس از ارسال، مدارک بررسی و با شما تماس گرفته می‌شود.</span>
       </div>
     </form>
   );

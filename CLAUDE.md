@@ -1,6 +1,6 @@
 ## Two apps in one repo — and two references
 
-- **Repo root** — Next.js 14 App Router + Prisma/PostgreSQL. The API surface
+- **Repo root** — Next.js 15.5.25 App Router + Prisma/PostgreSQL. The API surface
   (`app/api/**`) is healthy and complete; `npm run typecheck` passes clean.
   **The storefront frontend is being built in this same app** (App Router,
   same-origin) — the `SameSite=Lax` session-cookie design requires it.

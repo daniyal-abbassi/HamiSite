@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import { apiGet } from "@/lib/api-client";
 import { ProductCard, type ProductCardData } from "@/components/shop/ProductCard";
 import { formatToman } from "@/lib/utils";
@@ -20,6 +20,7 @@ type NewArrivalProduct = {
 
 export function NewArrivals() {
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", direction: "rtl", containScroll: "trimSnaps" });
+  const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
   const [products, setProducts] = useState<NewArrivalProduct[] | null>(null);
   const [error, setError] = useState(false);
@@ -35,7 +36,9 @@ export function NewArrivals() {
   }, []);
 
   const onSelect = useCallback(() => {
-    if (emblaApi) setCanNext(emblaApi.canScrollNext());
+    if (!emblaApi) return;
+    setCanPrev(emblaApi.canScrollPrev());
+    setCanNext(emblaApi.canScrollNext());
   }, [emblaApi]);
 
   useEffect(() => {
@@ -48,7 +51,7 @@ export function NewArrivals() {
   }, [emblaApi, onSelect]);
 
   return (
-    <section id="new-arrivals" className="wrap container py-14" aria-labelledby="new-arrivals-title">
+    <section id="new-arrivals" className="wrap container py-16 md:py-20" aria-labelledby="new-arrivals-title">
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
@@ -64,15 +67,29 @@ export function NewArrivals() {
             <Link href="/shop" className="inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
               مشاهده همه <ArrowLeft className="size-4" />
             </Link>
-            <button
-              type="button"
-              onClick={() => emblaApi?.scrollNext()}
-              aria-label="نمایش محصولات جدید بعدی"
-              disabled={!emblaApi || !canNext}
-              className="grid size-10 place-items-center rounded-full border border-aqua/50 text-aqua transition-colors hover:bg-aqua/10 disabled:opacity-40"
-            >
-              <ArrowLeft className="size-4" />
-            </button>
+            {/* Paired prev/next. The rail used to ship a next-only button:
+                once scrolled (RTL), the only way back was a swipe, which
+                keyboard and desktop-mouse users had no equivalent for. */}
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => emblaApi?.scrollPrev()}
+                aria-label="نمایش محصولات جدید قبلی"
+                disabled={!emblaApi || !canPrev}
+                className="grid size-11 place-items-center rounded-full border border-aqua/50 text-aqua transition-colors hover:bg-aqua/10 disabled:opacity-40"
+              >
+                <ArrowRight className="size-4" />
+              </button>
+              <button
+                type="button"
+                onClick={() => emblaApi?.scrollNext()}
+                aria-label="نمایش محصولات جدید بعدی"
+                disabled={!emblaApi || !canNext}
+                className="grid size-11 place-items-center rounded-full border border-aqua/50 text-aqua transition-colors hover:bg-aqua/10 disabled:opacity-40"
+              >
+                <ArrowLeft className="size-4" />
+              </button>
+            </div>
           </div>
         </div>
       </Reveal>
@@ -129,7 +146,8 @@ function NewArrivalsRail({ products, emblaRef }: RailProps) {
 function ArrivalCard({ product }: { product: NewArrivalProduct }) {
   return (
     <div className="min-w-0 flex-[0_0_45%] sm:flex-[0_0_46%] lg:flex-[0_0_32%]">
-      <ProductCard product={product satisfies ProductCardData} />
+      {/* Use a lighter card variant here to improve contrast against the dark background */}
+      <ProductCard product={product satisfies ProductCardData} variant="museum" />
     </div>
   );
 }

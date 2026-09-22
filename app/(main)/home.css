@@ -93,11 +93,15 @@
   position: absolute;
   inset: 0;
   border-radius: inherit;
+  /* The gradient MUST end transparent. It used to end at opaque #DFD3BF,
+     so mid-reveal the clip-path circle showed a hard cream rim against the
+     dark stage — a floating «phantom shape» cut off at its arc (and harder
+     still where the stage's overflow clipped it straight). Fading to 0 by
+     ~82% makes the reveal a soft wash of light under any clip radius. */
   background:
-    radial-gradient(circle 1400px at 0% 0%, #FAF8F5 0%, #F5F0E6 38%, #ECE4D6 65%, #DFD3BF 100%);
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.9),
-    inset 0 0 40px rgba(229, 211, 179, 0.35);
+    radial-gradient(circle 1400px at 0% 0%, #FAF8F5 0%, #F5F0E6 30%, rgba(236, 228, 214, 0.55) 55%, rgba(223, 211, 191, 0) 82%);
+  /* No inset box-shadow: its 1px white top hairline painted at the div's
+     own bounds — another straight hard edge during the reveal. */
   will-change: clip-path, opacity;
 }
 .cat-corner-glow::after {
@@ -110,81 +114,351 @@
 }
 
 
+
+
+
+/* ---------- category catalogue: quiet, direct navigation ---------- */
+.category-catalogue {
+  --catalogue-paper: #faf4e6;
+  --catalogue-ink: #21181a;
+  --catalogue-muted: #5d5552;
+  --catalogue-brand: #640211;
+  position: relative;
+  margin-block: 2.5rem;
+  padding: clamp(1.25rem, 4vw, 3rem);
+  border-radius: 28px;
+  background: var(--catalogue-paper);
+  color: var(--catalogue-ink);
+  scroll-margin-block-start: 7rem;
+}
+.category-catalogue__head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-block-end: 2rem;
+}
+.category-kicker {
+  color: var(--catalogue-brand);
+  font-size: 0.875rem;
+  font-weight: 700;
+}
+.category-catalogue h2 {
+  margin-block: 0.75rem;
+  color: var(--catalogue-ink);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.5;
+  text-wrap: balance;
+}
+.category-catalogue h2 span { color: var(--catalogue-brand); }
+.category-catalogue__head p {
+  max-width: 30rem;
+  color: var(--catalogue-muted);
+  font-size: 0.9375rem;
+  line-height: 1.9;
+}
+.category-catalogue__all {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 48px;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--catalogue-brand);
+  border-radius: 999px;
+  background: var(--catalogue-brand);
+  color: var(--catalogue-paper);
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: transform 100ms ease-out;
+}
 .cat-grid {
   display: grid;
-  gap: 16px;
-  grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: 205px;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem 1rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
 }
-@media (min-width: 768px) {
-  .cat-grid {
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-areas:
-      "mobile mobile audio charging"
-      "mobile mobile watch power"
-      "feature party party services";
-    grid-auto-rows: 235px;
-  }
+.cat-grid > li { min-width: 0; }
+.cat-cell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: start;
+  height: 100%;
+  border-radius: 22px;
+  color: var(--catalogue-ink);
+  transition: transform 100ms ease-out;
+  -webkit-tap-highlight-color: rgba(100, 2, 17, 0.12);
 }
-.cat-card {
-  --foreground: 240 236 233;
-  --muted-foreground: 186 170 164;
-  position: relative;
-  display: flex;
-  overflow: hidden;
-  border-radius: 24px;
-  border: 1px solid rgba(229, 211, 179, 0.22);
-  background: linear-gradient(165deg, #18070B 0%, #0F0306 100%);
-  color: #F0ECE9;
-  box-shadow:
-    0 10px 25px -5px rgba(20, 5, 10, 0.28),
-    0 24px 52px -12px rgba(20, 5, 10, 0.22),
-    0 0 1px 1px rgba(229, 211, 179, 0.15);
-  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s, box-shadow 0.35s;
-}
-.cat-card h3 {
-  color: #F0ECE9 !important;
-}
-.cat-card small {
-  color: rgba(240, 236, 233, 0.6) !important;
-}
-.cat-card p {
-  color: rgba(240, 236, 233, 0.65) !important;
-}
-.cat-card:hover {
-  transform: translateY(-8px) scale(1.012);
-  border-color: rgba(229, 211, 179, 0.65);
-  box-shadow:
-    0 18px 40px -8px rgba(20, 5, 10, 0.4),
-    0 38px 75px -16px rgba(20, 5, 10, 0.32),
-    0 0 24px -4px rgba(229, 211, 179, 0.3);
-}
-.cat-card--mobile { grid-area: mobile; }
-.cat-card--audio { grid-area: audio; }
-.cat-card--charging { grid-area: charging; }
-.cat-card--watch { grid-area: watch; }
-.cat-card--power { grid-area: power; }
-.cat-card--feature { grid-area: feature; }
-.cat-card--party { grid-area: party; }
-.cat-card--services { grid-area: services; }
-.cat-art {
-  position: absolute;
-  inset: 0;
+.cat-panel {
+  grid-column: 1 / -1;
   display: grid;
   place-items: center;
-  background:
-    radial-gradient(circle at 70% 30%, rgba(229, 211, 179, 0.16), transparent 55%),
-    linear-gradient(150deg, rgba(156, 10, 34, 0.55), rgba(58, 1, 10, 0.85));
-  color: rgba(229, 211, 179, 0.85);
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border-radius: 22px;
+  background: var(--catalogue-brand);
 }
-.cat-art i {
+.cat-panel-image {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  object-fit: contain;
+  mix-blend-mode: screen;
+}
+.cat-copy { min-width: 0; padding-block: 1rem 0.5rem; }
+.cat-copy h3 {
+  color: var(--catalogue-ink);
+  font-size: clamp(1rem, 1.5vw, 1.1875rem);
+  font-weight: 700;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.cat-detail {
+  display: block;
+  margin-block-start: 0.25rem;
+  color: var(--catalogue-muted);
+  font-size: 0.8125rem;
+  line-height: 1.8;
+  text-align: start;
+  overflow-wrap: anywhere;
+}
+.cat-arrow {
+  width: 1rem;
+  height: 1rem;
+  margin-block-start: 1.5rem;
+  margin-inline-start: 0.5rem;
+  color: var(--catalogue-brand);
+}
+.category-catalogue a:focus-visible {
+  outline: 3px solid var(--catalogue-brand);
+  outline-offset: 5px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .cat-cell:hover h3 { text-decoration: underline; text-underline-offset: 0.3em; }
+  .category-catalogue__all:hover { background: #3d020b; }
+}
+.category-catalogue__all:active,
+.cat-cell:active { transform: scale(0.97); }
+@media (min-width: 768px) {
+  .cat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem 1.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cat-cell, .category-catalogue__all { transition: none; }
+  .cat-cell:active, .category-catalogue__all:active { transform: none; }
+}
+@media (prefers-contrast: more) {
+  .category-catalogue { --catalogue-muted: #21181a; }
+  .cat-panel { border: 2px solid var(--catalogue-ink); }
+}
+
+/* ---------- brands: stacked rows (feature 004 / US1) ---------- */
+/* Separation is a hairline, never a band: US2's emphasis lays a coloured band over the
+   chosen row, and the resting list must not already look like something is selected. */
+.brand-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(229, 211, 179, 0.16);
+}
+/* The row. Its height never changes — emphasis moves surface and visibility only, so the
+   row below the one you pressed cannot slide out from under your thumb (research.md D5,
+   contract C11). The detail region is therefore reserved from the start. */
+.brand-rows__item {
+  position: relative;
+  /* Own stacking context, so the emphasis layer below can sit behind the row's content
+     without a z-index on every child. */
+  isolation: isolate;
+  display: grid;
+  /* ordinal | mark | label | count | expand, then the story band across the full measure.
+     Every column is placed on the inline axis, so the list mirrors for RTL without a
+     second rule anywhere. The mark column is fixed at 5.75rem because the Samsung
+     wordmark measures 91px at the optical height BrandMarks gives it — a narrower column
+     would have the mark bleed into the name. */
+  grid-template-columns: 1.5rem 5.75rem minmax(0, 1fr) auto 2.75rem;
+  grid-template-areas:
+    "index mark label count expand"
+    "detail detail detail detail detail";
+  align-items: center;
+  gap: 0.125rem 0.25rem;
+  min-height: 6rem;
+  padding: 0.75rem 0.25rem;
+  border-bottom: 1px solid rgba(229, 211, 179, 0.16);
+  color: #f0ece9;
+  transition: border-color 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+/* The emphasis surface is a pseudo-element whose opacity moves, not a `background`
+   transition. A gradient is a background-image and background-image does not interpolate,
+   so transitioning it — or the background-color underneath it, which never changes — makes
+   the band appear in one frame while everything around it eases. US2 scenario 5 asks for a
+   transition that arrives smoothly with no flicker, and opacity is also the cheaper of the
+   two to composite. */
+.brand-rows__item::before {
+  content: "";
   position: absolute;
-  border: 1px solid rgba(229, 211, 179, 0.25);
-  border-radius: 50%;
+  inset: 0;
+  z-index: -1;
+  background: linear-gradient(to left, rgba(100, 2, 17, 0.85), rgba(61, 2, 11, 0.55));
+  opacity: 0;
+  transition: opacity 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
 }
-.cat-art i:nth-child(1) { width: 46%; aspect-ratio: 1; }
-.cat-art i:nth-child(2) { width: 66%; aspect-ratio: 1; opacity: 0.55; }
-.cat-art i:nth-child(3) { width: 88%; aspect-ratio: 1; opacity: 0.25; }
+/* The row itself is the destination: one stretched link under the whole thing, so the
+   first press anywhere on the row navigates (C6) and the expand control is lifted back
+   above it as the only other target. */
+.brand-rows__go {
+  grid-area: 1 / 1 / -1 / -1;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 0.5rem;
+}
+.brand-rows__go:focus-visible {
+  outline: 2px solid #e5d3b3;
+  outline-offset: -3px;
+}
+.brand-rows__item[data-emphasised] {
+  border-bottom-color: rgba(229, 211, 179, 0.4);
+}
+.brand-rows__item[data-emphasised]::before {
+  opacity: 1;
+}
+.brand-rows__index {
+  grid-area: index;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0;
+  /* 0.72, not the 0.5 this started at: the ordinal sits where the emphasised band is at
+     its brightest, and at 0.5 it measured 3.3:1 there — below 4.5:1 for text this small. */
+  color: rgba(229, 211, 179, 0.72);
+}
+.brand-rows__mark {
+  grid-area: mark;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: #e5d3b3;
+}
+/* 001/FR-057 — tracking breaks letter joining in Persian. Set to zero explicitly rather
+   than left alone, so an inherited `tracking-*` cannot reach it and the browser check in
+   quickstart §3 reads a real value instead of "normal". */
+.brand-rows__label {
+  grid-area: label;
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+/* The count is a fact from the catalogue, on the name's own line, on all six rows, in both
+   states. It is what makes the row answer with something real whatever brand it is. */
+.brand-rows__count {
+  grid-area: count;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0;
+  color: rgba(229, 211, 179, 0.68);
+  transition: color 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.brand-rows__item[data-emphasised] .brand-rows__count {
+  color: #f4eadb;
+}
+/* The expand control. Its own focus stop, its own accessible name, and a 44px target —
+   it is the only thing above the row link, so it is the only press that does not navigate. */
+.brand-rows__expand {
+  grid-area: expand;
+  position: relative;
+  z-index: 2;
+  display: grid;
+  place-items: center;
+  justify-self: end;
+  width: 2.75rem;
+  min-height: 2.75rem;
+  border-radius: 0.5rem;
+  color: rgba(229, 211, 179, 0.6);
+  transition: color 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.brand-rows__expand:hover {
+  color: #e5d3b3;
+}
+.brand-rows__expand:focus-visible {
+  outline: 2px solid #e5d3b3;
+  outline-offset: -2px;
+}
+.brand-rows__chevron {
+  width: 1.125rem;
+  height: 1.125rem;
+  transition: transform 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.brand-rows__item[data-emphasised] .brand-rows__chevron {
+  transform: rotate(180deg);
+}
+/* The story band under the name. Its height is fixed rather than content-driven, so all
+   six rows share one geometry and a brand with no written story is not a shorter row —
+   Q3 asks for the opposite. `visibility` keeps the hidden story out of the accessibility
+   tree, so a resting row announces as a destination and nothing else. */
+.brand-rows__detail {
+  grid-area: detail;
+  display: grid;
+  height: 2.75rem;
+  padding-block-start: 0.375rem;
+}
+.brand-rows__story {
+  display: grid;
+  gap: 0.125rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 220ms cubic-bezier(0.2, 0.7, 0.3, 1), visibility 0s linear 220ms;
+}
+.brand-rows__item[data-emphasised] .brand-rows__story {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.brand-rows__story-title {
+  font-size: 0.9375rem;
+  font-weight: 800;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: #f4eadb;
+}
+.brand-rows__story-text {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: rgba(240, 236, 233, 0.72);
+  max-width: 46ch;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* C17: the same brands, marks, stories and destinations, with emphasis as a state
+     change rather than travel. Nothing is hidden and nothing moves. */
+  .brand-rows__item,
+  .brand-rows__item::before,
+  .brand-rows__expand,
+  .brand-rows__story {
+    transition: none;
+  }
+  .brand-rows__chevron {
+    transition: none;
+    transform: none;
+  }
+  .brand-rows__item[data-emphasised] .brand-rows__chevron {
+    transform: none;
+  }
+}
+@media (min-width: 768px) {
+  /* The list is capped rather than stretched: a six-row brand list at 1232px is one
+     long hairline with nothing on it. */
+  .brand-rows { max-width: 46rem; }
+  .brand-rows__item {
+    grid-template-columns: 2.25rem 8rem minmax(0, 1fr) auto 3rem;
+    gap: 0.25rem 1.5rem;
+    min-height: 5rem;
+    padding: 0.75rem 0.5rem;
+  }
+  .brand-rows__label { font-size: 1.5rem; }
+}
 
 /* ---------- why-hami proof compositions ---------- */
 .proof-media {
@@ -208,7 +482,7 @@
 .brand-composition b {
   display: block;
   font-family: var(--font-dm-mono), monospace;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
   color: #F0ECE9;
 }
@@ -224,15 +498,12 @@
 .b2b-route small {
   display: block;
   font-family: var(--font-dm-mono), monospace;
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.12em;
   color: rgba(229, 211, 179, 0.7);
 }
-/* The only font-size in this project declared in CSS rather than as a utility,
-   which is why it survived the mobile type floor in globals.css — that rule
-   keys off `text-[9px]` in the class attribute and this element has none.
-   Same decision applies: a 9px mono kicker is unreadable on a phone and carries
-   nothing a shopper needs. */
+/* Legible now (12px), but still a decorative kicker a phone doesn't need —
+   hidden on mobile purely to declutter, not for readability. */
 @media (max-width: 767px) {
   .b2b-route small {
     display: none;

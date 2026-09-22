@@ -17,7 +17,7 @@ const TERMINAL_STATUSES = ["CANCELED", "FAILED", "REVERSED"];
 
 function Badge({ label, tone }: { label: string; tone: string }) {
   return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full border border-line bg-foreground/5 px-3 py-1 text-[11px] font-bold ${tone}`}>
+    <span className={`inline-flex items-center gap-1.5 rounded-full border border-line bg-foreground/5 px-3 py-1 text-xs font-bold ${tone}`}>
       {label}
     </span>
   );
@@ -112,9 +112,9 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
       <div className="glass rounded-2xl p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="font-mono text-[10px] tracking-[0.12em] text-muted-foreground/70">ORDER</p>
+            <p className="font-mono text-xs tracking-[0.12em] text-muted-foreground/70">ORDER</p>
             <h2 className="mt-1 font-mono text-lg font-black text-aqua">{order.orderNumber}</h2>
-            <p className="mt-1 text-[11px] text-muted-foreground">ثبت‌شده در {formatFaDateTime(order.createdAt)}</p>
+            <p className="mt-1 text-xs text-muted-foreground">ثبت‌شده در {formatFaDateTime(order.createdAt)}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
             <Badge label={orderStatusLabels[order.status] ?? order.status} tone={orderStatusTone(order.status)} />
@@ -153,8 +153,8 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
             <li key={item.id} className="flex items-start justify-between gap-3 py-3 text-[13px]">
               <span className="min-w-0">
                 <span className="block font-bold">{item.productName}</span>
-                {item.variantName && <span className="block text-[11px] text-muted-foreground">{item.variantName}</span>}
-                <span className="mt-0.5 block font-mono text-[11px] text-muted-foreground">
+                {item.variantName && <span className="block text-xs text-muted-foreground">{item.variantName}</span>}
+                <span className="mt-0.5 block font-mono text-xs text-muted-foreground">
                   {item.quantity.toLocaleString("fa-IR")} × {formatToman(item.price)}
                 </span>
               </span>
@@ -233,11 +233,11 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
                 <li key={payment.id} className="flex items-start justify-between gap-2 text-[12px]">
                   <span>
                     <span className="block font-mono">{payment.transactionNumber}</span>
-                    <span className="block text-[11px] text-muted-foreground">{formatFaDate(payment.createdAt)}</span>
+                    <span className="block text-xs text-muted-foreground">{formatFaDate(payment.createdAt)}</span>
                   </span>
                   <span className="text-end">
                     <strong className="block font-mono">{formatToman(payment.amount)}</strong>
-                    <span className={`text-[11px] font-bold ${paymentStatusTones[payment.status] ?? "text-muted-foreground"}`}>
+                    <span className={`text-xs font-bold ${paymentStatusTones[payment.status] ?? "text-muted-foreground"}`}>
                       {paymentStatusLabels[payment.status] ?? payment.status}
                     </span>
                   </span>

@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
+import { categoryLinks } from "@/lib/content/home";
 
 /** Decorative blob from the reference shapes, rendered via CSS (no <img>). */
 function BlobDecor() {
@@ -28,7 +29,7 @@ const sideBanners = [
     src: "/images/banners/headphone.png",
     eyebrow: "SHOP / 03",
     title: "صوت، با جزئیات دقیق",
-    href: "/shop?category=audio",
+    href: categoryLinks.audio,
   },
 ] as const;
 
@@ -53,7 +54,7 @@ export function ShopBanner() {
               اصالت کالا، گارانتی رسمی و مشاوره تخصصی پیش از خرید.
             </p>
             <Link
-              href="/shop?category=mobile"
+              href={categoryLinks.mobile}
               className="mt-5 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-xs font-bold text-primary-foreground transition-opacity hover:opacity-90"
             >
               مشاهده موبایل‌ها <ArrowLeft className="size-4" />
@@ -88,9 +89,9 @@ export function ShopBanner() {
                 <Image src={banner.src} alt="" width={240} height={240} sizes="96px" className="size-full object-contain" />
               </div>
               <div>
-                <span className="font-mono text-[9px] tracking-[0.1em] text-aqua/80">{banner.eyebrow}</span>
+                <span className="font-mono text-xs tracking-[0.1em] text-aqua/80">{banner.eyebrow}</span>
                 <h3 className="mt-1.5 text-sm font-extrabold leading-6">{banner.title}</h3>
-                <span className="mt-2 inline-flex items-center gap-1 text-[11px] font-bold text-aqua">
+                <span className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-aqua">
                   مشاهده <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
                 </span>
               </div>

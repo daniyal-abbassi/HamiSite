@@ -85,7 +85,7 @@ export function MobileDock() {
             href={item.href}
             aria-current={active ? "page" : undefined}
             className={cn(
-              "relative flex flex-1 flex-col items-center gap-0.5 rounded-full py-1.5 text-[10px] font-bold transition-all duration-200",
+              "relative flex flex-1 flex-col items-center gap-0.5 rounded-full py-1.5 text-xs font-bold transition-all duration-200",
               active
                 ? "bg-champagne/15 text-champagne shadow-glow-gold"
                 : "text-foreground/60 hover:text-foreground/85 active:scale-95",
@@ -96,7 +96,7 @@ export function MobileDock() {
               {badge != null && badge > 0 && (
                 <span
                   aria-hidden="true"
-                  className="absolute -end-2.5 -top-1 grid h-[15px] min-w-[15px] place-items-center rounded-full bg-champagne px-1 font-mono text-[9px] font-black leading-none text-primary-foreground shadow-sm"
+                  className="absolute -end-2.5 -top-1 grid h-[15px] min-w-[15px] place-items-center rounded-full bg-champagne px-1 font-mono text-xs font-black leading-none text-primary-foreground shadow-sm"
                 >
                   {badge.toLocaleString("fa-IR")}
                 </span>

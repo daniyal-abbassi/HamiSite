@@ -284,6 +284,11 @@ export function CardSwap({
 
       {/* Required, not decorative: auto-advancing content has to offer a stop.
           Placed outside the perspective container so it is not transformed. */}
+        {/* Stop control. Pinned centered UNDER the stack, not on the front
+            card's edge: `-bottom-2 end-0` put it at the bottom-left (RTL),
+            overlapping the card — it read as a phantom dark circle artifact
+            glued to the artwork (the 3-cards capture). The wrapper below has
+            py-16 of clear space, so -bottom-14 lands there, clear of cards. */}
       <button
         type="button"
         onClick={() => {
@@ -300,7 +305,7 @@ export function CardSwap({
           holdRef.current = false;
         }}
         aria-label={playing ? `توقف ${label}` : `پخش ${label}`}
-        className="absolute -bottom-2 end-0 z-20 grid size-11 place-items-center rounded-full border border-line bg-card/85 text-foreground/75 backdrop-blur transition-colors hover:bg-foreground/10 hover:text-foreground"
+        className="absolute -bottom-14 left-1/2 z-20 grid size-11 -translate-x-1/2 place-items-center rounded-full border border-champagne/25 bg-[#14060A]/85 text-foreground/75 backdrop-blur transition-colors hover:border-champagne/50 hover:bg-foreground/10 hover:text-foreground"
       >
         {playing ? <Pause className="size-4" aria-hidden="true" /> : <Play className="size-4" aria-hidden="true" />}
       </button>

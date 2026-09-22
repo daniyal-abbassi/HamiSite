@@ -8,7 +8,7 @@ function ProofMedia({ media }: { media: string }) {
     return (
       <div className="store-architecture text-center" aria-hidden="true">
         <i /><i /><i />
-        <span className="mt-3 block font-mono text-[9px] tracking-[0.12em] text-primary/70">PHYSICAL PRESENCE</span>
+        <span className="mt-3 block font-mono text-xs tracking-[0.12em] text-primary/70">PHYSICAL PRESENCE</span>
         <b className="mt-1 block text-xs font-bold text-foreground/70">تصویر واقعی فروشگاه در انتظار افزودن</b>
       </div>
     );
@@ -18,7 +18,7 @@ function ProofMedia({ media }: { media: string }) {
       <div className="product-composition text-center" aria-hidden="true">
         <b>CURATED</b>
         <b>PRODUCTS</b>
-        <span className="mt-2 block font-mono text-[9px] tracking-[0.12em] text-primary/70">SELECTED WITH CARE</span>
+        <span className="mt-2 block font-mono text-xs tracking-[0.12em] text-primary/70">SELECTED WITH CARE</span>
       </div>
     );
   }
@@ -26,14 +26,14 @@ function ProofMedia({ media }: { media: string }) {
     return (
       <div className="brand-composition" aria-hidden="true">
         {brandWall.slice(0, 5).map((brand) => <b key={brand.name}>{brand.name}</b>)}
-        <span className="mt-2 block font-mono text-[9px] tracking-[0.12em] text-primary/70">MULTI / BRAND</span>
+        <span className="mt-2 block font-mono text-xs tracking-[0.12em] text-primary/70">MULTI / BRAND</span>
       </div>
     );
   }
   return (
     <div className="b2b-route" aria-hidden="true">
       <div>
-        <span className="font-mono text-[10px] tracking-[0.12em] text-primary/80">PARTNER</span>
+        <span className="font-mono text-xs tracking-[0.12em] text-primary/80">PARTNER</span>
         <i />
         <b className="block font-mono text-sm tracking-[0.1em] text-foreground/85">ROUTE</b>
       </div>
@@ -59,10 +59,10 @@ export function WhyHamiProofs() {
                 <ProofMedia media={proof.media} />
               </div>
               <div className="flex flex-1 flex-col p-6">
-                <span className="font-mono text-[9px] tracking-[0.12em] text-primary">{proof.eyebrow}</span>
+                <span className="font-mono text-xs tracking-[0.12em] text-primary">{proof.eyebrow}</span>
                 <h3 className="mt-2 text-base font-black">{proof.title}</h3>
                 <p className="mt-2 text-[13px] leading-7 text-foreground/65">{proof.description}</p>
-                <small className="mt-1 text-[11px] text-foreground/60">{proof.mediaNote}</small>
+                <small className="mt-1 text-xs text-foreground/60">{proof.mediaNote}</small>
                 <Link href={proof.href} className="mt-auto inline-flex items-center gap-1.5 pt-4 text-xs font-bold text-primary hover:underline">
                   {proof.cta} <ArrowLeft className="size-3.5" />
                 </Link>
@@ -78,7 +78,7 @@ export function WhyHamiProofs() {
         </blockquote>
         <div className="mt-8 flex flex-wrap items-center justify-center gap-x-3 gap-y-2" aria-label="امضای خدمات حامی همراه">
           {whyHamiTrustStrip.map((item, index) => (
-            <span key={item} className="flex items-center gap-3 text-[11px] text-foreground/55">
+            <span key={item} className="flex items-center gap-3 text-xs text-foreground/55">
               {index > 0 && <i className="size-1 rounded-full bg-primary/60" aria-hidden="true" />}
               {item}
             </span>

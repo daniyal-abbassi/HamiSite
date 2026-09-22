@@ -199,7 +199,7 @@ export function ProductDetail({ slug }: Props) {
        the tags row at the bottom of this page sits behind both. */
     <div className="pb-[calc(7.5rem+env(safe-area-inset-bottom))] md:pb-0">
       {/* Breadcrumb */}
-      <nav aria-label="مسیر صفحه" className="mb-6 flex flex-wrap items-center gap-1.5 text-[11px] text-muted-foreground/70">
+      <nav aria-label="مسیر صفحه" className="mb-6 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground/70">
         <Link href="/" className="transition-colors hover:text-aqua">خانه</Link>
         <span aria-hidden="true">/</span>
         <Link href="/shop" className="transition-colors hover:text-aqua">فروشگاه</Link>
@@ -220,7 +220,7 @@ export function ProductDetail({ slug }: Props) {
         {/* Image Vitrine */}
         <div className="relative aspect-square overflow-hidden rounded-3xl glass-smoked border border-champagne/25 shadow-monolith">
           {product.specialOffer && (
-            <span className="absolute start-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-champagne/30 bg-oxblood/90 px-3.5 py-1.5 font-mono text-[9px] tracking-[0.14em] text-champagne backdrop-blur-md shadow-glow-oxblood">
+            <span className="absolute start-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-champagne/30 bg-oxblood/90 px-3.5 py-1.5 font-mono text-xs tracking-[0.14em] text-champagne backdrop-blur-md shadow-glow-oxblood">
               <Sparkles className="size-3 text-champagne" />
               SPECIAL OFFER
             </span>
@@ -237,13 +237,13 @@ export function ProductDetail({ slug }: Props) {
 
         {/* Buy box */}
         <div>
-          <span className="font-mono text-[10px] tracking-[0.14em] text-champagne">
+          <span className="font-mono text-xs tracking-[0.14em] text-champagne">
             {product.brand?.name ?? "—"}
             {product.englishName ? ` · ${product.englishName}` : ""}
           </span>
           <h1 className="mt-2 text-2xl font-black leading-snug md:text-3xl text-foreground">{product.name}</h1>
 
-          <div className="mt-3 flex flex-wrap items-center gap-2 text-[11px]">
+          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
             <span className={cn("inline-flex items-center gap-1.5 rounded-full border border-champagne/20 bg-champagne/5 px-3 py-1", stockType === "out_of_stock" && "text-destructive")}>
               <i className={cn("size-1.5 rounded-full", stockType === "out_of_stock" ? "bg-destructive" : "bg-emerald-400")} aria-hidden="true" />
               {stockLabels[stockType] ?? "—"}
@@ -253,7 +253,7 @@ export function ProductDetail({ slug }: Props) {
                 گارانتی: {selectedVariant.guarantee}
               </span>
             )}
-            <span className="rounded-full border border-champagne/20 bg-champagne/5 px-3 py-1 font-mono text-[10px] text-champagne">
+            <span className="rounded-full border border-champagne/20 bg-champagne/5 px-3 py-1 font-mono text-xs text-champagne">
               ضمانت اصالت ۱۰۰٪
             </span>
           </div>
@@ -268,7 +268,7 @@ export function ProductDetail({ slug }: Props) {
                   {formatToman(unitPrice * quantity)}
                 </strong>
                 {quantity > 1 && (
-                  <span className="font-mono text-[11px] text-muted-foreground">
+                  <span className="font-mono text-xs text-muted-foreground">
                     ({toFaDigits(quantity)} × {formatToman(unitPrice)})
                   </span>
                 )}
@@ -281,7 +281,7 @@ export function ProductDetail({ slug }: Props) {
             )}
 
             {tierActive && tier && (
-              <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-aqua/15 px-3 py-1.5 text-[11px] font-bold text-aqua">
+              <p className="mt-3 inline-flex items-center gap-1.5 rounded-full bg-aqua/15 px-3 py-1.5 text-xs font-bold text-aqua">
                 <Check className="size-3.5" />
                 قیمت عمده فعال شد
                 {tier.discountPercent ? ` — ${toFaDigits(tier.discountPercent)}٪ تخفیف` : ""}
@@ -294,7 +294,7 @@ export function ProductDetail({ slug }: Props) {
             <div className="mt-6 space-y-4">
               {storages.length > 0 && (
                 <div>
-                  <p className="mb-2 font-mono text-[10px] tracking-[0.1em] text-muted-foreground/70">حافظه</p>
+                  <p className="mb-2 font-mono text-xs tracking-[0.1em] text-muted-foreground/70">حافظه</p>
                   <div className="flex flex-wrap gap-2">
                     {storages.map((storage) => (
                       <Chip key={storage} label={`حافظه ${storage}`} active={selectedVariant?.storage === storage} onClick={() => pickByStorage(storage)}>
@@ -306,7 +306,7 @@ export function ProductDetail({ slug }: Props) {
               )}
               {colors.length > 0 && (
                 <div>
-                  <p className="mb-2 font-mono text-[10px] tracking-[0.1em] text-muted-foreground/70">رنگ</p>
+                  <p className="mb-2 font-mono text-xs tracking-[0.1em] text-muted-foreground/70">رنگ</p>
                   <div className="flex flex-wrap gap-2">
                     {colors.map((color) => (
                       <Chip key={color} label={`رنگ ${color}`} active={selectedVariant?.color === color} onClick={() => pickByColor(color)}>
@@ -318,7 +318,7 @@ export function ProductDetail({ slug }: Props) {
               )}
               {isWholesale && (
                 <div>
-                  <p className="mb-2 font-mono text-[10px] tracking-[0.1em] text-muted-foreground/70">نوع تسویه</p>
+                  <p className="mb-2 font-mono text-xs tracking-[0.1em] text-muted-foreground/70">نوع تسویه</p>
                   <div className="flex flex-wrap gap-2">
                     {PAYMENT_TERMS.map((term) => (
                       <Chip key={term} label={paymentTermLabels[term]} active={paymentTerm === term} onClick={() => setPaymentTerm(term)}>
@@ -339,7 +339,7 @@ export function ProductDetail({ slug }: Props) {
                 aria-label="کاهش تعداد"
                 disabled={quantity <= 1 || addState === "loading"}
                 onClick={() => setQuantity((value) => Math.max(1, value - 1))}
-                className="grid size-9 place-items-center rounded-full text-foreground/75 transition-colors duration-fast hover:bg-foreground/10 disabled:opacity-40"
+                className="grid size-11 place-items-center rounded-full text-foreground/75 transition-colors duration-fast hover:bg-foreground/10 disabled:opacity-40"
               >
                 <Minus className="size-4" />
               </button>
@@ -351,7 +351,7 @@ export function ProductDetail({ slug }: Props) {
                 aria-label="افزایش تعداد"
                 disabled={addState === "loading" || (maxQuantity !== null && quantity >= maxQuantity)}
                 onClick={() => setQuantity((value) => value + 1)}
-                className="grid size-9 place-items-center rounded-full text-foreground/75 transition-colors duration-fast hover:bg-foreground/10 disabled:opacity-40"
+                className="grid size-11 place-items-center rounded-full text-foreground/75 transition-colors duration-fast hover:bg-foreground/10 disabled:opacity-40"
               >
                 <Plus className="size-4" />
               </button>
@@ -379,7 +379,7 @@ export function ProductDetail({ slug }: Props) {
           </div>
 
           {maxQuantity !== null && purchasable && (
-            <p className="mt-2.5 text-[11px] text-muted-foreground/70">
+            <p className="mt-2.5 text-xs text-muted-foreground/70">
               حداکثر {toFaDigits(maxQuantity)} عدد در انبار موجود است.
             </p>
           )}
@@ -413,9 +413,9 @@ export function ProductDetail({ slug }: Props) {
 
       {product.tags.length > 0 && (
         <div className="mt-8 flex flex-wrap items-center gap-2">
-          <span className="font-mono text-[10px] tracking-[0.12em] text-champagne">برچسب‌ها:</span>
+          <span className="font-mono text-xs tracking-[0.12em] text-champagne">برچسب‌ها:</span>
           {product.tags.map((tag) => (
-            <span key={tag} className="rounded-full border border-champagne/15 bg-champagne/5 px-3 py-1 font-mono text-[10px] text-foreground/70">
+            <span key={tag} className="rounded-full border border-champagne/15 bg-champagne/5 px-3 py-1 font-mono text-xs text-foreground/70">
               {tag}
             </span>
           ))}
@@ -430,7 +430,7 @@ export function ProductDetail({ slug }: Props) {
           <div className="min-w-0 flex-1">
             {unitPrice !== null ? (
               <>
-                <span className="block font-mono text-[11px] text-champagne/75">قیمت نهایی</span>
+                <span className="block font-mono text-xs text-champagne/75">قیمت نهایی</span>
                 <b className="block truncate text-base font-black leading-tight tabular-nums text-champagne">
                   {formatToman(unitPrice * quantity)}
                 </b>

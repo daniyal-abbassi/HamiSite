@@ -1,0 +1,50 @@
+/*
+ * The scroll-driven page ground (components/atmosphere/PageGround.tsx).
+ *
+ * A single fixed tint over the existing ground. It carries no layout, no interaction and no meaning;
+ * if this file were deleted the page would be complete and honest, which is contract G1 and the clause
+ * that outranks the rest of feature 002.
+ *
+ * Deliberately absent:
+ *  - **No transition.** The hook rewrites `--hami-ground` every animation frame. A transition on top of
+ *    that would make the ground trail the content, which contract S4 and FR-010 forbid — "the ground
+ *    MUST NOT lag behind the content, overshoot it, or snap into place after movement stops."
+ *  - **No `background-image`.** The five glows and the per-section lighting stay in `globals.css`
+ *    exactly as Resolved Q2 = C required. What this layer contributes is direction, not more light.
+ */
+.hami-page-ground {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /*
+   * 0.5 is a draft, and T017 judged it: the gate failed. See
+   * specs/002-scroll-atmosphere/notes/busyness.md.
+   *
+   * The reasoning that chose it was wrong, and the wrongness is the finding. It claimed that because
+   * this layer is uniform it cuts the *amplitude* of the left-right-left alternation of the section
+   * glows while leaving their presence intact — that the ground could get calmer at the same time as it
+   * gets directed. It cannot, and the reason is order: the glows are `main > section::before/::after`
+   * and `main` is z-10, so they composite *above* this z-0 layer. Measured, switching the glows off
+   * drops the rendered left/right asymmetry from 7.05 to 0.85, while raising this layer's alpha from
+   * 0.2 to 0.85 leaves it flat at ~7 and then pushes it to 7.38. A tint under a varying layer moves the
+   * base the variation sits on; it does not damp the variation.
+   *
+   * Keeping 0.5 pending the Q2 decision, not as a value that has been shown to satisfy FR-005.
+   */
+  opacity: 0.5;
+}
+
+/* FR-023 / contract L4: under forced colours the environment simply steps aside. */
+@media (forced-colors: active) {
+  .hami-page-ground {
+    display: none;
+  }
+}
+
+/* Scroll-linked state does not exist on paper (spec Edge Cases). */
+@media print {
+  .hami-page-ground {
+    display: none;
+  }
+}
