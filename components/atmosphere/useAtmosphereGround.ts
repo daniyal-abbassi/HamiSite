@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import { HOMEPAGE_SECTIONS, PROGRESSION, reducedMotionTone, toneAt } from "@/lib/atmosphere/progression";
 
 /** The one custom property this feature owns. Everything else is derived from it in CSS. */
@@ -9,15 +9,24 @@ export const GROUND_PROPERTY = "--hami-ground";
 /**
  * Scroll progress → one colour, written once per animation frame.
  *
- * This is research.md D1 in code. The whole effect is a single custom-property write on
- * `documentElement`, which triggers a style recalculation on one element and a repaint of one fixed
- * layer. It cannot cause layout, and it cannot be felt as lag because it never blocks the scroll.
+ * This is research.md D1 in code: the whole effect is a single custom-property write, so it cannot cause
+ * layout and it cannot be felt as lag because it never blocks the scroll.
+ *
+ * **Where the property is written, and why that is not a detail.** It goes on the ground element, not on
+ * `documentElement`. A custom property set on the root is inherited by every element in the document, so
+ * each per-frame change invalidates style for the whole subtree. Measured on the production build
+ * (`specs/002-scroll-atmosphere/notes/scroll-easing.md`, T047): with the scroll smoother running, style
+ * recalculation was **+3,350ms over 25.7s of scrolling** — by far the dominant cost, against +215ms of
+ * script and +29ms of layout. An earlier version of this comment claimed a root write "triggers a style
+ * recalculation on one element", which is precisely backwards, and is the reason the cost went unnoticed.
+ * Writing it on the sole consumer makes the invalidation actually one element.
  *
  * Three things it deliberately does not do:
  *
  *  - **It never touches the scroll position.** No `preventDefault`, no `scrollTo`, no easing of the
- *    shopper's own input. Q1 = A: "Visuals only; scrolling stays completely native." Everything the
- *    browser does with a wheel, a flick or an arrow key is the browser's business.
+ *    shopper's own input. Scroll *easing* is a separate, later decision — Resolved Q1 = C,
+ *    `components/atmosphere/ScrollSmooth.tsx` — and it does not live here. This hook only reads
+ *    `window.scrollY` and colours a layer.
  *  - **It does not measure layout per frame.** Section offsets are read on mount, on resize, on
  *    orientation change and once after load — never inside the frame loop. Eleven
  *    `getBoundingClientRect()` calls per frame is the classic way to turn a colour change into jank.
@@ -30,12 +39,17 @@ export const GROUND_PROPERTY = "--hami-ground";
  * stage colour per region instead of an interpolated one, so the shopper gets distinct tones with no
  * travel — FR-020 — over an identical page, FR-021.
  */
-export function useAtmosphereGround(enabled = true): void {
+export function useAtmosphereGround(
+  enabled = true,
+  target?: RefObject<HTMLElement | null>,
+): void {
   const boundaries = useRef<readonly number[]>([]);
 
   useEffect(() => {
     if (!enabled) return;
     const root = document.documentElement;
+    // The property lands on the consumer, not on the root — see the header comment and T047.
+    const surface = target?.current ?? root;
 
     const measure = () => {
       const scrollable = root.scrollHeight - window.innerHeight;
@@ -61,7 +75,7 @@ export function useAtmosphereGround(enabled = true): void {
       const scrollable = root.scrollHeight - window.innerHeight;
       const progress = scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0;
       const pick = reduced.matches ? reducedMotionTone : toneAt;
-      root.style.setProperty(GROUND_PROPERTY, pick(progress, boundaries.current));
+      surface.style.setProperty(GROUND_PROPERTY, pick(progress, boundaries.current));
     };
 
     const schedule = () => {

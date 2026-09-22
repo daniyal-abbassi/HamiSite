@@ -129,10 +129,10 @@ const check = (name, pass, detail) => {
   );
 
   const changed = await page.evaluate(async () => {
-    const first = document.documentElement.style.getPropertyValue("--hami-ground");
+    const first = document.querySelector('.hami-page-ground').style.getPropertyValue("--hami-ground");
     window.scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" });
     await new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r)));
-    return { first, last: document.documentElement.style.getPropertyValue("--hami-ground") };
+    return { first, last: document.querySelector('.hami-page-ground').style.getPropertyValue("--hami-ground") };
   });
   check(
     "the ground actually changes between the top and the bottom",

@@ -4,9 +4,25 @@
 
 **Created**: 2026-09-20
 
-**Status**: Draft
+**Status**: Draft — amended twice, 2026-09-22. See the Amendment Record.
 
 **Input**: User description: "On scrolling on first page, the main background should change on different sections - not so messy, but a coherent, luxury color change on scrolling, also, the changing should be smooth - also i want the scrolling be extra smooth and calm (fell luxery)"
+
+## Amendment Record
+
+Both amendments were made on 2026-09-22 at the owner's instruction. Neither was made to make a failing
+check pass; in each case a requirement written under one reading of the brief was contradicted by the
+owner's actual intent, and the requirement moved rather than the measurement.
+
+| # | Class | Requirement | What changed | Why |
+|---|---|---|---|---|
+| 1 | **MINOR** | FR-010, FR-011; new FR-011a; Resolved Q1 | Q1 re-answered **A → C**. FR-010's "scrolling stays native" clause and FR-011's "key press MUST produce immediate movement" withdrawn; FR-011a added to pin the touch boundary. | The owner clarified the ask was scroll *physics* — "smooth and heavy" — which option A had explicitly excluded. FR-010 as written mandated the opposite of the feature. |
+| 2 | **MINOR** | FR-005 | Second clause waived: the progression need not read *calmer than the existing glow field*. First clause — must not increase busyness — stands. | Resolved Q2 = C keeps the glow field untouched. That field paints at `z-10`, above the ground layer at `z-0`, so no opacity on the layer can damp it; measured across α = 0.2/0.5/0.85 the rendered asymmetry does not move (`notes/busyness.md`). The owner chose to keep the field and accept the consequence rather than to reduce it (option B) or replace it (option A). |
+
+**What is explicitly not amended**: the measurements. `notes/busyness.md` stands as recorded — rendered
+left/right asymmetry 7.05 without the layer and 6.90 with it at the draft alpha, direction-reversal count
+rising from 7 to 9, and both axes getting *worse* at α = 0.85. The gate did not pass and is not restated as
+having passed. It was waived by the person who owns the requirement.
 
 ## Related Initiative
 
@@ -216,9 +232,16 @@ no change to the progression design.
   elsewhere on the site.
 - **FR-004**: Every transition between stages MUST be gradual and continuous. No hard seam, band, visible
   step, or instantaneous change is acceptable at any scroll position.
-- **FR-005**: The progression MUST NOT increase the perceived busyness of the page. The result MUST read as
-  calmer than the existing decorative glow field it follows, and MUST NOT combine with it to produce more
-  simultaneous visual activity than either alone. (Constitution IV; FR-052 of feature 001)
+- **FR-005**: The progression MUST NOT increase the perceived busyness of the page.
+  ~~The result MUST read as calmer than the existing decorative glow field it follows, and MUST NOT combine
+  with it to produce more simultaneous visual activity than either alone.~~
+  **Amended 2026-09-22 — the second clause is waived by the owner, not met.** See the Amendment Record and
+  `notes/busyness.md`. What remains binding is the first sentence: the progression must not make the page
+  busier. What was withdrawn is the requirement that it make the page *quieter than it already is*, which
+  Resolved Q2 = C makes mechanically unreachable — the glow field paints at `z-10`, above the ground layer
+  at `z-0`, so nothing the layer does can damp it. The owner's decision keeps the existing field untouched
+  and accepts the consequence. The measurement stands unchanged and is not restated as a pass.
+  (Constitution IV; FR-052 of feature 001)
 - **FR-006**: The page MUST read as one continuous environment at every scroll position — never as a stack
   of separately-decorated pages.
 - **FR-007**: The ground MUST return to its exact initial state when the shopper returns to the top of the
@@ -414,7 +437,14 @@ visuals be smoothed while scrolling stays entirely native?
 | C      | Ease scroll on desktop wheel and trackpad only, native on touch | Common middle path; the two most divergent feel targets, and the desktop half still carries B's risks |
 | Custom | Provide your own answer                                  | Sets the entire scope of User Story 2 and half the accessibility requirements |
 
-### Question 2: What happens to the existing de  —  **RESOLVED: C**corative glow field?
+### Question 2: What happens to the existing decorative glow field?  —  **RESOLVED: C**, re-confirmed 2026-09-22
+
+> **Re-confirmed by the owner on 2026-09-22 after the FR-005 gate failed**: keep the field as it is and
+> ship the ground progression on top. The consequence — that the result will not read calmer than before —
+> was presented with measurements and accepted, so FR-005's second clause is waived rather than met.
+> Options B (reduce the field to a quiet base) and A (replace it) remain on the table and were declined,
+> not dismissed; B is the one with measured evidence that the page gets quieter (asymmetry 7.05 → 0.49,
+> range down 26% — `notes/busyness.md`). Re-open Q2 if the background is ever revisited.
 
 **Context**: "Why This Is Not a Greenfield Feature"; FR-005 and FR-018. The ground today is five stacked
 radial glows. Adding a scroll-responsive progression on top of it makes the page busier, which is the

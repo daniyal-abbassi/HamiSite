@@ -178,10 +178,14 @@ page?"
   "Where the ground and an existing decorative layer would both be visible, they MUST be reconciled with
   it rather than competing with it." `app/globals.css:182-224` is that layer. Record the reconciliation
   decision in a comment at the new block, in the style of the surrounding notes
-  → **NOT ACHIEVED — see T017.** The reconciliation comment was written into `page-ground.css` and its
-  premise has been measured false: a uniform tint at `z-index: 0` sits *beneath* `main` (`z-10`), so it
-  cannot damp the alternation of `main > section::before/::after`. The comment now records the failure
-  instead of the claim. Reopening this task requires the Q2 decision below.
+  → **CLOSED BY OWNER DECISION 2026-09-22, not achieved by design.** The reconciliation comment was
+  written into `page-ground.css` and its premise was measured false: a uniform tint at `z-index: 0` sits
+  *beneath* `main` (`z-10`), so it cannot damp the alternation of `main > section::before/::after`. The
+  comment now records the failure instead of the claim. The owner re-confirmed Q2 = C — the glow field is
+  left untouched and no reconciliation is attempted — so FR-018 is satisfied in the weakest sense
+  available: the two layers coexist without competing for the same job, because the ground contributes
+  direction and the glows contribute the lighting. That is not what FR-018 was written to require, and it
+  is recorded as closed-by-decision rather than done.
 - [ ] T013 [US1] Resolve the seam into the footer without an abrupt tone change in `app/globals.css`
   (new atmosphere block) and `components/layout/Footer.tsx` — FR-008, contract P7.
   `#final-conversion` is the last homepage section; the footer is outside this feature's scope and must
@@ -223,8 +227,8 @@ page?"
   propose option B — reduce the existing field to a quiet base — and NOT to weaken FR-005.** plan.md's
   Complexity Tracking table records exactly this instruction; do not resolve the contradiction by
   lowering the bar
-  → **Gate executed. Verdict: FR-005 FAILS.** (The checkbox means the gate was run and recorded, not that
-  it passed.) At 360px the rendered left/right asymmetry is 7.05 with the existing field alone and 6.90
+  → **Gate executed. Verdict: FR-005 FAILED, then WAIVED by the owner on 2026-09-22.** (The checkbox means
+  the gate was run and recorded, not that it passed.) At 360px the rendered left/right asymmetry is 7.05 with the existing field alone and 6.90
   with the layer at the draft α = 0.5 — 2% quieter, inside measurement noise — while the direction-reversal
   count goes 7 → 9. Sweeping α over 0.2 / 0.5 / 0.85 finds no value that helps; α = 0.85 is worse on both
   axes (7.38, range 14.00). The control that explains it: switching `main > section::before/::after` off
@@ -233,11 +237,11 @@ page?"
   arithmetic reason (a blend scales step deviations by (1−α), which preserves their signs and therefore
   the reversal count) in `notes/busyness.md`. FR-005 and Q2 = C are not simultaneously satisfiable.
 
-**Checkpoint**: **STOPPED HERE — gate failed.** US1 is *not* independently shippable: the progression is
-seam-free and directed, but it does not read calmer than the field it follows, which is the condition this
-checkpoint exists to test. T013 and T014 remain open on top of that. Per this task's own instruction the
-contradiction is escalated to the owner as a reopened Q2 (recommend **B**) rather than resolved by lowering
-FR-005; phases 4–7 are not built on a ground that has not earned its place.
+**Checkpoint**: **UNBLOCKED 2026-09-22 by owner decision.** The gate failed as recorded and the owner
+re-confirmed Q2 = C, waiving FR-005's "calmer than before" clause rather than meeting it — so the
+escalation this checkpoint called for has been answered and phases 4–7 may proceed. Two things are true at
+once and neither is allowed to quietly cancel the other: the progression is seam-free, directed and
+measured; and it does not make the page quieter than it was. T013 and T014 remain open on top of that.
 
 ---
 
@@ -512,7 +516,7 @@ confirm nothing about the scroll changed.
   now all resolve through the lerp. Confirm each lands on the right destination and that the ground's
   stage is correct on the first rendered frame — FR-007 and contract P5 still apply, and the smoother is
   new evidence against them.
-- [ ] T047 **BROWSER — production build, CPU-throttled.** A permanently-running rAF lerp over a 19,134px
+- [x] T047 **BROWSER — production build, CPU-throttled. FAILED — see `notes/scroll-cost.md`.** A permanently-running rAF lerp over a 19,134px
   document is exactly the change that must be re-measured rather than assumed cheap. Feature 004 recorded
   33.3ms median frames here; anything materially worse needs the `smooth` value lowered or the feature
   stood down on mid-range hardware. FR-014, FR-015, SC-006.

@@ -172,7 +172,7 @@ async function sampleGrid(scratch, shot, grid) {
       await page.evaluate((top) => window.scrollTo({ top, behavior: "instant" }), y);
       await page.waitForTimeout(420);
       const grid = await page.evaluate(bareGrid);
-      const declared = await page.evaluate(() => document.documentElement.style.getPropertyValue("--hami-ground"));
+      const declared = await page.evaluate(() => document.querySelector('.hami-page-ground').style.getPropertyValue("--hami-ground"));
       const shot = await page.screenshot();
       const sampled = await sampleGrid(scratch, shot, grid);
       rows.push({

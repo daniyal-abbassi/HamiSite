@@ -1,5 +1,6 @@
 "use client";
 
+import { useRef } from "react";
 import { usePathname } from "next/navigation";
 import { FALLBACK_TONE } from "@/lib/atmosphere/progression";
 import { useAtmosphereGround, GROUND_PROPERTY } from "./useAtmosphereGround";
@@ -18,14 +19,19 @@ import "./page-ground.css";
  * page has already been bitten by exactly this — `app/globals.css:290-294` records `background-attachment:
  * fixed` failing inside a `Reveal` wrapper. Layout level is the only place it is safe (research.md D3).
  *
- * It is a **tint, not a new light source.** Resolved Q2 = C left the existing five-glow field on `body`
- * exactly as it was, and FR-005 requires the combination to read *calmer* than the field alone. So this
- * layer is the stage colour at partial opacity over what is already there: it pulls the whole ground
- * toward one direction and, in doing so, flattens the left-right-left alternation of the per-section
- * glows rather than adding to it. That is the reconciliation FR-018 asks for, achieved by subtraction.
+ * It is a **tint, not a new light source.** Resolved Q2 = C left the existing five-glow field exactly as
+ * it was. The claim originally recorded here — that a uniform alpha would "flatten the left-right-left
+ * alternation of the per-section glows, achieving reconciliation by subtraction" — was measured and is
+ * false: the glows live on `main > section::before/::after` at `z-10`, above this layer at `z-0`, so
+ * nothing this layer does can damp them (`notes/busyness.md`). The owner kept Q2 = C anyway and waived
+ * the clause that required it, so what this layer contributes is direction and nothing more.
  *
  * There is no transition on the colour, on purpose — see the hook. The value changes every frame, so a
  * transition would make the ground lag the content, which contract S4 forbids.
+ *
+ * The custom property is written **on this element**, not on `documentElement`. It has exactly one
+ * consumer, and a root-level custom property invalidates style for the whole document on every frame.
+ * See T047 in `notes/scroll-easing.md` for the measurement that found this.
  *
  * Contract A3 and G1: nothing here is in the accessibility tree, nothing here carries meaning, and
  * deleting the component entirely leaves the page complete.
@@ -39,15 +45,16 @@ import "./page-ground.css";
 export function PageGround() {
   const pathname = usePathname();
   const enabled = pathname === "/";
-  useAtmosphereGround(enabled);
+  const surface = useRef<HTMLDivElement>(null);
+  useAtmosphereGround(enabled, surface);
 
   if (!enabled) return null;
 
   return (
     <div
+      ref={surface}
       className="hami-page-ground"
       aria-hidden="true"
-      data-hami-ground={GROUND_PROPERTY}
       style={{ backgroundColor: `var(${GROUND_PROPERTY}, ${FALLBACK_TONE})` }}
     />
   );

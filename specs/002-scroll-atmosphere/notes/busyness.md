@@ -1,4 +1,13 @@
-# T017 — FR-005 busyness gate: **FAIL**
+# T017 — FR-005 busyness gate: **FAIL → waived by the owner, 2026-09-22**
+
+> **Decision recorded.** The owner re-confirmed Resolved Q2 = C: the existing glow field stays exactly as
+> it is and the ground progression ships on top of it. FR-005's "must read as calmer than the existing
+> decorative glow field" clause is therefore **waived, not met** — see the Amendment Record in `spec.md`.
+> Options B and A were declined rather than dismissed; B remains the only option with measured evidence
+> that the page gets quieter.
+>
+> **Every number below stands unchanged.** The gate did not pass and is not restated as having passed.
+> This note is the evidence behind a decision, not a record of a defect resolved.
 
 Measured at 360px (`WIDTH=360`), 21 positions across the whole document, ~1130 bare-ground pixels
 per position, `specs/002-scroll-atmosphere/tools/ground-sweep.mjs`, output in
