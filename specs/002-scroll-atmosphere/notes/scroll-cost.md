@@ -1,17 +1,27 @@
-# T047 — Production cost of the scroll easing: **FAILS FR-009 / FR-015**
+# T047 — Production cost of the scroll easing: **UNMEASURED** (the first verdict was invalid)
 
-**Run**: 2026-09-22, production build, **headed Chrome on the real X display** so the GPU compositor is
-in play. 1280×900, 35 wheel steps of 90px.
+> **The verdict on this page was withdrawn on 2026-09-22.** It read "FAILS FR-009 / FR-015" and it was
+> wrong to draw that conclusion, for a reason the owner supplied: **the machine it was measured on is too
+> weak to be a benchmark.** Every frame-time number below is a property of that hardware, not of the
+> feature. The 5× ratio is not salvageable either — a CPU-bound machine can amplify a compositor cost
+> nonlinearly, so a machine with real graphics headroom might show a much smaller multiple, or almost
+> none. Whether ScrollSmoother is affordable here is **currently unknown**, not answered.
+>
+> What survives is the mechanism finding in the last section, which does not depend on the machine.
 
-## Why the first measurements were wrong, twice
+**Run**: 2026-09-22, production build, headed Chrome on the local X display. 1280×900, 35 wheel steps.
 
-Headless Chrome software-rasterises. Measured there, the page ran at **75ms median with no smoother at
-all** — an impossible number for an unthrottled desktop, and one that made every comparison suspect. It
-also invalidated the first mitigation test: `will-change: transform` appeared not to help, because the
-thing being measured was CPU rasterisation, not compositing.
+## Three reasons this measurement should not have been trusted
 
-Re-run headed on `DISPLAY=:0`, the baseline is **19.9ms median (~50fps)**. That is the number to compare
-against.
+1. **Headless Chrome software-rasterises.** Measured there, the page ran at 75ms median with *no smoother
+   at all* — an impossible number, and one that also invalidated the first `will-change` test, because
+   what was being measured was CPU rasterisation rather than compositing.
+2. **The machine is the bottleneck, not the feature.** Re-run headed with the GPU compositor, the
+   smoother-off baseline was 19.9ms. That is a floor set by this hardware, and a lerp layered on top of a
+   machine already near it will look catastrophic in proportion in a way it would not on one with
+   headroom.
+3. **The mitigation table is therefore measuring noise on a saturated system.** Run-to-run the baseline
+   moved 109ms → 136ms with no code change between the two runs.
 
 ## The measurement
 
@@ -21,10 +31,9 @@ against.
 | Smoother **on** | **109.3ms** | 297ms |
 | Smoother on, 4× CPU throttle | 212.3ms | 315ms |
 
-**Roughly 5× the frame cost.** At 109ms the page renders about 9 times a second while scrolling, on an
-unthrottled desktop, with the GPU attached. FR-009 requires "no visible stutter, jitter, or dropped
-frames on a mid-range phone or laptop" and FR-015 requires motion to stay smooth on a mid-range device.
-This fails both, and it fails them on the *desktop*, where the easing is the only thing that runs.
+**These numbers describe this PC.** They do not describe the shoppers, and FR-009 and FR-015 are about
+the shoppers — "a mid-range phone or laptop" is a claim about typical hardware, which this is not. The
+easing is neither cleared nor failed by anything on this page.
 
 ## Mitigations tried, under real GPU
 
@@ -36,10 +45,12 @@ This fails both, and it fails them on the *desktop*, where the easing is the onl
 | hide `.gradient-blur` + `.noir-stars` | 123.7ms | not the cause |
 | hide the categories carousel | 169.5ms | not the cause (and noise-dominated) |
 
-Nothing closes the gap. The cost is inherent to what ScrollSmoother does: it writes a fresh transform to a
-container holding the entire 12,554px document every frame, so the subtree cannot be treated as one
-statically-composited layer. Lowering `smooth` would shorten how *long* the loop runs, not what each
-frame costs.
+No mitigation helped meaningfully, but on a saturated machine that result proves very little — you
+cannot tell a compositor win from measurement noise when the baseline is already moving 25% run to run.
+**The one structural observation that does not need a benchmark:** ScrollSmoother writes a fresh
+transform to a container holding the entire 12,554px document every frame, and lowering `smooth` shortens
+how *long* the loop runs without reducing what each frame costs. Whether that is affordable is an
+empirical question about real hardware, and it has not been answered.
 
 ## One real win found on the way
 
@@ -60,16 +71,19 @@ hook was paying that tax on every homepage scroll since it was built. The hook's
 claimed a root write "triggers a style recalculation on one element", which is exactly backwards; that
 claim is corrected in the file, and it is the reason the cost went unnoticed.
 
-## Recommendation
+## What a real answer requires
 
-**Do not ship the easing as the default.** The options, in the order I'd take them:
+The easing stays in the build, **unjudged**, until it is measured somewhere that represents a shopper.
+Any of these would settle it and none of them is this machine:
 
-1. **Revert to native scroll** and keep the ground progression. The page stays at ~50fps. The owner's
-   "smooth and heavy" ask goes unmet, which is a real loss and should be decided by them, not buried.
-2. **Ship it behind an explicit opt-in** — a setting the shopper chooses, defaulting off. Honest, and it
-   means the premium-feel scroll is available to anyone on hardware that can carry it.
-3. **Ship it and accept ~9fps.** Not recommended: a stuttering "luxury" scroll contradicts the brief more
-   than a fast native one.
+- **The owner scrolls it on the hardware they actually care about** — a normal work laptop, and a real
+  Android phone to confirm touch was never touched. This is a feel question as much as a number, and
+  "does it feel expensive or does it feel broken" is answered by a hand on the trackpad.
+- **A remote/CI browser on a known-spec runner**, so the figure is reproducible and attributable to the
+  code rather than to whatever else this PC was doing.
+- **Chrome's own frame timings via a trace**, reading compositor and main-thread breakdown rather than
+  inferring fps from a `requestAnimationFrame` sampler, which is the crudest instrument available and is
+  sensitive to everything else running.
 
-This is a decision about a trade-off the spec did not anticipate, so it is recorded as an open question
-rather than resolved by picking one silently.
+Until then the honest status of FR-009 and FR-015 against the easing is **not yet measured**. The earlier
+"do not ship it" recommendation is withdrawn along with the numbers it rested on.

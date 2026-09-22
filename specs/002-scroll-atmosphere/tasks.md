@@ -506,7 +506,7 @@ confirm nothing about the scroll changed.
   `.gradient-blur`, `Header`, `MobileDock` — is a **sibling** of `#smooth-wrapper`, with only `<main>`
   and `<Footer>` inside it. A transformed ancestor captures `position: fixed`, so a fixed element left
   inside the wrapped subtree scrolls with the page and looks correct in any static screenshot.
-- [x] T045 **BROWSER** Prove the easing and the boundary. Desktop: one `wheel(0,1200)` produces a peak
+- [x] T045 **BROWSER** Prove the easing and the boundary. *(behaviour only — the fps numbers from this machine were withdrawn; see T047)* Desktop: one `wheel(0,1200)` produces a peak
   850px lag between `scrollY` (1200 at once) and the content transform (350), settling to 0 by ~1080ms.
   Touch (iPhone 13 emulation): the smoother is never created, `#smooth-content` computes
   `transform: none`, `scrollTo` lands instantly. Reduced motion: identical to touch. Fixed layers:
@@ -516,7 +516,7 @@ confirm nothing about the scroll changed.
   now all resolve through the lerp. Confirm each lands on the right destination and that the ground's
   stage is correct on the first rendered frame — FR-007 and contract P5 still apply, and the smoother is
   new evidence against them.
-- [x] T047 **BROWSER — production build, CPU-throttled. FAILED — see `notes/scroll-cost.md`.** A permanently-running rAF lerp over a 19,134px
+- [ ] T047 **BROWSER — production build. NOT MEASURED — the first attempt is withdrawn, see `notes/scroll-cost.md`.** A permanently-running rAF lerp over a 19,134px
   document is exactly the change that must be re-measured rather than assumed cheap. Feature 004 recorded
   33.3ms median frames here; anything materially worse needs the `smooth` value lowered or the feature
   stood down on mid-range hardware. FR-014, FR-015, SC-006.
