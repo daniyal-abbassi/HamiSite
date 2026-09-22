@@ -16,3 +16,29 @@ oldWebsite-openapi.json
 
 # Superdesign temporary component HTML
 .superdesign/tmp/
+
+# Universal editor/OS noise
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/
+
+# Local env variants and test output
+.env.local
+.env.*.local
+coverage/
+test-results/
+playwright-report/
+
+# Vendored agent skill trees and tool scratch state. Installed per-machine by the
+# skills CLI, regenerated on demand, and noise for both review and the graph.
+.claude/skills/
+.agents/skills/
+.impeccable/
+.playwright-mcp/
+.clinerules/
+
+# Local hand-off archives
+*.zip
