@@ -30,12 +30,19 @@ import { toFaDigits } from "@/lib/utils";
 import "./category-carousel.css";
 
 /**
+ * How many panels one flick may carry. Embla's inertia is velocity-driven and a hard swipe will
+ * happily skip five panels to the far side of the loop; FR-014 requires a shopper intending one
+ * panel not to travel three, and SC-004 measures it at 9 in 10. The cap is enforced after the fact
+ * by re-issuing a bounded scroll, because Embla exposes no maximum-travel option.
+ */
+const MAX_FLICK_TRAVEL = 2;
+
+/**
  * Where the shopper left the carousel, kept for the rest of the visit (FR-015, contract A7).
- *
- * Module-scoped rather than `localStorage` on purpose: a fresh page load legitimately starts at the
- * first department, and persisted state would make the carousel disagree with the server-rendered
- * first frame. It also has to survive Embla being destroyed and rebuilt at a viewport boundary, which
- * is exactly where a component-local value would be lost.
+ * Module-scoped rather than `localStorage`: a fresh page load legitimately starts at the first
+ * department, and persisted state would disagree with the server-rendered first frame. It also has
+ * to survive Embla being destroyed and rebuilt at a viewport boundary, where a component-local
+ * value would be lost.
  */
 let rememberedIndex = 0;
 
@@ -96,22 +103,47 @@ export function CategoryCarousel({ departments }: { departments: Department[] })
   useEffect(() => {
     if (!embla || !live) return;
 
+    /**
+     * The flick cap. Embla has no maximum-travel option, so a hard swipe is bounded after the fact:
+     * if the newly selected panel is further than MAX_FLICK_TRAVEL from where the shopper was, the
+     * carousel is re-issued a bounded scroll toward it. The short-arc distance is used rather than
+     * the raw index difference, because with `loop: true` travelling 2 panels backwards through the
+     * wrap is the same gesture as travelling 7 forwards, and a naive difference would clamp almost
+     * every flick.
+     */
+    const lastSnap = { current: embla.selectedScrollSnap() };
+    const onSelect = () => {
+      const next = embla.selectedScrollSnap();
+      const delta = wrappedOffset(next, lastSnap.current, count);
+      if (Math.abs(delta) > MAX_FLICK_TRAVEL) {
+        const bounded = (lastSnap.current + Math.sign(delta) * MAX_FLICK_TRAVEL + count) % count;
+        rememberedIndex = bounded;
+        embla.scrollTo(bounded);
+        setActiveIndex(bounded);
+        lastSnap.current = bounded;
+        return;
+      }
+      lastSnap.current = next;
+      rememberedIndex = next;
+      setActiveIndex(next);
+    };
+
     const read = () => {
       if (frame.current !== null) return;
       frame.current = requestAnimationFrame(() => {
         frame.current = null;
         paintArc(embla.scrollProgress());
-        setActiveIndex(embla.selectedScrollSnap());
       });
     };
 
     read();
-    embla.on("scroll", read).on("reInit", read).on("select", read);
+    embla.on("scroll", read).on("reInit", read);
+    embla.on("select", onSelect);
     return () => {
-      embla.off("scroll", read).off("reInit", read).off("select", read);
+      embla.off("scroll", read).off("reInit", read).off("select", onSelect);
       if (frame.current !== null) cancelAnimationFrame(frame.current);
     };
-  }, [embla, live, paintArc]);
+  }, [embla, live, count, paintArc]);
 
   /**
    * Off-screen, Embla is destroyed rather than paused (FR-019, contract P1). One call removes its
@@ -137,12 +169,22 @@ export function CategoryCarousel({ departments }: { departments: Department[] })
   }, [embla, live]);
 
   const goTo = useCallback(
-    (index: number) => {
+    (index: number, fromKeyboard = false) => {
       if (!embla) return;
       const next = ((index % count) + count) % count;
       rememberedIndex = next;
       embla.scrollTo(next);
       setActiveIndex(next);
+      if (fromKeyboard) {
+        // Contract K3: keyboard position and visual position must never disagree. Without this the
+        // roving tabindex stays on the panel you tabbed into while the carousel has moved on, so the
+        // shopper is pressing keys that act on one panel and Enter activates another.
+        // `preventScroll` keeps the browser from scrolling the page to reveal the focused link,
+        // which would be the one way this component could touch vertical scroll.
+        requestAnimationFrame(() => {
+          slideRefs.current[next]?.querySelector<HTMLAnchorElement>(".cat-panel")?.focus({ preventScroll: true });
+        });
+      }
     },
     [embla, count],
   );
@@ -156,8 +198,8 @@ export function CategoryCarousel({ departments }: { departments: Department[] })
    * (FR-028, contract K2).
    */
   const onKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
-    const forward = () => goTo(activeIndex + 1);
-    const back = () => goTo(activeIndex - 1);
+    const forward = () => goTo(activeIndex + 1, true);
+    const back = () => goTo(activeIndex - 1, true);
     switch (event.key) {
       case "ArrowLeft":
         event.preventDefault();
@@ -169,11 +211,11 @@ export function CategoryCarousel({ departments }: { departments: Department[] })
         return;
       case "Home":
         event.preventDefault();
-        goTo(0);
+        goTo(0, true);
         return;
       case "End":
         event.preventDefault();
-        goTo(count - 1);
+        goTo(count - 1, true);
         return;
       default:
       // Enter and Space reach the focused link natively; nothing to intercept.

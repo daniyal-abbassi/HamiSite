@@ -128,13 +128,13 @@ motion polish at all.
   `href` with the live-text label and badge, and
   implement the press contract: pressing the active panel navigates, pressing any other brings it to centre
   and does not navigate (A2, FR-009, FR-010, and the interaction half of FR-038 shared with `004/C24`).
-- [ ] T012 [US1] Cap inertia travel in `components/home/CategoryCarousel.tsx`: watch Embla's `select` event
+- [x] T012 [US1] Cap inertia travel in `components/home/CategoryCarousel.tsx`: watch Embla's `select` event
   `skipped` count and re-`scrollTo` the bounded target so a hard flick advances a small fixed maximum
   (FR-014, SC-004). Embla's physics are velocity-driven and will otherwise skip three panels.
 - [x] T013 [US1] Persist the shopper's position across the rest of the page in
   `components/home/CategoryCarousel.tsx` — module-scoped, restored on re-init, **not** `localStorage`
   (FR-015, A7, `data-model.md`'s persistence rule).
-- [ ] T014 [US1] **BROWSER** Run quickstart §2 at 360px: swipe to each of the nine, tap the centred panel,
+- [x] T014 [US1] **BROWSER** Run quickstart §2 at 360px: swipe to each of the nine, tap the centred panel,
   confirm arrival at that department's listing with products that belong to it, and tap a non-centred panel
   confirming it centred instead of navigating. Record all nine destinations in
   `specs/005-categories-carousel/notes/us1-destinations.md`. This is SC-001 and SC-002 and there is no
@@ -160,24 +160,24 @@ clipped.
 **Independent Test**: spec.md US2 — screen-reader traversal, select-and-copy a name, and compare rendering
 against the same name as real text. Independent of the arc and the motion.
 
-- [ ] T016 [P] [US2] Confirm in `components/home/CategoryCarousel.tsx` that every label is a text node — no
+- [x] T016 [P] [US2] Confirm in `components/home/CategoryCarousel.tsx` that every label is a text node — no
   image-of-text, no `background-image` label, no SVG `<text>` (FR-022, resolved Q2 = A, T1, SC-006). The
   reference's baked-bitmap mechanism is the direct cause of every Persian and assistive failure in that group
   and is not adopted in any form.
-- [ ] T017 [US2] Make panel geometry in `components/home/category-carousel.css` and
+- [x] T017 [US2] Make panel geometry in `components/home/category-carousel.css` and
   `components/home/CategoryCarousel.tsx` accommodate the longest label in the set without clipping or
   truncation
   at 360px and at 200% browser zoom — the layout yields to the word, never the reverse (FR-024, T3, US2/5).
   Measure against the actual longest `label` in `lib/category-departments.ts`, not an assumed one.
-- [ ] T018 [US2] Render any count in Persian numerals via `toFaDigits`, and render **no** count for `phone`
+- [x] T018 [US2] Render any count in Persian numerals via `toFaDigits`, and render **no** count for `phone`
   (FR-005, FR-025, C3). Assert in `tests/unit/category-departments.test.ts` that a shown count always equals
   `reachableCount`.
-- [ ] T019 [US2] Audit `components/home/category-carousel.css` for physical properties and for
+- [x] T019 [US2] Audit `components/home/category-carousel.css` for physical properties and for
   `letter-spacing`: replace any `left`/`right`/`margin-left` with logical equivalents (T4), and keep
   `letter-spacing` at `0`/`normal` on Persian text per `001/FR-057` (T5). Note that
   `getComputedStyle().letterSpacing` returns the string `"normal"` for a zero value — assert against both, as
   feature 004's quickstart had to be corrected for.
-- [ ] T020 [US2] **BROWSER** Run quickstart §4: select and copy a category name; traverse with a screen
+- [x] T020 [US2] **BROWSER** Run quickstart §4: select and copy a category name; traverse with a screen
   reader; inspect a label's node type; check the longest name at 360px and 200% zoom; compare sharpness on a
   high-density profile. Record in `notes/labels.md`.
 
@@ -193,21 +193,21 @@ of the homepage.
 **Independent Test**: spec.md US3 — scroll past the section on a phone and a laptop, then measure page
 responsiveness with the section running and with it removed.
 
-- [ ] T021 [US3] Gate the carousel's life on an `IntersectionObserver` in
+- [x] T021 [US3] Gate the carousel's life on an `IntersectionObserver` in
   `components/home/CategoryCarousel.tsx`: off-screen calls `emblaApi.destroy()`, which removes Embla's scroll
   watch, resize interpreter and snap loop in one call, and drops panels to `transition: none`; re-entry
   re-initialises at the stored index without animating (FR-019, P1, D5).
-- [ ] T022 [US3] Remove any entrance animation from `components/home/category-carousel.css` and
+- [x] T022 [US3] Remove any entrance animation from `components/home/category-carousel.css` and
   `components/home/CategoryCarousel.tsx` — none on first appearance and none on return (FR-019, P2, US3/3,
   US3/4, SC-008). Choosing "no entrance at all" over "no entrance when returning" deletes the bug class
   rather than guarding one condition of it.
-- [ ] T023 [US3] Prove the per-frame budget in `components/home/CategoryCarousel.tsx`: the only writes during
+- [x] T023 [US3] Prove the per-frame budget in `components/home/CategoryCarousel.tsx`: the only writes during
   movement are custom properties on existing nodes; **zero React state updates per frame**. A `setState` of
   the arc is the specific way to fail FR-020 (P4, `data-model.md`'s `arcOffset` note).
-- [ ] T024 [US3] Prove the loop is nine DOM nodes with no duplicated panels in
+- [x] T024 [US3] Prove the loop is nine DOM nodes with no duplicated panels in
   `components/home/CategoryCarousel.tsx` — Embla's `loop` repositions rather than clones, and a duplicated
   list would make `Tab` visit every department twice (P3, FR-012, FR-027).
-- [ ] T025 [US3] **BROWSER** Run quickstart §6 **on a production build** (`npm run build && npx next start`):
+- [x] T025 [US3] **BROWSER** Run quickstart §6 **on a production build** (`npm run build && npx next start`):
   record frames while scrolling a distant region with the section present versus removed, on a CPU-throttled
   profile. Dev-mode numbers are not comparable — feature 004 measured 50ms vs 33ms medians that vanished
   entirely in production. Restore the dev server afterwards. Record in `notes/cost.md` (FR-020, SC-009).
@@ -225,27 +225,27 @@ destination set as the swipe route.
 **Independent Test**: spec.md US4 — reach every department by keyboard alone, then screen reader, then mouse
 with no dragging; compare against the swipe path and require the same destinations in no more steps.
 
-- [ ] T026 [US4] Implement the listbox interaction in `components/home/CategoryCarousel.tsx`: one tab stop on
+- [x] T026 [US4] Implement the listbox interaction in `components/home/CategoryCarousel.tsx`: one tab stop on
   the container, `ArrowLeft`/`ArrowRight` moving the active panel, `Enter`/`Space` activating its destination,
   `Home`/`End` jumping to first and last, driven through `emblaApi.scrollNext()/scrollPrev()/scrollTo()` —
   Embla ships no keyboard binding (FR-027, K1).
-- [ ] T027 [US4] Map arrow keys to **reading** order, not screen direction: in RTL, forward is visually left
+- [x] T027 [US4] Map arrow keys to **reading** order, not screen direction: in RTL, forward is visually left
   (FR-028, K2, US4/2). A physical mapping is a failure here, not a preference.
-- [ ] T028 [US4] Make focusing a panel also make it the active panel in
+- [x] T028 [US4] Make focusing a panel also make it the active panel in
   `components/home/CategoryCarousel.tsx`, so keyboard position and visual position can never disagree
   (K3).
-- [ ] T029 [US4] Add `aria-activedescendant` plus each panel's name, position and the total of nine in
+- [x] T029 [US4] Add `aria-activedescendant` plus each panel's name, position and the total of nine in
   `components/home/CategoryCarousel.tsx` and `components/home/CategoryHub.tsx` (FR-007, FR-030, C4, K5,
   SC-012's assistive half).
-- [ ] T030 [US4] Add prev/next controls to `components/home/CategoryHub.tsx` so a pointer user can advance
+- [x] T030 [US4] Add prev/next controls to `components/home/CategoryHub.tsx` so a pointer user can advance
   without dragging (FR-029, K4, US4/3). Buttons, not wheel hijack — I4 and D2's wheel rule.
-- [ ] T031 [US4] Measure every touch target in `components/home/category-carousel.css` at ≥44×44 CSS px and
+- [x] T031 [US4] Measure every touch target in `components/home/category-carousel.css` at ≥44×44 CSS px and
   confirm none sits beneath the fixed header island at any scroll position on a 360×640 viewport (FR-032,
   K7, US4/5).
-- [ ] T032 [US4] Implement reduced motion in `components/home/category-carousel.css`: arc geometry stays
+- [x] T032 [US4] Implement reduced motion in `components/home/category-carousel.css`: arc geometry stays
   (it is layout), transitions and inertia go, movement resolves instantly, and the behaviour is **identical**
   to `004`'s brand rows (FR-031, K6, X5, SC-008's half).
-- [ ] T033 [US4] **BROWSER** Run quickstart §5: keyboard-only traversal of all nine, `Enter` activation, then
+- [x] T033 [US4] **BROWSER** Run quickstart §5: keyboard-only traversal of all nine, `Enter` activation, then
   mouse-only advance with no drag. Confirm the same destination set as the swipe route in no more steps, and
   that both this route and the site's existing category navigation land on identical results
   (SC-005, US4/4, US4/7, C5). Record in `notes/access.md`.
@@ -256,31 +256,31 @@ with no dragging; compare against the swipe path and require the same destinatio
 
 ## Phase 7: Polish & Cross-Cutting Concerns
 
-- [ ] T034 [P] Add a `forced-colors: active` block to `components/home/category-carousel.css`: the arc
+- [x] T034 [P] Add a `forced-colors: active` block to `components/home/category-carousel.css`: the arc
   survives and the active state is conveyed by something other than colour (F4).
-- [ ] T035 [P] Prove the fallback in `components/home/CategoryHub.tsx` by reading the raw server HTML with
+- [x] T035 [P] Prove the fallback in `components/home/CategoryHub.tsx` by reading the raw server HTML with
   scripts disabled: a complete list of all nine with working links, no arc, no motion, no observer (FR-021,
   F1). The fallback is the default, not a branch.
-- [ ] T036 Verify no file under `data/`, `app/api/`, or `prisma/` was modified (`git diff --stat main...HEAD`)
+- [x] T036 Verify no file under `data/`, `app/api/`, or `prisma/` was modified (`git diff --stat main...HEAD`)
   — Constitution III, and feature 002's plan records the same check for the same reason.
-- [ ] T037 Record the FR-038 coherence obligation in
+- [x] T037 Record the FR-038 coherence obligation in
   `specs/005-categories-carousel/notes/coherence.md`: the five shared behaviours against `004`, with the
   duration/easing values quoted from `app/(main)/home.css`'s `.brand-rows` block, and the reciprocal note
   that `004/FR-032` binds this surface.
-- [ ] T038 Screenshot both neighbouring surfaces together at 360px and 1280px into
+- [x] T038 Screenshot both neighbouring surfaces together at 360px and 1280px into
   `specs/005-categories-carousel/baseline/` and check them against contracts X1–X6, on the homepage's
   **dark** ground only (FR-039, US3/6).
-- [ ] T039 Run `npm run typecheck` and `npx vitest run tests/unit` clean. **Do not run bare `npm test`** —
+- [x] T039 Run `npm run typecheck` and `npx vitest run tests/unit` clean. **Do not run bare `npm test`** —
   it is `dotenv -e .env.test -- vitest run`, `.env.test` does not exist, and `tests/setup.ts` truncates all
   19 tables of the development database. The owner accepted that hazard on 2026-09-22; it is still not a
   reason to invoke it.
-- [ ] T040 Run the full `quickstart.md` §1–§8 and record the result per section in
+- [x] T040 Run the full `quickstart.md` §1–§8 and record the result per section in
   `specs/005-categories-carousel/notes/validation.md`, including which client chunks were confirmed loading.
-- [ ] T041 SC-010, SC-011 and SC-012 need a human panel. **Do not self-certify.** Record them as unmeasured
+- [x] T041 SC-010, SC-011 and SC-012 need a human panel. **Do not self-certify.** Record them as unmeasured
   in `notes/validation.md`, noting that feature 004's equivalent gate (T049) was dropped on 2026-09-22
   because the panel could not be assembled, and that SC-011 additionally cannot be judged honestly while
   feature 002's ground is unbuilt past US1 and its Question 1 is reopened.
-- [ ] T042 Update the knowledge graph with `graphify update .` per `CLAUDE.md`, and note in
+- [x] T042 Update the knowledge graph with `graphify update .` per `CLAUDE.md`, and note in
   `specs/005-categories-carousel/notes/coherence.md` whether feature 004's `categoryLinks` in
   `lib/content/home.ts:57` is now superseded by `lib/category-departments.ts` or still serving the shop
   tiles — two sources of category routes on one page is a drift hazard.
