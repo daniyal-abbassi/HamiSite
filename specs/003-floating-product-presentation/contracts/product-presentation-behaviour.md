@@ -9,19 +9,21 @@ other clause in this file.
 
 ## H. Honesty — this outranks the effect
 
-- **H1** A product's image is a photograph of that product, or the product is shown visibly without one. No
-  keyword-matched stand-in, no template stock photograph, no generated object, and no confident fallback.
-  **(Principle I, FR-028, FR-022.)** 188 of 189 records already satisfy this through the mirror; the one with
-  no photograph reaches `return pick("phone", …)` and renders a stock image of something else — that branch
-  is the defect this contract closes, and it is fixed before the visual work (D1).
+- **H1** A product's image is a photograph of that product, or the shared brand placeholder. Never a
+  keyword-guessed stand-in, never a template stock photograph of another company's device, never a generated
+  object, never a confident remote hotlink. **(Principle I, FR-028, FR-022.)** 188 of 189 records satisfy the
+  first branch through the mirror; the one with no photograph (`347 اپل آیدی`) renders
+  `/brand/placeholder-product.webp`, and `tests/unit/product-images.test.ts` pins both halves. The
+  keyword/brand/category guessing that used to fill that gap is deleted, not merely bypassed.
 - **H2** An asset whose `reviewStatus` is not `approved` is presented in the framed form or not at all.
   Silence is not approval, and the default state must be the honest one (FR-030).
 - **H3** No treatment may crop, obscure or de-emphasise price, availability, brand or name. An unknown stock
   state still reads «تماس بگیرید» at the same contrast it has today (FR-021, SC-006).
 - **H4** Nothing in the presentation implies a finish, accessory, scale reference, quantity or viewpoint the
   record does not support (FR-022, FR-023).
-- **H5** The imageless record is presented as a deliberate empty state. No placeholder object is invented
-  (FR-019, US4/2).
+- **H5** The imageless record is presented with the brand placeholder, which asserts something about the shop
+  and nothing about the product. No *object* is invented for it — the placeholder carries the merchant's own
+  monogram, not a device (FR-019, US4/2).
 
 ## P. Product as protagonist
 

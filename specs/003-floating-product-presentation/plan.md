@@ -67,7 +67,7 @@ Gates from `.specify/memory/constitution.md` v1.1.0, evaluated before Phase 0.
 
 | Principle | Status | Note |
 |---|---|---|
-| I. Honest Interface | **PASS, with one named defect to fix first** | All 188 products render their own mirrored photograph. One record has no photograph at all and currently resolves through the keyword fallback to a confident stock image of something else — a real Principle I violation, one product, fixed in D1 by making the last-resort branch visibly empty instead of inventing an object. Beyond that: FR-029 treats a bad matte as a misrepresentation, which is why D2 refuses generative editing and D3 measures the failure rate before anything ships. |
+| I. Honest Interface | **PASS — one defect found and closed during planning** | All 188 products with a photograph render their own. The 189th had none and was resolving through a keyword fallback to a confident stock image of another company's device; it now renders a shared brand placeholder built from the merchant's real mark, and the guessing table behind it is deleted. Beyond that: FR-029 treats a bad matte as a misrepresentation, which is why D2 refuses generative editing and D3 measures the failure rate before anything ships. |
 | II. Persian RTL | **PASS by design** | FR-024/FR-025 require re-derivation, not mirroring; D5 states the light direction and asymmetry on the inline axis. |
 | III. Static Data Seam | **PASS** | `data/`, `app/api/`, `prisma/` untouched. Image files are assets, not data; `catalog-images.json` is read, not rewritten. |
 | IV. Luxury is the bar | **This is the feature** | Q3 = B's dimensional, animated direction is squarely within IV, and IV's "restraint over decoration" is what keeps FR-009's depth cues from becoming the noise 001 and 002 exist to remove. |
@@ -145,8 +145,9 @@ stops inventing one.
 
 ## Key Decisions (summary — full reasoning in research.md)
 
-- **D1** — Build on the existing mirror. Fix the one real provenance hole: the no-image product must render
-  visibly empty, not a stand-in.
+- **D1** — Build on the existing mirror. The one real provenance hole is closed: an imageless product now
+  renders a shared brand tile built from the merchant's own mark, and the keyword guessing that used to fill
+  the gap is deleted rather than refined. **Done and verified in the browser, 2026-09-22.**
 - **D2** — Isolate deterministically: copy source pixels, change only transparency. Install what that needs.
   A generative edit is disqualified on auditability, not on price.
 - **D3** — Measure FR-034's failure rate on a stratified sample of 24 **before** relying on the treatment

@@ -75,17 +75,39 @@ Principle I defect — *"Missing data MUST stay visibly missing. It MUST NOT be 
 placeholder, a stock photograph, or an assumed value"* — and it is exactly FR-019 and US4/2's case: the
 imageless record must look intentional, with no substitute object invented.
 
-**Fix, and it is small**: the last-resort `return pick("phone", product.name)` inside
-`resolveLocalProductImage` is what converts "we have no picture" into "here is a confident picture of
-something else." It should return a visibly-empty presentation instead. One function, one product affected,
-and it is worth doing before any of the visual work in this feature, because FR-016's "a rule that holds
-across 188" is only as honest as its worst branch. The 31-file template pack stays: it is the right fallback
-for a listing grid that must not show 188 holes while the isolation work proceeds.
+**Resolved on 2026-09-22, and implemented.** The owner chose one identical, brand-owned placeholder for every
+imageless product rather than an empty state, and asked that its world be generated:
+`public/brand/placeholder-product.webp`, built by `scripts/make-product-placeholder.py`.
 
-**Alternatives considered**: deleting the template pack outright (rejected — it legitimately covers products
-added without a photo and offline builds, and removing it converts one honest gap into a visual hole across
-every surface); routing the one imageless product to a remote URL (rejected, it is the exact failure the
-mirror exists to escape).
+The distinction that keeps this inside Principle I is that the tile asserts something about the **shop**, not
+about the product. Constitution I forbids filling missing data with "a plausible placeholder, a stock
+photograph, or an assumed value" — a picture that could be mistaken for the merchandise. This one cannot be:
+it is the merchant's own monogram in champagne on the obsidian-and-oxblood ground, and it reads immediately as
+"this is Hami Hamrah, and there is no photo here."
+
+Two things were deliberately not done, and both are load-bearing:
+
+- **The mark is the real one** (`public/brand/hami-mark-alpha.png`), never a generated approximation. An
+  AI-invented logo would fabricate a brand identity, which is a worse honesty failure than a missing product
+  photo. Only the atmospheric backdrop is generated; its raw is kept at
+  `assets/generated-placeholder/hami-placeholder-backdrop.png` so the composite is reproducible.
+- **The mark is knocked out in champagne `#E5D3B3`, not left oxblood.** Its source `#640211` measures
+  **1.48:1** against the `#0B0204` ground — present in the file, invisible to a shopper. Champagne measures
+  **13.6:1**. The shape is untouched; only the fill changes, which is a standard monochrome knockout rather
+  than a redraw.
+
+The last-resort `return pick("phone", product.name)` is gone, along with the keyword, brand and category rule
+tables it depended on — a guess refined is still a guess. The 31-file template pack stays on disk and is now
+referenced by nothing; deleting it is the owner's call.
+
+Verified in a browser on 2026-09-22: `/shop/اپل-آیدی` renders `/brand/placeholder-product.webp`, and the
+`/shop` listing renders 12 `/images/catalog/<id>.jpg` photographs with zero template-pack paths and zero
+remote hotlinks in the DOM. `tests/unit/product-images.test.ts` pins the catalog-wide version of that — 188
+products to their own file, exactly one (`347 اپل آیدی`, `primary_image: null`) to the placeholder.
+
+One incidental gain: `CartLine` was calling `resolveProductImage({ name })` with no images at all, so every
+cart line was rendering a keyword-guessed stock image while the database row had a real one. It now passes
+`item.product.image`, so cart lines show the product's own photograph or the placeholder.
 
 ---
 

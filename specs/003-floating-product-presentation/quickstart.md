@@ -42,10 +42,23 @@ Expected: **188 entries, 188 files present**, all `RGB` (no alpha anywhere), max
 `serializeProduct`, promoted to `images[0]`, and `resolveProductImage` prefers a product's own local image.
 Open a distinctive product — one whose photograph has an unusual shape — and confirm the card shows *it*.
 
-The one real defect to confirm: `grep -n 'return pick("phone"' lib/product-images.ts`, then check the product
-record with no `primary_image`. Expected before the fix: it renders a confident stock photograph of a phone
-that is not it. Expected after: an intentional empty presentation. That is H1's only live failure and it is
-one record.
+The one defect this guide used to ask you to confirm is now fixed, and §0 checks it stays fixed. The product
+with no photograph — `347 اپل آیدی`, `primary_image: null` — resolves to
+`/brand/placeholder-product.webp`, one shared brand tile built by `scripts/make-product-placeholder.py` from
+the merchant's real mark knocked out in champagne (13.6:1 against the ground; the mark's own oxblood is
+1.48:1 and would have been invisible). Open that product and confirm the tile reads as *Hami Hamrah with no
+photo here*, not as a device.
+
+Then confirm the guesswork is gone rather than dormant:
+
+```bash
+grep -n "NAME_RULES\|BRAND_RULES\|pick(\"phone\"" lib/product-images.ts   # expect no matches
+npx vitest run tests/unit/product-images.test.ts
+```
+
+Expected from the test: 188 products resolve to `/images/catalog/<their-own-id>.jpg`, exactly one to the
+placeholder, and zero paths under `/images/products/` — the template pack, which is now referenced by nothing
+and still sits on disk awaiting an owner decision.
 
 ## §1 — US1 needs no asset work, so run it first
 
