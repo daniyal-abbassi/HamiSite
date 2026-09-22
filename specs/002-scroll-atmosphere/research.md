@@ -39,6 +39,27 @@ events fire, so nothing runs.
 
 ## D2 — No scroll library, and scroll-driven CSS animations are progressive enhancement only
 
+> **Corrected 2026-09-22, on two factual errors in this decision, both found while planning feature 005.**
+> They do not overturn the conclusion — a colour that tracks scroll position still should not cost a
+> library — but the reasoning as written below is partly built on things that are not true, and Question 1
+> has been reopened for scroll *physics*, where this decision is directly load-bearing.
+>
+> 1. **"GSAP … would be a runtime"** — `gsap@3.15.0` is already a dependency and already imported in
+>    `components/ui/CardSwap.tsx` and `components/layout/PillNav.tsx`. `node_modules/gsap/ScrollSmoother.js`
+>    is present; GSAP's club plugins became free at 3.13. So the option rejected here was not an addition to
+>    the thirteen-package ceiling; it was already inside it.
+> 2. **"`motion` is not used anywhere on this page today"** — false.
+>    `components/home/FeaturedProducts.tsx:4` imports `motion` from `motion/react`, and that component is
+>    mounted on the homepage at `app/(main)/page.tsx:177`. The competing-choreography risk this paragraph
+>    claims `motion` would *create* already exists and has to be managed regardless.
+>
+> The consequence for the reopened Question 1: the owner's "smooth and heavy" is scroll physics, and
+> `ScrollSmoother` — installed, licensed, unused — is the canonical implementation of exactly that. D2's
+> rejection was argued for a colour-tracking scalar and does not extend to it. 002's plan should be re-derived
+> with that on the table rather than inheriting this paragraph's conclusion. See
+> `specs/005-categories-carousel/research.md` D2 for the same fact applied the other way round: at a section
+> that must never touch page scroll, a document-level scroller is the wrong tool on merit.
+
 **Decision:** neither GSAP ScrollTrigger nor `motion` is used in this feature. `animation-timeline:
 scroll()` is used only as an enhancement behind a feature test, with the D1 custom property as the path
 that always runs.
