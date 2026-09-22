@@ -38,7 +38,10 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
         aria-label={item.product.name}
       >
         <Image
-          src={resolveProductImage({ name: item.product.name })}
+          src={resolveProductImage({
+            name: item.product.name,
+            images: item.product.image ? [item.product.image] : [],
+          })}
           alt={item.product.name}
           fill
           sizes="80px"

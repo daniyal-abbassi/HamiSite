@@ -1,67 +1,96 @@
 import { existsSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
-import { listCategories } from "@/lib/catalog";
-import { PRODUCT_IMAGE_FAMILIES, categoryImageFor, resolveProductImage } from "@/lib/product-images";
+import { listCategories, queryProducts } from "@/lib/catalog";
+import { PRODUCT_PLACEHOLDER_IMAGE, categoryImageFor, resolveProductImage } from "@/lib/product-images";
 
-function isFromFamily(src: string, family: keyof typeof PRODUCT_IMAGE_FAMILIES) {
-  return PRODUCT_IMAGE_FAMILIES[family].some((file) => src.endsWith(file));
-}
+const PLACEHOLDER = PRODUCT_PLACEHOLDER_IMAGE;
 
 describe("resolveProductImage", () => {
-  it("maps watch products by English name", () => {
-    const src = resolveProductImage({ name: "Apple Watch Series 9" });
-    expect(isFromFamily(src, "watch")).toBe(true);
-  });
-
-  it("maps watch products by Persian name", () => {
-    const src = resolveProductImage({ name: "ساعت هوشمند گلکسی واچ 4" });
-    expect(isFromFamily(src, "watch")).toBe(true);
-  });
-
-  it("maps audio products by English and Persian keywords", () => {
-    expect(isFromFamily(resolveProductImage({ name: "Sony WH-1000 Headphone" }), "audio")).toBe(true);
-    expect(isFromFamily(resolveProductImage({ name: "هندزفری بی‌سیم پرو" }), "audio")).toBe(true);
-  });
-
-  it("maps laptop products, matching ZWNJ and spaced Persian variants", () => {
-    expect(isFromFamily(resolveProductImage({ name: "لپ‌تاپ ایسوس VivoBook" }), "laptop")).toBe(true);
-    expect(isFromFamily(resolveProductImage({ name: "لپ تاپ MSI Modern 14" }), "laptop")).toBe(true);
-  });
-
-  it("falls back to the category slug when the name has no keyword", () => {
+  it("renders the product's own mirrored photograph", () => {
     const src = resolveProductImage({
-      name: "مدل ۲۰۲۴ پرو",
-      mainCategory: { slug: "smartwatch", name: "ساعت هوشمند" },
+      name: "گوشی شیائومی Poco X7 Pro",
+      images: [{ url: "/images/catalog/5.jpg", isDefault: true }],
     });
-    expect(isFromFamily(src, "watch")).toBe(true);
+    expect(src).toBe("/images/catalog/5.jpg");
   });
 
-  it("falls back to the brand slug when name and category are generic", () => {
+  it("prefers the default image when a product has several local ones", () => {
     const src = resolveProductImage({
-      name: "مدل A54",
-      mainCategory: { slug: "digital", name: "دیجیتال" },
-      brand: { slug: "xiaomi", name: "شیائومی" },
+      name: "هدفون",
+      images: [
+        { url: "/images/catalog/9.jpg", isDefault: false },
+        { url: "/images/catalog/11.jpg", isDefault: true },
+      ],
     });
-    expect(isFromFamily(src, "phone")).toBe(true);
+    expect(src).toBe("/images/catalog/11.jpg");
   });
 
-  it("defaults to the phone family for unmatched products", () => {
-    const src = resolveProductImage({ name: "محصول ناشناخته" });
-    expect(isFromFamily(src, "phone")).toBe(true);
+  /**
+   * The gallery keeps its origin URLs, and the live shop's host measured 5.8-7.5s
+   * per image with next/image 500-ing about as often as it succeeded. A remote URL
+   * must never reach the card, so an unmirrored product takes the placeholder
+   * instead of going back onto the network.
+   */
+  it("never renders a remote hotlink as a product's picture", () => {
+    const src = resolveProductImage({
+      name: "گوشی ساده",
+      images: [{ url: "https://hamihamrah-shop.com/shop-resources/x/product-images/y.jpg", isDefault: true }],
+    });
+    expect(src).toBe(PLACEHOLDER);
+  });
+
+  it("renders the brand placeholder for a product with no photograph", () => {
+    expect(resolveProductImage({ name: "محصول بدون تصویر", images: [] })).toBe(PLACEHOLDER);
+    expect(resolveProductImage({ name: "محصول بدون تصویر" })).toBe(PLACEHOLDER);
+  });
+
+  /**
+   * The whole point of the placeholder, and the reason the keyword fallback was
+   * deleted rather than tuned: a product with no photograph used to be shown as a
+   * plausible picture of some other product, chosen from its name. Constitution I
+   * forbids filling missing data with a stock photograph, and no amount of rule
+   * refinement makes a guess honest — only the absence of one does.
+   */
+  it("never resolves to the techBazar template pack", () => {
+    const nameless = resolveProductImage({ name: "ساعت هوشمند گلکسی واچ 4" });
+    expect(nameless).toBe(PLACEHOLDER);
+    expect(nameless.startsWith("/images/products/")).toBe(false);
+  });
+
+  it("points at a file that actually exists", () => {
+    expect(existsSync(join(process.cwd(), "public", PLACEHOLDER.replace(/^\//, "")))).toBe(true);
   });
 
   it("is deterministic for the same product", () => {
-    const product = { name: "گوشی سامسونگ گلکسی A15", brand: { slug: "samsung" } };
+    const product = { name: "گوشی سامسونگ گلکسی A15", images: [{ url: "/images/catalog/18.jpg", isDefault: true }] };
     expect(resolveProductImage(product)).toBe(resolveProductImage(product));
   });
 
-  it("ignores legacy image URLs (local-first decision)", () => {
-    const src = resolveProductImage({
-      name: "گوشی ساده",
-      images: [{ url: "https://legacy-shop.example/uploads/abc.jpg" }],
-    });
-    expect(src.startsWith("/images/products/")).toBe(true);
+  /**
+   * Drift guard over the real seam, and the assertion that would have caught the
+   * claim — made in good faith and wrong — that no product had a local photograph.
+   * 188 of 189 resolve to their own file; exactly one reaches the placeholder. A
+   * new placeholder here means the mirror lost a file, and a `/images/products/`
+   * path anywhere means the deleted guesswork came back.
+   */
+  it("resolves every catalogue product to its own photo or the placeholder", () => {
+    const { data, total } = queryProducts({ page: 1, pageSize: 500 });
+    expect(total).toBe(189);
+    expect(data.length).toBe(189);
+
+    const toPlaceholder: string[] = [];
+    const toTemplatePack: string[] = [];
+    for (const product of data) {
+      const src = resolveProductImage({ name: product.name, images: product.images });
+      if (src === PLACEHOLDER) toPlaceholder.push(`${product.id} ${product.name}`);
+      else if (src.startsWith("/images/products/")) toTemplatePack.push(`${product.id} ${product.name}`);
+      else expect(src).toBe(`/images/catalog/${product.id}.jpg`);
+    }
+
+    expect(toTemplatePack).toEqual([]);
+    // Exactly one: «اپل آیدی» (id 347), a service with `primary_image: null` in the export.
+    expect(toPlaceholder).toEqual(["347 اپل آیدی"]);
   });
 });
 

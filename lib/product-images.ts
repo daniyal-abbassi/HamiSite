@@ -1,106 +1,31 @@
 /**
- * Local-first product imagery — the shop-phase decision.
+ * Product and category imagery.
  *
- * Every product renders a deterministic image from `/public/images/products/`
- * (assets ported from docs/inspires/techBazar/public/images/products). The
- * legacy-import `ProductImage.url` values point at the old shop's host and are
- * deliberately ignored for now: consistent visuals, fully offline-safe.
+ * A product renders the shop's own photograph. `lib/catalog.ts` mirrors each
+ * product's primary image from the export into `/public/images/catalog/` and
+ * promotes it to `images[0]`, because the origin host measured 5.8-7.5s per
+ * image and had `next/image` returning 500 about as often as it succeeded.
+ * 188 of 189 products have one; the mapping is `data/catalog-images.json`.
  *
- * Mapping is keyword-based (product name / category / brand, English + Persian)
- * with a stable hash for variety inside a family, so the same product always
- * renders the same image without any database changes.
+ * A product with no photograph renders `/brand/placeholder-product.webp` — one
+ * identical, brand-owned tile, never a stand-in object. This replaced a
+ * keyword-and-hash lookup into a 31-file template pack that used to guess a
+ * plausible picture from the product's name, which meant an imageless phone was
+ * confidently displayed as an Apple Watch. Constitution I has no exception path
+ * and a guess is exactly what it forbids: «Missing data MUST stay visibly
+ * missing. It MUST NOT be filled with a plausible placeholder, a stock
+ * photograph, or an assumed value.» The placeholder is not a claim about the
+ * product; it is a claim about the shop, and it is true.
+ *
+ * The pack itself is still on disk under `/public/images/products/` and is now
+ * unreferenced by any code path. Deleting it is the owner's call, not this
+ * file's.
  */
 
-const PRODUCT_DIR = "/images/products";
 const CATEGORY_DIR = "/images/categories";
 
-export const PRODUCT_IMAGE_FAMILIES = {
-  /* Accessories. The 26 images ported from the techBazar template cover phones,
-     laptops, watches and audio and nothing else, so every charger and power bank
-     in this catalogue fell through to the `phone` fallback — a 45W power bank
-     was rendering an Apple Watch. These five were generated for this shop
-     (studio shots on white, keyed to transparent; raws in
-     assets/generated-products/) and deliberately carry no branding, because one
-     image stands in for several different makers' products. */
-  powerbank: [
-    "powerbank-compact.png",
-    "powerbank-mini.png",
-    "powerbank-elite.png",
-  ],
-  charger: [
-    "charger-gan.png",
-    "cable-braided.png",
-  ],
-  watch: [
-    "apple-watch-9-removebg-preview.png",
-    "apple-watch-9-3-removebg-preview.png",
-    "apple-watch-se-removebg-preview.png",
-    "apple-watch-se-2-removebg-preview.png",
-    "galaxy-watch-4-removebg-preview.png",
-    "galaxy-watch-4-2-removebg-preview.png",
-    "firebolt-ninja-removebg-preview.png",
-  ],
-  audio: [
-    "senheiser-removebg-preview.png",
-    "song-wh-removebg-preview.png",
-    "sony-dynamic-removebg-preview.png",
-    "sony-dynamic-2-removebg-preview.png",
-    "prothonics-removebg-preview.png",
-  ],
-  laptop: [
-    "msi-modern-14-removebg-preview.png",
-    "msi-modern-14-2-removebg-preview.png",
-    "msi-modern-14-3-removebg-preview.png",
-    "asus-vivobook-removebg-preview.png",
-    "asus-vivobook-2-removebg-preview.png",
-    "lenova-removebg-preview.png",
-    "lenova-2-removebg-preview.png",
-    "dell-gaming-removebg-preview.png",
-  ],
-  phone: [
-    "galaxy-15-removebg-preview.png",
-    "readme-13-c-removebg-preview.png",
-    "readme-13c-2-removebg-preview.png",
-    "peco-m6-removebg-preview.png",
-    "peco-m6-2-removebg-preview.png",
-    "lava_agni-removebg-preview.png",
-  ],
-} as const;
-
-export type ProductImageFamily = keyof typeof PRODUCT_IMAGE_FAMILIES;
-
-/** Ordered rules — the first family whose keyword appears wins. */
-const NAME_RULES: Array<[ProductImageFamily, string[]]> = [
-  // Accessories first, and power banks before chargers: «شارژر همراه» is a
-  // common Persian name for a power bank, so a plain «شارژر» rule placed first
-  // would claim it.
-  ["powerbank", ["پاوربانک", "پاور بانک", "شارژر همراه", "powerbank", "power bank"]],
-  ["charger", ["شارژر", "کابل", "آداپتور", "charger", "cable", "adapter"]],
-  ["watch", ["watch", "smartwatch", "ساعت"]],
-  [
-    "audio",
-    ["headphone", "headset", "airpod", "earbud", "earphone", "speaker", "هندزفری", "هدست", "ایرپاد", "هدفون", "اسپیکر"],
-  ],
-  [
-    "laptop",
-    ["laptop", "notebook", "macbook", "vivobook", "thinkpad", "ideapad", "لپ تاپ"],
-  ],
-  ["phone", ["phone", "mobile", "iphone", "galaxy", "redmi", "readmi", "گوشی", "موبایل", "تلفن"]],
-];
-
-const BRAND_RULES: Array<[ProductImageFamily, string[]]> = [
-  ["laptop", ["asus", "lenovo", "lenova", "dell", "msi", "acer", "hp"]],
-  ["phone", ["samsung", "xiaomi", "apple", "nokia", "honor", "huawei", "oppo", "realme", "lava"]],
-];
-
-const CATEGORY_RULES: Array<[ProductImageFamily, string[]]> = [
-  ["powerbank", ["powerbank", "power-bank", "پاوربانک"]],
-  ["charger", ["charger", "cable", "شارژر", "کابل"]],
-  ["watch", ["smartwatch", "watch"]],
-  ["audio", ["audio", "headphone", "speaker", "airpod"]],
-  ["laptop", ["laptop", "computer", "notebook", "tablet"]],
-  ["phone", ["mobile", "phone", "feature-phone"]],
-];
+/** Built by `scripts/make-product-placeholder.py` from the merchant's real mark. */
+const PRODUCT_PLACEHOLDER = "/brand/placeholder-product.webp";
 
 const CATEGORY_TILE_IMAGES: Array<[string, string[]]> = [
   [`${CATEGORY_DIR}/phone.png`, ["mobile", "phone", "گوشی", "موبایل", "تلفن"]],
@@ -123,40 +48,23 @@ function normalize(input: string): string {
 }
 
 /** Small stable string hash → deterministic image pick per product. */
-function stableHash(input: string): number {
-  let hash = 0;
-  for (let i = 0; i < input.length; i += 1) {
-    hash = (hash * 31 + input.charCodeAt(i)) >>> 0;
-  }
-  return hash;
-}
-
-function pick(family: ProductImageFamily, seed: string): string {
-  const files = PRODUCT_IMAGE_FAMILIES[family];
-  return `${PRODUCT_DIR}/${files[stableHash(seed) % files.length]}`;
-}
-
 export type ProductImageSource = {
   name: string;
-  englishName?: string | null;
   /** The shop's own photography, from the catalogue export. Preferred when present. */
   images?: Array<{ url?: string | null; isDefault?: boolean }> | unknown;
-  mainCategory?: { slug?: string | null; name?: string | null } | null;
-  brand?: { slug?: string | null; name?: string | null } | null;
 };
 
+/** The brand-owned tile every imageless product shares. */
+export const PRODUCT_PLACEHOLDER_IMAGE = PRODUCT_PLACEHOLDER;
+
 /**
- * Resolve a product's image.
+ * Resolve a product's image: its own photograph, or the brand placeholder.
  *
- * **The product's own photograph wins.** The catalogue export carries the
- * shop's real photography — 1570 images across 189 products — and a real
- * picture of the thing being sold beats any stand-in. Everything below it is
- * the fallback that used to be the only path: a deterministic pick from a local
- * pack, matched by name, then brand, then category.
- *
- * The fallback is kept rather than deleted because it still earns its place —
- * it covers a product added without a photo, a row whose image 404s, and any
- * build that has to work offline.
+ * There is no third option. The previous fallback guessed a plausible picture
+ * from the product's name, brand and category, which meant a product with no
+ * photograph was displayed as some other company's device — a false statement
+ * about merchandise, and the exact thing Constitution I has no exception path
+ * for. Guessing is now removed rather than refined.
  */
 export function resolveProductImage(product: ProductImageSource): string {
   const own = Array.isArray(product.images) ? (product.images as Array<{ url?: string | null; isDefault?: boolean }>) : null;
@@ -165,35 +73,13 @@ export function resolveProductImage(product: ProductImageSource): string {
     // and keeps the origin URL for the rest of the gallery, so a bare `img.url` here is
     // usually the live shop's host — which measured 5.8-7.5s per image and made
     // next/image 500 about as often as it succeeded. That is the failure the mirror was
-    // built to escape, so an unmirrored product falls through to the offline pack rather
-    // than back onto the network.
+    // built to escape, so an unmirrored product takes the placeholder rather than going
+    // back onto the network.
     const isLocal = (url: string | null | undefined): url is string => !!url && url.startsWith("/");
     const preferred = own.find((img) => img?.isDefault && isLocal(img.url)) ?? own.find((img) => isLocal(img.url));
     if (preferred?.url) return preferred.url;
   }
-  return resolveLocalProductImage(product);
-}
-
-/** The offline pack, matched by name then brand then category. */
-function resolveLocalProductImage(product: ProductImageSource): string {
-  const nameText = normalize([product.name, product.englishName].filter(Boolean).join(" "));
-  for (const [family, keywords] of NAME_RULES) {
-    if (keywords.some((keyword) => nameText.includes(keyword))) return pick(family, product.name);
-  }
-
-  const brandText = normalize([product.brand?.slug, product.brand?.name].filter(Boolean).join(" "));
-  for (const [family, keywords] of BRAND_RULES) {
-    if (keywords.some((keyword) => brandText.includes(keyword))) return pick(family, product.name);
-  }
-
-  const categoryText = normalize(
-    [product.mainCategory?.slug, product.mainCategory?.name].filter(Boolean).join(" "),
-  );
-  for (const [family, keywords] of CATEGORY_RULES) {
-    if (keywords.some((keyword) => categoryText.includes(keyword))) return pick(family, product.name);
-  }
-
-  return pick("phone", product.name);
+  return PRODUCT_PLACEHOLDER;
 }
 
 /** Resolve the local tile image for a category (deterministic, offline-safe). */
