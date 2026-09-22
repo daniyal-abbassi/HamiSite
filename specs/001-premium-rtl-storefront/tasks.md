@@ -35,7 +35,15 @@ before-images.
   `specs/001-premium-rtl-storefront/baseline/` at 360×800 and 1280×900. `audits/05` had to compute
   fold positions from 002's 2026-09-22 captures because nothing was listening on :3000 — re-measure
   against a live server before band 3 relies on any position claim.
-- [ ] T003 Obtain the eight owner decisions in `quickstart.md` §1 in one sitting, and record the answers
+- [x] T003 **DONE 2026-09-23** — all eight answers recorded in
+  `specs/001-premium-rtl-storefront/notes/owner-decisions.md`: (1) only the warranty was confirmed, as
+  «گارانتی ۱۸ ماهه شرکتی», and every other claim in that question came out; (2) the AI store photograph is
+  removed everywhere; (3) the fabricated email and the venue line are removed until supplied; (4) browsing
+  and the cart stay, the purchase claim is replaced by tap-to-call plus a copyable number; (5) the scroll
+  ground **extends to every shopper page**; (6) SC-007 is scoped to interface-authored strings, merchant
+  product text renders as written; (7) no human panel — band 4 stays visibly unmeasured; (8) no date for
+  the refreshed export, so band 0 tests against today's snapshot while the refresh-tolerance work
+  continues. **Nothing in band 0 is decision-blocked any more.** in `quickstart.md` §1 in one sitting, and record the answers
   in `specs/001-premium-rtl-storefront/notes/owner-decisions.md`: (1) which trust claims come out vs which
   get a supplied fact, (2) the AI store photograph, (3) address/email supply, (4) what replaces the
   purchase path, (5) whether the atmosphere extends past `/`, (6) whether SC-007 reaches merchant-authored
@@ -111,7 +119,8 @@ before-images.
 - [ ] T018 [US4] Make the product page consume the merchant's own signal: derive the purchasable test at
   `components/shop/ProductDetail.tsx:96` from `product.available` (`lib/catalog.ts:200`) instead of
   `stockType !== "out_of_stock" && stockType !== "call"`, which currently makes all 16
-  `limited`+`purchasable:false` records buyable. Depends on T003 for the label wording only, not the gate.
+  `limited`+`purchasable:false` records buyable. Label wording is fixed by decisions 1 and 4 («تماس بگیرید» plus tap-to-call); the
+  gate itself needs no decision.
 - [ ] T019 [US4] Gate the card's cart control in `components/shop/ProductCard.tsx:109,221-231` on the same
   `available` flag — it tests only `out_of_stock` today, which is why 22 unsellable records carry a live
   «افزودن به سبد خرید» (FR-002, FR-037).
@@ -124,9 +133,16 @@ before-images.
 
 ### Claims that have no fact behind them
 
-- [ ] T022 [P] [US3] Remove the «گارانتی رسمی» chip from `components/shop/ProductCard.tsx:191-193` — the
-  serializer hardcodes `guarantee: null` at `lib/catalog.ts:170`, so there is no record field behind it.
-- [ ] T023 [P] [US3] Remove «ضمانت اصالت ۱۰۰٪» from `components/shop/ProductDetail.tsx:256-258`.
+- [ ] T022 [US3] **Changed by decision 1, not deleted.** Source the warranty once and render it
+  everywhere: add «گارانتی ۱۸ ماهه شرکتی» as a verified merchant fact in the facts module beside
+  `lib/content/contact.ts` (not in JSX), and have `components/shop/ProductCard.tsx:191-193` and
+  `components/shop/ProductDetail.tsx:256-258` read it from there. The current «گارانتی رسمی» wording still
+  goes — it named no provider and no period. Do NOT make `lib/catalog.ts:170`'s `guarantee` field look
+  per-product: the export holds no guarantee data, so this is a storefront-wide fact and must not read as
+  record data. See `notes/owner-decisions.md` §1.
+- [ ] T023 [P] [US3] Remove «ضمانت اصالت ۱۰۰٪» from `components/shop/ProductDetail.tsx:256-258` — the owner
+  was offered the chance to confirm it in decision 1 and did not, so FR-001 applies
+  (`notes/owner-decisions.md` §1).
 - [ ] T024 [P] [US1] Remove «تضمین ۱۰۰٪ اصالت» and the accompanying authorization phrasing from
   `components/layout/Footer.tsx:57,62,69`, leaving only the four FR-006 facts.
 - [ ] T025 [P] [US1] Rewrite the hero claims at `app/(main)/page.tsx:86,103-106,108-109`: «بهترین قیمت
@@ -145,10 +161,12 @@ before-images.
 - [ ] T029 [US1] Remove or substantiate the venue line «مشهد • مجتمع تجاری موبایل» at
   `components/home/StoreExperience.tsx:98` — it is not in `lib/content/contact.ts`, which names the phone as
   the repo's only verified contact fact.
-- [ ] T030 [US1] Take the AI re-lit store photograph out of its trust role: `components/home/ShopWindow.tsx`
+- [ ] T030 [US1] **Decision 2: removed everywhere.** Take the AI re-lit store photograph out of its trust role: `components/home/ShopWindow.tsx`
   (lines 4–20 document the re-light derivation) and `components/home/StoreExperience.tsx:41,60-62` caption it
   «فضای واقعی مجموعه» and badge it `MASHHAD FLAGSHIP`. FR-006 forbids store imagery outright and research D5
-  decides it comes out. Depends on T003 only for *what replaces the slot*, not for removing the claim.
+  decides it comes out. The slot stays **empty** rather than filled with something nearby — FR-008 and
+  `notes/owner-decisions.md` §2. This also retires the radial "light thrown onto the wall" at
+  `ShopWindow.tsx:25-35`, which decorates an image that is leaving.
 - [ ] T031 [P] [US1] Delete the «تصویر واقعی فروشگاه در انتظار افزودن» placeholder and its `mediaNote`
   apology from `components/home/WhyHami.tsx:12,65` and `lib/content/home.ts:221-222` — FR-008: a place with
   nothing true to say stays empty; it does not advertise the gap.
@@ -160,11 +178,13 @@ before-images.
 
 ### FR-040: capability honesty, and the 404 that is not
 
-- [ ] T034 [US4] State plainly where a purchase capability cannot be honoured and remove controls that
+- [ ] T034 [US4] **Wording fixed by decision 4: "call us instead."** Browsing and the cart stay; the
+  purchase claim goes. State plainly where a purchase capability cannot be honoured and remove controls that
   merely appear to work: `app/(main)/checkout/page.tsx:22-26` and `components/checkout/CheckoutClient.tsx:424`
   («پرداخت آنلاین از طریق درگاه امن انجام می‌شود»), `components/cart/CartPageClient.tsx:99-122` («ادامه و
   تسویه حساب»). **Do not change cart/checkout logic** — Constitution III freezes it. Copy and affordance
-  only; the replacement wording is owner decision 4 from T003.
+  only. Put tap-to-call plus a copy-the-number control where a buy button stood (lands with T068), per
+  `notes/owner-decisions.md` §4.
 - [ ] T035 [US3] Make an unknown product slug return a real 404: `app/(main)/shop/[slug]/page.tsx` never
   calls `notFound()`, so a missing product currently serves HTTP 200 (US3 scenario 9 and SC-014).
 - [ ] T036 [P] [US3] Create `app/not-found.tsx` with the storefront chrome, RTL, Persian copy and a route
@@ -376,10 +396,12 @@ Depends on T003 for decisions 1, 2, 5.
   `lib/content/home.ts:180-265` ordinal fields, `components/shop/ShopBanner.tsx:24,29`,
   `components/partners/PartnerForm.tsx:94-96`, and `components/shop/FilterSidebar.tsx:157,170` number
   inputs. Use the existing `formatToman`/`toFaDigits`; research D7 rejects a new layer.
-- [ ] T079 [US5] Resolve SC-007's unreachable half as a recorded decision: 186 of 189 product names and 148
+- [x] T079 **Resolved by decision 6.** SC-007 is scoped to interface-authored strings: 186 of 189 product names and 148
   spec sets interleave Latin digits with Persian in `data/hami-products.json`, which is frozen. Either the
-  merchant corrects the source, or SC-007 is scoped to interface-authored strings. From `quickstart.md` §1
-  decision 6 — an agent must not silently transform a product's own name.
+  merchant corrects the source, or SC-007 is scoped to interface-authored strings. Merchant product text renders **exactly as written** — including `512` inside a Persian name — because
+  `data/` is frozen and converting it would make the screen disagree with the shop's own wording. `spec.md`
+  SC-007 is NOT amended; the narrowing is recorded in `notes/owner-decisions.md` §6 and reported as
+  met-with-stated-scope, never as "zero mixed screens". T078 is now the whole of the numeral work.
 - [ ] T080 [P] [US5] Fix the validator band: accept the pasted `0098…` form and normalise digits in
   `lib/phone.ts:8-13` (FR-062); add the landline rule that does not exist anywhere in `lib/` and apply it to
   `shopPhone`, currently `min(7).max(20)` with no shape check (`app/api/partners/route.ts:44`) (FR-063);
@@ -398,11 +420,15 @@ Depends on T003 for decisions 1, 2, 5.
   (`:106-108`) — so at 360/390 there is no readable identity. FR-015 and the Assumption that the official
   files are "used as supplied, not redrawn". Depends on T003 decision 1 only if the supplied files prove
   unusable, in which case amend FR-015 per research D9.
-- [ ] T083 [US5] Unify the page-heading grammar: the homepage's pill + gradient word + swash versus
+- [ ] T083 [US5] **Depends on T073 — strip first, then extend (decision 5).** Unify the page-heading grammar: the homepage's pill + gradient word + swash versus
   `.section-label` numerals on every interior page (`app/(main)/shop/page.tsx:19-27`, `cart/page.tsx:13-21`,
   `orders/page.tsx:14-21`, `partners/page.tsx:15-23`), and give `/login` and `/register` real page headers
   (both are currently a bare centred card, `login/page.tsx:11-18`). Fix the decorative numeral sequence
-  while there: ۰۰۱ appears on both /shop and /cart. FR-049.
+  while there: ۰۰۱ appears on both /shop and /cart. FR-049. Then open the atmosphere to every shopper page:
+  remove the `pathname === "/"` gate at `components/atmosphere/PageGround.tsx:47` so `/shop`, the product
+  page, `/cart`, `/orders` and `/partners` inherit the scroll ground — the owner chose "extend it to all
+  pages" (`notes/owner-decisions.md` §5). Order matters: extending before T073 strips would multiply the
+  glow field across six surfaces instead of one.
 - [ ] T084 [P] [US5] Add the guard tests in `tests/unit/persian-typography.test.ts` that stop the
   typographic band regressing: a unit pass over the
   authored string sources asserting zero non-zero `letter-spacing` on Persian literals, ZWNJ presence in the
@@ -480,19 +506,19 @@ honest end-state is "built, walked, screenshotted, awaiting the panel" — not "
 instrument named, on the precedent 004's T049 set and the owner endorsed: an empty box is information, a
 ticked one is a fabrication.
 
-- [ ] T098 [US1] SC-001 — 10 shoppers new to the business, five seconds on the first screen, at least 8
+- [ ] T098 [US1] **CLOSED UNMEASURED by decision 7 — do not fill this box.** SC-001 — 10 shoppers new to the business, five seconds on the first screen, at least 8
   state unprompted that Hami Hamrah is an established trustworthy retailer and 6 name a specific reason.
   Write the protocol and the result to `specs/001-premium-rtl-storefront/notes/panel-sc001.md`; `audits/05`
   confirms no record, transcript or rating exists anywhere.
-- [ ] T099 [US1] SC-012 — side-by-side against a well-regarded global technology brand's site: 7 of 10 rate
+- [ ] T099 [US1] **CLOSED UNMEASURED by decision 7.** SC-012 — side-by-side against a well-regarded global technology brand's site: 7 of 10 rate
   Hami Hamrah equally or more polished, mean ≥ 4/5 on "does this feel like a premium, intentional brand".
   Write the comparison protocol and result to
   `specs/001-premium-rtl-storefront/notes/panel-sc012.md`. No comparison has ever been run.
-- [ ] T100 [US3] SC-013 — fewer than 10% of tested shoppers reach a product they wanted and leave because
+- [ ] T100 [US3] **CLOSED UNMEASURED by decision 7.** SC-013 — fewer than 10% of tested shoppers reach a product they wanted and leave because
   they cannot tell how to proceed. Record the test script and results in
   `specs/001-premium-rtl-storefront/notes/panel-sc013.md`. No instrumentation exists. The nearest code
   signal is negative and is recorded in `audits/05`.
-- [ ] T101 [US4] SC-011 — in at least 9 of 10 phone enquiries, what the site said matched what the shopkeeper
+- [ ] T101 [US4] **CLOSED UNMEASURED by decision 7.** SC-011 — in at least 9 of 10 phone enquiries, what the site said matched what the shopkeeper
   said about price and availability. Log the requirement and whatever the merchant records in
   `specs/001-premium-rtl-storefront/notes/enquiries-sc011.md`; there is no `tel:` tracking or enquiry log of
   any kind.
@@ -572,11 +598,13 @@ same space, so the void is judged rather than papered.
 - After band 1: US2 (T049–T061) and US3 (T062–T068) run in parallel; after band 3's strip phase, T076–T097
   parallelise by file.
 
-### Decision-blocked, do not start blind
+### Nothing is decision-blocked any more
 
-T018 (label wording), T030 (what replaces the photo slot), T034 (replacement for the purchase affordance),
-T048 (placeholder waiver), T073/T083 (atmosphere beyond `/`), T079 (SC-007's data half), T082 (only if the
-official files prove unusable), T098–T101 (the panel). Each is parked on `quickstart.md` §1.
+T003 was answered in full on 2026-09-23 (`notes/owner-decisions.md`), which cleared T018, T022–T030, T034,
+T073/T083 and T079. Two items stay open for reasons that are not decisions: **T048** (the
+placeholder-vs-Principle-I collision was never put to the owner; band 1 only) and **T082** (blocked only if
+the four official logo files prove unusable at 36px, which is found out by doing it). T098–T101 are
+closed-as-unmeasured, not blocked. T073 now gates T083's extension step.
 
 ---
 

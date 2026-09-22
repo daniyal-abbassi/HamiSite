@@ -66,11 +66,19 @@ Contact (FR-007) — from `lib/content/contact.ts` only. That file holds a phone
 the phone as the repo's only verified contact fact. A street address or email MUST NOT appear anywhere
 until supplied **and confirmed** — not as a real value, not as an obviously-placeholder value.
 
-Currently on screen and inadmissible: «گارانتی رسمی» (the seam hardcodes `guarantee: null`),
-«ضمانت اصالت ۱۰۰٪», «تضمین ۱۰۰٪ اصالت», «قیمتی بی‌رقیب», «بهترین قیمت», «همان قیمت» at one and a hundred
-units (no tiers exist), «انتخاب‌های بی‌نهایت», «ویترین رسمی برندهای برتر», the six-logo «برندهای همکار»
-wall, «مشهد • مجتمع تجاری موبایل» as a venue line, the `info@hamihamrah.ir` address, and **a
-«تصویر واقعی فروشگاه در انتظار افزودن» placeholder shown to shoppers** with an apology note beneath it.
+Warranty (amended by owner decision 1, 2026-09-23 — see `../notes/owner-decisions.md`) — **«گارانتی ۱۸
+ماهه شرکتی» is a verified merchant fact and IS admissible on every product.** Two conditions bind it: the
+string lives in the verified-facts module beside `lib/content/contact.ts`, never hardcoded in a component;
+and because the export carries no guarantee field (`lib/catalog.ts:170` emits `guarantee: null`), the UI
+MUST NOT present it as per-product record data. The current «گارانتی رسمی» wording — no provider, no
+period — is still inadmissible and is replaced, not kept.
+
+Currently on screen and inadmissible, every one of them put to the owner on 2026-09-23 and left
+unconfirmed, so FR-001 removes them rather than rewording them: «ضمانت اصالت ۱۰۰٪», «تضمین ۱۰۰٪ اصالت»,
+«قیمتی بی‌رقیب», «بهترین قیمت», «همان قیمت منصفانه» at one and a hundred units (no tiers exist),
+«انتخاب‌های بی‌نهایت», «ویترین رسمی برندهای برتر», the six-logo «برندهای همکار» wall, the
+«مشهد • مجتمع تجاری موبایل» venue line standing in for an address, the `info@hamihamrah.ir` email, and a
+**«تصویر واقعی فروشگاه در انتظار افزودن» placeholder shown to shoppers** with an apology note beneath it.
 
 **Store imagery is inadmissible as proof.** FR-006 forbids certificate and store photography outright,
 because the owner confirmed no documents and no store photos are coming. `components/home/ShopWindow.tsx`

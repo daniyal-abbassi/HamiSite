@@ -32,6 +32,12 @@ verdict drawn from it has already been withdrawn once on this project.
 
 ## 1. Owner decisions required before band 3 (one sitting)
 
+> **ANSWERED IN FULL 2026-09-23 — see [notes/owner-decisions.md](./notes/owner-decisions.md).** This list
+> is kept as the question record. Nothing in band 0 is blocked by it any more; decisions 1, 2, 4, 5 and 6
+> changed what several tasks must do rather than merely permitting them, and `contracts/honest-states.md`
+> and `tasks.md` were updated to match.
+
+
 These are not answerable from code, and each one blocks work rather than being blocked by it.
 
 1. **Admissible claims.** `contracts/honest-states.md` lists everything currently on screen that the data
