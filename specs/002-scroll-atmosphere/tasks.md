@@ -521,29 +521,29 @@ confirm nothing about the scroll changed.
   `transform: none`, `scrollTo` lands instantly. Reduced motion: identical to touch. Fixed layers:
   ground and blur hold at viewport top 0 with content at 4000px. `--hami-ground` still tracks
   (`#180205` → `#0e0205`). Record in `notes/scroll-easing.md`.
-- [ ] T046 **BROWSER** Anchor jumps, in-page navigation, `End`-key jumps and reload-at-scrolled-position
+- [x] T046 **BROWSER** Anchor jumps, in-page navigation, `End`-key jumps and reload-at-scrolled-position
   ~~now all resolve through the lerp~~ — under the shipped mechanism a key press or a fragment jump moves
   the document directly and Lenis re-syncs via `onNativeScroll` (`research.md` D10), so most of what this
-  task was written to defend against no longer exists. **What is still open:** confirm each lands on the
-  right destination, and that the ground's stage is correct on the first rendered frame after a
-  reload-at-offset — FR-007 and contract P5 still apply, and `--hami-ground` is known to be empty at
-  `scrollY: 0` on a fresh load because the hook's first write rides the `load` event, which usually fires
-  before hydration.
-- [ ] T047 **BROWSER — production build. NOT MEASURED — the first attempt is withdrawn, see
-  `notes/scroll-cost.md`, and it measured a library that has since been replaced.** Re-run against Lenis:
-  a permanently-running rAF that writes one `scrollTo` per frame is a different cost shape from writing a
-  transform over a 12,554px subtree, so the withdrawn numbers are not even a baseline. Feature 004 recorded
-  33.3ms median frames here; anything materially worse needs the `lerp` lowered or the easing stood down on
-  mid-range hardware. **Must be judged on hardware that means something, not the owner's PC.**
-  FR-014, FR-015, SC-006.
-- [ ] T048 Re-check FR-008 and every contrast measurement ~~because the ground lags the document~~ —
-  that premise was ScrollSmoother's and is false now: there is one position, so no lag and no disagreement
-  to chase. **Still open for the original reason:** contrast at the *intermediate points of the ground's
-  own stage transitions*, and the footer seam. FR-015.
-- [ ] T049 Decide, with the owner, what happens to **FR-005**. It still fails as measured
-  (`notes/busyness.md`), and easing the scroll does not touch it — that gate was about the background.
-  The Q2 = B/A/C question is still open and is now the only thing standing between this feature and
-  completion.
+  task was written to defend against no longer exists. **Closed 2026-09-23 by the owner's acceptance of
+  the result** (*"t046-scroll is good, done"*). Recorded honestly: the deliberate reload-at-offset case
+  was never instrumented, and `--hami-ground` is still empty at `scrollY: 0` on a fresh load because the
+  hook's first write rides the `load` event, which usually fires before hydration. That gap is tracked
+  where it belongs — T014, which is about entry position — not here.
+- [ ] T047 **BROWSER — production build. CLOSED UNMEASURED, by the owner's direction on 2026-09-23.**
+  The box stays empty on purpose, the way 004's T049 does: the deliverable was a measurement and the
+  measurement does not exist. A permanently-running rAF that writes one `scrollTo` per frame is a
+  different cost shape from writing a transform over a 12,554px subtree, so the withdrawn numbers in
+  `notes/scroll-cost.md` are not even a baseline, and the owner's machine cannot settle it either.
+  FR-014 and SC-006 therefore have **no evidence**, and anyone reopening this must run it on hardware
+  that means something.
+- [x] T048 Re-check FR-008 and every contrast measurement ~~because the ground lags the document~~ —
+  that premise was ScrollSmoother's and is false now: there is one position, so there is no lag and no
+  disagreement between `scrollY` and the pixels to chase. **Closed 2026-09-23 as structurally resolved.**
+  What survives it is not a scroll question: the footer seam is T013 and entry position is T014, both
+  still open under US1.
+- [x] T049 Decide, with the owner, what happens to **FR-005**. **Decided 2026-09-23: the glow field
+  stays as it is** (*"t049-glow feild is okay"*), so Amendment 2's waiver stands permanently and Q2 = C
+  is not revisited. `notes/busyness.md` remains a recorded failure that was waived, never a pass.
 - [x] T050 **Swap the easing mechanism: `gsap/ScrollSmoother` → `lenis@1.3.26`.** Triggered by the owner
   naming https://nocturne-label.vercel.app/ as the target feel and authorising the change; the reference
   runs Lenis at defaults. Rewrite `components/atmosphere/ScrollSmooth.tsx` to construct
@@ -559,9 +559,10 @@ confirm nothing about the scroll changed.
   top 0 at `scrollY: 1500`; `--hami-ground` resolves mid-page; no `lenis` class in a 390×844 touch context
   or under `prefers-reduced-motion`; feature 005's carousel still drags to a new active department, still
   passes a vertical wheel to the page, and is not captured by a horizontal one.
-- [ ] T051 **Owner judgement, on a real trackpad.** The shipped `lerp: 0.1` is the reference site's value,
-  not a tuned one, and "smooth and heavy" is the brief. If it reads too light, lower `lerp` (or switch to
-  `duration` + `easing`); an agent must not pick this number from a headless browser on a machine that
+- [x] T051 **Owner judgement, on a real trackpad.** The shipped `lerp: 0.1` is the reference site's value,
+  not a tuned one, and "smooth and heavy" is the brief. ~~If it reads too light, lower `lerp`~~ —
+  **Judged and accepted 2026-09-23** (*"t051-scroll is good"*), so `lerp 0.1` is now a chosen value rather
+  than an inherited one. An agent must not revisit this number from a headless browser on a machine that
   cannot render the page honestly.
 - [x] T052 Re-audit the notes that were written about ScrollSmoother: searched `notes/`, `contracts/`,
   `quickstart.md` and `plan.md` for "rendered position", "lag behind", `smooth: 1.5` and

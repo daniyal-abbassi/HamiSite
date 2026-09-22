@@ -5,6 +5,10 @@
 **Created**: 2026-09-20
 
 **Status**: Draft — amended three times, 2026-09-22. See the Amendment Record.
+**Scroll-feel work (US2) closed 2026-09-23 by the owner**: easing accepted at Lenis's `lerp 0.1`, glow
+field accepted as-is so the FR-005 waiver is permanent, and the production cost measurement (FR-014 /
+SC-006) explicitly closed **unmeasured** rather than passed. US1's seam and entry-position tasks and all
+of US3/US4 remain open.
 
 **Input**: User description: "On scrolling on first page, the main background should change on different sections - not so messy, but a coherent, luxury color change on scrolling, also, the changing should be smooth - also i want the scrolling be extra smooth and calm (fell luxery)"
 

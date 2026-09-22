@@ -334,9 +334,10 @@ owner's machine is not a performance instrument and no frame-rate claim is made 
   (2846 → 3246 for a 400px gesture); a horizontal wheel (300, 0) left the page exactly where it was,
   because `gestureOrientation` is `vertical` and such a gesture returns before any capture.
 
-**What this does not settle.** D9's `smooth: 1.5` was a guess, and Lenis's `lerp: 0.1` is now the shipped
-value purely because it is what the reference site uses. Whether it reads "heavy" enough on a real
-trackpad is the owner's call and cannot be measured here. T047 (what the easing costs) is still open and
+**What this does not settle.** D9's `smooth: 1.5` was a guess, and Lenis's `lerp: 0.1` shipped as the
+reference site's value rather than a tuned one. **That is settled now: the owner judged it on real
+hardware on 2026-09-23 and accepted it** (*"t051-scroll is good"*), so `0.1` is a chosen value and should
+not be re-derived by an agent from a headless browser. T047 (what the easing costs) is still open and
 still needs hardware that means something; T046 (anchor jump and restore through the smoothing window) was
 written against ScrollSmoother's two-position model and needs re-reading before it is attempted, because
 the thing it was worried about may no longer exist.
