@@ -118,11 +118,22 @@
 
 
 /* ---------- category catalogue: quiet, direct navigation ---------- */
+/*
+ * The section used to sit on a cream card — `#faf4e6` paper, `#21181a` ink — which is the light
+ * chapter feature 005's FR-039 explicitly forbids signing this surface off against. The carousel's
+ * panels are dark lacquer artwork with champagne line-work; on cream they read as holes cut in the
+ * page. So the section now sits one step off the obsidian ground and the type is knocked out in
+ * champagne, which is also what makes the arc's depth cue legible at all.
+ *
+ * `--catalogue-brand` was oxblood `#640211`. Against `#120104` that measures about 1.5:1 — present
+ * in the file, invisible to a shopper — so the accent is champagne and the oxblood stays where it
+ * has room to breathe: the button fill.
+ */
 .category-catalogue {
-  --catalogue-paper: #faf4e6;
-  --catalogue-ink: #21181a;
-  --catalogue-muted: #5d5552;
-  --catalogue-brand: #640211;
+  --catalogue-paper: #120104;
+  --catalogue-ink: #f0ece9;
+  --catalogue-muted: #b9b3b0;
+  --catalogue-brand: #e5d3b3;
   position: relative;
   margin-block: 2.5rem;
   padding: clamp(1.25rem, 4vw, 3rem);
@@ -174,81 +185,17 @@
   font-weight: 700;
   transition: transform 100ms ease-out;
 }
-.cat-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 1.75rem 1rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-.cat-grid > li { min-width: 0; }
-.cat-cell {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  align-content: start;
-  height: 100%;
-  border-radius: 22px;
-  color: var(--catalogue-ink);
-  transition: transform 100ms ease-out;
-  -webkit-tap-highlight-color: rgba(100, 2, 17, 0.12);
-}
-.cat-panel {
-  grid-column: 1 / -1;
-  display: grid;
-  place-items: center;
-  aspect-ratio: 4 / 3;
-  overflow: hidden;
-  border-radius: 22px;
-  background: var(--catalogue-brand);
-}
-.cat-panel-image {
-  width: 100%;
-  height: 100%;
-  min-height: 0;
-  object-fit: contain;
-  mix-blend-mode: screen;
-}
-.cat-copy { min-width: 0; padding-block: 1rem 0.5rem; }
-.cat-copy h3 {
-  color: var(--catalogue-ink);
-  font-size: clamp(1rem, 1.5vw, 1.1875rem);
-  font-weight: 700;
-  line-height: 1.7;
-  overflow-wrap: anywhere;
-}
-.cat-detail {
-  display: block;
-  margin-block-start: 0.25rem;
-  color: var(--catalogue-muted);
-  font-size: 0.8125rem;
-  line-height: 1.8;
-  text-align: start;
-  overflow-wrap: anywhere;
-}
-.cat-arrow {
-  width: 1rem;
-  height: 1rem;
-  margin-block-start: 1.5rem;
-  margin-inline-start: 0.5rem;
-  color: var(--catalogue-brand);
-}
 .category-catalogue a:focus-visible {
   outline: 3px solid var(--catalogue-brand);
   outline-offset: 5px;
 }
 @media (hover: hover) and (pointer: fine) {
-  .cat-cell:hover h3 { text-decoration: underline; text-underline-offset: 0.3em; }
-  .category-catalogue__all:hover { background: #3d020b; }
+  .category-catalogue__all:hover { background: #c5a880; border-color: #c5a880; color: #16080c; }
 }
-.category-catalogue__all:active,
-.cat-cell:active { transform: scale(0.97); }
-@media (min-width: 768px) {
-  .cat-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 2rem 1.5rem; }
-}
+.category-catalogue__all:active { transform: scale(0.97); }
 @media (prefers-reduced-motion: reduce) {
-  .cat-cell, .category-catalogue__all { transition: none; }
-  .cat-cell:active, .category-catalogue__all:active { transform: none; }
+  .category-catalogue__all { transition: none; }
+  .category-catalogue__all:active { transform: none; }
 }
 @media (prefers-contrast: more) {
   .category-catalogue { --catalogue-muted: #21181a; }

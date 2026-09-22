@@ -26,12 +26,8 @@
         </g>
         
   <g>
-    <text x="52" y="86" fill="#F5E4C4" font-family="Tahoma, sans-serif" font-size="22" font-weight="700" letter-spacing="6">HAMI HAMRAH</text>
-    <text x="52" y="124" fill="rgba(245,228,196,0.76)" font-family="Tahoma, sans-serif" font-size="18" letter-spacing="8">POWER</text>
   </g>
   <g transform="translate(52 800)">
     <image href="/brand/hami-mark-alpha.png" x="0" y="0" width="72" height="72" preserveAspectRatio="xMidYMid meet"/>
-    <text x="92" y="46" fill="#F5E4C4" font-family="Tahoma, sans-serif" font-size="30" font-weight="700">حامی همراه</text>
   </g>
-  <text x="52" y="760" fill="rgba(245,228,196,0.85)" font-family="Tahoma, sans-serif" font-size="38" font-weight="700">پاوربانک</text>
 </svg>

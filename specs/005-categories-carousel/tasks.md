@@ -92,10 +92,10 @@ where the taxonomy finding from `research.md` D1 is either honoured or quietly l
   unannounced. The three new badges deliberately carry no text. T011 must treat the live label as the only
   readable name and the baked text in the six older badges as decoration to crop, dim or replace — decided
   before the panels are built, not discovered in the browser.
-- [ ] T007 [P] Create `components/home/category-carousel.css` scaffold: the container's geometry custom
+- [x] T007 [P] Create `components/home/category-carousel.css` scaffold: the container's geometry custom
   properties (`--arc-bend`, `--arc-depth`, `--arc-falloff`), the panel state selectors, and the
   `@media (prefers-reduced-motion: reduce)` block. Logical properties only — no `left`/`right` (T4).
-- [ ] T008 Re-point `app/(main)/page.tsx:178` so `#categories` renders the new surface, keeping the section
+- [x] T008 Re-point `app/(main)/page.tsx:178` so `#categories` renders the new surface, keeping the section
   id, the `aria-labelledby="categories-title"` heading and the existing `#categories` ambience overrides at
   `app/(main)/home.css:25-70`.
 
@@ -113,25 +113,25 @@ that department's products — while the page keeps scrolling normally underneat
 confirm the page still scrolls vertically while the pointer is over it. Testable with no bending effect and no
 motion polish at all.
 
-- [ ] T009 [US1] Create `components/home/CategoryCarousel.tsx` as the client island: Embla via
+- [x] T009 [US1] Create `components/home/CategoryCarousel.tsx` as the client island: Embla via
   `useEmblaCarousel({ axis: "x", align: "center", loop: true, containScroll: "trimSnaps", direction: "rtl" })`
   per `research.md` D2. **Write no pointer, touch or wheel listener.** The file must contain no
   `addEventListener` on `window` or `document` — that is the reference's disqualifying property and the
   reason G1 exists.
-- [ ] T010 [US1] Implement the arc in `components/home/CategoryCarousel.tsx` +
+- [x] T010 [US1] Implement the arc in `components/home/CategoryCarousel.tsx` +
   `components/home/category-carousel.css`: on Embla's `scroll` event compute each slide's signed
   `offset(i)` wrapped to the shortest arc through ±4 of 9, and write **one custom property per slide**.
   `rotateY`, `scale`, `dim` and `zIndex` derive from it in CSS. **No `translate` term** — Embla's track
   already moves the slides and a second offset double-applies the motion (`data-model.md`, PanelGeometry).
   Sign follows the inline axis, not physical left/right (FR-026).
-- [ ] T011 [US1] In `components/home/CategoryCarousel.tsx`, render each panel as a real `<Link>` to its
+- [x] T011 [US1] In `components/home/CategoryCarousel.tsx`, render each panel as a real `<Link>` to its
   `href` with the live-text label and badge, and
   implement the press contract: pressing the active panel navigates, pressing any other brings it to centre
   and does not navigate (A2, FR-009, FR-010, and the interaction half of FR-038 shared with `004/C24`).
 - [ ] T012 [US1] Cap inertia travel in `components/home/CategoryCarousel.tsx`: watch Embla's `select` event
   `skipped` count and re-`scrollTo` the bounded target so a hard flick advances a small fixed maximum
   (FR-014, SC-004). Embla's physics are velocity-driven and will otherwise skip three panels.
-- [ ] T013 [US1] Persist the shopper's position across the rest of the page in
+- [x] T013 [US1] Persist the shopper's position across the rest of the page in
   `components/home/CategoryCarousel.tsx` — module-scoped, restored on re-init, **not** `localStorage`
   (FR-015, A7, `data-model.md`'s persistence rule).
 - [ ] T014 [US1] **BROWSER** Run quickstart §2 at 360px: swipe to each of the nine, tap the centred panel,
@@ -139,7 +139,7 @@ motion polish at all.
   confirming it centred instead of navigating. Record all nine destinations in
   `specs/005-categories-carousel/notes/us1-destinations.md`. This is SC-001 and SC-002 and there is no
   cheaper way to satisfy either.
-- [ ] T015 [US1] **BROWSER — THE GATE.** Run quickstart §3 on three input classes: emulated phone touch,
+- [x] T015 [US1] **BROWSER — THE GATE. PASSED.** See `notes/scroll-capture.md`: page scrolled +249px under a touch drag begun on a panel, +720px under a mouse wheel, +108px under trackpad deltas, and a 700px drag outside the section moved the carousel zero panels. The active index never changed under any vertical input. The scroll-trace sub-probe in that run was invalid (it measured `scrollBy` under `scroll-behavior: smooth`) and is recorded as such — it neither clears nor fails T025. Run quickstart §3 on three input classes: emulated phone touch,
   laptop mouse wheel, laptop trackpad. Park the cursor over the section and scroll the page; start a vertical
   drag on a panel and turn it horizontal mid-drag. Then capture `window.scrollY` over a fixed 1.5s
   programmatic scroll with the section present and with it removed from the DOM, and compare the traces.

@@ -1,0 +1,3578 @@
+{
+ "model": "isnet-general-use",
+ "sampleSize": null,
+ "assets": [
+  {
+   "productId": 5,
+   "name": "گوشی موبایل شیائومی مدل Poco X7 Pro دو سیم کارت ظرفیت 512 گیگابایت و رم 12 گیگابایت - گلوبال",
+   "kind": "phone",
+   "source": "public/images/catalog/5.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/5.webp",
+   "sourceBytes": 81404,
+   "derivedBytes": 67924,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6358,
+   "borderRingOpacity": 0.2445,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 9,
+   "name": "گوشی موبایل شیائومی مدل Redmi Note 14 Pro Plus 5G دو سیم کارت ظرفیت 512 گیگابایت و رم 12 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/9.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/9.webp",
+   "sourceBytes": 75369,
+   "derivedBytes": 76756,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.7622,
+   "borderRingOpacity": 0.2853,
+   "autoFlag": "background-likely-retained",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 11,
+   "name": "گوشی موبایل شیائومی مدل Redmi Note 14s دو سیم کارت ظرفیت 512 گیگابایت و رم 12 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/11.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/11.webp",
+   "sourceBytes": 59123,
+   "derivedBytes": 60238,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6763,
+   "borderRingOpacity": 0.1266,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 15,
+   "name": "گوشی موبایل شیائومی مدل Redmi Note 14 Pro 4G دو سیم کارت ظرفیت 512 گیگابایت و رم 12 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/15.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/15.webp",
+   "sourceBytes": 56521,
+   "derivedBytes": 49850,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 254,
+   "opaqueFraction": 0.716,
+   "borderRingOpacity": 0.1109,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 16,
+   "name": "هدفون بلوتوثی سامسونگ مدل Galaxy Buds3 Pro",
+   "kind": "audio",
+   "source": "public/images/catalog/16.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/16.webp",
+   "sourceBytes": 50083,
+   "derivedBytes": 48608,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.7805,
+   "borderRingOpacity": 0.1826,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 18,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/18.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/18.webp",
+   "sourceBytes": 51835,
+   "derivedBytes": 40514,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.7358,
+   "borderRingOpacity": 0.2143,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 22,
+   "name": "گوشی موبایل شیائومی مدل Poco M7 4G دو سیم کارت ظرفیت 128 گیگابایت و رم 6 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/22.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/22.webp",
+   "sourceBytes": 65926,
+   "derivedBytes": 105758,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4286,
+   "borderRingOpacity": 0.139,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 23,
+   "name": "هدفون بلوتوثی سامسونگ مدل Galaxy Buds3",
+   "kind": "audio",
+   "source": "public/images/catalog/23.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/23.webp",
+   "sourceBytes": 54686,
+   "derivedBytes": 60796,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.7688,
+   "borderRingOpacity": 0.1993,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 32,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت + آداپتور",
+   "kind": "phone",
+   "source": "public/images/catalog/32.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/32.webp",
+   "sourceBytes": 47674,
+   "derivedBytes": 67126,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5038,
+   "borderRingOpacity": 0.0058,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 33,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A17 4G دو سیم کارت ظرفیت 128 گیگابایت و رم 6 گیگابایت - ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/33.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/33.webp",
+   "sourceBytes": 57365,
+   "derivedBytes": 78416,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6523,
+   "borderRingOpacity": 0.1489,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 38,
+   "name": "گوشی موبایل داریا مدل bond II Lite دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت 5G - به همراه شارژر 66 وات داریا",
+   "kind": "phone",
+   "source": "public/images/catalog/38.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/38.webp",
+   "sourceBytes": 69510,
+   "derivedBytes": 119290,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.551,
+   "borderRingOpacity": 0.1559,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 40,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A36 دو سیم کارت ظرفیت 128 گیگابایت و رم 8 گیگابایت- ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/40.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/40.webp",
+   "sourceBytes": 49925,
+   "derivedBytes": 62804,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3546,
+   "borderRingOpacity": 0.0557,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 42,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A26 دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت - ویتنام -",
+   "kind": "phone",
+   "source": "public/images/catalog/42.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/42.webp",
+   "sourceBytes": 56701,
+   "derivedBytes": 86402,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3008,
+   "borderRingOpacity": 0.0622,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 43,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A17 4G دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت -",
+   "kind": "phone",
+   "source": "public/images/catalog/43.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/43.webp",
+   "sourceBytes": 57928,
+   "derivedBytes": 57916,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6168,
+   "borderRingOpacity": 0.1263,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 48,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A06 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت -",
+   "kind": "phone",
+   "source": "public/images/catalog/48.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/48.webp",
+   "sourceBytes": 65995,
+   "derivedBytes": 95374,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4015,
+   "borderRingOpacity": 0.1681,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 56,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A56 دو سیم کارت ظرفیت 128 گیگابایت و رم 8 گیگابایت - ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/56.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/56.webp",
+   "sourceBytes": 50786,
+   "derivedBytes": 63772,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3544,
+   "borderRingOpacity": 0.1694,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 58,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A17 4G دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت - ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/58.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/58.webp",
+   "sourceBytes": 54637,
+   "derivedBytes": 81192,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5052,
+   "borderRingOpacity": 0.1593,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 63,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy S25 Ultra دو سیم کارت ظرفیت 512 گیگابایت و رم 12 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/63.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/63.webp",
+   "sourceBytes": 47565,
+   "derivedBytes": 53394,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5101,
+   "borderRingOpacity": 0.1974,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 64,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A16 4G دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت - ویتنام -",
+   "kind": "phone",
+   "source": "public/images/catalog/64.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/64.webp",
+   "sourceBytes": 63196,
+   "derivedBytes": 80922,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5757,
+   "borderRingOpacity": 0.0886,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 66,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A26 دو سیم کارت ظرفیت 128 گیگابایت و رم 6 گیگابایت - سامسونگ",
+   "kind": "phone",
+   "source": "public/images/catalog/66.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/66.webp",
+   "sourceBytes": 51556,
+   "derivedBytes": 71952,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3984,
+   "borderRingOpacity": 0.0754,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 96,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A06 5G دو سیم کارت 64 گیگابایت و رم 4 گیگابایت سامسونگ",
+   "kind": "phone",
+   "source": "public/images/catalog/96.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/96.webp",
+   "sourceBytes": 55790,
+   "derivedBytes": 65902,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3772,
+   "borderRingOpacity": 0.0671,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 100,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A56 دو سیم کارت ظرفیت 256 گیگابایت و رم 12 گیگابایت - ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/100.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/100.webp",
+   "sourceBytes": 52697,
+   "derivedBytes": 79622,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5046,
+   "borderRingOpacity": 0.0962,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 101,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy S25 Ultra دو سیم کارت ظرفیت 256 گیگابایت و رم 12 گیگابایت - پک ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/101.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/101.webp",
+   "sourceBytes": 59465,
+   "derivedBytes": 93724,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 254,
+   "opaqueFraction": 0.7423,
+   "borderRingOpacity": 0.2841,
+   "autoFlag": "background-likely-retained",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 104,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A06 دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/104.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/104.webp",
+   "sourceBytes": 68026,
+   "derivedBytes": 141604,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4269,
+   "borderRingOpacity": 0.1511,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 105,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A36 دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت - ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/105.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/105.webp",
+   "sourceBytes": 53226,
+   "derivedBytes": 67072,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4588,
+   "borderRingOpacity": 0.0714,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 107,
+   "name": "گوشی موبایل شیائومی مدل Poco C71 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/107.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/107.webp",
+   "sourceBytes": 83972,
+   "derivedBytes": 120894,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6026,
+   "borderRingOpacity": 0.0766,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 108,
+   "name": "گوشی موبایل شیائومی مدل Redmi A5 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت -",
+   "kind": "phone",
+   "source": "public/images/catalog/108.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/108.webp",
+   "sourceBytes": 58565,
+   "derivedBytes": 84548,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4964,
+   "borderRingOpacity": 0.072,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 109,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A56 دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت - ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/109.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/109.webp",
+   "sourceBytes": 52447,
+   "derivedBytes": 81886,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4929,
+   "borderRingOpacity": 0.0955,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 110,
+   "name": "گوشی موبایل شیائومی مدل Redmi Note 14s دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/110.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/110.webp",
+   "sourceBytes": 57515,
+   "derivedBytes": 58374,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6716,
+   "borderRingOpacity": 0.1134,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 111,
+   "name": "گوشی موبایل شیائومی مدل Redmi 13x دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/111.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/111.webp",
+   "sourceBytes": 66822,
+   "derivedBytes": 69508,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.7008,
+   "borderRingOpacity": 0.1315,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 112,
+   "name": "گوشی موبایل شیائومی مدل Poco C71 دو سیم کارت ظرفیت 64 گیگابایت و رم 3 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/112.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/112.webp",
+   "sourceBytes": 87981,
+   "derivedBytes": 128396,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6546,
+   "borderRingOpacity": 0.139,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 113,
+   "name": "گوشی موبایل شیائومی مدل Poco M6 4G دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/113.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/113.webp",
+   "sourceBytes": 68566,
+   "derivedBytes": 104406,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.7316,
+   "borderRingOpacity": 0.2253,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 116,
+   "name": "گوشی موبایل شیائومی مدل Redmi A5 دو سیم کارت ظرفیت 64 گیگابایت و رم 3 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/116.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/116.webp",
+   "sourceBytes": 60021,
+   "derivedBytes": 90500,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5315,
+   "borderRingOpacity": 0.1085,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 118,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A06 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/118.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/118.webp",
+   "sourceBytes": 59903,
+   "derivedBytes": 109858,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5906,
+   "borderRingOpacity": 0.1634,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 120,
+   "name": "گوشی موبایل شیائومی مدل Poco M7 4G دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/120.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/120.webp",
+   "sourceBytes": 65896,
+   "derivedBytes": 106372,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4263,
+   "borderRingOpacity": 0.1387,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 127,
+   "name": "گوشی موبایل نوکیا مدل 106 2023 دو سیم کارت - مونتاژ ایران تحت لیسانس نوکیا",
+   "kind": "phone",
+   "source": "public/images/catalog/127.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/127.webp",
+   "sourceBytes": 69127,
+   "derivedBytes": 84786,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5989,
+   "borderRingOpacity": 0.1958,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 134,
+   "name": "ساعت هوشمند تی سی اچ مدل TCH HD2 3D Hero2 دارای قابلیت های کنترل موسیقی (Music Player)، پشتیبانی از زبان فارسی در منو و سیستم‌عامل بند فلز",
+   "kind": "smartwatch",
+   "source": "public/images/catalog/134.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/134.webp",
+   "sourceBytes": 99201,
+   "derivedBytes": 163386,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4307,
+   "borderRingOpacity": 0.0285,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 138,
+   "name": "ساعت هوشمند تی سی اچ مدل TCH HD1 3D Hero1 دارای قابلیت های کنترل موسیقی (Music Player)، قابلیت مکالمه از طریق بلوتوث، پشتیبانی از زبان فارسی در منو و سیستم‌عامل، قابلیت تغییر طرح ساعت یا تم بند چرم مصنوعی",
+   "kind": "smartwatch",
+   "source": "public/images/catalog/138.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/138.webp",
+   "sourceBytes": 63808,
+   "derivedBytes": 92418,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5331,
+   "borderRingOpacity": 0.0491,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 141,
+   "name": "هدفون بلوتوثی تی سی اچ مدل Blade L10",
+   "kind": "audio",
+   "source": "public/images/catalog/141.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/141.webp",
+   "sourceBytes": 38949,
+   "derivedBytes": 98430,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3066,
+   "borderRingOpacity": 0.0088,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 146,
+   "name": "هدفون بلوتوثی تی سی اچ مدلTCH - Blade L10 ANC",
+   "kind": "audio",
+   "source": "public/images/catalog/146.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/146.webp",
+   "sourceBytes": 46081,
+   "derivedBytes": 51932,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4488,
+   "borderRingOpacity": 0.0503,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 152,
+   "name": "هدفون بلوتوثی تی سی اچ مدلTCH Boom Trap L30",
+   "kind": "audio",
+   "source": "public/images/catalog/152.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/152.webp",
+   "sourceBytes": 71735,
+   "derivedBytes": 92740,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6091,
+   "borderRingOpacity": 0.079,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 175,
+   "name": "گوشی موبایل شیائومی مدل Redmi Note 14 Pro 4G دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/175.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/175.webp",
+   "sourceBytes": 62935,
+   "derivedBytes": 89670,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4666,
+   "borderRingOpacity": 0.1163,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 182,
+   "name": "هدفون بلوتوثی اپل مدل AirPods New Generation",
+   "kind": "audio",
+   "source": "public/images/catalog/182.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/182.webp",
+   "sourceBytes": 20218,
+   "derivedBytes": 28476,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2924,
+   "borderRingOpacity": 0.0434,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 200,
+   "name": "گوشی موبایل شیائومی مدل Poco X7 Pro دو سیم کارت ظرفیت 256 گیگابایت و رم 12 گیگابایت - پک گلوبال",
+   "kind": "phone",
+   "source": "public/images/catalog/200.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/200.webp",
+   "sourceBytes": 73888,
+   "derivedBytes": 64032,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6347,
+   "borderRingOpacity": 0.2433,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 236,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A36 دو سیم کارت ظرفیت 256 گیگابایت و رم 12 گیگابایت - ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/236.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/236.webp",
+   "sourceBytes": 52524,
+   "derivedBytes": 50104,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4598,
+   "borderRingOpacity": 0.0742,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 244,
+   "name": "گوشی موبایل شیائومی مدل Redmi 15C 4G دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/244.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/244.webp",
+   "sourceBytes": 85570,
+   "derivedBytes": 153734,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2505,
+   "borderRingOpacity": 0.017,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 246,
+   "name": "گوشی موبایل اپل - استوک - مدل Iphone 16 Pro حافظه 128 گیگ",
+   "kind": "phone",
+   "source": "public/images/catalog/246.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/246.webp",
+   "sourceBytes": 73305,
+   "derivedBytes": 49646,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5057,
+   "borderRingOpacity": 0.0388,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 247,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 16 Pro Max حافظه 256 گیگ",
+   "kind": "phone",
+   "source": "public/images/catalog/247.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/247.webp",
+   "sourceBytes": 78307,
+   "derivedBytes": 54978,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5316,
+   "borderRingOpacity": 0.003,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 248,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 16 Pro Max حافظه 256 گیگ",
+   "kind": "phone",
+   "source": "public/images/catalog/248.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/248.webp",
+   "sourceBytes": 71953,
+   "derivedBytes": 43792,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4195,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 249,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 16 Pro Max حافظه 256 گیگ",
+   "kind": "phone",
+   "source": "public/images/catalog/249.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/249.webp",
+   "sourceBytes": 67590,
+   "derivedBytes": 42356,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4924,
+   "borderRingOpacity": 0.0071,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 250,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 16 Pro حافظه 256 گیگ",
+   "kind": "phone",
+   "source": "public/images/catalog/250.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/250.webp",
+   "sourceBytes": 73091,
+   "derivedBytes": 45524,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5017,
+   "borderRingOpacity": 0.005,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 251,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 16 Pro حافظه 256 گیگ",
+   "kind": "phone",
+   "source": "public/images/catalog/251.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/251.webp",
+   "sourceBytes": 69483,
+   "derivedBytes": 38544,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4722,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 252,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 16 Pro Max حافظه 256 گیگ",
+   "kind": "phone",
+   "source": "public/images/catalog/252.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/252.webp",
+   "sourceBytes": 69487,
+   "derivedBytes": 58876,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5175,
+   "borderRingOpacity": 0.0067,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 253,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 16 Pro حافظه 128 گیگ",
+   "kind": "phone",
+   "source": "public/images/catalog/253.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/253.webp",
+   "sourceBytes": 77765,
+   "derivedBytes": 41894,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4345,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 254,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 16 Pro حافظه 256 گیگ",
+   "kind": "phone",
+   "source": "public/images/catalog/254.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/254.webp",
+   "sourceBytes": 75174,
+   "derivedBytes": 60120,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4826,
+   "borderRingOpacity": 0.013,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 255,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 16 Pro حافظه 256 گیگ",
+   "kind": "phone",
+   "source": "public/images/catalog/255.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/255.webp",
+   "sourceBytes": 81867,
+   "derivedBytes": 41480,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5053,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 256,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 16 Pro حافظه 128 گیگ",
+   "kind": "phone",
+   "source": "public/images/catalog/256.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/256.webp",
+   "sourceBytes": 69153,
+   "derivedBytes": 61014,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4821,
+   "borderRingOpacity": 0.0143,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 257,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 15 Pro Max حافظه 256 گیگ",
+   "kind": "phone",
+   "source": "public/images/catalog/257.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/257.webp",
+   "sourceBytes": 68694,
+   "derivedBytes": 52412,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4769,
+   "borderRingOpacity": 0.0017,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 258,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 15 Pro حافظه 1 ترابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/258.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/258.webp",
+   "sourceBytes": 69738,
+   "derivedBytes": 74192,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5145,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 259,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 15 Pro حافظه 256 گیگ",
+   "kind": "phone",
+   "source": "public/images/catalog/259.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/259.webp",
+   "sourceBytes": 82291,
+   "derivedBytes": 74154,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5415,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 260,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 15 Pro حافظه 256 گیگ - سلامت باتری ۹۲",
+   "kind": "phone",
+   "source": "public/images/catalog/260.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/260.webp",
+   "sourceBytes": 72110,
+   "derivedBytes": 64988,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5491,
+   "borderRingOpacity": 0.0808,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 261,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 15 Pro حافظه 128 گیگ - سلامت باتری 100",
+   "kind": "phone",
+   "source": "public/images/catalog/261.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/261.webp",
+   "sourceBytes": 68156,
+   "derivedBytes": 49844,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4905,
+   "borderRingOpacity": 0.086,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 262,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 15 Pro حافظه 128 گیگ - سلامت باتری 100",
+   "kind": "phone",
+   "source": "public/images/catalog/262.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/262.webp",
+   "sourceBytes": 66780,
+   "derivedBytes": 62576,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4849,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 263,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 15 Pro حافظه 128 گیگ - سلامت باتری 100",
+   "kind": "phone",
+   "source": "public/images/catalog/263.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/263.webp",
+   "sourceBytes": 86119,
+   "derivedBytes": 57934,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5359,
+   "borderRingOpacity": 0.094,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 264,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 15 Pro حافظه 128 گیگ - سلامت باتری 100",
+   "kind": "phone",
+   "source": "public/images/catalog/264.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/264.webp",
+   "sourceBytes": 69253,
+   "derivedBytes": 59256,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5057,
+   "borderRingOpacity": 0.0401,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 265,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro Max حافظه 512 گیگ - سلامت باتری 85",
+   "kind": "phone",
+   "source": "public/images/catalog/265.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/265.webp",
+   "sourceBytes": 66814,
+   "derivedBytes": 63370,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5286,
+   "borderRingOpacity": 0.0427,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 266,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro Max حافظه 128 گیگ - سلامت باتری 88",
+   "kind": "phone",
+   "source": "public/images/catalog/266.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/266.webp",
+   "sourceBytes": 60609,
+   "derivedBytes": 51616,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4436,
+   "borderRingOpacity": 0.0033,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 267,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro حافظه 256 گیگ - سلامت باتری 89",
+   "kind": "phone",
+   "source": "public/images/catalog/267.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/267.webp",
+   "sourceBytes": 103563,
+   "derivedBytes": 82358,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4758,
+   "borderRingOpacity": 0.074,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 268,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro Max حافظه 128 گیگ - سلامت باتری 85",
+   "kind": "phone",
+   "source": "public/images/catalog/268.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/268.webp",
+   "sourceBytes": 62094,
+   "derivedBytes": 45898,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4914,
+   "borderRingOpacity": 0.0229,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 269,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro حافظه 256 گیگ - سلامت باتری 83",
+   "kind": "phone",
+   "source": "public/images/catalog/269.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/269.webp",
+   "sourceBytes": 66354,
+   "derivedBytes": 55344,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3348,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 270,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro حافظه 128 گیگ - سلامت باتری 84",
+   "kind": "phone",
+   "source": "public/images/catalog/270.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/270.webp",
+   "sourceBytes": 65141,
+   "derivedBytes": 65852,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4356,
+   "borderRingOpacity": 0.0025,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 271,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro حافظه 256 گیگ - سلامت باتری 85",
+   "kind": "phone",
+   "source": "public/images/catalog/271.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/271.webp",
+   "sourceBytes": 72507,
+   "derivedBytes": 51822,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4192,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 272,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro حافظه 256 گیگ - سلامت باتری 82",
+   "kind": "phone",
+   "source": "public/images/catalog/272.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/272.webp",
+   "sourceBytes": 71979,
+   "derivedBytes": 59036,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5194,
+   "borderRingOpacity": 0.1063,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 273,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro حافظه 128 گیگ - سلامت باتری86",
+   "kind": "phone",
+   "source": "public/images/catalog/273.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/273.webp",
+   "sourceBytes": 92121,
+   "derivedBytes": 63980,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5274,
+   "borderRingOpacity": 0.0081,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 274,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro حافظه 256 گیگ - سلامت باتری 89",
+   "kind": "phone",
+   "source": "public/images/catalog/274.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/274.webp",
+   "sourceBytes": 90599,
+   "derivedBytes": 66984,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5754,
+   "borderRingOpacity": 0.055,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 275,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro حافظه 256 گیگ - سلامت باتری 80",
+   "kind": "phone",
+   "source": "public/images/catalog/275.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/275.webp",
+   "sourceBytes": 79496,
+   "derivedBytes": 68000,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 254,
+   "opaqueFraction": 0.5151,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 276,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro حافظه 128 گیگ - سلامت باتری 88",
+   "kind": "phone",
+   "source": "public/images/catalog/276.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/276.webp",
+   "sourceBytes": 66311,
+   "derivedBytes": 51070,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4488,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 277,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro حافظه 256 گیگ - سلامت باتری 88",
+   "kind": "phone",
+   "source": "public/images/catalog/277.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/277.webp",
+   "sourceBytes": 93617,
+   "derivedBytes": 67564,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5219,
+   "borderRingOpacity": 0.0004,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 278,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 14 Pro حافظه 256 گیگ - سلامت باتری 85",
+   "kind": "phone",
+   "source": "public/images/catalog/278.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/278.webp",
+   "sourceBytes": 92553,
+   "derivedBytes": 61698,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5231,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 279,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 13 Pro Max حافظه 128 گیگ - سلامت باتری 87",
+   "kind": "phone",
+   "source": "public/images/catalog/279.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/279.webp",
+   "sourceBytes": 91750,
+   "derivedBytes": 146532,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4072,
+   "borderRingOpacity": 0.0741,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 280,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 13 Pro Max حافظه 1 ترابایت - سلامت باتری ۸۹",
+   "kind": "phone",
+   "source": "public/images/catalog/280.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/280.webp",
+   "sourceBytes": 62487,
+   "derivedBytes": 52806,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5159,
+   "borderRingOpacity": 0.0711,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 281,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 13 Pro Max حافظه 256 گیگ - سلامت باتری ۸۴",
+   "kind": "phone",
+   "source": "public/images/catalog/281.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/281.webp",
+   "sourceBytes": 70142,
+   "derivedBytes": 58490,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5111,
+   "borderRingOpacity": 0.0449,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 282,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 13 Pro Max حافظه 128 گیگ - سلامت باتری ۸۴",
+   "kind": "phone",
+   "source": "public/images/catalog/282.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/282.webp",
+   "sourceBytes": 65490,
+   "derivedBytes": 48180,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4836,
+   "borderRingOpacity": 0.0536,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 283,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 13 Pro Max حافظه 128 گیگ - سلامت باتری 80",
+   "kind": "phone",
+   "source": "public/images/catalog/283.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/283.webp",
+   "sourceBytes": 72975,
+   "derivedBytes": 72316,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4603,
+   "borderRingOpacity": 0.0005,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 284,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 13 Pro Max حافظه 256 گیگ - سلامت باتری 86",
+   "kind": "phone",
+   "source": "public/images/catalog/284.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/284.webp",
+   "sourceBytes": 68663,
+   "derivedBytes": 54674,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5002,
+   "borderRingOpacity": 0.0612,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 285,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 13 Pro حافظه 256 گیگ - سلامت باتری 80",
+   "kind": "phone",
+   "source": "public/images/catalog/285.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/285.webp",
+   "sourceBytes": 73078,
+   "derivedBytes": 67264,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4824,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 286,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 13 Pro حافظه 512 گیگ - سلامت باتری 89 - پارت LLA",
+   "kind": "phone",
+   "source": "public/images/catalog/286.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/286.webp",
+   "sourceBytes": 75851,
+   "derivedBytes": 77100,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 254,
+   "opaqueFraction": 0.5404,
+   "borderRingOpacity": 0.038,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 287,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 13 Pro حافظه 256 گیگ - سلامت باتری 81",
+   "kind": "phone",
+   "source": "public/images/catalog/287.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/287.webp",
+   "sourceBytes": 63153,
+   "derivedBytes": 59032,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5137,
+   "borderRingOpacity": 0.0171,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 288,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 13 Pro حافظه 128 گیگ - سلامت باتری 83",
+   "kind": "phone",
+   "source": "public/images/catalog/288.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/288.webp",
+   "sourceBytes": 65130,
+   "derivedBytes": 64790,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4907,
+   "borderRingOpacity": 0.0636,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 289,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 13 Pro حافظه 256 گیگ - سلامت باتری 87",
+   "kind": "phone",
+   "source": "public/images/catalog/289.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/289.webp",
+   "sourceBytes": 77993,
+   "derivedBytes": 71164,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4018,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 290,
+   "name": "گوشی موبایل اپل - استوک - مدل iphone 13 Pro حافظه 128 گیگ - سلامت باتری 85",
+   "kind": "phone",
+   "source": "public/images/catalog/290.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/290.webp",
+   "sourceBytes": 71855,
+   "derivedBytes": 61336,
+   "sourceDimensions": [
+    675,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4072,
+   "borderRingOpacity": 0.0005,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 291,
+   "name": "گوشی موبایل تی سی اچ مدل ARC دو سیم‌کارت ظرفیت 4 مگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/291.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/291.webp",
+   "sourceBytes": 52931,
+   "derivedBytes": 44284,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5365,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 292,
+   "name": "گوشی موبایل تی سی اچ مدل Nova دو سیم کارت ظرفیت 8 مگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/292.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/292.webp",
+   "sourceBytes": 75257,
+   "derivedBytes": 106536,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5888,
+   "borderRingOpacity": 0.1006,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 293,
+   "name": "گوشی موبایل تی سی اچ مدل Lime دو سیم‌کارت ظرفیت 4 مگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/293.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/293.webp",
+   "sourceBytes": 54030,
+   "derivedBytes": 50578,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.501,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 294,
+   "name": "ساعت هوشمند تی سی اچ مدل Z10 Pro Swift",
+   "kind": "smartwatch",
+   "source": "public/images/catalog/294.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/294.webp",
+   "sourceBytes": 60629,
+   "derivedBytes": 71640,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5361,
+   "borderRingOpacity": 0.055,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 295,
+   "name": "ساعت هوشمند تی سی اچ مدل Z40+ Tech Sense، مناسب برای ورزش، روزمره، رسمی، دارای قابلیت‌های صفحه نمایش رنگی و لمسی، کنترل موسیقی",
+   "kind": "smartwatch",
+   "source": "public/images/catalog/295.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/295.webp",
+   "sourceBytes": 79898,
+   "derivedBytes": 102372,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5795,
+   "borderRingOpacity": 0.0536,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 296,
+   "name": "گوشی موبایل داریا مدل Bond 5G ظرفیت 256 گیگابایت رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/296.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/296.webp",
+   "sourceBytes": 59600,
+   "derivedBytes": 66842,
+   "sourceDimensions": [
+    900,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5517,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 297,
+   "name": "گوشی موبایل داریا Bond II 5G ظرفیت 512 گیگابایت رم 12 گیگابایت - DM-B70104",
+   "kind": "phone",
+   "source": "public/images/catalog/297.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/297.webp",
+   "sourceBytes": 59600,
+   "derivedBytes": 66842,
+   "sourceDimensions": [
+    900,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5517,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 298,
+   "name": "گوشی شیائومی Redmi Note 14 4G دو سیم کارت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/298.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/298.webp",
+   "sourceBytes": 61741,
+   "derivedBytes": 92206,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4456,
+   "borderRingOpacity": 0.1141,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 299,
+   "name": "گوشی موبایل شیائومی مدل Redmi 15 4G دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت - باتری ۷۰۰۰",
+   "kind": "phone",
+   "source": "public/images/catalog/299.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/299.webp",
+   "sourceBytes": 58578,
+   "derivedBytes": 104138,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 254,
+   "opaqueFraction": 0.5543,
+   "borderRingOpacity": 0.0364,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 300,
+   "name": "گوشی موبایل شیائومی مدل Redmi A3 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/300.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/300.webp",
+   "sourceBytes": 72539,
+   "derivedBytes": 86818,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.8018,
+   "borderRingOpacity": 0.2623,
+   "autoFlag": "background-likely-retained",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 301,
+   "name": "گوشی موبایل شیائومی مدل Redmi A3 Pro دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/301.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/301.webp",
+   "sourceBytes": 63075,
+   "derivedBytes": 83056,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.776,
+   "borderRingOpacity": 0.2594,
+   "autoFlag": "background-likely-retained",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 302,
+   "name": "گوشی موبایل شیائومی مدل Poco C85 دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/302.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/302.webp",
+   "sourceBytes": 56122,
+   "derivedBytes": 91656,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4729,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 303,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A16 4G دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت - ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/303.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/303.webp",
+   "sourceBytes": 67323,
+   "derivedBytes": 124238,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4815,
+   "borderRingOpacity": 0.1125,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 304,
+   "name": "گوشی موبایل شیائومی مدل Poco C75 دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/304.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/304.webp",
+   "sourceBytes": 68900,
+   "derivedBytes": 71498,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.8134,
+   "borderRingOpacity": 0.3119,
+   "autoFlag": "background-likely-retained",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 306,
+   "name": "گوشی موبایل سامسونگ مدل Sm_B315E دو سیم کارت",
+   "kind": "phone",
+   "source": "public/images/catalog/306.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/306.webp",
+   "sourceBytes": 66365,
+   "derivedBytes": 70920,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.657,
+   "borderRingOpacity": 0.181,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 307,
+   "name": "گوشی موبایل نوکیا مدل 110 2023 دو سیم کارت - مونتاژ ایران تحت لیسانس نوکیا",
+   "kind": "phone",
+   "source": "public/images/catalog/307.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/307.webp",
+   "sourceBytes": 68104,
+   "derivedBytes": 81408,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.584,
+   "borderRingOpacity": 0.18,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 309,
+   "name": "گوشی موبایل نوکیا مدل 105 2023 دو سیم‌ کارت - مونتاژ ایران تحت لیسانس نوکیا",
+   "kind": "phone",
+   "source": "public/images/catalog/309.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/309.webp",
+   "sourceBytes": 64909,
+   "derivedBytes": 83216,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6104,
+   "borderRingOpacity": 0.1902,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 310,
+   "name": "هدفون بلوتوثی سامسونگ مدل Galaxy Buds Core",
+   "kind": "audio",
+   "source": "public/images/catalog/310.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/310.webp",
+   "sourceBytes": 15823,
+   "derivedBytes": 22148,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2021,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 311,
+   "name": "شارژر فوق سریع 66W",
+   "kind": "charger",
+   "source": "public/images/catalog/311.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/311.webp",
+   "sourceBytes": 10735,
+   "derivedBytes": 11332,
+   "sourceDimensions": [
+    400,
+    400
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4312,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 312,
+   "name": "هدفون بلوتوثی اپل مدل AirPods 4 (نسخه دارای نویز کنسلینگ)",
+   "kind": "audio",
+   "source": "public/images/catalog/312.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/312.webp",
+   "sourceBytes": 29769,
+   "derivedBytes": 63028,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2637,
+   "borderRingOpacity": 0.0354,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 313,
+   "name": "هدفون بلوتوثی اپل مدل AirPods 4",
+   "kind": "audio",
+   "source": "public/images/catalog/313.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/313.webp",
+   "sourceBytes": 29769,
+   "derivedBytes": 63028,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2637,
+   "borderRingOpacity": 0.0354,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 314,
+   "name": "شارژر دیواری 20 وات اپل مدل (A2344) تایپ سی",
+   "kind": "charger",
+   "source": "public/images/catalog/314.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/314.webp",
+   "sourceBytes": 32685,
+   "derivedBytes": 32954,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4376,
+   "borderRingOpacity": 0.0123,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 315,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A06 5G دو سیم کارت 128 گیگابایت و رم 4 گیگابایت سامسونگ",
+   "kind": "phone",
+   "source": "public/images/catalog/315.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/315.webp",
+   "sourceBytes": 63213,
+   "derivedBytes": 45380,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5688,
+   "borderRingOpacity": 0.0905,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 316,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A06 دو سیم کارت 128 گیگابایت و رم 6 گیگابایت سامسونگ",
+   "kind": "phone",
+   "source": "public/images/catalog/316.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/316.webp",
+   "sourceBytes": 63213,
+   "derivedBytes": 45380,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5688,
+   "borderRingOpacity": 0.0905,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 317,
+   "name": "گوشی موبایل شیائومی مدل Poco C75 دو سیم کارت ظرفیت 128 گیگابایت و رم 6 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/317.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/317.webp",
+   "sourceBytes": 68900,
+   "derivedBytes": 71498,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.8134,
+   "borderRingOpacity": 0.3119,
+   "autoFlag": "background-likely-retained",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 318,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت + آداپتور",
+   "kind": "phone",
+   "source": "public/images/catalog/318.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/318.webp",
+   "sourceBytes": 40057,
+   "derivedBytes": 34452,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4275,
+   "borderRingOpacity": 0.0481,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 319,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 128 گیگابایت و رم 6 گیگابایت + آداپتور",
+   "kind": "phone",
+   "source": "public/images/catalog/319.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/319.webp",
+   "sourceBytes": 47674,
+   "derivedBytes": 67126,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5038,
+   "borderRingOpacity": 0.0058,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 322,
+   "name": "گوشی موبایل سامسونگ مدل S24 FE دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت - ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/322.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/322.webp",
+   "sourceBytes": 55415,
+   "derivedBytes": 110176,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4729,
+   "borderRingOpacity": 0.1057,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 323,
+   "name": "گوشی موبایل وکال مدل V1 Core دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/323.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/323.webp",
+   "sourceBytes": 63482,
+   "derivedBytes": 91990,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5592,
+   "borderRingOpacity": 0.1367,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 324,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 128 گیگابایت و رم 6 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/324.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/324.webp",
+   "sourceBytes": 47674,
+   "derivedBytes": 67126,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5038,
+   "borderRingOpacity": 0.0058,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 325,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A07 دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/325.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/325.webp",
+   "sourceBytes": 40057,
+   "derivedBytes": 34452,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4275,
+   "borderRingOpacity": 0.0481,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 326,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy S25 FE دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت - ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/326.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/326.webp",
+   "sourceBytes": 47698,
+   "derivedBytes": 84234,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5541,
+   "borderRingOpacity": 0.1163,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 328,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A16 4G دو سیم کارت ظرفیت 128 گیگابایت و رم 6 گیگابایت - ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/328.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/328.webp",
+   "sourceBytes": 60691,
+   "derivedBytes": 108494,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 254,
+   "opaqueFraction": 0.4881,
+   "borderRingOpacity": 0.1012,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 329,
+   "name": "گوشی موبایل تی سی اچ مدل One دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت + 6 گیگابایت اضافه",
+   "kind": "phone",
+   "source": "public/images/catalog/329.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/329.webp",
+   "sourceBytes": 54866,
+   "derivedBytes": 45752,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.635,
+   "borderRingOpacity": 0.1493,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 330,
+   "name": "گوشی موبایل تی سی اچ مدل One Lite دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت + 4 گیگابایت اضافه",
+   "kind": "phone",
+   "source": "public/images/catalog/330.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/330.webp",
+   "sourceBytes": 70206,
+   "derivedBytes": 113192,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6229,
+   "borderRingOpacity": 0.2991,
+   "autoFlag": "background-likely-retained",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 331,
+   "name": "گوشی موبایل شیائومی مدل Redmi Note 15 4G دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/331.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/331.webp",
+   "sourceBytes": 53897,
+   "derivedBytes": 60696,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6288,
+   "borderRingOpacity": 0.1302,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 332,
+   "name": "گوشی موبایل شیائومی مدل Redmi Note 15 Pro 4G دو سیم کارت ظرفیت 512 گیگابایت و رم 12 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/332.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/332.webp",
+   "sourceBytes": 62443,
+   "derivedBytes": 77468,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6503,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 333,
+   "name": "گوشی موبایل شیائومی مدل Redmi Note 15 Pro 4G دو سیم کارت ظرفیت 256 گیگابایت و رم 12 گیگابایت 5G",
+   "kind": "phone",
+   "source": "public/images/catalog/333.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/333.webp",
+   "sourceBytes": 47969,
+   "derivedBytes": 92254,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3326,
+   "borderRingOpacity": 0.094,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 334,
+   "name": "گوشی موبایل شیائومی مدل Redmi A3 دو سیم کارت ظرفیت 64 گیگابایت و رم 3 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/334.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/334.webp",
+   "sourceBytes": 71999,
+   "derivedBytes": 85604,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.8027,
+   "borderRingOpacity": 0.2659,
+   "autoFlag": "background-likely-retained",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 335,
+   "name": "شارژر 45 وات سامسونگ مدل EP-T4511 Low Standby به همراه کابل USB-C به طول 1.8 متر گارانتی 18 ماهه یکتا",
+   "kind": "charger",
+   "source": "public/images/catalog/335.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/335.webp",
+   "sourceBytes": 38255,
+   "derivedBytes": 35608,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2432,
+   "borderRingOpacity": 0.0223,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 336,
+   "name": "گوشی موبایل تی سی اچ مدل One دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت + 6 گیگابایت اضافه",
+   "kind": "phone",
+   "source": "public/images/catalog/336.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/336.webp",
+   "sourceBytes": 48193,
+   "derivedBytes": 65896,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4711,
+   "borderRingOpacity": 0.0978,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 337,
+   "name": "گوشی موبایل ریلمی مدل Note 50 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/337.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/337.webp",
+   "sourceBytes": 77822,
+   "derivedBytes": 110984,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6714,
+   "borderRingOpacity": 0.2603,
+   "autoFlag": "background-likely-retained",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 338,
+   "name": "شارژر دیواری 25 وات سامسونگ مدل EP-T2510 با گارانتی یکتا",
+   "kind": "charger",
+   "source": "public/images/catalog/338.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/338.webp",
+   "sourceBytes": 39426,
+   "derivedBytes": 40466,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4654,
+   "borderRingOpacity": 0.0707,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 340,
+   "name": "گوشی موبایل وکال مدل V0 Core دو سیم کارت ظرفیت 32 گیگابایت و رم 2 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/340.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/340.webp",
+   "sourceBytes": 54088,
+   "derivedBytes": 69424,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4824,
+   "borderRingOpacity": 0.1773,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 341,
+   "name": "گوشی موبایل وکال مدل F1 دو سیم‌کارت ظرفیت 32 مگابایت و رم 32 مگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/341.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/341.webp",
+   "sourceBytes": 22175,
+   "derivedBytes": 22022,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1874,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 342,
+   "name": "گوشی موبایل وکال مدل F2 دو سیم‌کارت ظرفیت 32 مگابایت و رم 32 مگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/342.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/342.webp",
+   "sourceBytes": 34798,
+   "derivedBytes": 32174,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3471,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 343,
+   "name": "گوشی موبایل وکال مدل F4 دو سیم‌کارت ظرفیت 64 مگابایت و رم 64 مگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/343.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/343.webp",
+   "sourceBytes": 42174,
+   "derivedBytes": 38252,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4202,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 344,
+   "name": "گوشی موبایل شیائومی مدل Redmi 15C 4G دو سیم کارت ظرفیت 128گیگابایت و رم 4 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/344.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/344.webp",
+   "sourceBytes": 85570,
+   "derivedBytes": 153734,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2505,
+   "borderRingOpacity": 0.017,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 345,
+   "name": "گوشی موبایل شیائومی مدل Redmi 13 دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/345.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/345.webp",
+   "sourceBytes": 56414,
+   "derivedBytes": 83594,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.7384,
+   "borderRingOpacity": 0.2227,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 346,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy S26 Ultra دو سیم‌کارت ظرفیت 256 گیگابایت و رم 12 گیگابایت - ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/346.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/346.webp",
+   "sourceBytes": 59972,
+   "derivedBytes": 90752,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6396,
+   "borderRingOpacity": 0.1334,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 348,
+   "name": "خط رند همراه اول 1009 850 0990",
+   "kind": "sim_card",
+   "source": "public/images/catalog/348.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/348.webp",
+   "sourceBytes": 54517,
+   "derivedBytes": 94650,
+   "sourceDimensions": [
+    900,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1526,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 349,
+   "name": "خط رند همراه اول 1006 850 0990",
+   "kind": "sim_card",
+   "source": "public/images/catalog/349.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/349.webp",
+   "sourceBytes": 55355,
+   "derivedBytes": 136376,
+   "sourceDimensions": [
+    900,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.0895,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 350,
+   "name": "خط رند همراه اول 1004 850 0990",
+   "kind": "sim_card",
+   "source": "public/images/catalog/350.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/350.webp",
+   "sourceBytes": 57696,
+   "derivedBytes": 83150,
+   "sourceDimensions": [
+    900,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3207,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 352,
+   "name": "موس گیمینگ نکسا مدل M102",
+   "kind": "computer_accessory",
+   "source": "public/images/catalog/352.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/352.webp",
+   "sourceBytes": 44579,
+   "derivedBytes": 40402,
+   "sourceDimensions": [
+    848,
+    848
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3668,
+   "borderRingOpacity": 0.049,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 353,
+   "name": "موس گیمینگ نکسا مدل M101",
+   "kind": "computer_accessory",
+   "source": "public/images/catalog/353.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/353.webp",
+   "sourceBytes": 30346,
+   "derivedBytes": 28786,
+   "sourceDimensions": [
+    614,
+    614
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3939,
+   "borderRingOpacity": 0.0566,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 354,
+   "name": "ماوس با سیم Nexa مدل M12",
+   "kind": "computer_accessory",
+   "source": "public/images/catalog/354.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/354.webp",
+   "sourceBytes": 16168,
+   "derivedBytes": 14490,
+   "sourceDimensions": [
+    600,
+    600
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.265,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 355,
+   "name": "ماوس بی سیم برند نکسا مدل M50 مشکی",
+   "kind": "computer_accessory",
+   "source": "public/images/catalog/355.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/355.webp",
+   "sourceBytes": 13107,
+   "derivedBytes": 14056,
+   "sourceDimensions": [
+    600,
+    600
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2208,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 356,
+   "name": "موس NEXA بلوتوث نکسا M51",
+   "kind": "computer_accessory",
+   "source": "public/images/catalog/356.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/356.webp",
+   "sourceBytes": 26771,
+   "derivedBytes": 28398,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2357,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 357,
+   "name": "شارژر دیواری 45 وات نکسا مدل C145C به همراه کابل تبدیل USB-C",
+   "kind": "charger",
+   "source": "public/images/catalog/357.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/357.webp",
+   "sourceBytes": 16346,
+   "derivedBytes": 15066,
+   "sourceDimensions": [
+    642,
+    642
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.222,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 358,
+   "name": "شارژر دیواری 33 وات نکسا مدل C133C به همراه کابل Type-C",
+   "kind": "charger",
+   "source": "public/images/catalog/358.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/358.webp",
+   "sourceBytes": 14607,
+   "derivedBytes": 25098,
+   "sourceDimensions": [
+    720,
+    720
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1195,
+   "borderRingOpacity": 0.0095,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 359,
+   "name": "شارژر 18 وات نکسا مدل C118C به همراه کابل تایپ سی",
+   "kind": "charger",
+   "source": "public/images/catalog/359.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/359.webp",
+   "sourceBytes": 15066,
+   "derivedBytes": 15856,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1286,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 360,
+   "name": "شارژر 20 وات نکسا مدل C120L به همراه کابل تایپ سی به لاتنینگ",
+   "kind": "charger",
+   "source": "public/images/catalog/360.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/360.webp",
+   "sourceBytes": 15033,
+   "derivedBytes": 29970,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1389,
+   "borderRingOpacity": 0.0086,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 361,
+   "name": "شارژر نکسا مدل C130 (۳۰ وات)",
+   "kind": "charger",
+   "source": "public/images/catalog/361.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/361.webp",
+   "sourceBytes": 8501,
+   "derivedBytes": 9804,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1555,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 362,
+   "name": "شارژر دیواری نکسا مدل C220 - با خروجی تایپ-سی",
+   "kind": "charger",
+   "source": "public/images/catalog/362.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/362.webp",
+   "sourceBytes": 13093,
+   "derivedBytes": 41310,
+   "sourceDimensions": [
+    554,
+    554
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1807,
+   "borderRingOpacity": 0.0336,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 363,
+   "name": "هندزفری باسیم Yoshita مدل YR-013",
+   "kind": "audio",
+   "source": "public/images/catalog/363.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/363.webp",
+   "sourceBytes": 28466,
+   "derivedBytes": 50608,
+   "sourceDimensions": [
+    554,
+    554
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2108,
+   "borderRingOpacity": 0.1353,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 364,
+   "name": "هندزفری باسیم Yoshita مدل YR-014",
+   "kind": "audio",
+   "source": "public/images/catalog/364.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/364.webp",
+   "sourceBytes": 39631,
+   "derivedBytes": 52518,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1993,
+   "borderRingOpacity": 0.0674,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 365,
+   "name": "هندزفری سیمی یوشیتا مدل Yoshita YR-015",
+   "kind": "audio",
+   "source": "public/images/catalog/365.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/365.webp",
+   "sourceBytes": 53132,
+   "derivedBytes": 77300,
+   "sourceDimensions": [
+    900,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2026,
+   "borderRingOpacity": 0.0128,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 366,
+   "name": "هندزفری ترانیو مدل T4",
+   "kind": "audio",
+   "source": "public/images/catalog/366.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/366.webp",
+   "sourceBytes": 22233,
+   "derivedBytes": 32024,
+   "sourceDimensions": [
+    640,
+    640
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1516,
+   "borderRingOpacity": 0.0316,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 367,
+   "name": "هندزفری اوآک مدل HE-13",
+   "kind": "audio",
+   "source": "public/images/catalog/367.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/367.webp",
+   "sourceBytes": 21942,
+   "derivedBytes": 28692,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.0571,
+   "borderRingOpacity": 0.0119,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 368,
+   "name": "هندزفری با سیم OAK مدل HE-13c تایپ سی",
+   "kind": "audio",
+   "source": "public/images/catalog/368.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/368.webp",
+   "sourceBytes": 14893,
+   "derivedBytes": 21496,
+   "sourceDimensions": [
+    600,
+    600
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.0579,
+   "borderRingOpacity": 0.0109,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 369,
+   "name": "هندزفری اوآک مدل HE-07",
+   "kind": "audio",
+   "source": "public/images/catalog/369.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/369.webp",
+   "sourceBytes": 22414,
+   "derivedBytes": 36004,
+   "sourceDimensions": [
+    720,
+    720
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.0673,
+   "borderRingOpacity": 0.0165,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 370,
+   "name": "هندزفری سیمی نکسا مدل NEXA F56 Type-C",
+   "kind": "audio",
+   "source": "public/images/catalog/370.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/370.webp",
+   "sourceBytes": 23831,
+   "derivedBytes": 47332,
+   "sourceDimensions": [
+    500,
+    500
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2093,
+   "borderRingOpacity": 0.0514,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 371,
+   "name": "هندزفری سیمی Nexa مدل F55 تایپ C",
+   "kind": "audio",
+   "source": "public/images/catalog/371.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/371.webp",
+   "sourceBytes": 21282,
+   "derivedBytes": 39176,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.0552,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 372,
+   "name": "هندزفری باسیم نکسا مدل f-11 جک",
+   "kind": "audio",
+   "source": "public/images/catalog/372.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/372.webp",
+   "sourceBytes": 14156,
+   "derivedBytes": 22398,
+   "sourceDimensions": [
+    600,
+    600
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1134,
+   "borderRingOpacity": 0.0074,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 373,
+   "name": "شارژر فندکی ایکس‌کین مدل Car 18 | توان 68 وات با 3 خروجی فست شارژ",
+   "kind": "car_charger",
+   "source": "public/images/catalog/373.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/373.webp",
+   "sourceBytes": 90159,
+   "derivedBytes": 55612,
+   "sourceDimensions": [
+    900,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.0505,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 374,
+   "name": "شارژر فندکی 66 وات ویرکس مدل EV-c008 - فست 4 درگاه",
+   "kind": "car_charger",
+   "source": "public/images/catalog/374.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/374.webp",
+   "sourceBytes": 90379,
+   "derivedBytes": 78394,
+   "sourceDimensions": [
+    835,
+    835
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.23,
+   "borderRingOpacity": 0.0019,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 375,
+   "name": "شارژر فندکی 55 وات فست مدل WKN-104",
+   "kind": "car_charger",
+   "source": "public/images/catalog/375.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/375.webp",
+   "sourceBytes": 85854,
+   "derivedBytes": 161532,
+   "sourceDimensions": [
+    900,
+    805
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1833,
+   "borderRingOpacity": 0.0216,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 376,
+   "name": "ساعت هوشمند Nexa مدل W6 Ultra",
+   "kind": "smartwatch",
+   "source": "public/images/catalog/376.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/376.webp",
+   "sourceBytes": 70975,
+   "derivedBytes": 107462,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3526,
+   "borderRingOpacity": 0.0585,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 377,
+   "name": "ساعت هوشمند Nexa W5 Ultra",
+   "kind": "smartwatch",
+   "source": "public/images/catalog/377.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/377.webp",
+   "sourceBytes": 24205,
+   "derivedBytes": 38360,
+   "sourceDimensions": [
+    447,
+    447
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3966,
+   "borderRingOpacity": 0.0096,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 378,
+   "name": "ساعت هوشمند ME13 Series10",
+   "kind": "smartwatch",
+   "source": "public/images/catalog/378.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/378.webp",
+   "sourceBytes": 84091,
+   "derivedBytes": 61298,
+   "sourceDimensions": [
+    780,
+    780
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3709,
+   "borderRingOpacity": 0.0115,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 379,
+   "name": "پاوربانک کامتل مدل OP18S ظرفیت 20000 میلی آمپر ساعت",
+   "kind": "powerbank",
+   "source": "public/images/catalog/379.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/379.webp",
+   "sourceBytes": 18991,
+   "derivedBytes": 18520,
+   "sourceDimensions": [
+    500,
+    500
+   ],
+   "alphaMin": 0,
+   "alphaMax": 254,
+   "opaqueFraction": 0.4086,
+   "borderRingOpacity": 0.0696,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 380,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A27 دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/380.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/380.webp",
+   "sourceBytes": 38313,
+   "derivedBytes": 35284,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6611,
+   "borderRingOpacity": 0.124,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 381,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A27 دو سیم کارت ظرفیت 128 گیگابایت و رم 6 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/381.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/381.webp",
+   "sourceBytes": 38324,
+   "derivedBytes": 35862,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6616,
+   "borderRingOpacity": 0.1245,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 382,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A27 دو سیم کارت ظرفیت 128 گیگابایت و رم 8 گیگابایت - ویتنام",
+   "kind": "phone",
+   "source": "public/images/catalog/382.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/382.webp",
+   "sourceBytes": 38337,
+   "derivedBytes": 35586,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6612,
+   "borderRingOpacity": 0.124,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 383,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A37 دو سیم‌کارت ظرفیت 128 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/383.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/383.webp",
+   "sourceBytes": 38851,
+   "derivedBytes": 84284,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6881,
+   "borderRingOpacity": 0.193,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 384,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A37 دو سیم‌کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/384.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/384.webp",
+   "sourceBytes": 38851,
+   "derivedBytes": 84284,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6881,
+   "borderRingOpacity": 0.193,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 385,
+   "name": "گوشی موبایل تی سی اچ مدل One Lite دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت + 4 گیگابایت اضافه",
+   "kind": "phone",
+   "source": "public/images/catalog/385.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/385.webp",
+   "sourceBytes": 70206,
+   "derivedBytes": 113192,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6229,
+   "borderRingOpacity": 0.2991,
+   "autoFlag": "background-likely-retained",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 386,
+   "name": "گوشی موبایل تی سی اچ مدل One Pro دو سیم کارت ظرفیت 128 گیگابایت و رم 6 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/386.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/386.webp",
+   "sourceBytes": 65452,
+   "derivedBytes": 81556,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6271,
+   "borderRingOpacity": 0.086,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 387,
+   "name": "گوشی موبایل تی سی اچ مدل One Pro دو سیم کارت ظرفیت 128 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/387.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/387.webp",
+   "sourceBytes": 65452,
+   "derivedBytes": 81556,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.6271,
+   "borderRingOpacity": 0.086,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 388,
+   "name": "گوشی موبایل تی سی اچ مدل Neo دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/388.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/388.webp",
+   "sourceBytes": 56922,
+   "derivedBytes": 73178,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.632,
+   "borderRingOpacity": 0.1412,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 389,
+   "name": "پاوربانک 22.5 وات تی سی اچ مدل Compact 2020 ظرفیت 20000 میلی‌آمپرساعت به همراه 2 عدد کابل USB-C / لایتنینگ",
+   "kind": "powerbank",
+   "source": "public/images/catalog/389.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/389.webp",
+   "sourceBytes": 24885,
+   "derivedBytes": 23940,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2753,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 390,
+   "name": "پاوربانک 45 وات تی سی اچ مدل Slim 2045 ظرفیت 20000 میلی‌آمپرساعت",
+   "kind": "powerbank",
+   "source": "public/images/catalog/390.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/390.webp",
+   "sourceBytes": 20184,
+   "derivedBytes": 17596,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2927,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 391,
+   "name": "پاوربانک بی‌سیم 22.5 وات تی سی اچ مدل Elite 1020WS ظرفیت 10000 میلی‌آمپرساعت",
+   "kind": "powerbank",
+   "source": "public/images/catalog/391.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/391.webp",
+   "sourceBytes": 19523,
+   "derivedBytes": 21384,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1701,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 392,
+   "name": "پاوربانک 45 وات تی سی اچ مدل Compact 2045 ظرفیت 20000 میلی‌آمپرساعت",
+   "kind": "powerbank",
+   "source": "public/images/catalog/392.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/392.webp",
+   "sourceBytes": 29813,
+   "derivedBytes": 36406,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2572,
+   "borderRingOpacity": 0.0012,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 393,
+   "name": "پاوربانک 22.5 وات تی سی اچ مدل Mini 1020 ظرفیت 10000 میلی‌آمپرساعت به همراه کابل تبدیل USB-C به لایتنینگ",
+   "kind": "powerbank",
+   "source": "public/images/catalog/393.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/393.webp",
+   "sourceBytes": 22662,
+   "derivedBytes": 24676,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2095,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 394,
+   "name": "پاوربانک 148 وات تی سی اچ مدل Elite 20148 ظرفیت 20000 میلی‌آمپرساعت",
+   "kind": "powerbank",
+   "source": "public/images/catalog/394.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/394.webp",
+   "sourceBytes": 24680,
+   "derivedBytes": 24066,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2496,
+   "borderRingOpacity": 0.0,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 395,
+   "name": "گوشی موبایل شیائومی مدل Redmi Note 15 Pro 4G دو سیم کارت ظرفیت 256 گیگابایت و رم 8گیگابایت 4G",
+   "kind": "phone",
+   "source": "public/images/catalog/395.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/full/isolated/395.webp",
+   "sourceBytes": 47969,
+   "derivedBytes": 92254,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3326,
+   "borderRingOpacity": 0.094,
+   "autoFlag": "clean-border",
+   "reviewStatus": "unreviewed"
+  }
+ ]
+}

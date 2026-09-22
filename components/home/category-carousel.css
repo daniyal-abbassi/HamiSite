@@ -1,0 +1,246 @@
+/*
+ * The categories carousel (components/home/CategoryCarousel.tsx) — feature 005.
+ *
+ * Nine departments arranged along an arc, bending away toward the edges of the screen. The physics —
+ * drag, inertia, snap, loop, RTL — belong to Embla; this file only draws what Embla's scroll position
+ * looks like.
+ *
+ * Deliberately absent:
+ *  - **No translate term.** Embla's track already moves the slides. A per-panel `translateX` derived
+ *    from the same progress would apply the motion twice and the arc would run ahead of the finger
+ *    driving it. Only the non-translational parts of the bend live here (plan D3, data-model PanelGeometry).
+ *  - **No entrance animation.** Not "suppressed on return" — absent outright. A section appearing
+ *    mid-page on a 19,000px document has no business announcing itself, and removing the animation
+ *    removes the bug class rather than guarding one branch of it (FR-019, contract P2).
+ *  - **No glow of its own.** The page ground already carries five side-alternating radial glows
+ *    (`app/globals.css:182-224`), and feature 002 measured what happens when a sixth light source is
+ *    added on top of them: `specs/002-scroll-atmosphere/notes/busyness.md`. Depth here comes from
+ *    dimming and scale, never from emitted light.
+ *
+ * Geometry arrives from JS as two custom properties per slide: `--o` the signed offset from centre
+ * (drives the rotation, whose sign must follow the inline axis so RTL bends the right way without
+ * mirroring the component) and `--d` the clamped absolute offset (drives scale, dim and stacking).
+ * Two writes per slide per frame, both on nodes Embla is already compositing — no layout read, no
+ * React state, which is what contract P4 requires.
+ */
+
+.cat-carousel {
+  position: relative;
+  /* Embla needs an overflow-clipping box; `clip` on the cross axis keeps the vertical axis out of
+     the scroll chain, the same trick `.tray-field` uses elsewhere in this codebase. */
+  overflow: hidden;
+  /* Embla's own drag cursor, without implying the region is a control. */
+  touch-action: pan-y;
+  /* Break out of the section's own padding so the bend has room to bend. Contained inside
+     `clamp(1.25rem, 4vw, 3rem)` of section padding, an arc on a phone shows one panel and two
+     slivers — which is a carousel that has not been allowed to be a carousel. */
+  margin-inline: calc(clamp(1.25rem, 4vw, 3rem) * -0.62);
+  padding-inline: 0;
+}
+
+.cat-carousel[data-live="false"] {
+  /* Off-screen: Embla is destroyed, so nothing here is animating or observing. */
+  transition: none;
+}
+
+.cat-track {
+  display: flex;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  /* Room for the bend: rotated panels extend past their layout box vertically. */
+  align-items: center;
+  padding-block: 2.5rem;
+}
+
+.cat-slide {
+  flex: 0 0 auto;
+  width: min(62vw, 232px);
+  /* Perspective on the slide, not the track, so each panel gets its own vanishing point and the
+     bend reads as separate objects turning rather than one flat plane tilting. */
+  perspective: 1200px;
+  will-change: transform;
+}
+
+.cat-panel {
+  --o: 0;
+  --d: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  text-decoration: none;
+  color: inherit;
+  /* 13° per panel of offset. At 9° the bend was technically present and visually a flat row — the
+     arc is this section's whole reason to exist, so it has to read on a 360px screen, not only in
+     the computed style. Paired with the scale below it still stays legible at the edges. */
+  transform: rotateY(calc(var(--o) * -13deg)) scale(calc(1 - var(--d) * 0.16));
+  transform-style: preserve-3d;
+  /* The shared motion vocabulary with feature 004's brand rows — one duration scale, one curve,
+     neither surface inventing its own (FR-038, contract M7/X1). */
+  transition: transform 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+  z-index: calc(9 - var(--zi, 0));
+  position: relative;
+}
+
+.cat-panel__art {
+  position: relative;
+  display: block;
+  border-radius: 26px;
+  overflow: hidden;
+  /* The badges are dark lacquer artwork — their own ground runs #14080B → #2B050D, essentially the
+     same value as the section behind them. Without an edge the panel is not a shallow object on a
+     dark stage, it is a hole in one. A champagne hairline is what makes the shape legible; the
+     inset highlight reads as the top edge catching the page's light. */
+  border: 1px solid rgba(229, 211, 179, 0.22);
+  box-shadow: inset 0 1px 0 rgba(245, 228, 196, 0.14);
+  transition: border-color 220ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    box-shadow 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.cat-panel[data-active="true"] .cat-panel__art {
+  border-color: rgba(229, 211, 179, 0.5);
+  /* The grounding cue: one soft shadow under the panel the shopper is holding, so it reads as
+     resting above the stage rather than being cut from it. One blur scale, one opacity, applied
+     identically to all nine — never per-panel art direction. */
+  box-shadow: 0 18px 40px -18px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(245, 228, 196, 0.2);
+}
+
+.cat-panel__art img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+/* The depth cue. A veil over the non-active panels rather than a filter, so the artwork's own
+   colours are never re-decided by a compositing pass. Calibrated so one panel away is clearly
+   receded but still legible — at 0.2 the neighbours were indistinguishable from the stage. */
+.cat-panel__art::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: #0b0204;
+  opacity: calc(var(--d) * 0.75);
+  pointer-events: none;
+  transition: opacity 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.cat-panel__label {
+  /* Live text, always. The reference drew its labels into bitmaps at a fixed pixel size, which
+     costs Persian its shaping, its reading order, its sharpness, its selectability and its
+     screen-reader access in one mechanism. FR-022 resolved as A: panels bend, words do not. */
+  font-weight: 700;
+  font-size: clamp(1.05rem, 4.6vw, 1.35rem);
+  line-height: 1.35;
+  color: rgba(185, 179, 176, 0.92);
+  letter-spacing: 0;
+  /* The layout yields to the longest name in the set, never the reverse (FR-024). */
+  text-wrap: balance;
+  transition: color 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.cat-panel__count {
+  font-size: 0.8rem;
+  color: rgba(154, 147, 143, 0.9);
+  font-variant-numeric: tabular-nums;
+}
+
+/* Active state is colour AND scale, never colour alone (contract A1). */
+.cat-panel[data-active="true"] .cat-panel__label {
+  color: #f0ece9;
+}
+
+.cat-panel:focus-visible {
+  outline: 2px solid #e5d3b3;
+  outline-offset: 6px;
+  border-radius: 12px;
+}
+
+/*
+ * Reduced motion: the arc is layout, not animation, so the bend stays and only the travel goes.
+ * Identical departments, identical labels, identical destinations, nothing absent (FR-031) — and the
+ * same rule feature 004's brand rows already ship, which is the reciprocal half of FR-038.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .cat-panel,
+  .cat-panel__art::after {
+    transition: none;
+  }
+}
+
+@media (forced-colors: active) {
+  /* The veil is a background colour and the emphasis is a colour; neither survives forced colours.
+     The active panel keeps a border so position is still legible without colour (contract F4). */
+  .cat-panel__art::after {
+    display: none;
+  }
+  .cat-panel[data-active="true"] .cat-panel__art {
+    border: 2px solid CanvasText;
+  }
+}
+
+/*
+ * Desktop is derived from the phone presentation, not separately authored (FR-037): wider slides,
+ * more of them visible, the same bend per unit of offset.
+ */
+@media (min-width: 768px) {
+  .cat-slide {
+    width: min(26vw, 268px);
+  }
+}
+
+/*
+ * Controls and status live in CategoryCarousel.tsx. They are styled here rather than in
+ * `home.css` so the whole surface can be reasoned about in one file, and so the shared duration
+ * scale above is the only one this section obeys.
+ */
+.cat-carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-block-start: 1.25rem;
+}
+
+.cat-carousel__status {
+  font-size: 0.82rem;
+  color: rgba(185, 179, 176, 0.85);
+  font-variant-numeric: tabular-nums;
+}
+
+.cat-carousel__nav {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.cat-carousel__nav button {
+  /* 44×44 minimum touch target, and the section sits below the fixed header island by way of
+     the page's own top padding — asserted in the browser, not assumed here (FR-032, contract K7). */
+  min-width: 44px;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid rgba(245, 228, 196, 0.28);
+  background: transparent;
+  color: #e5d3b3;
+  cursor: pointer;
+  transition: background-color 220ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    border-color 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.cat-carousel__nav button:hover:not(:disabled) {
+  background: rgba(245, 228, 196, 0.08);
+  border-color: rgba(245, 228, 196, 0.5);
+}
+
+.cat-carousel__nav button:focus-visible {
+  outline: 2px solid #e5d3b3;
+  outline-offset: 3px;
+}
+
+.cat-carousel__nav button:disabled {
+  opacity: 0.35;
+  cursor: default;
+}

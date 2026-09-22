@@ -1,17 +1,20 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { categoryMosaic } from "@/lib/content/home";
+import { categoryDepartments } from "@/lib/category-departments";
+import { CategoryCarousel } from "@/components/home/CategoryCarousel";
 
-const categoryArtwork: Record<string, string> = {
-  smartphone: "/brand/categories/mobile.svg",
-  headphones: "/brand/categories/audio.svg",
-  plug: "/brand/categories/charger.svg",
-  battery: "/brand/categories/power-bank.svg",
-  watch: "/brand/categories/smartwatch.svg",
-  globe: "/brand/categories/online-services.svg",
-};
-
+/**
+ * The categories surface.
+ *
+ * The department set is derived, not authored — see `lib/category-departments.ts` for why the stored
+ * category tree cannot be shown as it stands (11 of 32 categories hold no products, and the brand axis
+ * is fused into the type axis). The list was previously six hand-written tiles in `categoryMosaic`;
+ * those six are a subset of the nine departments now derived here, and `categoryMosaic` remains in
+ * `lib/content/home.ts` for whatever still reads it.
+ */
 export function CategoryHub() {
+  const departments = categoryDepartments();
+
   return (
     <section id="categories" className="category-catalogue wrap container" aria-labelledby="categories-title">
       <div className="category-catalogue__head">
@@ -25,29 +28,7 @@ export function CategoryHub() {
         </Link>
       </div>
 
-      <ul className="cat-grid" role="list">
-        {categoryMosaic.map((category) => (
-          <li key={category.key}>
-            <Link href={category.href} className="cat-cell" aria-labelledby={`category-${category.key}`}>
-              <span className="cat-panel" aria-hidden="true">
-                <img
-                  src={categoryArtwork[category.icon] ?? "/brand/categories/mobile.svg"}
-                  alt=""
-                  width={800}
-                  height={960}
-                  loading="lazy"
-                  className="cat-panel-image"
-                />
-              </span>
-              <div className="cat-copy">
-                <h3 id={`category-${category.key}`}>{category.title}</h3>
-                <span className="cat-detail" dir="auto">{category.detail}</span>
-              </div>
-              <ArrowLeft className="cat-arrow" aria-hidden="true" />
-            </Link>
-          </li>
-        ))}
-      </ul>
+      <CategoryCarousel departments={departments} />
     </section>
   );
 }
