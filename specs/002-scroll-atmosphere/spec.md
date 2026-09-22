@@ -359,10 +359,43 @@ no change to the progression design.
 
 ## Resolved Clarifications
 
-All answered by the owner on 2026-09-20 and now binding. **Open questions remaining: none.**
+All answered by the owner on 2026-09-20. **Question 1 has since been reversed by the owner on 2026-09-22 —
+see below — so Open questions remaining: one.**
+
+### Question 1: Does the shopper's own scrolling change, or only what happens visually while scrolling? — **REVERSED, awaiting re-answer (A → B or C)**
+
+> **2026-09-22, owner:** *"by calmer scroll, i mean the movement should be smooth, up and down scrolling
+> should be smooth and heavy — not the background!!"*
+
+The original answer **A locked the requested effect out**, and FR-010 wrote that lock into a requirement:
+*"The shopper's own scrolling stays native and is not intercepted, eased, or substituted (Resolved Q1 = A),
+so 'smooth' here means the visual response is smooth, not the scroll physics."* The owner's actual ask is
+the scroll physics — option B or C — which is the reading this question offered and which was not taken.
+
+Consequences, all of them currently standing on the old answer:
+
+- FR-010's second sentence is void, and FR-011/FR-012 were written to *forbid* the mechanism being asked
+  for rather than to constrain it.
+- User Story 2 as a whole is inverted. T018 reads "Prove non-interception in the code, not by feel" —
+  non-interception is now the thing to remove, not to verify.
+- `research.md` D2 rejects GSAP, `motion` and any smooth-scroll library "for this work". Under Q1 = B/C
+  that rejection has no subject any more: a damped-scroll implementation is now the work.
+- FR-005, the busyness gate, is a real requirement about the background and it still fails as measured
+  (`notes/busyness.md`). It is simply not the requirement the feature was asked for. The gate did not
+  reject the request; it rejected a feature built against the wrong reading of it.
+
+**The choice to make, and why it is not free.** B eases scrolling for every input method including touch.
+C eases the desktop wheel and trackpad only and leaves touch native. C is what the "heavy and expensive"
+sites actually do, and for this shop it has a specific advantage: phones already run an OS-level momentum
+scroll that is tuned per device, and a JS lerp on top of it usually reads as *worse* — slushy, late, and
+prone to fighting a flick that should stop dead. The owner's standing rule is mobile-first, and B spends
+the mobile experience to buy the desktop one. B additionally has to re-implement caret browsing,
+find-in-page, restore-position and every assistive scroll path.
+
+Needs: **B**, **C**, or a custom boundary (for example C on desktop plus a specific phone/tablet rule).
 
 
-### Question 1: Does the shopper's own scrolling change, or only what happens visually while scrolling?  —  **RESOLVED: A**
+### Question 1 — original record (2026-09-20). Superseded by the reversal above; the options table is still the one to choose from.
 
 **Context**: User Story 2 and FR-010 … FR-014. The request is that scrolling itself feel "extra smooth and
 calm". There are two very different readings, and they are not equally safe.

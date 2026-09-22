@@ -375,6 +375,11 @@ context. It is also the cheaper of the two to composite.
   recorded as additionally impossible right now: it asks about three motion systems and feature 002's
   ground does not exist. The note does list the two judgement calls a reviewer should be told about —
   the section is ~250px taller on a phone, and the three stories were shortened to fit the band.
+  **Dropped by owner decision 2026-09-22, and left unchecked because it was never measured.** Asked
+  directly whether they could assemble ten reviewers, the answer was no — and the owner volunteered their
+  own read instead: the section is "somehow simple, boring, not styled and mis-placed in desktop".
+  SC-011 therefore has no evidence behind it. The reception instrument in `notes/reception.md` goes
+  unused. Do not report this feature as reception-validated.
 - [x] T050 Run `npm run typecheck` and `npm test` clean, then restart the dev server if `npm run build` was run at any point (it rewrites `.next` under a live server)
   Typecheck clean; **113 unit tests, 0 failures** — the two `product-images` failures are gone (T055).
   **`npm test` was deliberately not run, and it cannot be made clean as written.** It is
@@ -401,6 +406,10 @@ context. It is also the cheaper of the two to composite.
   direct products because `queryProducts` matches `categoryId` exactly with no subtree walk. Closing this needs
   either a `kind` filter or a subtree walk in `lib/catalog.ts` + `app/api/products/route.ts`, both frozen by
   Principle III. **Owner decision required before any tile is re-labelled.**
+  → **Owner accepted the 8 on 2026-09-22: "accept 8".** No frozen layer is being opened for this. The
+  consequence is a labelling rule, not a code change — the tile keeps its current wording and MUST NOT be
+  re-labelled to anything that promises all phones, because it does not deliver them. Revisit only if
+  feature 005's category structure makes a `kind` filter cheap.
 - [x] T054 `components/shop/CategoryTiles.tsx` renders the API's root categories verbatim, so the shop page shows
   three tiles that lead nowhere — `موبایل-و-تبلت`, `لوازم-جانبی`, `لوازم-جانبی-لپ-تاپ` all resolve to 0 products
   and render the empty state. Verified in the browser at `/shop`. Either filter the tiles to categories with
