@@ -247,6 +247,12 @@ measured; and it does not make the page quieter than it was. T013 and T014 remai
 
 ## Phase 4: User Story 2 — Scroll that feels calm and expensive (Priority: P2)
 
+> **This whole phase was superseded on 2026-09-22 by “Phase 4 (revised)” below, and none of its
+> four tasks should be executed as written.** They were authored against Resolved Q1 = A, which
+> required proving the shopper's own scrolling stays native; the owner re-answered Q1 as C, so
+> non-interception is now the thing being removed. Each original task is annotated where it
+> stands, and every ID resolves exactly once.
+
 **Goal**: The visual response is smooth while the shopper's own scrolling remains completely native.
 
 **Independent Test**: spec.md US2 — perform three navigation tasks (read to the third section, jump to
@@ -273,13 +279,6 @@ rough, delayed or unresponsive.
 **Checkpoint**: US1 and US2 both work independently; the effect is smooth and the scroll is untouched.
 
 ---
-
-- [ ] T018–T021 **SUPERSEDED — do not execute; the revised tasks are T043–T049 in Phase 4 (revised)
-  below.** These four were written against Resolved Q1 = A, which required proving the shopper's scrolling
-  stays native. The owner re-answered Q1 as C on 2026-09-22, so non-interception is now the thing being
-  removed rather than verified. The IDs are retired rather than reused so the history stays readable:
-  T018's "prove non-interception in the code" is the exact inverse of T043, T020's scroll-input probe is
-  replaced by T045's content-transform lag measurement, and T021's cost check survives as T047.
 
 ---
 
