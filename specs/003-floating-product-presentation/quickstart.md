@@ -2,147 +2,167 @@
 
 **Feature**: [spec.md](./spec.md) | **Contract**: [product-presentation-behaviour.md](./contracts/product-presentation-behaviour.md)
 
-## Read this before running anything
-
-**§0 is a gate, not a step.** `research.md` D1 measured that 0 of 189 products have a local photograph, that
-188 render a keyword-matched template stock image, and that 26 of those stock files are already
-background-removed. Sections §2 and §4 below are only meaningful after the 188 real sources are on disk.
-Skipping to §3 — making a stock image of an Apple Watch float beautifully on a dark ground — is the one
-outcome this feature must not produce.
-
-```bash
-# §0. Where product imagery actually comes from
-node -e '
-const d=JSON.parse(require("fs").readFileSync("data/hami-products.json","utf8"));
-const u=d.products.map(p=>p.primary_image);
-console.log({total:u.length,local:u.filter(x=>String(x).startsWith("/")).length,
-  remote:u.filter(x=>/^http/.test(String(x))).length,none:u.filter(x=>!x).length});'
-ls public/images/products | sed 's/.*\.//' | sort | uniq -c
-ls public/images/products | grep -c removebg
-# expected today: {total:189, local:0, remote:188, none:1}; 31 png; 26 removebg
-```
-
-Then, from the browser: open a product whose name does not match its category art and confirm what you are
-being shown is not it. This is H1's failure and it is the finding, not a step to complete.
-
 ## Prerequisites
 
 ```bash
 npm run typecheck
-npx vitest run tests/unit        # never bare `npm test` — it truncates 19 DB tables (002/005 research D8)
+npx vitest run tests/unit        # never bare `npm test` — it truncates 19 DB tables (003/research D8 note)
 ```
 
-No new package in `package.json`. `motion` and `gsap` are already installed and in use; if a third animation
-or image library appears, that is a plan violation. A matting tool is required for §4 and needs explicit
-owner approval before install — `/home` is at 95% with 13 GB free.
+Installing a matting model is expected (D2) — dependency cost is not a constraint on this initiative, per the
+owner's ruling of 2026-09-22 — but it is a real install, so run it deliberately and check space:
+`df -h /home` was **13 GB free** at planning time.
 
-Dev server health before any browser claim: exactly one Next process, one listener on 3000, and a 200 on a
+Dev server health before any browser claim: one Next process, one listener on 3000, and a 200 on a
 `/_next/static/chunks/*.js` request. An HTML 200 is not proof of a working page.
 
-## §1 — US1 needs no assets, so run it first
+## §0 — Confirm the assets are what the spec says they are
 
-Pick one real product and put it on a screen with the treatment on and once as it ships today, side by side
-at 360px and 1280px. Ask two people what the page is about and what competed for attention.
-
-Expected: P1–P5. The product is named unprompted; no element on the screen is neither the product, its
-information, nor its action; one primary action. This stage is provable with the current files, which is why
-it is sequenced first (`research.md` D1's staging table).
-
-## §2 — Provenance, before beauty
-
-Run the fetch (owner-invoked, sequential, throttled — it is a bulk request to a third-party host), then:
+The earlier draft of this guide told you to prove the storefront was showing the wrong photographs. It was
+wrong, and the check below is the one that should have been run first.
 
 ```bash
-node scripts/catalog-images/fetch.mjs        # writes public/images/products/catalog/<id>.jpg
-node scripts/catalog-images/manifest.mjs     # writes data/catalog-image-manifest.json
-npx vitest run tests/unit/product-images.test.ts
+node -e '
+const m=require("./data/catalog-images.json"), fs=require("fs"), path=require("path");
+const ids=Object.keys(m);
+const present=ids.filter(id=>fs.existsSync(path.join("public", m[id].replace(/^\//,""))));
+console.log({entries:ids.length, filesPresent:present.length});'
+
+python3 -c "
+from PIL import Image; import os, collections
+d='public/images/catalog'; modes=collections.Counter(); dims=collections.Counter(); n=[]
+for f in os.listdir(d):
+    im=Image.open(os.path.join(d,f)); modes[im.mode]+=1; dims[(im.width,im.height)]+=1
+    n.append(os.path.getsize(os.path.join(d,f)))
+print('modes:',dict(modes),'| max dim:',max(max(k) for k in dims),'| median bytes:',sorted(n)[len(n)//2])"
 ```
 
-Expected: 188 fetched with content-type `image/jpeg` and a plausible byte length; any quarantine listed by
-product id rather than silently dropped; the provenance-chain test green with every id equal. **Measure the
-real dimension distribution here and write it back into `research.md` D8** — the spec's "141 square, 45
-portrait, ≤900px" describes remote files nobody had downloaded.
+Expected: **188 entries, 188 files present**, all `RGB` (no alpha anywhere), max dimension 900, median
+~60 KB. Then confirm the product cards really use them: the mirror is applied in `lib/catalog.ts`'s
+`serializeProduct`, promoted to `images[0]`, and `resolveProductImage` prefers a product's own local image.
+Open a distinctive product — one whose photograph has an unusual shape — and confirm the card shows *it*.
 
-Also expected, and it is the point: `resolveProductImage` can no longer fall back to the template pool
-without failing a test. If it still can, §2 has not run.
+The one real defect to confirm: `grep -n 'return pick("phone"' lib/product-images.ts`, then check the product
+record with no `primary_image`. Expected before the fix: it renders a confident stock photograph of a phone
+that is not it. Expected after: an intentional empty presentation. That is H1's only live failure and it is
+one record.
 
-## §3 — The 24-sample isolation measurement (FR-034)
+## §1 — US1 needs no asset work, so run it first
 
-Select the stratified sample named in `research.md` D4 — the fine-detail classes (cables, straps, earbuds,
-SIM cards), translucent and reflective finishes, the two smallest sources, portrait files, the imageless
-record — and isolate exactly those 24 with the deterministic matte. Review each against its source.
+Put one real product on a screen with the treatment on and once as it ships today, side by side at 360px and
+1280px. Ask two people what the page is about and what competed for attention.
 
-Report the count that could not be cleanly isolated. Then branch:
+Expected: P1–P5. The product is named unprompted; nothing on the screen is neither the product, its
+information, nor its action; one primary action. The spec's own Assumptions make this the safe floor, and it
+is provable with everything already in place.
 
-- **under ~10%** → catalog-wide, with framed fallback for the remainder
-- **10–35%** → catalog-wide with the framed form as co-primary; §1's P3 review matters more, because two
-  visual states now share the page
-- **over ~35%** → stop. This is a listing-quality feature, not a floating-product one, and the spec should be
-  re-scoped rather than pushed through
+## §2 — The 24-file isolation measurement (FR-034) — the gate
 
-Do not proceed to §4 without this number written down. It is the measurement the spec asked for before the
-treatment was relied on.
+Build the stratified sample from the measured distribution rather than from a guess about it: a slice of the
+117 `800×800` files, some of the 45 `675×900` portraits, the smallest sources (minimum is 8,501 bytes), the
+fine-detail classes — cables, straps, earbuds, SIM cards — translucent and reflective finishes, and the
+imageless record.
 
-## §4 — The seam and the checkerboard
+```bash
+python3 scripts/isolate-catalog-images.py --sample 24   # deterministic matte, alpha only, no regeneration
+```
 
-Show one product on three surfaces of different tone, including feature 002's darkest scroll position.
-Then render a row of twenty real products and look at it as a whole rather than as twenty tiles.
+Review all 24 against their sources at 1:1 and at displayed size. **Report the count that cannot be cleanly
+isolated**, then branch:
 
-Expected: D1 (no accidental seam on any product), D2 (no row mixing isolated and framed with mismatched
-baselines), D5 (a square and a portrait file read as siblings). D3 requires 002's ground to be sampled at
-intermediate positions — note 002's Question 1 is reopened as of 2026-09-22, so this runs against whatever the
-ground currently does, and re-runs after 002 settles.
+- **under ~10%** → catalog-wide, with the framed fallback for the remainder
+- **10–35%** → catalog-wide, but framed becomes co-primary, and §3's P3 review matters more because two visual
+  states now share the page
+- **over ~35%** → stop and re-scope. This becomes a listing-quality feature, not a floating-product one.
 
-The independent test the spec sets is the right one: repeat on the smallest and the portrait files, "which is
-where any rule will actually break."
+Do not proceed past this without the number written down. FR-034 asked for it before the treatment was
+relied on, and it is the only clause in the spec that can save the feature from its own premise.
 
-## §5 — Sharpness caps
+Check the matting is honest while you are here: open a source and its derivative in the same viewer and
+confirm pixels are identical where opaque. A finish that shifted, a logo that tidied itself or a bezel that
+straightened is D2's disqualifying failure mode, not a rounding error.
 
-Open the product page at 1280px for the two smallest sources and for a 900px one. Measure rendered width
+## §3 — The seam and the checkerboard
+
+Show one product on three surfaces of different tone, including feature 002's darkest scroll position. Then
+render a grid of twenty real products and look at it as a whole rather than as twenty tiles.
+
+Expected: D1 (no accidental seam on any product), D2 (no row mixing `isolated` and `framed` with mismatched
+baselines), D5 (a square and a portrait file read as siblings), and P3 (no border, panel or card shadow doing
+the hierarchy's work). D3 requires sampling 002's ground at intermediate positions — 002's Question 1 is
+reopened as of 2026-09-22, so run this against the ground's actual current behaviour and re-run after it
+settles.
+
+The spec's independent test is the right one: repeat on the smallest and the portrait files, "which is where
+any rule will actually break."
+
+## §4 — Sharpness caps
+
+Open the product page at 1280px for the smallest sources and for a `900×900` one. Compare rendered width
 against the manifest's recorded source width.
 
 Expected: S2 — no product exceeds its own pixels. The tempting failure is a grid that looks better with bigger
-objects; FR-018 settles that in favour of sharpness, and isolation buying apparent scale "MUST NOT be used as
-a reason to exceed what the pixels support".
+objects; FR-018 settles it for sharpness, and says in terms that isolation buying apparent scale is not a
+licence to exceed the pixels.
+
+## §5 — Weight
+
+Same route, same device profile, before and after derivatives ship; compare a 24-tile listing's time to usable.
+
+Expected: S4 and D4. Sources run 8.5–103 KB, so alpha WebP at displayed sizes should be near parity, not a
+regression. Measure on a **production build** (`npm run build && npx next start`) — dev-mode numbers are not
+comparable, and 004 measured a 50 ms versus 33 ms gap that vanished entirely in production.
 
 ## §6 — Motion, purpose, and calm after two minutes
 
 Watch a surface for thirty seconds doing nothing. Interact normally. Then browse treated surfaces for two
 minutes and answer whether the page still reads as calm.
 
-Expected: M1–M8, and SC-007 (a reviewer can state what each movement communicated), SC-009 (8 of 10 still say
-calm after two minutes). Verify with `prefers-reduced-motion` on, and compare the reduced-motion behaviour
-against 004's brand rows and 005's carousel side by side — one rule across three surfaces is FR-038, and it is
-the coherence clause most likely to drift. Measure frame cost on a **production build** (`npm run build &&
-npx next start`) under CPU throttling; dev-mode numbers are not comparable, and 004 measured a 50 ms versus
-33 ms difference that vanished entirely in production.
+Expected: M1–M8, SC-007 (a reviewer can state what each movement communicated) and SC-009 (8 of 10 still say
+calm after two minutes). Verify with `prefers-reduced-motion` on and compare against 004's brand rows and
+005's carousel side by side — one rule across three surfaces is FR-038 and it is the coherence clause most
+likely to drift.
 
-## §7 — Weight and responsiveness
+**M6/M7 are the ones at risk.** Confirm a single motion system is driving scroll-linked movement on the
+homepage; `gsap` and `motion` are both installed and both in use, so two are possible and FR-014 forbids it.
+This section cannot be finalised before 002's reopened Question 1 decides whether the page is scroll-eased at
+all — a scroll-scrubbed reveal on a lerped page behaves differently.
 
-Same route, same device profile, before and after the derivatives ship.
+## §7 — Right-to-left
 
-Expected: S3 and S4 — a listing becomes usable no slower than today, and every product that could not be
-isolated remains presentable, browsable, and counted.
+Compare every composition against the inline-axis rule: light direction, product-against-headline asymmetry,
+reveal direction. Expected R1/R2, SC-011: no composition reads as an afterthought mirror. Check the reference
+document's LTR-specific alignments were adapted or dropped, with the adaptation noted.
 
-## §8 — Judgement gates that cannot be automated
+## §8 — FR-030's review pass, and what to do if it cannot happen
 
-SC-001, SC-002, SC-005, SC-011, SC-012, SC-013, SC-015 all require people. **SC-012 is 188 individual image
-comparisons against their sources** and FR-030 explicitly forbids batch approval.
+`reviews/index.csv` carries one row per product: source path, derivative path, reviewer, date, and a verdict
+on three questions — same object, nothing missing, finish unchanged. SC-012 requires zero accepted defects
+across 188, and FR-030 states a batch process may produce them but a batch approval may not sign them off.
 
-Say what is true rather than filling it in: feature 004's ten-person reception gate (T049) was dropped on
-2026-09-22 because the panel could not be assembled, and its owner's own read on the finished brands surface
-was that it is "somehow simple, boring, not styled and mis-placed in desktop". There is no evidence a
-188-review panel is available. If it is not, the honest outcomes are either the merchant reviewing their own
-products — the most plausible route, since these are their photographs — or SC-012 and SC-013 staying visibly
-unmeasured. Do not mark them passed.
+No agent can close this. The realistic reviewer is the merchant, who knows whether the picture is their
+product, and 188 rows is something one person can work through in sittings.
+
+If the review does not happen: unreviewed means **framed**, not absent, so the feature degrades safely and
+stays honest — the products are visible, correct and simply not floating. Record the count of rows still
+`unreviewed` rather than letting the column imply approval. Feature 004's ten-person reception gate (T049) was
+dropped on 2026-09-22 because the panel could not be assembled; the honest state of an unrun review is
+unmeasured, and this feature inherits that discipline.
+
+## §9 — Judgement gates that cannot be automated
+
+SC-001, SC-002, SC-005, SC-011, SC-013, SC-015 need people. SC-013 in particular asks reviewers whether an
+isolated object depicts the same product as the merchant's original — which is §0's check done at scale by
+someone with an opinion. Where a gate goes unmeasured it stays visibly unmeasured.
 
 ## Definition of done for this feature
 
-Typecheck and `npm run build` clean; §0 and §2 green with no product rendering a stand-in photograph; §3's
-number written down and the branch taken from it stated; §1, §4–§7 verified in a real browser at 360px and
-1280px with client chunks confirmed loading; §8 either measured or explicitly unmeasured.
+Typecheck and `npm run build` clean; §0 confirming the mirror is what renders and the one imageless record
+presented honestly; §2's number measured and the branch taken from it stated in writing; §1 and §3–§7 verified
+in a real browser at 360px and 1280px with client chunks confirmed loading; §8's review count reported; §9
+either measured or explicitly unmeasured.
 
 And the Constitution IV clause that outranks the checklist: a page where every product is honest, correctly
-sized and still looks like a catalogue of rectangles has not delivered this feature. Equally, a page where
-products float beautifully and none of them are the products for sale has failed it — which is where the
-storefront stands today.
+sized and still looks like a catalogue of rectangles has not delivered this feature. Conversely one where
+products float beautifully and any of them are not the products for sale has failed it — which is why §0 is
+first and §2 is a gate.

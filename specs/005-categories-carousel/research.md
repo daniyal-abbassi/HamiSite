@@ -286,20 +286,20 @@ pattern appropriate to a list, whereas here the widget has a single current item
 
 ## D8. No new dependency, no DOM test harness
 
-**Decision**: Zero packages added. `package.json` holds thirteen dependencies and that set is the ceiling —
-which **already includes `embla-carousel-react@8.6.0`, `gsap@3.15.0` and `motion@13.2.0`**, so D2's choice to
-build on Embla costs nothing and is partly why it is the right call. Tests are pure-function tests over the
-derived department table plus browser scripts under `tools/`, with the visual contract checked by a
+**Decision**: Zero packages added — but as a consequence of the arc needing nothing else, not as a rule. The
+owner ruled on 2026-09-22 that **dependency cost is not a constraint on this initiative and quality is the
+priority**, so "it would add a package" is not a valid objection anywhere in these specs. `package.json`
+already holds `embla-carousel-react@8.6.0`, `gsap@3.15.0` and `motion@13.2.0`, and Embla is chosen because it
+does the risky parts better than hand-written code would, not because it is free. Tests are pure-function tests
+over the derived department table plus browser scripts under `tools/`, with the visual contract checked by a
 Playwright-driven script the way feature 002's `tools/ground-sweep.mjs` works — Playwright resolved from
 `PLAYWRIGHT_PATH` so it never becomes an app dependency.
 
 **Rationale**: `002/research.md` D6 established that vitest here runs with `environment: "node"` and that no
-jsdom/happy-dom harness exists; adding one to exercise drag behaviour would be the second-largest dependency
-decision of the feature and still would not prove a real touch gesture works, whereas Embla's behaviour under
-a real pointer is exactly what `quickstart.md` §3 tests in a browser. Note that `002/research.md` D2's
-rejection of "GSAP, `motion`, embla and any smooth-scroll library" was framed as a cost it would add to
-`package.json`. It is not one — all three are installed and two are in use. Where that rejection still holds
-is on merit: 002's ground needed no library, and adding one there would have been the smaller bad decision.
+jsdom/happy-dom harness exists; adding one to exercise drag behaviour would still not prove a real touch
+gesture works, whereas Embla's behaviour under a real pointer is exactly what `quickstart.md` §3 tests in a
+browser. The no-DOM-testing position is a tooling judgement and survives the owner's ruling; the
+no-new-packages position was a constraint that has been explicitly lifted.
 
 **Known harness hazard, recorded so nobody re-discovers it the hard way**: bare `npm test` runs
 `dotenv -e .env.test -- vitest run`, `.env.test` does not exist, and `tests/setup.ts` truncates all 19

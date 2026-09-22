@@ -9,10 +9,11 @@ other clause in this file.
 
 ## H. Honesty — this outranks the effect
 
-- **H1** A product's image is a photograph of that product, or the product is shown without an object image.
-  No keyword-matched stand-in, no template stock photograph, no generated object, and no confident fallback.
-  Every displayed product image satisfies the id-equal provenance chain in `data-model.md`.
-  **(Principle I, FR-028, FR-022; currently violated across 188 records — `research.md` D1.)**
+- **H1** A product's image is a photograph of that product, or the product is shown visibly without one. No
+  keyword-matched stand-in, no template stock photograph, no generated object, and no confident fallback.
+  **(Principle I, FR-028, FR-022.)** 188 of 189 records already satisfy this through the mirror; the one with
+  no photograph reaches `return pick("phone", …)` and renders a stock image of something else — that branch
+  is the defect this contract closes, and it is fixed before the visual work (D1).
 - **H2** An asset whose `reviewStatus` is not `approved` is presented in the framed form or not at all.
   Silence is not approval, and the default state must be the honest one (FR-030).
 - **H3** No treatment may crop, obscure or de-emphasise price, availability, brand or name. An unknown stock
@@ -62,10 +63,13 @@ other clause in this file.
   missing (FR-013, SC-008). The behaviour matches `004`'s rows and `005`'s carousel exactly — one rule across
   three surfaces (FR-038/005-X5).
 - **M6** Motion and the scroll-driven ground coexist as one choreography; neither destabilises the other
-  (FR-014). Note 002's Question 1 is currently reopened, so this is verified against 002's actual behaviour,
-  not its planned behaviour.
-- **M7** Shared vocabulary with `004` and `005`: `220ms cubic-bezier(0.2, 0.7, 0.3, 1)`, one duration scale.
-  This surface does not choose its own (X1 of 005's contract, reciprocal with `004/FR-032`).
+  (FR-014). Two motion libraries each driving scroll-linked movement on one page fails this clause no matter
+  how each performs alone (D6). 002's Question 1 is reopened, so this is verified against what the ground
+  actually does and re-run after 002 settles.
+- **M7** One motion system serves 002, 003, 004 and 005, chosen on quality rather than on what is already
+  installed (owner ruling, 2026-09-22). Until it is chosen, this surface inherits 004's shipped vocabulary —
+  `220ms cubic-bezier(0.2, 0.7, 0.3, 1)`, one duration scale — and does not invent its own
+  (X1 of 005's contract, reciprocal with `004/FR-032`).
 - **M8** Nothing animates while off-screen (matching `002/FR-019` and `005/FR-019`).
 
 ## S. Systematic across 188
@@ -90,8 +94,9 @@ other clause in this file.
 
 ## Explicitly not covered by this contract
 
-- **Whether the assets exist.** H1 is unsatisfiable until `research.md` D2 runs. Every clause about how
-  beautifully an object floats is downstream of that, and this contract is not a place to pretend otherwise.
+- **Whether D3's measurement comes back good.** The sources exist and are honest; whether 188 of them can be
+  cleanly matted is unknown until the 24-file trial runs, and a failure rate above ~35% means this feature is
+  re-scoped rather than that D1–D5 are met by smaller shadows.
 - **The specific colours, radii, curve values and stage counts** the reference is silent on and Constitution
   IV assigns to the implementer (FR-026, FR-027).
 - **Any judgement gate** — SC-001, SC-002, SC-005, SC-007, SC-009, SC-011, SC-012, SC-013, SC-015 need

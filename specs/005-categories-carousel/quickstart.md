@@ -6,8 +6,10 @@ How to run it and how to prove it. No implementation lives here.
 
 ## Prerequisites
 
-- Node 24, dependencies installed. **No new package is added** — if `package.json` gains a dependency during
-  this feature, that is a plan violation (`research.md` D8), not a convenience.
+- Node 24, dependencies installed. No new package is *expected* — `embla-carousel-react` already does the
+  physics and the arc needs nothing else (`research.md` D2, D8) — but the owner ruled on 2026-09-22 that
+  **quality outranks dependency cost**, so a package added to raise quality is a decision to state, not a
+  rule to violate.
 - Dev server on `http://localhost:3000`. Verify exactly one Next process and one listener on 3000 before
   trusting any browser claim, and check a `/_next/static/chunks/*.js` request returns 200 — an HTML 200
   proves nothing about hydration (Constitution, Definition of Done).
