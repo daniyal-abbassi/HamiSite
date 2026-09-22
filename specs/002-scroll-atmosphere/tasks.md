@@ -253,21 +253,17 @@ measured; and it does not make the page quieter than it was. T013 and T014 remai
 the footer, return to a product) using keyboard, wheel and touch, recording any moment the motion feels
 rough, delayed or unresponsive.
 
-- [ ] T018 [US2] Prove non-interception in the code, not by feel. Assert that nothing added in this
   feature calls `preventDefault` on wheel/touch/scroll, sets `scrollTop`/`scrollTo` on the document, or
   uses `will-change` in a way that captures the fixed layer. Contract S1: "The shopper's own scrolling is
   native. Nothing intercepts, eases, delays, substitutes for, or re-implements it."
-- [ ] T019 [US2] [P] Cooperate with the existing anchor animation rather than replacing it.
   `html { scroll-behavior: smooth }` is at `app/globals.css:127-129` and `main > section` carries
   `scroll-margin-top: 6rem` at line 184. FR-026: existing anchor behaviour "MUST land at a correct ground
   tone, and the two mechanisms MUST NOT conflict."
-- [ ] T020 [US2] [BROWSER] Write `specs/002-scroll-atmosphere/tools/scroll-input.mjs` and run quickstart
   §4 from it: keyboard (`ArrowDown`, `PageDown`, `Space`, `End`) begins
   moving on input with no perceptible lag at every position (FR-011, contract S2, SC-007); wheel and
   trackpad continuous with no stutter (FR-009, contract S4); touch emulation flick-deceleration and
   stop-mid-gesture, correct under a right-to-left document (FR-012, contract S3); the ground never
   lagging, overshooting or snapping after movement stops (FR-010, contract S4)
-- [ ] T021 [US2] [BROWSER] Run quickstart §5 — cost, measured on a **production build**, not the dev
   server. feature 004 established that dev-mode style recalculation dominates frame-pacing numbers and
   attributed a 50ms-vs-33ms difference to a section that cost nothing. Compare frame pacing with the
   layer visible against the layer hidden, on the same build and route; FR-014 and contract S6 require the
@@ -275,6 +271,15 @@ rough, delayed or unresponsive.
   `npm run build` rewrites `.next` under a live server
 
 **Checkpoint**: US1 and US2 both work independently; the effect is smooth and the scroll is untouched.
+
+---
+
+- [ ] T018–T021 **SUPERSEDED — do not execute; the revised tasks are T043–T049 in Phase 4 (revised)
+  below.** These four were written against Resolved Q1 = A, which required proving the shopper's scrolling
+  stays native. The owner re-answered Q1 as C on 2026-09-22, so non-interception is now the thing being
+  removed rather than verified. The IDs are retired rather than reused so the history stays readable:
+  T018's "prove non-interception in the code" is the exact inverse of T043, T020's scroll-input probe is
+  replaced by T045's content-transform lag measurement, and T021's cost check survives as T047.
 
 ---
 
