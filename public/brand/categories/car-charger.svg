@@ -1,0 +1,62 @@
+<svg width="800" height="960" viewBox="0 0 800 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-car-charger" x1="120" y1="60" x2="680" y2="880" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#14080B"/>
+      <stop offset="0.48" stop-color="#2B050D"/>
+      <stop offset="1" stop-color="#09070A"/>
+    </linearGradient>
+    <radialGradient id="glow-car-charger" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(210 180) rotate(42) scale(430 420)">
+      <stop stop-color="#F6E5C5" stop-opacity="0.32"/>
+      <stop offset="0.4" stop-color="#C11E3A" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="barrel" x1="0" y1="0" x2="1" y2="0">
+      <stop stop-color="#0d1115"/>
+      <stop offset="0.34" stop-color="rgba(245,228,196,0.22)"/>
+      <stop offset="0.52" stop-color="#111214"/>
+      <stop offset="1" stop-color="#0b0d10"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="960" rx="40" fill="url(#bg-car-charger)"/>
+  <rect width="800" height="960" rx="40" fill="url(#glow-car-charger)"/>
+  <circle cx="122" cy="120" r="3.5" fill="#C11E3A"/>
+
+  <!-- 12V barrel plug, drawn vertically: spring contacts at the tip, a USB face at the top. -->
+  <g transform="translate(296 236)">
+    <!-- Contact tip -->
+    <rect x="72" y="404" width="64" height="58" rx="14" fill="url(#barrel)" stroke="rgba(245,228,196,0.34)" stroke-width="2.5"/>
+    <rect x="92" y="452" width="24" height="30" rx="8" fill="#C11E3A" fill-opacity="0.9"/>
+    <!-- Spring side contacts -->
+    <g stroke="rgba(245,228,196,0.42)" stroke-width="4" stroke-linecap="round">
+      <path d="M62 412h-16M186 412h16M62 432h-16M186 432h16"/>
+    </g>
+
+    <!-- Body -->
+    <rect x="24" y="120" width="160" height="292" rx="40" fill="url(#barrel)" stroke="rgba(245,228,196,0.38)" stroke-width="3"/>
+    <rect x="24" y="228" width="160" height="4" fill="rgba(245,228,196,0.18)"/>
+    <rect x="24" y="316" width="160" height="4" fill="rgba(245,228,196,0.18)"/>
+    <!-- Grip ribs -->
+    <g fill="rgba(255,255,255,0.05)">
+      <rect x="44" y="248" width="120" height="10" rx="5"/>
+      <rect x="44" y="270" width="120" height="10" rx="5"/>
+      <rect x="44" y="292" width="120" height="10" rx="5"/>
+    </g>
+
+    <!-- Tapered shoulder up to the USB face -->
+    <path d="M40 122c0-26 12-44 34-52h60c22 8 34 26 34 52H40Z"
+          fill="#0f1215" stroke="rgba(245,228,196,0.32)" stroke-width="3"/>
+
+    <!-- Head with two ports: USB-C lit oxblood, USB-A champagne. -->
+    <rect x="12" y="0" width="184" height="128" rx="34" fill="#0d1115" stroke="rgba(245,228,196,0.42)" stroke-width="3"/>
+    <rect x="48" y="34" width="112" height="26" rx="13" fill="rgba(169,25,52,0.72)" stroke="rgba(245,228,196,0.34)" stroke-width="2.5"/>
+    <rect x="48" y="78" width="112" height="22" rx="6" fill="none" stroke="rgba(245,228,196,0.5)" stroke-width="2.5"/>
+    <rect x="58" y="85" width="92" height="8" rx="4" fill="rgba(245,228,196,0.3)"/>
+  </g>
+
+  <!-- A cable leaving the head, so the object reads as a charger and not a torch bulb. -->
+  <path d="M488 268c58 0 84 46 84 108v112"
+        stroke="rgba(245,228,196,0.22)" stroke-width="6" stroke-linecap="round" fill="none"/>
+
+  <rect x="96" y="742" width="608" height="1" fill="rgba(245,228,196,0.18)"/>
+</svg>

@@ -1,0 +1,86 @@
+{
+ "capturedAt": "2026-09-22T14:31:31.642Z",
+ "url": "http://localhost:3000/",
+ "widths": {
+  "360px": {
+   "docHeight": 19134,
+   "rect": {
+    "top": 5410,
+    "height": 925,
+    "width": 360
+   },
+   "tileCount": 6,
+   "links": [
+    {
+     "href": "/shop",
+     "text": "مشاهده همه محصولات"
+    },
+    {
+     "href": "/shop?category=%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84",
+     "text": "موبایلSamsung · TCH"
+    },
+    {
+     "href": "/shop?category=%D9%87%D8%AF%D9%81%D9%88%D9%86-%D8%A7%DB%8C%D8%B1%D9%BE%D8%A7%D8%AF-%D9%88-%D9%87%D9%86%D8%AF%D8%B2%D9%81%D8%B1%DB%8C",
+     "text": "ایرپاد و هدفونAirPods · Headphones"
+    },
+    {
+     "href": "/shop?category=%D8%A2%D8%AF%D8%A7%D9%BE%D8%AA%D9%88%D8%B1-%DA%A9%D8%A7%D8%A8%D9%84-%D9%88-%D8%B4%D8%A7%D8%B1%DA%98%D8%B1",
+     "text": "شارژر و آداپتورAdapters · Cables"
+    },
+    {
+     "href": "/shop?category=%D9%BE%D8%A7%D9%88%D8%B1-%D8%A8%D8%A7%D9%86%DA%A9",
+     "text": "پاوربانکهمیشه آماده"
+    },
+    {
+     "href": "/shop?category=%D8%B3%D8%A7%D8%B9%D8%AA-%D9%88-%D9%85%DA%86-%D8%A8%D9%86%D8%AF-%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF",
+     "text": "ساعت هوشمندروزمره، دقیق، نزدیک"
+    },
+    {
+     "href": "/shop?category=%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D8%A2%D9%86%D9%84%D8%A7%DB%8C%D9%86",
+     "text": "خدمات آنلاینApple ID"
+    }
+   ],
+   "labelIsSvgText": true
+  },
+  "1280px": {
+   "docHeight": 12630,
+   "rect": {
+    "top": 2779,
+    "height": 887,
+    "width": 1280
+   },
+   "tileCount": 6,
+   "links": [
+    {
+     "href": "/shop",
+     "text": "مشاهده همه محصولات"
+    },
+    {
+     "href": "/shop?category=%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84",
+     "text": "موبایلSamsung · TCH"
+    },
+    {
+     "href": "/shop?category=%D9%87%D8%AF%D9%81%D9%88%D9%86-%D8%A7%DB%8C%D8%B1%D9%BE%D8%A7%D8%AF-%D9%88-%D9%87%D9%86%D8%AF%D8%B2%D9%81%D8%B1%DB%8C",
+     "text": "ایرپاد و هدفونAirPods · Headphones"
+    },
+    {
+     "href": "/shop?category=%D8%A2%D8%AF%D8%A7%D9%BE%D8%AA%D9%88%D8%B1-%DA%A9%D8%A7%D8%A8%D9%84-%D9%88-%D8%B4%D8%A7%D8%B1%DA%98%D8%B1",
+     "text": "شارژر و آداپتورAdapters · Cables"
+    },
+    {
+     "href": "/shop?category=%D9%BE%D8%A7%D9%88%D8%B1-%D8%A8%D8%A7%D9%86%DA%A9",
+     "text": "پاوربانکهمیشه آماده"
+    },
+    {
+     "href": "/shop?category=%D8%B3%D8%A7%D8%B9%D8%AA-%D9%88-%D9%85%DA%86-%D8%A8%D9%86%D8%AF-%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF",
+     "text": "ساعت هوشمندروزمره، دقیق، نزدیک"
+    },
+    {
+     "href": "/shop?category=%D8%AE%D8%AF%D9%85%D8%A7%D8%AA-%D8%A2%D9%86%D9%84%D8%A7%DB%8C%D9%86",
+     "text": "خدمات آنلاینApple ID"
+    }
+   ],
+   "labelIsSvgText": true
+  }
+ }
+}
