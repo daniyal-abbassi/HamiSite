@@ -471,3 +471,55 @@ Task: "T027 Sections shorter than the viewport"
 - **The one thing not to do**: if T017 fails, do not soften FR-005, do not reduce the sampling density,
   and do not declare the busyness comparison "subjective". Take the evidence to the owner and ask for
   Q2 again.
+
+---
+
+## Phase 4 (revised 2026-09-22): User Story 2 — Scroll that feels calm and expensive
+
+**Reopened.** The original Phase 4 (T018–T021) was written against Resolved Q1 = A and set out to *prove
+the shopper's scrolling stays native* — T018 read "Prove non-interception in the code, not by feel". The
+owner re-answered Q1 as **C** the same day: ease the desktop wheel and trackpad, leave touch native. Those
+four tasks are withdrawn rather than completed; their numbering is kept so the history reads.
+
+**Independent Test**: give one wheel notch on a desktop and confirm the rendered content settles toward the
+target over roughly a second rather than arriving at once; then do the same on an emulated phone and
+confirm nothing about the scroll changed.
+
+- [x] T018 ~~Prove non-interception in the code~~ **Withdrawn** — non-interception is now the thing being
+  removed. Replaced by T043, which proves the opposite half: that interception stops at the desktop.
+- [ ] T019 ~~Cooperate with the existing anchor animation~~ **Superseded.** Anchor jumps now travel
+  through the smoother's lerp. Re-check under T046 rather than as a standalone task.
+- [ ] T020 ~~Write `tools/scroll-input.mjs` to prove native scrolling is untouched~~ **Withdrawn.**
+  Replaced by T045, which measures the lag between `scrollY` and the content transform — the only signal
+  that shows easing at all. A first probe measured `scrollY` alone and reported "not eased" on a build
+  that was demonstrably easing, because `scrollY` is the driver ScrollSmoother does not delay.
+- [ ] T021 ~~Measure scroll cost on a production build~~ **Retained and now urgent** — see T047.
+- [x] T043 Create `components/atmosphere/ScrollSmooth.tsx`: `ScrollSmoother` at `smooth: 1.5`, gated on
+  `(pointer: fine)` and not `(any-pointer: coarse)` and not `(prefers-reduced-motion: reduce)`.
+  **`smoothTouch` is deliberately not passed** — `ScrollSmoother.js:121` makes an unset value parse to
+  `0`, so touch stays native by the library's own default. Passing it is how that would break silently.
+- [x] T044 Restructure `app/(main)/layout.tsx` so every fixed layer — `PageGround`, `.noir-stars`,
+  `.gradient-blur`, `Header`, `MobileDock` — is a **sibling** of `#smooth-wrapper`, with only `<main>`
+  and `<Footer>` inside it. A transformed ancestor captures `position: fixed`, so a fixed element left
+  inside the wrapped subtree scrolls with the page and looks correct in any static screenshot.
+- [x] T045 **BROWSER** Prove the easing and the boundary. Desktop: one `wheel(0,1200)` produces a peak
+  850px lag between `scrollY` (1200 at once) and the content transform (350), settling to 0 by ~1080ms.
+  Touch (iPhone 13 emulation): the smoother is never created, `#smooth-content` computes
+  `transform: none`, `scrollTo` lands instantly. Reduced motion: identical to touch. Fixed layers:
+  ground and blur hold at viewport top 0 with content at 4000px. `--hami-ground` still tracks
+  (`#180205` → `#0e0205`). Record in `notes/scroll-easing.md`.
+- [ ] T046 **BROWSER** Anchor jumps, in-page navigation, `End`-key jumps and reload-at-scrolled-position
+  now all resolve through the lerp. Confirm each lands on the right destination and that the ground's
+  stage is correct on the first rendered frame — FR-007 and contract P5 still apply, and the smoother is
+  new evidence against them.
+- [ ] T047 **BROWSER — production build, CPU-throttled.** A permanently-running rAF lerp over a 19,134px
+  document is exactly the change that must be re-measured rather than assumed cheap. Feature 004 recorded
+  33.3ms median frames here; anything materially worse needs the `smooth` value lowered or the feature
+  stood down on mid-range hardware. FR-014, FR-015, SC-006.
+- [ ] T048 Re-check FR-008 and every contrast measurement: the ground now tracks a *rendered* position
+  that lags the document, so the tone at a given `scrollY` and the tone behind the pixels on screen can
+  disagree mid-settle. Measure contrast at intermediate points of the settle, not only at rest.
+- [ ] T049 Decide, with the owner, what happens to **FR-005**. It still fails as measured
+  (`notes/busyness.md`), and easing the scroll does not touch it — that gate was about the background.
+  The Q2 = B/A/C question is still open and is now the only thing standing between this feature and
+  completion.

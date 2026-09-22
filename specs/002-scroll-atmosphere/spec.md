@@ -231,11 +231,25 @@ no change to the progression design.
 - **FR-009**: The shopper's scrolling MUST feel continuous, weighted, and calm, with no visible stutter,
   jitter, or dropped frames on a mid-range phone or laptop.
 - **FR-010**: The visual response to scroll MUST keep up with the shopper's own position: the ground MUST
-  NOT lag behind the content, overshoot it, or snap into place after movement stops. The shopper's own
-  scrolling stays native and is not intercepted, eased, or substituted (Resolved Q1 = A), so "smooth" here
-  means the visual response is smooth, not the scroll physics.
-- **FR-011**: Whatever is done to scroll feel MUST NOT delay, intercept, or substitute for the shopper's
-  keyboard navigation, and a key press MUST produce immediate movement.
+  NOT lag behind the content, overshoot it, or snap into place after movement stops.
+  ~~The shopper's own scrolling stays native and is not intercepted, eased, or substituted (Resolved Q1 =
+  A), so "smooth" here means the visual response is smooth, not the scroll physics.~~
+  **Amended 2026-09-22 for Resolved Q1 = C.** The first sentence stands unchanged and is now the harder
+  half of the requirement: the ground is driven by the *rendered* position, so it must track the eased
+  content rather than the raw scroll target. The second sentence is withdrawn — the scroll physics are
+  now exactly what changes, on desktop.
+- **FR-011**: ~~A shopper's keyboard navigation MUST NOT be delayed, intercepted or substituted for, and
+  a key press MUST produce immediate movement.~~
+  **Amended 2026-09-22 for Resolved Q1 = C.** On desktop the easing is input-agnostic, so a key press
+  moves the document immediately and the rendered content settles toward it over the smoothing window —
+  that lag is the requested effect, not a defect. What MUST hold is that keyboard navigation is never
+  *blocked or redirected*: every key that worked before still reaches every position, and
+  `prefers-reduced-motion` restores instant movement with no easing at all. On touch, where this feature
+  does not engage, key behaviour is unchanged.
+- **FR-011a (new)**: Touch scrolling MUST remain native. The easing engages only on precision-pointer
+  devices; a phone, tablet or touchscreen laptop keeps its operating system's own momentum, flick
+  deceleration and stop-mid-gesture behaviour. This is the boundary that makes Q1 = C different from B,
+  and it is the reason mobile-first survives a change whose benefit is a desktop one.
 - **FR-012**: Whatever is done to scroll feel MUST NOT interfere with touch gestures, including flick
   deceleration and stopping mid-gesture, and MUST remain correct for a right-to-left document. (Constitution II)
 - **FR-013**: If the shopper's scrolling is ever programmatic rather than direct, stopping that movement

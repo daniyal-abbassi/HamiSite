@@ -203,3 +203,60 @@ this feature introduces or fixes.
 | FR-005 vs Resolved Q2 = C | Owner | Q2 = C is the option the spec itself labels "likely to reproduce the busyness the request objects to". This plan honours C and constrains the new layer to shift value rather than add light sources. **If the FR-005 gate fails in validation, the correct response is to revisit Q2 toward B, not to weaken FR-005.** |
 | Stale spec line | Docs | `spec.md` Assumptions still says "Question 2 is unresolved … the design phase cannot lock the ground", contradicting Resolved Clarifications. Not edited during planning. |
 | Feature 004's C22/C24 obligations | 002 design | 004 committed to 220ms and `cubic-bezier(0.2, 0.7, 0.3, 1)` and recorded it in `specs/004-mobile-brands-rows/notes/coherence.md`. 002's ground transition is a different kind of motion (continuous, position-linked) so it does not take the 220ms figure, but it MUST use the same easing family wherever it has a discrete transition, and it must not become the page's second travelling element. |
+
+---
+
+## D9 — Scroll easing: GSAP ScrollSmoother, desktop-only (added 2026-09-22 for Resolved Q1 = C)
+
+**Decision**: `components/atmosphere/ScrollSmooth.tsx` wraps `<main>` and `<Footer>` in
+`#smooth-wrapper` / `#smooth-content` and creates `ScrollSmoother` with `smooth: 1.5`, gated on
+`(pointer: fine) and not (any-pointer: coarse) and not (prefers-reduced-motion: reduce)`.
+
+**Rationale — the library's default already is option C.** `node_modules/gsap/ScrollSmoother.js:121`
+computes the smoothing duration as
+`isTouch === 1 ? parseFloat(smoothTouch) || 0 : parseFloat(smooth) || 0.8`. An unset `smoothTouch`
+parses to `0`, so on a touch device the lerp is zero and the OS's own momentum scroll is untouched.
+The desktop/touch split the owner asked for is therefore the library's out-of-the-box behaviour rather
+than a guard to write and then defend. `smoothTouch` is deliberately not passed, and the component says
+so in a comment, because setting it would be the way to break this quietly.
+
+Licensing is not a question: `package.json` reports GSAP's *"Standard 'no charge' license"* at 3.15.0,
+and `node_modules/gsap/ScrollSmoother.js` is present in the installed package. Club plugins became free
+at 3.13, which is what invalidated D2's cost argument — see the correction at the head of D2.
+
+**The constraint that dictated the layout change, and it is the one to remember.** ScrollSmoother
+animates by writing a `transform` to `#smooth-content`. A transformed ancestor becomes the containing
+block for `position: fixed` descendants, so any fixed element inside the wrapped subtree stops sticking
+to the viewport and starts travelling with the page. The page ground, `.noir-stars`, `.gradient-blur`,
+the header island and the mobile dock are therefore **siblings** of `#smooth-wrapper` in
+`app/(main)/layout.tsx`, and only document flow goes inside. This is the same mechanism as D3 and the
+same one `.tray-field` records about `background-attachment: fixed` inside a `Reveal` wrapper. It will
+look correct in a static screenshot either way, which is how it ships.
+
+**Measured, 2026-09-22, headless Chromium at 1280×900.** After a single `wheel(0, 1200)`:
+
+| t (ms) | `scrollY` | content `translateY` | lag |
+|---|---|---|---|
+| 0 | 0 | 0 | 0 |
+| 90 | 1200 | 350 | **850** |
+| 270 | 1200 | 954 | 246 |
+| 450 | 1200 | 1170 | 30 |
+| 810 | 1200 | 1199 | 1 |
+| 1080 | 1200 | 1200 | 0 |
+
+The scroll target is reached at once and the rendered content settles toward it over ~1s — that is the
+"smooth and heavy" the brief names. **`window.scrollY` is the driver, not the experience**: a first
+probe measured `scrollY` and reported "not eased" because it was reading the quantity ScrollSmoother
+does not delay. The lag between `scrollY` and the content transform is the only honest signal.
+
+Also verified: on an emulated iPhone the smoother is never created (`#smooth-content` computed
+`transform: none`, `scrollTo` lands instantly); under `prefers-reduced-motion` the same; the fixed
+ground and blur layers hold at viewport top `0` while content sits at 4000px; and `--hami-ground` still
+tracks position through the smoother (`#180205` at 4000 → `#0e0205` at 11000).
+
+**What this costs the rest of the page, and what it does not fix.** The easing is a rAF-driven transform
+on the whole document subtree. Feature 004 measured this homepage at 33.3ms median frames on a
+production build under CPU throttle; a permanently-running lerp on a 19,134px document is the kind of
+change that has to be re-measured rather than assumed cheap, and that measurement is an open task.
+FR-005's busyness finding is untouched by all of this — it was about the background, it still fails as
+measured, and easing the scroll does not make the glow field quieter.
