@@ -152,6 +152,14 @@ stops inventing one.
   A generative edit is disqualified on auditability, not on price.
 - **D3** — Measure FR-034's failure rate on a stratified sample of 24 **before** relying on the treatment
   catalog-wide. The answer decides system versus curation, and >35% fails means re-scoping.
+  → **Measured on all 188, 2026-09-22. The gate passes at 3% and the feature is still not viable.**
+  Isolation works — the predicted hard subjects (cables, straps, thin sources, reflective finishes) came
+  out clean, which inverts the spec's expectation. But ~77% of the photographs are marketing composites:
+  burned-in spec banners, handwritten price stickers on shop-shelf phones, retail packaging in frame,
+  multi-colour family shots. A perfect matte of an advertisement is still an advertisement, and FR-001,
+  FR-002, FR-022 and FR-023 all fail on it. See
+  [notes/fr034-isolation-measurement.md](notes/fr034-isolation-measurement.md) for the recommendation:
+  ship US1 (needs no assets), curate the ~44 genuinely clean files, and do not build this catalog-wide.
 - **D4** — Ship derivatives as alpha WebP at displayed sizes, sources retained, manifest committed.
 - **D5** — One grounding cue derived from the object's own alpha bounds; one light direction on the inline
   axis; no shadow at all on the framed fallback; never both forms in one row with different baselines.
