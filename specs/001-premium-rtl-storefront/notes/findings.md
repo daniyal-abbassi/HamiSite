@@ -284,3 +284,81 @@ whole set.
 Band 2's checks after all of this: `tsc --noEmit` clean, **205 unit tests / 21 files** passing, `npm run
 build` clean, the 20-page × 3-width overflow sweep still fitting with the clip disabled, and the press
 contract passing in production.
+
+---
+
+## Band 3 — the design language (2026-09-23, in progress)
+
+Re-captured after this band's edits with `verification/capture-baseline.mjs --tag after`, so every number
+below is from the same instrument reading the same twelve surfaces at two widths, against
+`manifest-before.json`.
+
+### The strip is measured, and it holds across all 24 captures
+
+`shinyEdge`, `gradText`, `starfield`, `blur3xl`, `blur2xl`, `ping`, `textStroke` and `backdropElements` are
+**0 at every width of every surface**. On the homepage at 360 that is 2 shiny edges → 0, 7 gradient-text
+elements → 0, 40 elements under a `backdrop-filter` → 0. Two survive: one element with a class containing
+`beam` and one with `glow`, both named rather than painted — the sweep counts substrings, and the honest
+reading of a count of 1 is "check it", not "it is fine" and not "it is a regression". The page is 1,136px
+shorter at 360 (17,520 → 16,384).
+
+Rendered Persian letter-spacing is 0 on the homepage, the product page, and every interior surface. It is
+**1 on `/shop` and `/shop/[brand]`**, at both widths, and it is `SHOP / ۰۳` at
+`components/shop/ShopBanner.tsx:29` (`tracking-[0.1em]`). Left as-is deliberately: FR-057 forbids tracking
+because it pulls *joining strokes* apart, and there is nothing to join in a Latin word followed by two
+digits. The unit guard in `tests/unit/persian-typography.test.ts` scopes itself to Persian letters for the
+same reason, which is why it reports clean and this line exists — the exempted case should be written down,
+not inferred from a green suite.
+
+### T093 — a thumb is not a screen width
+
+Moving the 44px block from `@media (max-width: 767px)` to `@media (pointer: coarse)` was the recorded task;
+measuring it found the defect was wider than the block. With the rules keyed to width, a phone held in
+landscape (844px) got desktop controls, and three components carried `min-h-11 … md:min-h-0` pairs that
+re-introduced the same error per-element. `a[class*="inline-flex"]` also never matched the footer and trust
+links, which are `flex`, so widening that selector is what actually caught them.
+
+Measured in a coarse-pointer context at 844×390 and 360×800, counting each control's **effective** hit area
+(its box widened by any pseudo-element hit area it declares, and by the card behind it for the whole-card
+links): **0 elements under 24px and 0 icon controls under 44px at both sizes**, where the homepage at 390px
+had measured 78 sub-44 interactive elements before the band. At 1280 with a fine pointer the rules are
+confirmed *off* — `min-width: 0` on the brand grid, `min-height: auto` on buttons — which is the point: a
+mouse does not need them and every prose link on the site would otherwise have become 44px tall.
+`.lux-card:hover { transform: none }` moved to `@media (hover: none)` on the same reasoning: the bug it
+prevents is a tap leaving the card lifted, and that happens on a wide phone too.
+
+### The scroll ground was invisible, and the suite could not see it (T105)
+
+The owner's complaint — *"the same colour all along"* — is correct at the pixel level. Sampled in the
+gutter down the live homepage: `#1D0308 → #150105 → #110104 → #0E0103 → #0C0002 → #0B0003 → #0B0104`, i.e.
+the back half of a 16,384px page moves three units in one channel. The authored legs were ΔE 9.8 / 4.6 /
+2.6, all four stages inside one hue. The suite passed because it asserted that luminance was *monotone* and
+never asked whether the change reached an eye. Two causes: stages with no amplitude, and `opacity: .5` on
+the layer blending every leg with a body canvas that only varies `#100306 → #0A0205` — an alpha that existed
+to negotiate with a glow field band 3's T073 had already deleted.
+
+Replaced with a six-stop tour (`#3A0C12 → #2A0713 → #1A0A16 → #0E1122 → #320B0A → #160406`), layer at full
+opacity. Re-measured with `verification/ground-travel.mjs`, which reads gutter **pixels** rather than the
+authored function for exactly the reason above: 13 distinct tones at 13 positions, legs summing ΔE 68.2
+against an endpoint distance of 20.0 (3.4× — the shipped palette measured 17.0 against 16.9, which is a
+slide), worst text contrast 5.59:1 across the 500-step unit sweep. The travel is in hue and chroma; `Y`
+stays 0.0027–0.0121, inside `LEGIBILITY_BAND`, because lightness is the one axis a dark ground cannot spend.
+
+**New finding, not yet fixed: the ground does not reach everywhere it should.** The same script reports the
+authored tone arriving at the gutter unpainted at **9 of 13 positions**. At 25%, 42% and 58% the gutter
+shows `#110003`/`#0e070f`/`#10060d` where the layer holds `#220915`/`#130e1d`/`#180f1b` — a section painting
+its own opaque background over the ground — and at 8% the left and right gutters disagree. The arc is now
+strong enough that this is the limiting factor on how much of it a shopper sees, so it belongs with T083's
+extension rather than being filed as decoration.
+
+### FR-014 is still not met at 360, and the hero comment claims it is
+
+`manifest-after.json` puts the hero's trust text row at **y=916** on a 360×800 screen — below the fold —
+while the comment at `app/(main)/page.tsx:73-79` states that after the recompose "the whole stack lands
+inside the first viewport with the shop window beginning above the fold". The first merchandise did move up
+(2,016 → 1,640), so the recompose bought something real. What it did not buy is the trust row: the
+shop-window panel stacks between the hero actions and that row on a phone, and the row sits exactly where
+the panel ends. The `533–572` figure quoted in this band's scratch notes was a different element (the
+eyebrow inside the hero) read by a different instrument, and it is not FR-014's measurement — recorded here
+so it is not repeated as one. T085 stays open, and T107 (the photograph returning) changes that panel's
+height, so the fold is re-measured after it rather than now.

@@ -19,12 +19,14 @@ import "./page-ground.css";
  * page has already been bitten by exactly this — `app/globals.css:290-294` records `background-attachment:
  * fixed` failing inside a `Reveal` wrapper. Layout level is the only place it is safe (research.md D3).
  *
- * It is a **tint, not a new light source.** Resolved Q2 = C left the existing five-glow field exactly as
- * it was. The claim originally recorded here — that a uniform alpha would "flatten the left-right-left
- * alternation of the per-section glows, achieving reconciliation by subtraction" — was measured and is
- * false: the glows live on `main > section::before/::after` at `z-10`, above this layer at `z-0`, so
- * nothing this layer does can damp them (`notes/busyness.md`). The owner kept Q2 = C anyway and waived
- * the clause that required it, so what this layer contributes is direction and nothing more.
+ * It is a **tint, not a new light source** — no glow, no image, one flat colour per frame. What it tints
+ * has changed since it shipped: Resolved Q2 = C kept the five-glow field in place, and band 3's T073 then
+ * deleted it, so this layer now carries the ground on its own at full opacity. The claim originally
+ * recorded here — that a uniform alpha would "flatten the left-right-left alternation of the per-section
+ * glows, achieving reconciliation by subtraction" — was measured and is false: the glows lived on
+ * `main > section::before/::after` at `z-10`, above this layer at `z-0`, so nothing this layer does could
+ * ever have damped them (`notes/busyness.md`). The owner kept Q2 = C anyway and waived the clause that
+ * required it.
  *
  * There is no transition on the colour, on purpose — see the hook. The value changes every frame, so a
  * transition would make the ground lag the content, which contract S4 forbids.

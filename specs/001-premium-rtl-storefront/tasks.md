@@ -448,12 +448,12 @@ Depends on T003 for decisions 1, 2, 5.
   `data/` is frozen and converting it would make the screen disagree with the shop's own wording. `spec.md`
   SC-007 is NOT amended; the narrowing is recorded in `notes/owner-decisions.md` §6 and reported as
   met-with-stated-scope, never as "zero mixed screens". T078 is now the whole of the numeral work.
-- [ ] T080 [P] [US5] Fix the validator band: accept the pasted `0098…` form and normalise digits in
+- [x] T080 [P] [US5] Fix the validator band: accept the pasted `0098…` form and normalise digits in
   `lib/phone.ts:8-13` (FR-062); add the landline rule that does not exist anywhere in `lib/` and apply it to
   `shopPhone`, currently `min(7).max(20)` with no shape check (`app/api/partners/route.ts:44`) (FR-063);
   give the checkout postal-code field at `components/checkout/CheckoutClient.tsx:307-311` its length hint,
   `dir="ltr"` and validation, matching the partner form which already does all three (FR-064).
-- [ ] T081 [P] [US5] Correct the two RTL-direction back-links that point forward for a Persian reader:
+- [x] T081 [P] [US5] Correct the two RTL-direction back-links that point forward for a Persian reader:
   `components/admin/orders/OrdersAdminClient.tsx:131` and `OrderAdminDetailClient.tsx:265` pair «بازگشت به…»
   with `ArrowLeft` (FR-013).
 
@@ -501,13 +501,19 @@ Depends on T003 for decisions 1, 2, 5.
   `components/home/B2bSection.tsx:51-55` says does not exist), `AccessoryUniverse` (a CSS gradient plus three
   strings), `OnlineServices`, `TrustBento`/`WhyHamiProofs`, `FinalConversion`. The mounted section count may
   legitimately fall; a section with nothing true to say comes out.
-- [ ] T090 [P] [US5] Delete the dead code the audits surfaced so it stops being mistaken for available
+- [x] T090 [P] [US5] Delete the dead code the audits surfaced so it stops being mistaken for available
   options: unmounted `TrustBar`, `MobileNav`, `ui/CardSwap.tsx`, and the orphan `categoryMosaic` /
   `brandWall` / `tickerItems` / `customerContentNote` data in `lib/content/home.ts`.
+  **The task's premise was half wrong, and the wrong half was the part that would have cost something.**
+  `categoryMosaic`, `brandWall` and `customerContentNote` are all live — mounted through
+  `ShopBanner`/`StoreExperience` and read by `lib/shop-category-tiles.ts`. Deleting them as "orphan data"
+  would have removed working homepage furniture. Deleted: `TrustBar` (its slot is now
+  `components/home/MobileQuickRoutes.tsx`), `MobileNav`, `ui/CardSwap.tsx`, `ModernWhiteWave`, and
+  `tickerItems` — which was genuinely unreachable, and was the only animated marquee left after T072.
 
 ### Interaction quality (US5)
 
-- [ ] T091 [P] [US5] Fix the five controls that respond visually and deliver nothing: the inert
+- [x] T091 [P] [US5] Fix the five controls that respond visually and deliver nothing: the inert
   «تلاش دوباره» at `components/home/FeaturedProducts.tsx:177` (`setTab(tab)` with the same value — the
   error state's primary action does nothing), the link labelled «تلاش دوباره» pointing at the current page
   (`components/shop/ShopResults.tsx:129-133`), «اطلاعات فروشگاه» anchoring to its own section
@@ -521,11 +527,20 @@ Depends on T003 for decisions 1, 2, 5.
   hand-rolled pills (`FeaturedProducts.tsx:118`, `NewArrivals.tsx:67`, `AccessoryUniverse.tsx:72`); and give
   a disabled control a reason (`ui/button.tsx:7` `disabled:pointer-events-none` silences it entirely).
   FR-043, FR-044.
-- [ ] T093 [US5] Add the missing 44px floor above `md`: the patch at `app/globals.css:1127-1166` is
+- [x] T093 [US5] Add the missing 44px floor above `md`: the patch at `app/globals.css:1127-1166` is
   mobile-only and matches class substrings, so `Header.tsx:133` search (`md:h-9`), `ShopResults.tsx:74` sort
   select, `ui/button.tsx:28` `sm:h-9`, `FeaturedProducts.tsx:146` tabs (~32px) and
   `AccessoryUniverse.tsx:72` (~34px) all stay undersized, and anything sized by inline `style` escapes it
   (FR-045).
+  **Resolved differently than worded, 2026-09-23.** The task asked for the 44px floor to be extended
+  "above `md`". Done, but the axis was wrong rather than the range: the rules exist because of a thumb, so
+  the block moved to `@media (pointer: coarse)` rather than being widened, which also fixes the landscape
+  phone (844px wide) and leaves every fine-pointer surface its compact controls. The class-substring
+  matching was kept and one selector widened (`a[class*="flex"]`), because three components carried
+  `min-h-11 … md:min-h-0` pairs that re-tied the same thumb rule to a width breakpoint. Controls sized by
+  inline `style` still escape it — none exist in the purchase path today, and the next one that appears
+  needs the size on the element, not in the stylesheet. Measured: `notes/findings.md`.
+
 - [ ] T094 [P] [US5] Fix the async-state jumps FR-046 names: `FeaturedProducts.tsx:102` gates skeletons on
   `isLoading && products === null` so a tab switch keeps stale cards with no busy affordance and then swaps,
   jumping the section; `NewArrivals` reserves 4 skeletons against a 6-item result;
@@ -537,9 +552,50 @@ Depends on T003 for decisions 1, 2, 5.
 - [ ] T096 [P] [US5] Fix the `Reveal` flash: `components/home/Reveal.tsx:26-37` SSR-paints below-fold
   content, hides it in an effect, then reveals it on intersection — a visible flash-then-vanish on a slow
   connection, the inverse of a loading state (FR-046, FR-048's reserve-space intent).
-- [ ] T097 [P] [US2] Fix the checkout order inversion: `components/checkout/CheckoutClient.tsx:441` applies
+- [x] T097 [P] [US2] Fix the checkout order inversion: `components/checkout/CheckoutClient.tsx:441` applies
   `order-first` on mobile so the summary sits visually above controls that come later in the DOM, breaking
   FR-044's "keyboard order MUST follow visual order".
+
+### The ground, judged on screen after the strip (owner follow-up, 2026-09-23)
+
+The owner's verdict on band 3 part 1+2 was "great, but still not luxurious", and the specific complaint
+that turned into work here was that the page background is **one colour all the way down**. It was true,
+measured at the gutter pixel: `#1D0308 → #150105 → #110104 → #0E0103 → #0C0002 → #0B0003 → #0B0104` across
+16,384px, so the whole back half of the page moves three units in one channel. Owner explicitly rejected a
+light theme — the ask is *travel within the dark palette*, not white.
+
+- [x] T105 [US1] Give the scroll ground real travel. `lib/atmosphere/progression.ts` moves from the
+  four-stop descent to a six-stop tour — `#3A0C12` arrival → `#2A0713` goods → `#1A0A16` shelves →
+  `#0E1122` ink at the trade chapter → `#320B0A` ember at the store → `#160406` close — every leg ≥ ΔE 9,
+  no stage within ΔE 6 of the one two places along, worst text contrast 5.59:1 across the 500-step sweep,
+  all tones inside `LEGIBILITY_BAND`. Travel is carried by hue and chroma because lightness is the one
+  axis a dark ground cannot spend freely. `components/atmosphere/page-ground.css` goes from the draft
+  `opacity: .5` to 1 — the blend was halving every leg before it reached a pixel, and the glow field it
+  was negotiating with was deleted by T073. The direction assertion in
+  `tests/unit/atmosphere-progression.test.ts` is replaced by the four guards above (it had been proving
+  monotone luminance, which the invisible palette passed). Recorded as 002 Amendment Record #4 against
+  FR-001, FR-003 and the "Coherence beats variety" assumption.
+- [ ] T106 [US1] First-load choreography for `/shop`. The surface has **zero** entrance motion today —
+  `app/(main)/shop/page.tsx` and `components/shop/ShopResults.tsx` contain no `Reveal`, no `animate-*`, no
+  transition — so the listing arrives all at once while the homepage reveals in stages. Three beats:
+  header and search settle, banner lines, then the grid in a ~50ms stagger capped at six items. Hard
+  constraints, each of which has already been paid for once in this feature: CSS-only with no JS gate (band
+  2 made the listing server-rendered so a crawler and a slow connection see 24 products in the document —
+  an entrance that hides content until hydration throws that away), `prefers-reduced-motion` returns the
+  finished state immediately (FR-047), and the first text paint is never delayed.
+- [ ] T107 [US1] The store photograph returns to `components/home/ShopWindow.tsx`, per the owner on
+  2026-09-23, reversing decision 2. Use the merchant's own file (`public/store/shop-upright.jpg`,
+  orientation-corrected only), not `shop.jpg`, which is an AI re-lit derivative of it; and do not re-add the
+  "MASHHAD FLAGSHIP" / "SHOWROOM" badges or the invented brand lightboxes that were on the old frame.
+  Principle I still forbids the image standing for something the shop does not have.
+
+- [ ] T108 [US1] Make the ground reach the pixels it owns. `verification/ground-travel.mjs` reports the
+  authored tone arriving at the gutter unpainted at only **9 of 13** scroll positions: at 25%, 42% and 58%
+  the gutter shows `#110003` / `#0e070f` / `#10060d` where `lib/atmosphere/progression.ts` holds
+  `#220915` / `#130e1d` / `#180f1b`, i.e. a section painting its own opaque background over the ground, and
+  at 8% the left and right gutters disagree. Now that the arc has amplitude this is the limiting factor on
+  how much of it a shopper sees, so it belongs with T083's extension to the interior pages rather than as
+  decoration work.
 
 **Checkpoint**: the `quickstart.md` §4 walk at 360 and 1280, per surface, against T002's baseline. Band 3's
 honest end-state is "built, walked, screenshotted, awaiting the panel" — not "done" (research D11).

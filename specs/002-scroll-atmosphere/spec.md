@@ -4,7 +4,7 @@
 
 **Created**: 2026-09-20
 
-**Status**: Draft — amended three times, 2026-09-22. See the Amendment Record.
+**Status**: Draft — amended four times, 2026-09-22 and 2026-09-23. See the Amendment Record.
 **Scroll-feel work (US2) closed 2026-09-23 by the owner**: easing accepted at Lenis's `lerp 0.1`, glow
 field accepted as-is so the FR-005 waiver is permanent, and the production cost measurement (FR-014 /
 SC-006) explicitly closed **unmeasured** rather than passed. US1's seam and entry-position tasks and all
@@ -14,15 +14,18 @@ of US3/US4 remain open.
 
 ## Amendment Record
 
-All three amendments were made on 2026-09-22 at the owner's instruction. None was made to make a failing
-check pass; in each case a requirement written under one reading of the brief was contradicted by the
-owner's actual intent, and the requirement moved rather than the measurement.
+The first three amendments were made on 2026-09-22 at the owner's instruction, the fourth on 2026-09-23
+after the shipped palette was judged on screen. None was made to make a failing check pass; in each case a
+requirement written under one reading of the brief was contradicted by the owner's actual intent, and the
+requirement moved rather than the measurement.
 
 | # | Class | Requirement | What changed | Why |
 |---|---|---|---|---|
 | 1 | **MINOR** | FR-010, FR-011; new FR-011a; Resolved Q1 | Q1 re-answered **A → C**. FR-010's "scrolling stays native" clause and FR-011's "key press MUST produce immediate movement" withdrawn; FR-011a added to pin the touch boundary. | The owner clarified the ask was scroll *physics* — "smooth and heavy" — which option A had explicitly excluded. FR-010 as written mandated the opposite of the feature. |
 | 2 | **MINOR** | FR-005 | Second clause waived: the progression need not read *calmer than the existing glow field*. First clause — must not increase busyness — stands. | Resolved Q2 = C keeps the glow field untouched. That field paints at `z-10`, above the ground layer at `z-0`, so no opacity on the layer can damp it; measured across α = 0.2/0.5/0.85 the rendered asymmetry does not move (`notes/busyness.md`). The owner chose to keep the field and accept the consequence rather than to reduce it (option B) or replace it (option A). |
 | 3 | **CORRECTION** | FR-011, FR-011a | FR-011's amendment claimed "the rendered content settles toward [a key press] over the smoothing window". **That was a property of ScrollSmoother, not of the easing as such, and it is false for the mechanism now shipped** — see correction note under FR-011. | The easing mechanism was swapped the same day (GSAP ScrollSmoother → Lenis, `research.md` D10) because the owner named a reference site whose feel they wanted. Lenis animates the real document scroll and binds no key handler, so a key press moves the document and the visible page with it, with no settle. The requirement's substance — never blocked or redirected, `prefers-reduced-motion` restores instant movement — is unchanged and still met. |
+| 4 | **MINOR** | FR-001, FR-003; the "Coherence beats variety" assumption | FR-001 now requires the change to be **perceptible**, not merely non-constant, and FR-003's "clear overall direction" stops meaning *one monotone descent*. The assumption's ceiling of "three or four closely-related stages" is withdrawn; six stages are permitted provided no leg is under ΔE 9 and no stage sits within ΔE 6 of the one two places along. | The shipped four-stage palette satisfied every check this feature had and the owner's verdict on screen was "the same colour all along". Measured at the gutter pixel it was right: `#1D0308 → #150105 → #110104 → #0E0103 → #0C0002 → #0B0003 → #0B0104`, with the last two legs ΔE 4.6 and 2.6 — under the ~10 at which a change registers. The progression was legal and invisible; the test suite proved monotonic luminance and never asked whether anyone could see it. `progression.ts` records the replacement palette and `tests/unit/atmosphere-progression.test.ts` the guards that would have failed the old one. |
+
 
 **What is explicitly not amended**: the measurements. `notes/busyness.md` stands as recorded — rendered
 left/right asymmetry 7.05 without the layer and 6.90 with it at the draft alpha, direction-reversal count
@@ -230,11 +233,20 @@ no change to the progression design.
 
 - **FR-001**: The homepage page ground MUST change across the length of the page so that a shopper
   scrolling from top to bottom passes through more than one tonal state.
+  **Amended 2026-09-23 — "more than one tonal state" is now a perceptible change, not a non-constant
+  function.** The shipped palette satisfied the sentence as written while moving the back half of the page
+  by three units in one channel; see Amendment Record #4. The binding form is in
+  `tests/unit/atmosphere-progression.test.ts`: every adjacent pair of stages at least ΔE 9 apart.
 - **FR-002**: The change MUST be tied to the content sections the shopper is passing, so the tonal shift
   reads as belonging to the page's structure rather than as an independent animation.
 - **FR-003**: The stages MUST form one coherent progression: a single deliberate sequence with a clear
   overall direction, related in character to one another, and consistent with the brand identity used
   elsewhere on the site.
+  **Amended 2026-09-23 — "clear overall direction" is no longer read as monotone lightness.** A descent
+  that stays inside one hue can be perfectly monotone and perfectly invisible, which is what shipped.
+  Direction now means: a deliberate order that never doubles back (no stage within ΔE 6 of the one two
+  places along) and closes — the final stage is the darkest on the page. Related-in-character is retained
+  and is carried by the hue staying inside the brand's warm family except at the one ink stage.
 - **FR-004**: Every transition between stages MUST be gradual and continuous. No hard seam, band, visible
   step, or instantaneous change is acceptable at any scroll position.
 - **FR-005**: The progression MUST NOT increase the perceived busyness of the page.
@@ -411,8 +423,13 @@ no change to the progression design.
 - **In-page anchor animation already exists** and stays; this feature must cooperate with it, not remove it.
 - **Section boundaries are derived from the current homepage structure**, which is eleven sections over a
   long page — enough room for a genuine progression without inventing stages.
-- **Coherence beats variety.** A progression of three or four closely-related stages that reads as one
-  movement satisfies this feature; many contrasting stages do not.
+- **Coherence beats variety.** Amended 2026-09-23 (Amendment Record #4). This read "a progression of three
+  or four closely-related stages that reads as one movement satisfies this feature; many contrasting
+  stages do not", and it was the sentence that licensed a four-stage descent so shallow nobody could see
+  it. The concern — a ground that flickers between unrelated colours — is legitimate and is now asserted
+  directly instead of by counting stages: **no leg under ΔE 9, no stage within ΔE 6 of the one two places
+  along, and every tone inside `LEGIBILITY_BAND`.** Six stages that satisfy those are coherent; four that
+  move one channel by three units are not a progression at all.
 - **The effect is decorative, never load-bearing.** No information may exist only in the ground.
 - **Question 2 is unresolved**: whether this feature replaces, reduces, or preserves the existing
   decorative glow field as a base. FR-005, FR-018, and the "Why This Is Not a Greenfield Feature" section

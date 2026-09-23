@@ -40,7 +40,7 @@ claim is exactly what Principle I forbids rendering. Deleted, not reworded (rese
 
 If any of these is also true, one sentence from the owner reinstates it — that is the whole mechanism.
 
-## 2. The AI store photograph — removed everywhere
+## 2. The AI store photograph — removed everywhere, then reinstated same day
 
 > *"Remove it everywhere."*
 
@@ -51,6 +51,25 @@ Mashhad, the phone number, the hours. **The hero slot is then empty rather than 
 nearby** — FR-008: a place with nothing true to say stays empty. T030 and T089 inherit this; it also
 narrows T073, since the radial "light thrown onto the wall" behind the shop window (`ShopWindow.tsx:25-35`)
 decorates an image that is leaving.
+
+> **Reversed later the same day (2026-09-23), by the same owner: *"عکس فروشگاه رو برگردون حتما"* — bring the
+> store photo back, definitely.** Seen on the finished strip rather than in the abstract, the empty hero
+> column cost more than the removal bought.
+
+The reversal is about the **photograph**, not about the claims that were painted over it, and the two are
+kept apart deliberately:
+
+- **Use `public/store/shop-upright.jpg`** — the merchant's own file with the orientation corrected, nothing
+  else done to it. **Not `shop.jpg`**, which is the last step of an AI chain
+  (`shop-original → shop-upright → shop-ai-relight → shop-hero-master → shop.jpg`): re-lit and rebuilt, i.e.
+  a picture of a shop that does not exist in that light. Principle I is about exactly that.
+- **The badges do not come back.** `MASHHAD FLAGSHIP`, `SHOWROOM` and the brand lightboxes were invented
+  over the photograph; the photograph is not what made them false. Twenty years, Mashhad, the phone number
+  and the hours stay in words, as above.
+- FR-006's clause — no store imagery standing in for proof — is **not** amended, because the photo returns
+  as the premises, not as evidence. If it is ever captioned as proof of anything, that clause bites again.
+
+Recorded as T107.
 
 ## 3. Address and email — removed until supplied
 
@@ -133,6 +152,54 @@ stays open and is **not** a band-4 blocker: it is the one criterion in that phas
 build without people, and it waits on data shape, not on the owner.
 
 ---
+
+## 9. The scroll ground must travel — and not by getting lighter
+
+> *"i don't want the entire background atmosphere to be the same color all along"* — preceded by an
+> explicit rejection of the alternative: *"No - i don't want it to be white!!"*
+
+The owner was measuring correctly. Sampled at the gutter pixel down the live homepage at 360×800, the
+ground that shipped with feature 002 runs:
+
+```
+0%  #1D0308   17% #150105   33% #110104   50% #0E0103   67% #0C0002   83% #0B0003  100% #0B0104
+```
+
+— the back half of a 16,384px document moves **three units in one channel**. The four legs of the authored
+array are ΔE 9.8 / 4.6 / 2.6, and below about ΔE 10 a change does not register. All four stages sit in the
+same hue (`14° → 358°`) while chroma collapses 19.6 → 3.4: it was one colour switching itself off, and
+every check in the suite was satisfied by it, because the check asked whether luminance was monotone and
+never asked whether anyone could see the result.
+
+Two causes, both inherited: the stops themselves have no amplitude, and `page-ground.css` composited the
+layer at `opacity: .5` over a body canvas that only varies `#100306 → #0A0205`, halving what little travel
+existed before it reached a pixel. That alpha was protecting a glow field that band 3's T073 had already
+deleted.
+
+**Rejected: a white theme.** The reference the owner named (`palatemcp.com`) is not white either — measured
+at eleven scroll positions its `body` is `rgb(30,17,17)` throughout, and what changes is each `<section>`
+painting its own opaque band (`#0B0B0D → #F7F5EE → #E2553D → #1A1512 → #E9E2D2`) with the text inverting
+inside each. Adopting that here would mean inverting ~140 `text-foreground/NN` usages and 24 `bg-ink-2`
+panels, and re-measuring all six contrast sweeps. Different feature, not a band-3 task.
+
+**Chosen: a six-stop tour inside the dark palette.** Warmth → wine → ink at the trade chapter → ember at
+the physical store → the deepest tone on the page at the close. `#3A0C12 #2A0713 #1A0A16 #0E1122 #320B0A
+#160406`. The owner picked the warm tour with the cool stop swapped in at B2B from two candidates.
+
+The reason it can move this far without touching legibility: **the travel is in hue and chroma, and the
+lightness range stays `Y` 0.0027–0.0121, inside `LEGIBILITY_BAND`.** Lightness is the one axis a dark
+ground cannot spend — every unit of it is bought back from contrast, which is why the previous palette
+reached for it and got nothing visible for the trouble. Hue costs nothing; the worst point on the 500-step
+sweep is 5.59:1 against the dimmest text on the page.
+
+This needed a requirement to move rather than a colour to be picked, so it is 002 Amendment Record #4
+against FR-001, FR-003 and the "Coherence beats variety" assumption: FR-001 now means *perceptibly*
+changes, and FR-003's "clear overall direction" stops meaning *monotone*. What replaces them is asserted
+in `tests/unit/atmosphere-progression.test.ts` — every leg ≥ ΔE 9, no stage within ΔE 6 of the one two
+places along (that is what alternation looks like, measured three stops deep), the last stage the darkest
+on the page, and the legs summing to more than 2.5× the straight-line distance between the endpoints.
+That last one is the test the old palette fails outright: its legs add to 17.0 against an endpoint distance
+of 16.9 — a slide, not a tour.
 
 ## What this changes in tasks.md
 

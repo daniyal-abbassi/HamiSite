@@ -9,8 +9,9 @@
  *  - **No transition.** The hook rewrites `--hami-ground` every animation frame. A transition on top of
  *    that would make the ground trail the content, which contract S4 and FR-010 forbid — "the ground
  *    MUST NOT lag behind the content, overshoot it, or snap into place after movement stops."
- *  - **No `background-image`.** The five glows and the per-section lighting stay in `globals.css`
- *    exactly as Resolved Q2 = C required. What this layer contributes is direction, not more light.
+ *  - **No `background-image`.** This layer contributes colour and nothing else. The per-section lighting
+ *    it used to sit under was deleted by band 3's T073, so at full opacity it is the ground on the
+ *    homepage rather than a tint over one — which is the point of feature 002.
  */
 .hami-page-ground {
   position: fixed;
@@ -18,21 +19,23 @@
   z-index: 0;
   pointer-events: none;
   /*
-   * 0.5 is a draft, and T017 judged it: the gate failed. See
-   * specs/002-scroll-atmosphere/notes/busyness.md.
+   * Full strength. The 0.5 this replaces was a draft that T017 judged and kept anyway (see
+   * specs/002-scroll-atmosphere/notes/busyness.md), and it was the second of two reasons the shipped
+   * progression was invisible: the layer's colour was being blended half-and-half with a body canvas that
+   * only varies `#100306 → #0A0205`, so every leg of the tour was cut in half before it reached a pixel.
    *
-   * The reasoning that chose it was wrong, and the wrongness is the finding. It claimed that because
-   * this layer is uniform it cuts the *amplitude* of the left-right-left alternation of the section
-   * glows while leaving their presence intact — that the ground could get calmer at the same time as it
-   * gets directed. It cannot, and the reason is order: the glows are `main > section::before/::after`
-   * and `main` is z-10, so they composite *above* this z-0 layer. Measured, switching the glows off
-   * drops the rendered left/right asymmetry from 7.05 to 0.85, while raising this layer's alpha from
-   * 0.2 to 0.85 leaves it flat at ~7 and then pushes it to 7.38. A tint under a varying layer moves the
-   * base the variation sits on; it does not damp the variation.
+   * What the alpha was protecting no longer exists. It was set while the five body glows and the
+   * per-section lighting still painted, and the reasoning was that a uniform tint at full strength would
+   * flatten them — which was already false (they are `main > section::before/::after` at `z-10`, *above*
+   * this layer, so nothing done here could damp them; measured, α 0.2 → 0.85 left the rendered asymmetry
+   * flat at ~7). Band 3's T073 then deleted those layers outright, which removed the only thing the
+   * blend was negotiating with.
    *
-   * Keeping 0.5 pending the Q2 decision, not as a value that has been shown to satisfy FR-005.
+   * The consequence to know about: at α 1 this layer *is* the page ground on the homepage, and it covers
+   * the body's depth ramp completely. That ramp still carries every interior page until T083 gives them
+   * an arc of their own.
    */
-  opacity: 0.5;
+  opacity: 1;
 }
 
 /* FR-023 / contract L4: under forced colours the environment simply steps aside. */

@@ -106,12 +106,93 @@ describe("legibility band — FR-015, SC-004, contracts L1 and L5", () => {
     }
   });
 
-  it("moves in one declared direction, so the progression reads as composed rather than alternating", () => {
-    const lights = sweep.map((p) => luminanceOf(toneAt(p)));
-    const rising = lights.filter((l, i) => i > 0 && l > lights[i - 1]! + 1e-6).length;
-    const falling = lights.filter((l, i) => i > 0 && l < lights[i - 1]! - 1e-6).length;
-    // One direction with at most a 2% exception; the current page fails this, alternating side to side.
-    expect(Math.min(rising, falling)).toBeLessThanOrEqual(Math.round(STEPS * 0.02));
+  /**
+   * FR-003's "one coherent progression", stated as the property that actually makes a ground read as
+   * composed — and it is not the property this file used to assert.
+   *
+   * The previous version counted whether luminance rose or fell and required one direction to dominate.
+   * The shipped palette satisfied it, and the owner's verdict on the result was "the same colour all
+   * along". Both are correct: a monotone descent with nothing else in it is *invisible* monotonicity —
+   * the four legs measured ΔE 9.8 / 4.6 / 2.6, i.e. the last two thirds of a 16,384px page moved by less
+   * than the ~10 at which a change registers. The assertion was proving the wrong thing, so the wrong
+   * thing is what it was guarding.
+   *
+   * What a tour has to satisfy instead, and what the 002 Amendment Record #4 now says:
+   *
+   *  - **every leg perceptible** — adjacent stages at least ΔE 9 apart;
+   *  - **no leg retraced** — a stage must not sit near the one two places along, which is the
+   *    light-left / light-right alternation FR-003 exists to forbid, in three stops instead of two;
+   *  - **it closes** — the final stage is the darkest on the page, so the movement has an end rather
+   *    than a stop.
+   *
+   * CIE76 rather than CIEDE2000: the deltas being separated are 9-to-26, far above the point where the
+   * two formulas disagree, and CIE76 is nine lines of maths against a dependency nobody asked for.
+   */
+  describe("perceptual travel — FR-003 as amended", () => {
+    const toLab = (hex: string): readonly [number, number, number] => {
+      const v = hex.replace("#", "");
+      const lin = (i: number) => {
+        const c = Number.parseInt(v.slice(i, i + 2), 16) / 255;
+        return c <= 0.04045 ? c / 12.92 : ((c + 0.055) / 1.055) ** 2.4;
+      };
+      const [x, y, z] = [
+        0.4124 * lin(0) + 0.3576 * lin(2) + 0.1805 * lin(4),
+        0.2126 * lin(0) + 0.7152 * lin(2) + 0.0722 * lin(4),
+        0.0193 * lin(0) + 0.1192 * lin(2) + 0.9505 * lin(4),
+      ].map((n, i) => n / [0.95047, 1, 1.08883][i]!);
+      const f = (t: number) => (t > 0.008856 ? Math.cbrt(t) : 7.787 * t + 16 / 116);
+      const [fx, fy, fz] = [x, y, z].map(f);
+      return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)];
+    };
+    const deltaE = (a: string, b: string) => {
+      const p = toLab(a);
+      const q = toLab(b);
+      return Math.hypot(p[0] - q[0], p[1] - q[1], p[2] - q[2]);
+    };
+    const stages = PROGRESSION.map((s) => s.color);
+
+    it("has a perceptible leg between every pair of adjacent stages", () => {
+      stages.slice(1).forEach((colour, i) => {
+        const leg = deltaE(stages[i]!, colour);
+        expect(leg, `${stages[i]} → ${colour} travels only ΔE ${leg.toFixed(1)}; below ~9 nobody sees it`).toBeGreaterThanOrEqual(
+          9,
+        );
+      });
+    });
+
+    it("never retraces itself two stops on, which is what alternation looks like", () => {
+      stages.slice(0, -2).forEach((colour, i) => {
+        const apart = deltaE(colour, stages[i + 2]!);
+        expect(apart, `${colour} is only ΔE ${apart.toFixed(1)} from ${stages[i + 2]} — the tour doubles back`).toBeGreaterThanOrEqual(
+          6,
+        );
+      });
+    });
+
+    it("closes on the darkest tone on the page", () => {
+      const last = luminanceOf(stages.at(-1)!);
+      for (const colour of stages.slice(0, -1)) expect(last).toBeLessThan(luminanceOf(colour));
+    });
+
+    it("keeps the dimmest meaningful text above 5:1 at every interpolated point, not only at AA", () => {
+      for (const p of sweep) {
+        const tone = toneAt(p);
+        for (const [name, colour] of Object.entries(SCENE_TEXT_COLOURS)) {
+          const ratio = contrastOn(colour, tone);
+          expect(ratio, `${name} on ${tone} at ${p.toFixed(3)} is ${ratio.toFixed(2)}:1`).toBeGreaterThanOrEqual(5);
+        }
+      }
+    });
+
+    it("travels far enough in total that the shopper cannot mistake it for a static canvas", () => {
+      // The measurement that condemned the previous palette: sum of legs 17.0 against a straight-line
+      // distance of 16.9 — a slide, not a tour. A tour's legs have to add up to more than its endpoints
+      // differ by, or there is only one direction in it and depth was the only axis available.
+      const legs = stages.slice(1).reduce((sum, colour, i) => sum + deltaE(stages[i]!, colour), 0);
+      const endpoints = deltaE(stages[0]!, stages.at(-1)!);
+      expect(legs).toBeGreaterThan(endpoints * 2.5);
+      expect(legs).toBeGreaterThanOrEqual(60);
+    });
   });
 });
 

@@ -1,5 +1,5 @@
 {
- "capturedAt": "2026-09-23T15:02:35.672Z",
+ "capturedAt": "2026-09-23T20:09:23.765Z",
  "base": "http://localhost:3000",
  "mode": "after",
  "surfaces": {
@@ -9,7 +9,7 @@
     "status": 200,
     "finalUrl": "/",
     "screenshot": "home@360-after.png",
-    "docHeight": 17266,
+    "docHeight": 16384,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [
@@ -43,109 +43,103 @@
      "modernWhiteWave": 0
     },
     "fold": {
-     "h1": 191,
+     "h1": 167,
      "heroPrimaryCta": 0,
-     "trustRow": 10093,
-     "trustTextRow": 486,
-     "firstProductCard": 2016
+     "trustRow": 9583,
+     "trustTextRow": 916,
+     "firstProductCard": 1640
     },
     "sectionsAboveFold": [
      {
       "id": "top",
       "top": 96,
-      "height": 1489,
+      "height": 1143,
       "visibleWithoutScrolling": true
      },
      {
       "id": "obtainable-now",
-      "top": 1677,
-      "height": 804,
+      "top": 1325,
+      "height": 780,
       "visibleWithoutScrolling": false
      },
      {
       "id": "featured",
-      "top": 2481,
-      "height": 914,
+      "top": 2105,
+      "height": 878,
       "visibleWithoutScrolling": false
      },
      {
       "id": "categories",
-      "top": 3434,
+      "top": 3022,
       "height": 1251,
       "visibleWithoutScrolling": false
      },
      {
       "id": "brands",
-      "top": 4726,
-      "height": 1166,
+      "top": 4314,
+      "height": 1124,
       "visibleWithoutScrolling": false
      },
      {
       "id": "new-arrivals",
-      "top": 5891,
+      "top": 5437,
       "height": 800,
       "visibleWithoutScrolling": false
      },
      {
       "id": "b2b",
-      "top": 6691,
+      "top": 6237,
       "height": 1395,
       "visibleWithoutScrolling": false
      },
      {
       "id": "accessories",
-      "top": 8086,
-      "height": 986,
+      "top": 7632,
+      "height": 962,
       "visibleWithoutScrolling": false
      },
      {
       "id": "online-services",
-      "top": 9072,
-      "height": 1021,
+      "top": 8594,
+      "height": 989,
       "visibleWithoutScrolling": false
      },
      {
       "id": "store-experience",
-      "top": 10093,
-      "height": 1957,
+      "top": 9583,
+      "height": 1901,
       "visibleWithoutScrolling": false
      },
      {
       "id": "trust",
-      "top": 12050,
-      "height": 3707,
+      "top": 11484,
+      "height": 3603,
       "visibleWithoutScrolling": false
      },
      {
       "id": "final-conversion",
-      "top": 15798,
-      "height": 480,
+      "top": 15128,
+      "height": 452,
       "visibleWithoutScrolling": false
      }
     ],
     "foldContents": [
      {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 25,
-      "visible": true
-     },
-     {
       "tag": "h1",
-      "text": "حامی همراه؛ بیست سال اعتماد در بازار مشهد.قی",
-      "top": 191,
+      "text": "قیمت روزِ بازار، مستقیم از مشهد برای موبایلل",
+      "top": 167,
       "visible": true
      },
      {
       "tag": "a",
       "text": "مشاهده محصولات",
-      "top": 642,
+      "top": 429,
       "visible": true
      },
      {
       "tag": "a",
       "text": "شروع همکاری",
-      "top": 698,
+      "top": 429,
       "visible": true
      },
      {
@@ -186,57 +180,8 @@
      }
     ],
     "persianTracked": {
-     "count": 90,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "حامی همراه؛ بیست سال اعتماد ",
-       "spacing": "-0.8px",
-       "tag": "span",
-       "cls": "block text-foreground/90"
-      },
-      {
-       "text": "موبایل",
-       "spacing": "-0.8px",
-       "tag": "span",
-       "cls": "invisible col-start-1 row-start-1 whites"
-      },
-      {
-       "text": "لوازم جانبی",
-       "spacing": "-0.8px",
-       "tag": "span",
-       "cls": "invisible col-start-1 row-start-1 whites"
-      },
-      {
-       "text": "ساعت هوشمند",
-       "spacing": "-0.8px",
-       "tag": "span",
-       "cls": "invisible col-start-1 row-start-1 whites"
-      },
-      {
-       "text": "خرید عمده",
-       "spacing": "-0.8px",
-       "tag": "span",
-       "cls": "invisible col-start-1 row-start-1 whites"
-      },
-      {
-       "text": "موبایل",
-       "spacing": "-0.8px",
-       "tag": "span",
-       "cls": "col-start-1 row-start-1 inline-block whi"
-      },
-      {
-       "text": "موبایل، لوازم جانبی، ساعت هو",
-       "spacing": "-0.8px",
-       "tag": "span",
-       "cls": "sr-only"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    },
    "1280px": {
@@ -244,7 +189,7 @@
     "status": 200,
     "finalUrl": "/",
     "screenshot": "home@1280-after.png",
-    "docHeight": 13398,
+    "docHeight": 13239,
     "viewportHeight": 900,
     "horizontalOverflow": null,
     "sections": [
@@ -278,93 +223,87 @@
      "modernWhiteWave": 0
     },
     "fold": {
-     "h1": 251,
+     "h1": 219,
      "heroPrimaryCta": 39,
-     "trustRow": 9570,
-     "trustTextRow": 439,
-     "firstProductCard": 1225
+     "trustRow": 9410,
+     "trustTextRow": 498,
+     "firstProductCard": 1090
     },
     "sectionsAboveFold": [
      {
       "id": "top",
       "top": 112,
-      "height": 838,
+      "height": 703,
       "visibleWithoutScrolling": true
      },
      {
       "id": "obtainable-now",
-      "top": 950,
+      "top": 815,
       "height": 1600,
-      "visibleWithoutScrolling": false
+      "visibleWithoutScrolling": true
      },
      {
       "id": "featured",
-      "top": 2550,
+      "top": 2414,
       "height": 1677,
       "visibleWithoutScrolling": false
      },
      {
       "id": "categories",
-      "top": 4267,
+      "top": 4132,
       "height": 1219,
       "visibleWithoutScrolling": false
      },
      {
       "id": "brands",
-      "top": 5526,
-      "height": 1116,
+      "top": 5391,
+      "height": 1092,
       "visibleWithoutScrolling": false
      },
      {
       "id": "new-arrivals",
-      "top": 6643,
+      "top": 6483,
       "height": 946,
       "visibleWithoutScrolling": false
      },
      {
       "id": "b2b",
-      "top": 7589,
+      "top": 7430,
       "height": 655,
       "visibleWithoutScrolling": false
      },
      {
       "id": "accessories",
-      "top": 8244,
+      "top": 8084,
       "height": 661,
       "visibleWithoutScrolling": false
      },
      {
       "id": "online-services",
-      "top": 8905,
+      "top": 8745,
       "height": 665,
       "visibleWithoutScrolling": false
      },
      {
       "id": "store-experience",
-      "top": 9570,
+      "top": 9410,
       "height": 980,
       "visibleWithoutScrolling": false
      },
      {
       "id": "trust",
-      "top": 10550,
+      "top": 10390,
       "height": 1839,
       "visibleWithoutScrolling": false
      },
      {
       "id": "final-conversion",
-      "top": 12429,
+      "top": 12270,
       "height": 466,
       "visibleWithoutScrolling": false
      }
     ],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 39,
-      "visible": true
-     },
      {
       "tag": "a",
       "text": "خانهخانه",
@@ -397,75 +336,26 @@
      },
      {
       "tag": "h1",
-      "text": "حامی همراه؛ بیست سال اعتماد در بازار مشهد.قی",
-      "top": 251,
+      "text": "قیمت روزِ بازار، مستقیم از مشهد برای موبایلل",
+      "top": 219,
       "visible": true
      },
      {
       "tag": "a",
       "text": "مشاهده محصولات",
-      "top": 597,
+      "top": 479,
       "visible": true
      },
      {
       "tag": "a",
       "text": "شروع همکاری",
-      "top": 595,
+      "top": 479,
       "visible": true
      }
     ],
     "persianTracked": {
-     "count": 90,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "حامی همراه؛ بیست سال اعتماد ",
-       "spacing": "-1.2px",
-       "tag": "span",
-       "cls": "block text-foreground/90"
-      },
-      {
-       "text": "موبایل",
-       "spacing": "-1.2px",
-       "tag": "span",
-       "cls": "invisible col-start-1 row-start-1 whites"
-      },
-      {
-       "text": "لوازم جانبی",
-       "spacing": "-1.2px",
-       "tag": "span",
-       "cls": "invisible col-start-1 row-start-1 whites"
-      },
-      {
-       "text": "ساعت هوشمند",
-       "spacing": "-1.2px",
-       "tag": "span",
-       "cls": "invisible col-start-1 row-start-1 whites"
-      },
-      {
-       "text": "خرید عمده",
-       "spacing": "-1.2px",
-       "tag": "span",
-       "cls": "invisible col-start-1 row-start-1 whites"
-      },
-      {
-       "text": "موبایل",
-       "spacing": "-1.2px",
-       "tag": "span",
-       "cls": "col-start-1 row-start-1 inline-block whi"
-      },
-      {
-       "text": "موبایل، لوازم جانبی، ساعت هو",
-       "spacing": "-1.2px",
-       "tag": "span",
-       "cls": "sr-only"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    }
   },
@@ -475,7 +365,7 @@
     "status": 200,
     "finalUrl": "/shop",
     "screenshot": "shop@360-after.png",
-    "docHeight": 4739,
+    "docHeight": 4547,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [
@@ -499,33 +389,27 @@
      "modernWhiteWave": 0
     },
     "fold": {
-     "h1": 662,
+     "h1": 654,
      "heroPrimaryCta": 0,
      "trustRow": null,
      "trustTextRow": 305,
-     "firstProductCard": 1166
+     "firstProductCard": 1158
     },
     "sectionsAboveFold": [
      {
       "id": "container.pt-10",
       "top": 96,
-      "height": 462,
+      "height": 454,
       "visibleWithoutScrolling": true
      },
      {
       "id": "mt-10",
-      "top": 778,
+      "top": 770,
       "height": 156,
       "visibleWithoutScrolling": true
      }
     ],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 25,
-      "visible": true
-     },
      {
       "tag": "h2",
       "text": "پرچمداران جدید،با خیالِ راحت.",
@@ -541,43 +425,43 @@
      {
       "tag": "h1",
       "text": "همه محصولات، یک‌جا.",
-      "top": 662,
+      "top": 654,
       "visible": true
      },
      {
       "tag": "a",
       "text": "گوشی موبایل",
-      "top": 778,
+      "top": 770,
       "visible": true
      },
      {
       "tag": "a",
       "text": "هدفون و ایرپاد۱۹ محصول",
-      "top": 778,
+      "top": 770,
       "visible": true
      },
      {
       "tag": "a",
       "text": "شارژر و کابل",
-      "top": 778,
+      "top": 770,
       "visible": true
      },
      {
       "tag": "a",
       "text": "ساعت هوشمند۷ محصول",
-      "top": 778,
+      "top": 770,
       "visible": true
      },
      {
       "tag": "a",
       "text": "پاوربانک",
-      "top": 778,
+      "top": 770,
       "visible": true
      },
      {
       "tag": "a",
       "text": "لوازم کامپیوتر۵ محصول",
-      "top": 778,
+      "top": 770,
       "visible": true
      },
      {
@@ -603,58 +487,22 @@
       "text": "همکاری",
       "top": 733,
       "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "تماس",
+      "top": 733,
+      "visible": true
      }
     ],
     "persianTracked": {
-     "count": 55,
+     "count": 1,
      "sample": [
       {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
+       "text": "SHOP / ۰۳",
+       "spacing": "1.2px",
        "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "یک‌جا.",
-       "spacing": "-0.6px",
-       "tag": "em",
-       "cls": "font-black not-italic text-aqua"
-      },
-      {
-       "text": "دسته‌بندی",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "برند",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "محدوده قیمت (تومان)",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "وضعیت موجودی",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "شیائومی",
-       "spacing": "2.16px",
-       "tag": "span",
-       "cls": "font-mono text-xs font-bold tracking-[0."
-      },
-      {
-       "text": "گارانتی ۱۸ ماهه شرکتی",
-       "spacing": "0.6px",
-       "tag": "span",
-       "cls": "hidden sm:inline-flex items-center gap-1"
+       "cls": "font-mono text-xs tracking-[0.1em] text-"
       }
      ]
     }
@@ -711,12 +559,6 @@
     "foldContents": [
      {
       "tag": "a",
-      "text": "حامی همراه",
-      "top": 39,
-      "visible": true
-     },
-     {
-      "tag": "a",
       "text": "خانهخانه",
       "top": 39,
       "visible": true
@@ -759,7 +601,7 @@
      },
      {
       "tag": "a",
-      "text": "SHOP / 03صوت، با جزئیات دقیقمشاهده",
+      "text": "SHOP / ۰۳صوت، با جزئیات دقیقمشاهده",
       "top": 152,
       "visible": true
      },
@@ -792,58 +634,22 @@
       "text": "شارژر و کابل",
       "top": 650,
       "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "ساعت هوشمند۷ محصول",
+      "top": 650,
+      "visible": true
      }
     ],
     "persianTracked": {
-     "count": 55,
+     "count": 1,
      "sample": [
       {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
+       "text": "SHOP / ۰۳",
+       "spacing": "1.2px",
        "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "یک‌جا.",
-       "spacing": "-0.75px",
-       "tag": "em",
-       "cls": "font-black not-italic text-aqua"
-      },
-      {
-       "text": "دسته‌بندی",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "برند",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "محدوده قیمت (تومان)",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "وضعیت موجودی",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "شیائومی",
-       "spacing": "2.16px",
-       "tag": "span",
-       "cls": "font-mono text-xs font-bold tracking-[0."
-      },
-      {
-       "text": "گارانتی ۱۸ ماهه شرکتی",
-       "spacing": "0.6px",
-       "tag": "span",
-       "cls": "hidden sm:inline-flex items-center gap-1"
+       "cls": "font-mono text-xs tracking-[0.1em] text-"
       }
      ]
     }
@@ -855,7 +661,7 @@
     "status": 200,
     "finalUrl": "/shop?brand=%D8%A7%D9%BE%D9%84",
     "screenshot": "shop-brand@360-after.png",
-    "docHeight": 4678,
+    "docHeight": 4472,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [
@@ -879,33 +685,27 @@
      "modernWhiteWave": 0
     },
     "fold": {
-     "h1": 662,
+     "h1": 654,
      "heroPrimaryCta": 0,
      "trustRow": null,
      "trustTextRow": 305,
-     "firstProductCard": 1222
+     "firstProductCard": 1200
     },
     "sectionsAboveFold": [
      {
       "id": "container.pt-10",
       "top": 96,
-      "height": 462,
+      "height": 454,
       "visibleWithoutScrolling": true
      },
      {
       "id": "mt-10",
-      "top": 778,
+      "top": 770,
       "height": 156,
       "visibleWithoutScrolling": true
      }
     ],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 25,
-      "visible": true
-     },
      {
       "tag": "h2",
       "text": "پرچمداران جدید،با خیالِ راحت.",
@@ -921,43 +721,43 @@
      {
       "tag": "h1",
       "text": "همه محصولات، یک‌جا.",
-      "top": 662,
+      "top": 654,
       "visible": true
      },
      {
       "tag": "a",
       "text": "گوشی موبایل",
-      "top": 778,
+      "top": 770,
       "visible": true
      },
      {
       "tag": "a",
       "text": "هدفون و ایرپاد۱۹ محصول",
-      "top": 778,
+      "top": 770,
       "visible": true
      },
      {
       "tag": "a",
       "text": "شارژر و کابل",
-      "top": 778,
+      "top": 770,
       "visible": true
      },
      {
       "tag": "a",
       "text": "ساعت هوشمند۷ محصول",
-      "top": 778,
+      "top": 770,
       "visible": true
      },
      {
       "tag": "a",
       "text": "پاوربانک",
-      "top": 778,
+      "top": 770,
       "visible": true
      },
      {
       "tag": "a",
       "text": "لوازم کامپیوتر۵ محصول",
-      "top": 778,
+      "top": 770,
       "visible": true
      },
      {
@@ -983,58 +783,22 @@
       "text": "همکاری",
       "top": 733,
       "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "تماس",
+      "top": 733,
+      "visible": true
      }
     ],
     "persianTracked": {
-     "count": 48,
+     "count": 1,
      "sample": [
       {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
+       "text": "SHOP / ۰۳",
+       "spacing": "1.2px",
        "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "یک‌جا.",
-       "spacing": "-0.6px",
-       "tag": "em",
-       "cls": "font-black not-italic text-aqua"
-      },
-      {
-       "text": "دسته‌بندی",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "برند",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "محدوده قیمت (تومان)",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "وضعیت موجودی",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "اپل",
-       "spacing": "2.16px",
-       "tag": "span",
-       "cls": "font-mono text-xs font-bold tracking-[0."
-      },
-      {
-       "text": "−۱۱٪",
-       "spacing": "0.6px",
-       "tag": "span",
-       "cls": "font-mono text-champagne"
+       "cls": "font-mono text-xs tracking-[0.1em] text-"
       }
      ]
     }
@@ -1091,12 +855,6 @@
     "foldContents": [
      {
       "tag": "a",
-      "text": "حامی همراه",
-      "top": 39,
-      "visible": true
-     },
-     {
-      "tag": "a",
       "text": "خانهخانه",
       "top": 39,
       "visible": true
@@ -1139,7 +897,7 @@
      },
      {
       "tag": "a",
-      "text": "SHOP / 03صوت، با جزئیات دقیقمشاهده",
+      "text": "SHOP / ۰۳صوت، با جزئیات دقیقمشاهده",
       "top": 152,
       "visible": true
      },
@@ -1172,58 +930,22 @@
       "text": "شارژر و کابل",
       "top": 650,
       "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "ساعت هوشمند۷ محصول",
+      "top": 650,
+      "visible": true
      }
     ],
     "persianTracked": {
-     "count": 48,
+     "count": 1,
      "sample": [
       {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
+       "text": "SHOP / ۰۳",
+       "spacing": "1.2px",
        "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "یک‌جا.",
-       "spacing": "-0.75px",
-       "tag": "em",
-       "cls": "font-black not-italic text-aqua"
-      },
-      {
-       "text": "دسته‌بندی",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "برند",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "محدوده قیمت (تومان)",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "وضعیت موجودی",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "اپل",
-       "spacing": "2.16px",
-       "tag": "span",
-       "cls": "font-mono text-xs font-bold tracking-[0."
-      },
-      {
-       "text": "−۱۱٪",
-       "spacing": "0.6px",
-       "tag": "span",
-       "cls": "font-mono text-champagne"
+       "cls": "font-mono text-xs tracking-[0.1em] text-"
       }
      ]
     }
@@ -1235,7 +957,7 @@
     "status": 200,
     "finalUrl": "/shop/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%B4%DB%8C%D8%A7%D8%A6%D9%88%D9%85%DB%8C-%D9%85%D8%AF%D9%84-poco-x7-pro-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-512-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-12-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%DA%AF%D9%84%D9%88%D8%A8%D8%A7%D9%84",
     "screenshot": "pdp-variant@360-after.png",
-    "docHeight": 5210,
+    "docHeight": 5016,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [
@@ -1264,35 +986,29 @@
      "heroPrimaryCta": 0,
      "trustRow": null,
      "trustTextRow": 1300,
-     "firstProductCard": 3693
+     "firstProductCard": 3683
     },
     "sectionsAboveFold": [
      {
       "id": "mt-12",
-      "top": 1829,
+      "top": 1819,
       "height": 492,
       "visibleWithoutScrolling": false
      },
      {
       "id": "glass-smoked.rounded-2xl",
-      "top": 2369,
+      "top": 2359,
       "height": 1103,
       "visibleWithoutScrolling": false
      },
      {
       "id": "mt-12.pb-24",
-      "top": 3640,
+      "top": 3630,
       "height": 541,
       "visibleWithoutScrolling": false
      }
     ],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 25,
-      "visible": true
-     },
      {
       "tag": "a",
       "text": "خانه",
@@ -1355,57 +1071,8 @@
      }
     ],
     "persianTracked": {
-     "count": 35,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "شیائومی · POCO X7PRO 512/12 ",
-       "spacing": "1.68px",
-       "tag": "span",
-       "cls": "font-mono text-xs tracking-[0.14em] text"
-      },
-      {
-       "text": "۱۱۵٬۰۰۰٬۰۰۰ تومان",
-       "spacing": "-0.75px",
-       "tag": "strong",
-       "cls": "text-3xl font-black text-champagne track"
-      },
-      {
-       "text": "شیائومی",
-       "spacing": "2.16px",
-       "tag": "span",
-       "cls": "font-mono text-xs font-bold tracking-[0."
-      },
-      {
-       "text": "−۲٪",
-       "spacing": "0.6px",
-       "tag": "span",
-       "cls": "font-mono text-champagne"
-      },
-      {
-       "text": "گارانتی ۱۸ ماهه شرکتی",
-       "spacing": "0.6px",
-       "tag": "span",
-       "cls": "hidden sm:inline-flex items-center gap-1"
-      },
-      {
-       "text": "۴۰٬۴۸۰٬۰۰۰ تومان",
-       "spacing": "-0.247087px",
-       "tag": "strong",
-       "cls": "block text-[26px] font-black leading-9 t"
-      },
-      {
-       "text": "شیائومی",
-       "spacing": "2.16px",
-       "tag": "span",
-       "cls": "font-mono text-xs font-bold tracking-[0."
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    },
    "1280px": {
@@ -1465,12 +1132,6 @@
      }
     ],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 39,
-      "visible": true
-     },
      {
       "tag": "a",
       "text": "خانهخانه",
@@ -1551,57 +1212,8 @@
      }
     ],
     "persianTracked": {
-     "count": 35,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "شیائومی · POCO X7PRO 512/12 ",
-       "spacing": "1.68px",
-       "tag": "span",
-       "cls": "font-mono text-xs tracking-[0.14em] text"
-      },
-      {
-       "text": "۱۱۵٬۰۰۰٬۰۰۰ تومان",
-       "spacing": "-0.75px",
-       "tag": "strong",
-       "cls": "text-3xl font-black text-champagne track"
-      },
-      {
-       "text": "شیائومی",
-       "spacing": "2.16px",
-       "tag": "span",
-       "cls": "font-mono text-xs font-bold tracking-[0."
-      },
-      {
-       "text": "−۲٪",
-       "spacing": "0.6px",
-       "tag": "span",
-       "cls": "font-mono text-champagne"
-      },
-      {
-       "text": "گارانتی ۱۸ ماهه شرکتی",
-       "spacing": "0.6px",
-       "tag": "span",
-       "cls": "hidden sm:inline-flex items-center gap-1"
-      },
-      {
-       "text": "۴۰٬۴۸۰٬۰۰۰ تومان",
-       "spacing": "-0.52px",
-       "tag": "strong",
-       "cls": "block text-[26px] font-black leading-9 t"
-      },
-      {
-       "text": "شیائومی",
-       "spacing": "2.16px",
-       "tag": "span",
-       "cls": "font-mono text-xs font-bold tracking-[0."
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    }
   },
@@ -1611,7 +1223,7 @@
     "status": 200,
     "finalUrl": "/shop/%D8%A7%D9%BE%D9%84-%D8%A2%DB%8C%D8%AF%DB%8C",
     "screenshot": "pdp-no-image@360-after.png",
-    "docHeight": 2816,
+    "docHeight": 2589,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [
@@ -1643,18 +1255,12 @@
     "sectionsAboveFold": [
      {
       "id": "glass-smoked.rounded-2xl",
-      "top": 1396,
+      "top": 1354,
       "height": 271,
       "visibleWithoutScrolling": false
      }
     ],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 25,
-      "visible": true
-     },
      {
       "tag": "a",
       "text": "خانه",
@@ -1723,39 +1329,8 @@
      }
     ],
     "persianTracked": {
-     "count": 5,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "۵۰٬۰۰۰ تومان",
-       "spacing": "-0.75px",
-       "tag": "strong",
-       "cls": "text-3xl font-black text-champagne track"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    },
    "1280px": {
@@ -1801,12 +1376,6 @@
      }
     ],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 39,
-      "visible": true
-     },
      {
       "tag": "a",
       "text": "خانهخانه",
@@ -1884,42 +1453,17 @@
       "text": "2015",
       "top": 649,
       "visible": true
+     },
+     {
+      "tag": "button",
+      "text": "2025",
+      "top": 649,
+      "visible": true
      }
     ],
     "persianTracked": {
-     "count": 5,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "۵۰٬۰۰۰ تومان",
-       "spacing": "-0.75px",
-       "tag": "strong",
-       "cls": "text-3xl font-black text-champagne track"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    }
   },
@@ -1929,7 +1473,7 @@
     "status": 200,
     "finalUrl": "/cart",
     "screenshot": "cart@360-after.png",
-    "docHeight": 1619,
+    "docHeight": 1434,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [],
@@ -1958,12 +1502,6 @@
     },
     "sectionsAboveFold": [],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 25,
-      "visible": true
-     },
      {
       "tag": "h1",
       "text": "بازبینی سفارش.",
@@ -2026,39 +1564,8 @@
      }
     ],
     "persianTracked": {
-     "count": 5,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "سفارش.",
-       "spacing": "-0.6px",
-       "tag": "em",
-       "cls": "font-black not-italic text-aqua"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    },
    "1280px": {
@@ -2066,7 +1573,7 @@
     "status": 200,
     "finalUrl": "/cart",
     "screenshot": "cart@1280-after.png",
-    "docHeight": 1126,
+    "docHeight": 1196,
     "viewportHeight": 900,
     "horizontalOverflow": null,
     "sections": [],
@@ -2090,17 +1597,11 @@
      "h1": 216,
      "heroPrimaryCta": 39,
      "trustRow": null,
-     "trustTextRow": 824,
+     "trustTextRow": 894,
      "firstProductCard": null
     },
     "sectionsAboveFold": [],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 39,
-      "visible": true
-     },
      {
       "tag": "a",
       "text": "خانهخانه",
@@ -2138,82 +1639,45 @@
       "visible": true
      },
      {
-      "tag": "h2",
-      "text": "وارد حساب خود شوید",
-      "top": 381,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "ورود / ثبت‌نام",
-      "top": 497,
-      "visible": true
-     },
-     {
-      "tag": "button",
-      "text": "ورود / ثبت‌نام",
-      "top": 497,
-      "visible": true
-     },
-     {
       "tag": "h3",
       "text": "فروشگاه",
-      "top": 768,
+      "top": 838,
       "visible": true
      },
      {
       "tag": "a",
       "text": "همه محصولات",
-      "top": 800,
+      "top": 870,
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "text": "حامی همراه",
+      "top": 838,
       "visible": true
      },
      {
       "tag": "a",
-      "text": "موبایل",
-      "top": 830,
+      "text": "همکاری عمده (B2B)",
+      "top": 870,
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "text": "حساب کاربری",
+      "top": 838,
       "visible": true
      },
      {
       "tag": "a",
-      "text": "ایرپاد و هدفون",
-      "top": 861,
+      "text": "ورود",
+      "top": 870,
       "visible": true
      }
     ],
     "persianTracked": {
-     "count": 5,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "سفارش.",
-       "spacing": "-0.75px",
-       "tag": "em",
-       "cls": "font-black not-italic text-aqua"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    }
   },
@@ -2223,7 +1687,7 @@
     "status": 200,
     "finalUrl": "/checkout",
     "screenshot": "checkout@360-after.png",
-    "docHeight": 1293,
+    "docHeight": 1676,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [],
@@ -2247,63 +1711,15 @@
      "h1": 200,
      "heroPrimaryCta": 0,
      "trustRow": null,
-     "trustTextRow": 482,
+     "trustTextRow": 1050,
      "firstProductCard": null
     },
     "sectionsAboveFold": [],
     "foldContents": [
      {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 25,
-      "visible": true
-     },
-     {
       "tag": "h1",
       "text": "تکمیل خرید.",
       "top": 200,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "۰۹۳۳ ۱۲۱ ۴۰۰۰",
-      "top": 634,
-      "visible": true
-     },
-     {
-      "tag": "h3",
-      "text": "فروشگاه",
-      "top": 706,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "همه محصولات",
-      "top": 726,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "موبایل",
-      "top": 770,
-      "visible": true
-     },
-     {
-      "tag": "h3",
-      "text": "حامی همراه",
-      "top": 706,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "همکاری عمده (B2B)",
-      "top": 726,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "درباره ما",
-      "top": 770,
       "visible": true
      },
      {
@@ -2335,50 +1751,25 @@
       "text": "تماس",
       "top": 733,
       "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "حساب",
+      "top": 733,
+      "visible": true
      }
     ],
     "persianTracked": {
-     "count": 5,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "خرید.",
-       "spacing": "-0.6px",
-       "tag": "em",
-       "cls": "font-black not-italic text-aqua"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    },
    "1280px": {
     "route": "/checkout",
     "status": 200,
-    "finalUrl": "/login?next=%2Fcheckout",
+    "finalUrl": "/checkout",
     "screenshot": "checkout@1280-after.png",
-    "docHeight": 900,
+    "docHeight": 1116,
     "viewportHeight": 900,
     "horizontalOverflow": null,
     "sections": [],
@@ -2399,20 +1790,14 @@
      "modernWhiteWave": 0
     },
     "fold": {
-     "h1": null,
+     "h1": 216,
      "heroPrimaryCta": 39,
      "trustRow": null,
-     "trustTextRow": 598,
+     "trustTextRow": 814,
      "firstProductCard": null
     },
     "sectionsAboveFold": [],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 39,
-      "visible": true
-     },
      {
       "tag": "a",
       "text": "خانهخانه",
@@ -2444,82 +1829,63 @@
       "visible": true
      },
      {
-      "tag": "a",
-      "text": "۰۹۳۳ ۱۲۱ ۴۰۰۰",
-      "top": 750,
+      "tag": "h1",
+      "text": "تکمیل خرید.",
+      "top": 216,
       "visible": true
      },
      {
       "tag": "h3",
       "text": "فروشگاه",
-      "top": 542,
+      "top": 758,
       "visible": true
      },
      {
       "tag": "a",
       "text": "همه محصولات",
-      "top": 574,
+      "top": 790,
       "visible": true
      },
      {
       "tag": "a",
       "text": "موبایل",
-      "top": 605,
+      "top": 820,
       "visible": true
      },
      {
       "tag": "a",
       "text": "ایرپاد و هدفون",
-      "top": 635,
+      "top": 851,
       "visible": true
      },
      {
       "tag": "a",
       "text": "ساعت هوشمند",
-      "top": 665,
+      "top": 881,
       "visible": true
      },
      {
       "tag": "h3",
       "text": "حامی همراه",
-      "top": 542,
+      "top": 758,
       "visible": true
      },
      {
       "tag": "a",
       "text": "همکاری عمده (B2B)",
-      "top": 574,
+      "top": 790,
+      "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "درباره ما",
+      "top": 820,
       "visible": true
      }
     ],
     "persianTracked": {
-     "count": 4,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    }
   },
@@ -2529,7 +1895,7 @@
     "status": 200,
     "finalUrl": "/login",
     "screenshot": "login@360-after.png",
-    "docHeight": 1637,
+    "docHeight": 1453,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [],
@@ -2558,12 +1924,6 @@
     },
     "sectionsAboveFold": [],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 25,
-      "visible": true
-     },
      {
       "tag": "h1",
       "text": "خوش آمدید",
@@ -2620,33 +1980,8 @@
      }
     ],
     "persianTracked": {
-     "count": 4,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    },
    "1280px": {
@@ -2683,12 +2018,6 @@
     },
     "sectionsAboveFold": [],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 39,
-      "visible": true
-     },
      {
       "tag": "a",
       "text": "خانهخانه",
@@ -2766,36 +2095,17 @@
       "text": "حساب کاربری",
       "top": 859,
       "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "ورود",
+      "top": 891,
+      "visible": true
      }
     ],
     "persianTracked": {
-     "count": 4,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    }
   },
@@ -2805,7 +2115,7 @@
     "status": 200,
     "finalUrl": "/register",
     "screenshot": "register@360-after.png",
-    "docHeight": 2201,
+    "docHeight": 2017,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [],
@@ -2834,12 +2144,6 @@
     },
     "sectionsAboveFold": [],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 25,
-      "visible": true
-     },
      {
       "tag": "h1",
       "text": "ساخت حساب کاربری",
@@ -2896,33 +2200,8 @@
      }
     ],
     "persianTracked": {
-     "count": 4,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    },
    "1280px": {
@@ -2959,12 +2238,6 @@
     },
     "sectionsAboveFold": [],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 39,
-      "visible": true
-     },
      {
       "tag": "a",
       "text": "خانهخانه",
@@ -3027,33 +2300,8 @@
      }
     ],
     "persianTracked": {
-     "count": 4,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    }
   },
@@ -3061,9 +2309,9 @@
    "360px": {
     "route": "/orders",
     "status": 200,
-    "finalUrl": "/login?next=%2Forders",
+    "finalUrl": "/orders",
     "screenshot": "orders@360-after.png",
-    "docHeight": 1637,
+    "docHeight": 1108,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [],
@@ -3084,36 +2332,78 @@
      "modernWhiteWave": 0
     },
     "fold": {
-     "h1": 221,
+     "h1": 200,
      "heroPrimaryCta": 0,
      "trustRow": null,
-     "trustTextRow": 827,
+     "trustTextRow": 482,
      "firstProductCard": null
     },
     "sectionsAboveFold": [],
     "foldContents": [
      {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 25,
-      "visible": true
-     },
-     {
       "tag": "h1",
-      "text": "خوش آمدید",
-      "top": 221,
-      "visible": true
-     },
-     {
-      "tag": "button",
-      "text": "ورود به حساب",
-      "top": 467,
+      "text": "سفارش‌های من.",
+      "top": 200,
       "visible": true
      },
      {
       "tag": "a",
-      "text": "ثبت‌نام کنید",
-      "top": 538,
+      "text": "۰۹۳۳ ۱۲۱ ۴۰۰۰",
+      "top": 634,
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "text": "فروشگاه",
+      "top": 688,
+      "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "همه محصولات",
+      "top": 708,
+      "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "موبایل",
+      "top": 728,
+      "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "ایرپاد و هدفون",
+      "top": 749,
+      "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "ساعت هوشمند",
+      "top": 769,
+      "visible": true
+     },
+     {
+      "tag": "h3",
+      "text": "حامی همراه",
+      "top": 688,
+      "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "همکاری عمده (B2B)",
+      "top": 708,
+      "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "درباره ما",
+      "top": 728,
+      "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "تماس با ما",
+      "top": 749,
       "visible": true
      },
      {
@@ -3133,54 +2423,11 @@
       "text": "سبد",
       "top": 733,
       "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "همکاری",
-      "top": 733,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "تماس",
-      "top": 733,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "حساب",
-      "top": 733,
-      "visible": true
      }
     ],
     "persianTracked": {
-     "count": 4,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    },
    "1280px": {
@@ -3188,7 +2435,7 @@
     "status": 200,
     "finalUrl": "/orders",
     "screenshot": "orders@1280-after.png",
-    "docHeight": 900,
+    "docHeight": 1092,
     "viewportHeight": 900,
     "horizontalOverflow": null,
     "sections": [],
@@ -3212,17 +2459,11 @@
      "h1": 216,
      "heroPrimaryCta": 39,
      "trustRow": null,
-     "trustTextRow": 598,
+     "trustTextRow": 790,
      "firstProductCard": null
     },
     "sectionsAboveFold": [],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 39,
-      "visible": true
-     },
      {
       "tag": "a",
       "text": "خانهخانه",
@@ -3260,82 +2501,57 @@
       "visible": true
      },
      {
-      "tag": "a",
-      "text": "۰۹۳۳ ۱۲۱ ۴۰۰۰",
-      "top": 750,
-      "visible": true
-     },
-     {
       "tag": "h3",
       "text": "فروشگاه",
-      "top": 542,
+      "top": 734,
       "visible": true
      },
      {
       "tag": "a",
       "text": "همه محصولات",
-      "top": 574,
+      "top": 766,
       "visible": true
      },
      {
       "tag": "a",
       "text": "موبایل",
-      "top": 605,
+      "top": 796,
       "visible": true
      },
      {
       "tag": "a",
       "text": "ایرپاد و هدفون",
-      "top": 635,
+      "top": 827,
       "visible": true
      },
      {
       "tag": "a",
       "text": "ساعت هوشمند",
-      "top": 665,
+      "top": 857,
       "visible": true
      },
      {
       "tag": "h3",
       "text": "حامی همراه",
-      "top": 542,
+      "top": 734,
+      "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "همکاری عمده (B2B)",
+      "top": 766,
+      "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "درباره ما",
+      "top": 796,
       "visible": true
      }
     ],
     "persianTracked": {
-     "count": 5,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "من.",
-       "spacing": "-0.75px",
-       "tag": "em",
-       "cls": "font-black not-italic text-aqua"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    }
   },
@@ -3345,7 +2561,7 @@
     "status": 200,
     "finalUrl": "/partners",
     "screenshot": "partners@360-after.png",
-    "docHeight": 3470,
+    "docHeight": 3271,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [],
@@ -3369,17 +2585,11 @@
      "h1": 208,
      "heroPrimaryCta": 0,
      "trustRow": null,
-     "trustTextRow": 2659,
+     "trustTextRow": 2645,
      "firstProductCard": null
     },
     "sectionsAboveFold": [],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 25,
-      "visible": true
-     },
      {
       "tag": "h1",
       "text": "همکاری،با حامی همراه.",
@@ -3442,45 +2652,8 @@
      }
     ],
     "persianTracked": {
-     "count": 6,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "با حامی همراه.",
-       "spacing": "-0.75px",
-       "tag": "em",
-       "cls": "block font-black not-italic text-aqua"
-      },
-      {
-       "text": "INDIVIDUAL / حقیقی",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    },
    "1280px": {
@@ -3517,12 +2690,6 @@
     },
     "sectionsAboveFold": [],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 39,
-      "visible": true
-     },
      {
       "tag": "a",
       "text": "خانهخانه",
@@ -3600,48 +2767,17 @@
       "text": "بعد از ارسال",
       "top": 614,
       "visible": true
+     },
+     {
+      "tag": "h3",
+      "text": "نیاز به مشاوره دارید؟",
+      "top": 804,
+      "visible": true
      }
     ],
     "persianTracked": {
-     "count": 6,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "با حامی همراه.",
-       "spacing": "-0.9px",
-       "tag": "em",
-       "cls": "block font-black not-italic text-aqua"
-      },
-      {
-       "text": "INDIVIDUAL / حقیقی",
-       "spacing": "0.96px",
-       "tag": "h3",
-       "cls": "font-mono text-xs tracking-[0.08em] text"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    }
   },
@@ -3651,7 +2787,7 @@
     "status": 404,
     "finalUrl": "/this-page-does-not-exist",
     "screenshot": "not-found@360-after.png",
-    "docHeight": 1507,
+    "docHeight": 1350,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [],
@@ -3675,17 +2811,11 @@
      "h1": 132,
      "heroPrimaryCta": 0,
      "trustRow": null,
-     "trustTextRow": 696,
+     "trustTextRow": 724,
      "firstProductCard": null
     },
     "sectionsAboveFold": [],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 25,
-      "visible": true
-     },
      {
       "tag": "h1",
       "text": "این صفحه در فروشگاه حامی همراه وجود ندارد.",
@@ -3695,25 +2825,25 @@
      {
       "tag": "a",
       "text": "بازگشت به فروشگاه",
-      "top": 322,
+      "top": 350,
       "visible": true
      },
      {
       "tag": "button",
       "text": "بازگشت به فروشگاه",
-      "top": 322,
+      "top": 350,
       "visible": true
      },
      {
       "tag": "a",
       "text": "صفحه نخست",
-      "top": 378,
+      "top": 406,
       "visible": true
      },
      {
       "tag": "button",
       "text": "صفحه نخست",
-      "top": 378,
+      "top": 406,
       "visible": true
      },
      {
@@ -3754,39 +2884,8 @@
      }
     ],
     "persianTracked": {
-     "count": 5,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "۴۰۴",
-       "spacing": "2.4px",
-       "tag": "span",
-       "cls": "font-mono text-xs tracking-[0.2em] text-"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    },
    "1280px": {
@@ -3823,12 +2922,6 @@
     },
     "sectionsAboveFold": [],
     "foldContents": [
-     {
-      "tag": "a",
-      "text": "حامی همراه",
-      "top": 39,
-      "visible": true
-     },
      {
       "tag": "a",
       "text": "خانهخانه",
@@ -3906,42 +2999,17 @@
       "text": "همه محصولات",
       "top": 610,
       "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "موبایل",
+      "top": 640,
+      "visible": true
      }
     ],
     "persianTracked": {
-     "count": 5,
-     "sample": [
-      {
-       "text": "حامی همراه",
-       "spacing": "-0.375px",
-       "tag": "span",
-       "cls": "hidden text-[15px] font-black tracking-t"
-      },
-      {
-       "text": "۴۰۴",
-       "spacing": "2.4px",
-       "tag": "span",
-       "cls": "font-mono text-xs tracking-[0.2em] text-"
-      },
-      {
-       "text": "فروشگاه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حامی همراه",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      },
-      {
-       "text": "حساب کاربری",
-       "spacing": "0.48px",
-       "tag": "h3",
-       "cls": "m-0 font-mono text-xs font-medium tracki"
-      }
-     ]
+     "count": 0,
+     "sample": []
     }
    }
   }
