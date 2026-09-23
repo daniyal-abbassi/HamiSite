@@ -142,7 +142,18 @@ see exactly what you are staging. Never `git add -A` or `git add .` here — `.s
 
 If `git status` shows a modified file you did not touch, **leave it alone and stage around it by path**.
 
-### 4.4 Reporting
+### 4.4 The channel: `.agent-pair/`
+
+A live coordination folder exists at the repo root — **read `.agent-pair/README.md` and `.agent-pair/BOARD.md`
+before your next edit.** It is git-ignored, so `git status` will never show it to you; you find it because
+this section says so. Four rules there, in short: claim a file by writing `locks/<path>.lock` before you edit
+it, never edit someone else's locked file (post a `REQUEST` instead), overwrite `HEARTBEAT-<you>.md` every
+~5 minutes, and remember that `git status` will list files you did not touch — those are your partner's, so
+**never** `git restore`, `git checkout --`, `git stash` or `git add -A` in this checkout.
+
+The driver agent posts first. Say hello back, and post `DONE` with your measured numbers when a task lands.
+
+### 4.5 Reporting
 
 Every task you finish gets: the code change, a measurement before/after, a line in
 `notes/parallel-agent-findings.md` (append, do not restructure), and its checkbox ticked in `tasks.md` by
