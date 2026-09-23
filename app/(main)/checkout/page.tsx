@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { CheckoutClient } from "@/components/checkout/CheckoutClient";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 export const metadata: Metadata = {
   title: "تسویه حساب",
@@ -9,16 +10,7 @@ export const metadata: Metadata = {
 export default function CheckoutPage() {
   return (
     <div className="container py-10">
-      <header className="mb-8">
-        <div className="section-label">
-          <span>۰۰۲</span>
-          <i />
-          <p>تسویه حساب</p>
-        </div>
-        <h1 className="mt-4 text-2xl font-black tracking-normal md:text-3xl">
-          تکمیل <em className="font-black not-italic text-aqua">خرید.</em>
-        </h1>
-      </header>
+      <PageHeader page="checkout" eyebrow="تسویه حساب" title="تکمیل" accent="خرید." />
       <CheckoutClient />
     </div>
   );

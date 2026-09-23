@@ -401,3 +401,50 @@ One consequence for the ground: `ground-travel.mjs` now reports the authored ton
 **8 of 13** positions where it reported 9 — the panel is full-bleed on a phone and opaque, so it covers a
 strip of ground it used to let through. That is the photograph doing its job and T115 getting slightly
 harder, not a regression to undo.
+
+### T096's flash-then-vanish is not in the code, and the test that says so
+
+The task claims `components/home/Reveal.tsx` "SSR-paints below-fold content, hides it in an effect, then
+reveals it on intersection — a visible flash-then-vanish on a slow connection". Read against the file the
+claim was written for, that is a fair description; read against the file as it now stands, the middle step is
+guarded: the effect measures `getBoundingClientRect()` **at mount** and returns early for anything in view,
+so content the shopper is actually looking at is never hidden. Three probes over the live page at 360×800:
+
+- scrolling the whole 16,065px document in 700px flings during the hydration window caught **0** in-viewport
+  `.reveal` elements lacking `reveal--visible`;
+- the tallest reveal wrapper is 986px, and the observer's `threshold: 0.08` therefore needs 79px of it
+  visible — the failure mode worth worrying about is a target taller than ~10× the viewport, where 8% of the
+  target exceeds the viewport and the observer can never fire, leaving content invisible forever. Nothing on
+  the page is near that;
+- a reload at 62% scroll leaves **0** hidden-in-view.
+
+So T096 is closed as **verified-not-a-defect**, not fixed. The permanent risk is the one the third bullet
+covers: `inView` is measured once, at mount. A section that is below the fold at mount and that the shopper
+reaches *before* hydration still hides and re-reveals — which is correct behaviour, not a flash, because the
+observer fires on entry.
+
+### T083 part 1 — one heading grammar, and the ordinal that was never an index
+
+Six routes each carried their own copy of `.section-label` + `<h1>` + `<em>` accent, and the copies had
+drifted into three simultaneous schemes: `/shop` and `/cart` both said **۰۰۱**, `/checkout` said **۰۰۲**,
+`/orders` said **۰۰**, `/partners` said **۰۱** — a different width — and `/login` and `/register` had no
+header at all, just a centred card on bare ground. `components/layout/PageHeader.tsx` is now the single
+grammar, with the ordinals in one `PAGE_INDEX` map so a duplicate is a compile-time problem rather than a
+screenshot someone has to notice, and `aria-hidden="true"` on the numeral: it is the site's editorial device
+and Constitution IV is why it stays, but "page 1 of 6" is a claim about a route set nobody walks in order,
+and FR-047 says a device like that must not be announced as information.
+
+Verified in the browser at 360: all seven routes render an `h1`, `max-width: 672px` on every header, zero
+horizontal overflow, and **seven distinct ordinals**. Two things the same check surfaced:
+
+- **`/shop` still shows ۰۰۱ twice** — `components/shop/ShopBanner.tsx:39-40` carries its own `.section-label`.
+  That file is the second agent's, so it went to the board as a REQUEST rather than being edited around the
+  lock. The way I caught it is the way worth remembering: `querySelector('.section-label span')` returned a
+  node with `aria-hidden=null`, which is impossible for one of mine.
+- **A cold dev route answers 404 on the first hit** while Next compiles it. `/cart` reported 404 and 200 on
+  retry. Any route-level browser assertion in this repo has to curl twice or it will "find" a missing page.
+
+Still open in T083: the `pathname === "/"` gate at `components/atmosphere/PageGround.tsx:47`, which needs an
+interior arc before it can be removed — the tour's six stages are anchored to homepage sections, and
+`stageBoundaries()` would otherwise spread them evenly across a 4,547px listing page, which is a different
+journey.

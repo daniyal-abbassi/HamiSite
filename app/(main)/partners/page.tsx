@@ -3,6 +3,7 @@ import { PartnerForm } from "@/components/partners/PartnerForm";
 import { Phone } from "lucide-react";
 import { partnerPageCopy } from "@/lib/content/partners";
 import { storeContact } from "@/lib/content/contact";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 export const metadata: Metadata = {
   title: "همکاری عمده",
@@ -13,18 +14,13 @@ export const metadata: Metadata = {
 export default function PartnersPage() {
   return (
     <div className="container py-12 md:py-16">
-      <header className="max-w-2xl">
-        <div className="section-label">
-          <span>۰۱</span>
-          <i />
-          <p>{partnerPageCopy.eyebrow}</p>
-        </div>
-        <h1 className="mt-4 text-3xl font-black leading-[1.4] tracking-normal md:text-4xl">
-          {partnerPageCopy.titleLead}،
-          <em className="block font-black not-italic text-aqua">{partnerPageCopy.titleTail}</em>
-        </h1>
-        <p className="mt-4 text-sm leading-8 text-foreground/65">{partnerPageCopy.intro}</p>
-      </header>
+      <PageHeader
+        page="partners"
+        eyebrow={partnerPageCopy.eyebrow}
+        title={partnerPageCopy.titleLead}
+        accent={partnerPageCopy.titleTail}
+        description={partnerPageCopy.intro}
+      />
 
       {/* Steps */}
       <ol className="mt-10 grid list-none gap-6 border-t border-line p-0 pt-8 sm:grid-cols-3" aria-label="مراحل همکاری">

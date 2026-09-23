@@ -559,7 +559,9 @@ Depends on T003 for decisions 1, 2, 5.
 - [ ] T095 [US5] Complete the tab semantics at `components/home/FeaturedProducts.tsx:135-160`: `role="tab"`
   and `tablist` with no `aria-controls`, no `tabpanel` and no arrow-key handling — two tab stops that behave
   as buttons (FR-044, FR-047's "no information available only through interaction pattern").
-- [ ] T096 [P] [US5] Fix the `Reveal` flash: `components/home/Reveal.tsx:26-37` SSR-paints below-fold
+- [x] T096 [P] [US5] **Closed as verified-not-a-defect, 2026-09-24 — the flash is not in the
+g  current code.** See `notes/findings.md`. Original task text:
+  Fix the `Reveal` flash: `components/home/Reveal.tsx:26-37` SSR-paints below-fold
   content, hides it in an effect, then reveals it on intersection — a visible flash-then-vanish on a slow
   connection, the inverse of a loading state (FR-046, FR-048's reserve-space intent).
 - [x] T097 [P] [US2] Fix the checkout order inversion: `components/checkout/CheckoutClient.tsx:441` applies

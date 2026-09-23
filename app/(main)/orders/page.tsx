@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { OrdersListClient } from "@/components/order/OrdersListClient";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 export const metadata: Metadata = {
   title: "سفارش‌های من",
@@ -9,16 +10,7 @@ export const metadata: Metadata = {
 export default function OrdersPage() {
   return (
     <div className="container py-10">
-      <header className="mb-8">
-        <div className="section-label">
-          <span>۰۰۴</span>
-          <i />
-          <p>حساب کاربری</p>
-        </div>
-        <h1 className="mt-4 text-2xl font-black tracking-normal md:text-3xl">
-          سفارش‌های <em className="font-black not-italic text-aqua">من.</em>
-        </h1>
-      </header>
+      <PageHeader page="orders" eyebrow="حساب کاربری" title="سفارش‌های" accent="من." />
       <OrdersListClient />
     </div>
   );

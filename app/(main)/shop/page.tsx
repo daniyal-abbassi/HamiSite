@@ -5,6 +5,7 @@ import { ShopClient } from "@/components/shop/ShopClient";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
 import { buildShopView } from "@/lib/shop-query";
 import { shopCategoryTiles } from "@/lib/shop-category-tiles";
+import { PageHeader } from "@/components/layout/PageHeader";
 
 export const metadata: Metadata = {
 /* The template in app/layout.tsx appends the brand: «فروشگاه | حامی همراه». */
@@ -36,17 +37,9 @@ export default async function ShopPage({
     <>
       <ShopBanner />
       <div className="container py-10">
-        <header className="mb-8">
-          <div className="section-label">
-            <span>۰۰۱</span>
-            <i />
-            <p>فروشگاه حامی همراه</p>
-          </div>
-          <h1 className="mt-4 text-2xl font-black tracking-normal md:text-3xl">
-            همه محصولات، <em className="font-black not-italic text-aqua">یک‌جا.</em>
-          </h1>
+        <PageHeader page="shop" eyebrow="فروشگاه حامی همراه" title="همه محصولات،" accent="یک‌جا.">
           <DataCurrencyNote className="mt-3 text-xs" />
-        </header>
+        </PageHeader>
         {/* Kept for the client children that still read useSearchParams; the
             results themselves no longer wait on it. */}
         <Suspense fallback={null}>
