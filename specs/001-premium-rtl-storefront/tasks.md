@@ -589,6 +589,14 @@ light theme — the ask is *travel within the dark palette*, not white.
   "MASHHAD FLAGSHIP" / "SHOWROOM" badges or the invented brand lightboxes that were on the old frame.
   Principle I still forbids the image standing for something the shop does not have.
 
+- [ ] T116 [US1] **Light chapters — the owner's live ask (2026-09-24).** *"the background shifting and
+  transform is not my taste - is wayyy too boring - use white somewhere."* The tonal tour (T112) is not
+  enough on its own: the page needs real light against the dark, the way `palatemcp.com` alternates opaque
+  per-section bands (`#0B0B0D → #F7F5EE → #E2553D → #1A1512 → #E9E2D2`, measured at eleven scroll positions
+  with its `body` constant at `rgb(30,17,17)`). Two paper chapters, dark → paper → dark → paper → dark,
+  hero and closing CTA staying dark. Specified in full — mechanism, hazards, contrast numbers, acceptance —
+  in `notes/parallel-agent-plan.md` §6, and assigned to the second agent working this checkout.
+
 - [ ] T115 [US1] Make the ground reach the pixels it owns. `verification/ground-travel.mjs` reports the
   authored tone arriving at the gutter unpainted at only **9 of 13** scroll positions: at 25%, 42% and 58%
   the gutter shows `#110003` / `#0e070f` / `#10060d` where `lib/atmosphere/progression.ts` holds

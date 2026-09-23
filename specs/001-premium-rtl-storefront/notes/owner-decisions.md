@@ -59,19 +59,19 @@ decorates an image that is leaving.
 The reversal is about the **photograph**, not about the claims that were painted over it, and the two are
 kept apart deliberately:
 
-- **Use `public/store/shop-upright.jpg`** — the merchant's own file with the orientation applied, nothing
-  else done to it. **Not `shop.jpg`**, which is the last step of an AI chain
-  (`shop-original → shop-upright → shop-ai-relight → shop-hero-master → shop.jpg`). Looked at side by side
-  the difference is not a grade or a white balance: **the AI steps cleared the counter of every box in the
-  room** — the real shop has a counter stacked with roughly fifteen phone cartons, a PS5 box and two
-  plants, and the derived image replaces all of it with four phones standing in a row under showroom
-  spotlights, a lit strip under the counter and a polished reflective floor that the tiles in the original
-  do not have. It is a picture of a shop that does not exist, of a business that does. Principle I is about
-  exactly that.
+- **Which file, chosen twice.** First reinstated on 2026-09-23 as `public/store/shop-upright.jpg` — the
+  merchant's own file with the orientation applied — because `shop.jpg` is the last step of an AI chain
+  (`shop-original → shop-upright → shop-ai-relight → shop-hero-master → shop.jpg`) and the AI steps **clear
+  the counter of every box in the room**: the real shop has roughly fifteen phone cartons, a PS5 box and two
+  plants on the counter; the derived image stands four phones under wall spotlights with a lit strip beneath
+  the counter and a mirror-polished floor the tiles do not have. On **2026-09-24 the owner overrode that and
+  chose the polished frame** — *"use the AI polished shop image"*. It is their storefront and their eye; the
+  objection is recorded here rather than re-fought in the code. What keeps the choice honest is the text
+  around it, so the caption and the `alt` describe the picture as a picture, never as the room.
 - **The two UI badges do not come back.** `MASHHAD FLAGSHIP` and `SHOWROOM` were text laid over the frame;
   they were never in the room. The «SAMSUNG» and «ACCESSORIES» lightboxes **are** fixtures — visible in the
   merchant's own photograph — and an earlier draft of this note called them invented, which was wrong and
-  is corrected here rather than quietly deleted. What may not return is the caption that was attached to
+  is corrected here rather than quietly deleted. What may never return is the caption that used to sit on
   the AI file: «فضای واقعی مجموعه» ("the real space of the collection") is a true sentence about
   `shop-upright.jpg` and a false one about every step after it.
 - **No address.** Decision 3 stands: the street address is out until the merchant supplies it, and a photo
@@ -82,9 +82,9 @@ kept apart deliberately:
 
 Implemented as T114: the photograph sits at the top of the hero's shop-window panel (42vh capped at 380px on
 a phone, 460px on a desktop column), the four FR-006 facts in a two-up grid under it, warranty last. Web
-derivatives generated from the merchant's file with the repo's own `sharp`:
-`public/store/shop-hero.jpg` (1200×1600, 136KB) and `shop-hero@2x.jpg` (1800×2400, 212KB). The 2.6MB source
-stays in the repo as the record of provenance and is not what the browser fetches.
+derivative generated from `shop-hero-master.png` with the repo's own `sharp`: `public/store/shop-hero.jpg`
+(1122×1402, 120KB, progressive mozjpeg). The 1.5MB PNG master and the 2.6MB camera original stay in the repo
+as the record of provenance and are not what a browser fetches.
 
 ## 3. Address and email — removed until supplied
 

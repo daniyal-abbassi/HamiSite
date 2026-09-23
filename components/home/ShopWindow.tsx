@@ -4,26 +4,33 @@ import { trustFacts, storeWarranty } from "@/lib/content/verified-facts";
 /**
  * The hero's shop window: the shop's own photograph, and the four facts FR-006 admits.
  *
- * The image has been on this page, off it, and now back on it, and both moves were the owner's. It was
- * removed on 2026-09-23 under FR-006 because what stood in the frame was not the shop: `public/store/`
- * keeps the whole chain — `shop-original` → `shop-upright` → `shop-ai-relight` → `shop-hero-master` →
- * `shop.jpg` — and the AI steps **cleared the counter of every box in the room** and replaced the ceiling
- * with showroom lighting. A picture of a shop that does not exist, captioned as the one that does, is the
- * most expensive kind of claim a storefront can make.
+ * The image has been on this page, off it, back on it, and now on it in its polished form — every move the
+ * owner's. `public/store/` keeps the whole chain, so the provenance is on the record rather than in this
+ * comment: `shop-original` → `shop-upright` (the merchant's camera, orientation applied) →
+ * `shop-ai-relight` → `shop-hero-master` → `shop.jpg`. The AI steps clear the counter of the roughly fifteen
+ * phone cartons, PS5 box and two plants that are actually in the room and stand four phones under wall
+ * spotlights instead. That is not a re-grade of a photograph, it is a different room, which is why an
+ * earlier pass of this file used the merchant's own frame.
  *
- * It came back the same day, and what came back is `shop-upright.jpg` — the merchant's own file with the
- * EXIF orientation applied and nothing else done to it: the counter stacked with stock, the PS5 box, the
- * plants, the dome cameras, the «SAMSUNG» and «ACCESSORIES» lightboxes that are fixtures of the room and
- * were never invented. The two UI badges that used to sit on top of it — `MASHHAD FLAGSHIP` and
- * `SHOWROOM` — stay out, because those were claims, not captions.
+ * The owner chose the polished frame on 2026-09-23 over that objection, and it is their storefront. What
+ * keeps the choice honest is the text around it, so three things are load-bearing and stay:
  *
- * So the frame is the premises, not evidence of anything. The twenty years, the warranty and the phone
- * number carry the proof in words, below the picture, where a shopper reads them as statements rather than
- * as a photograph's caption.
+ *  - **No "real" caption.** «فضای واقعی مجموعه» ("the real space of the collection") was attached to this
+ *    image before, and it is a false sentence about this particular file. The caption is the brand and the
+ *    city, which the picture does show.
+ *  - **No proof badges.** `MASHHAD FLAGSHIP` and `SHOWROOM` were UI text laid over the frame and were never
+ *    in the room. The «SAMSUNG» and «ACCESSORIES» lightboxes are fixtures, visible in the merchant's own
+ *    photograph, and they survive because they are true.
+ *  - **The `alt` describes this image, not the shop.** A screen-reader user is being told what the picture
+ *    contains; saying "a counter stacked with stock" would describe the file that was rejected.
+ *
+ * The twenty years, the warranty, the representations and the phone number stay in words below the picture,
+ * where a shopper reads them as statements rather than as a photograph's caption. That is FR-006's line:
+ * imagery is the premises, never the evidence.
  *
  * Sized for the phone first because that is where the panel is full-bleed: the photograph is capped at
  * 42vh so the panel's own text stays reachable, and `object-position` favours the wall branding, which is
- * the part that identifies the place. The desktop column is where the whole frame can stand up.
+ * the part that identifies the place.
  */
 export function ShopWindow() {
   return (
@@ -31,7 +38,7 @@ export function ShopWindow() {
       <div className="relative h-[42vh] max-h-[380px] min-h-[220px] w-full lg:h-[460px]">
         <Image
           src="/store/shop-hero.jpg"
-          alt="نمای داخلی فروشگاه حامی همراه در مشهد؛ پیشخوانی با جعبه‌های گوشی و لوگوی برند روی دیوار سرخ"
+          alt="نمایی رندرشده از فضای داخلی فروشگاه حامی همراه؛ لوگوی برند روی دیوار سرخ و چهار گوشی روی پیشخوان"
           fill
           priority
           sizes="(min-width: 1024px) 46vw, 92vw"
