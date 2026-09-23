@@ -90,3 +90,18 @@ curl -s -o /dev/null -w "%{http_code}\n" "http://localhost:3000$CHUNK"
 
 Recovery: kill every Next process by pid, `rm -rf .next`, then `npm run dev`.
 Never `rm -rf .next` while a server is serving from it.
+
+## If `.agent-pair/` exists, you are not the only agent here
+
+More than one agent may be working in this checkout at the same time. The folder is git-ignored, so
+`git status` will never show it — check for it directly before your first edit:
+
+```bash
+test -f .agent-pair/README.md && cat .agent-pair/README.md .agent-pair/BOARD.md
+```
+
+Four rules, all of them about not destroying someone else's work: **claim before you edit**
+(`.agent-pair/locks/<path>.lock`), **never edit a file someone else has locked** (post a `REQUEST`
+instead), **heartbeat every ~5 minutes**, and **never `git restore` / `git checkout --` / `git stash` /
+`git add -A`** — a dirty file you did not touch belongs to another agent, so stage by explicit path.
+Append to the board with `>>`; never rewrite an existing message in place, even to fix it.

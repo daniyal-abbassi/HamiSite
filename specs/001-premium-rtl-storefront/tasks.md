@@ -619,6 +619,17 @@ light theme — the ask is *travel within the dark palette*, not white.
   hero and closing CTA staying dark. Specified in full — mechanism, hazards, contrast numbers, acceptance —
   in `notes/parallel-agent-plan.md` §6, and assigned to the second agent working this checkout.
 
+- [ ] T118 [US1] **ASK-HUMAN: the two featured tabs cannot show different products.** Found by the second
+  agent while finishing T095, and verified in the browser by reading the six headings out of `#featured-panel`
+  on each tab — identical. Both rails filter `specialOffer: true` and differ only in `sort`, and on an
+  already-filtered set `sort: "special"`'s first comparator key is always equal, so it falls through to
+  `updated_at`, which *is* `sort: "newest"` (`lib/home-rails.ts:31-40`, `lib/catalog.ts:324-331`). So the
+  section advertises a distinction the catalog cannot deliver, which is a Constitution I question, not an
+  accessibility one — the ARIA work is done and good. Two honest answers, both expensive in different ways:
+  make «ویژه» mean something the data has (discount depth — which also moves `/shop?sort=special` and
+  `contracts/shop-url.md`), or delete the tablist and stop asking the shopper to choose between two views of
+  the same six products. Neither agent is touching the seam until the owner picks.
+
 - [ ] T117 [US1] **`--signal` / `text-destructive` fails on every light surface, and the pair just built
   light surfaces.** `#E4573F` measures **3.66:1 on `#ffffff`** and **3.25:1 on the T116 paper `#f4f1ea`** —
   under AA's 4.5:1 for body text — and the `bg-destructive/10` wash behind it measures **1.13:1** against the
