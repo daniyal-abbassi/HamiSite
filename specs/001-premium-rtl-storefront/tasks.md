@@ -541,11 +541,21 @@ Depends on T003 for decisions 1, 2, 5.
   inline `style` still escape it — none exist in the purchase path today, and the next one that appears
   needs the size on the element, not in the stylesheet. Measured: `notes/findings.md`.
 
-- [ ] T094 [P] [US5] Fix the async-state jumps FR-046 names: `FeaturedProducts.tsx:102` gates skeletons on
+- [x] T094 [P] [US5] Fix the async-state jumps FR-046 names: `FeaturedProducts.tsx:102` gates skeletons on
   `isLoading && products === null` so a tab switch keeps stale cards with no busy affordance and then swaps,
   jumping the section; `NewArrivals` reserves 4 skeletons against a 6-item result;
   `components/layout/CartButton.tsx:19` renders the badge only when `itemCount > 0`, reflowing the header on
   the first add; `components/shop/AddToCartButton.tsx:63-65` swallows every non-auth failure silently.
+  **Done 2026-09-24 (T-P2), but three of the four defects were already gone or never existed.** Items 1 and 2
+  describe the pre-band-1 loading model: `FeaturedProducts` has no `isLoading` and `NewArrivals`' `products`
+  and `error` are `useState` with no setter, so both skeleton branches were unreachable — deleted, with the
+  never-referenced `ProductSkeletonCard` and unread `activeBadge`. Item 3 is **false**: the badge is
+  `position: absolute` inside a `relative` button, and mounting it moved the header 78→78 at 360 and 90→90 at
+  1280, siblings and document height unchanged to 0.01px. Item 4 was real and understated — a failed add now
+  says its reason in Persian via a `role="alert"` chip keyed on `error.code`, card height invariant at
+  392.06px/567.6px. Evidence: `notes/parallel-agent-decisions.md` §"three of the four named defects".
+  **Follow-up this task surfaced, not fixed here:** `text-destructive` on white measures 3.66:1, and the idiom
+  appears in twelve files — the ones inside `.product-card` fail AA.
 - [ ] T095 [US5] Complete the tab semantics at `components/home/FeaturedProducts.tsx:135-160`: `role="tab"`
   and `tablist` with no `aria-controls`, no `tabpanel` and no arrow-key handling — two tab stops that behave
   as buttons (FR-044, FR-047's "no information available only through interaction pattern").

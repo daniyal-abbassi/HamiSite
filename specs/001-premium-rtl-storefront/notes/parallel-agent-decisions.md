@@ -57,3 +57,41 @@ is in a file this task owns.
 and the string `«/* * Every panel is a destin»` disappeared from the rendered pairs. **The driving agent
 should know this changed the document height**: the homepage went 16,547px → 16,067px at 360, which is why
 `ground-travel.mjs`'s gutter count is not comparable to the 8/13 recorded in `notes/findings.md`.
+
+## 2026-09-24 — T-P2: three of the four named defects are not defects, and one is worse than described
+
+**Chosen:** fix the one real defect (`AddToCartButton`'s silent failure), delete the code that pretends the
+other three still exist, and report the measurements that killed the claims.
+**Rejected:** implementing §7 as written. Two of its four items describe a loading model the page no longer
+has, and the third describes a reflow that does not happen. Building them would have added a skeleton to a
+section that cannot be empty-by-loading, and reserved space for a badge that is out of the flow.
+**Verified by:** `.scratch/cartbadge-reflow.mjs` (header geometry across a badge mount),
+`.scratch/addfail2.mjs` (forced 409, card and button geometry sampled four times),
+`npx tsc --noEmit` clean, `npx vitest run tests/unit` 221/221.
+
+| §7 item | Verdict | Evidence |
+|---|---|---|
+| 1. `FeaturedProducts` skeletons gated on `isLoading && products === null` | **Obsolete.** There is no `isLoading` and no `products === null` — band 1 ("browsing stops round-tripping through the API") removed the fetch. `ProductSkeletonCard` was defined and never referenced; `activeBadge` was computed and never read. Both deleted. |
+| 2. `NewArrivals` reserves 4 skeletons against a 6-item result | **Unreachable.** `useState(initialProducts)` with no setter and `useState(false)` for `error` — the null branch and the error branch could never render. Deleted with them went the `\| null` in `RailProps` and the now-meaningless `aria-busy`. |
+| 3. `CartButton` badge reflows the header on first add | **False.** The badge is `position: absolute` inside a `relative` button, so it is out of the flow. Mounting it moved nothing: header height 78→78 at 360 and 90→90 at 1280, the button's box identical to 0.01px, all five siblings unmoved, document height unchanged. The same is true of `MobileDock`'s badge (`absolute` inside `<span class="relative">`), which is where a reader might have gone looking for the reflow. §7's fix — "reserve the space always" — would have changed no measurement and put a permanent empty dot beside an empty cart. |
+| 4. `AddToCartButton` swallows every non-auth failure | **Real, and under-stated.** See below. |
+
+## 2026-09-24 — the failed add says itself in a solid chip, not in the house error idiom
+
+**Chosen:** a `role="alert` chip — solid `#8E1B10`, white 11px text, absolutely positioned at the card's
+bottom-start, `pointer-events-none` so the control underneath stays pressable for a retry. Held 4s, then the
+button returns to idle and the alert unmounts.
+**Rejected, twice:**
+- *`text-destructive` on `bg-destructive/10`* — the idiom in twelve files across this repo. Measured on the
+  ground it would actually sit on: the only live caller renders this control inside a **white** product card,
+  and `#E4573F` on `#ffffff` is **3.66:1**, with the `/10` wash itself at **1.13:1**. The house idiom fails AA
+  at this size on this ground. That is worth someone's attention beyond this task.
+- *`sr-only` + an icon change* — my own first version. It passed the accessibility-tree assertion and was
+  still wrong: the only live caller passes `iconOnly`, so a sighted shopper would have gotten a `Ban` glyph
+  and a colour with no Persian sentence anywhere on screen. §7 asks that the user "see that nothing happened,
+  in Persian"; an `sr-only` string is seen by nobody.
+**Verified by:** card height invariant across the whole failure — 392.06px at 360, 567.6px at 1280, identical
+before, during and after. The button's box looked like it grew 6px until the pointer was moved away: that is
+`hover:scale-105` on the control, not the error state. Its apparent 127px vertical jump afterwards was
+Playwright scrolling to take the element screenshot — `scrollY` 954→827 against `btnY` 480.1→607.1, which
+cancel exactly, so the document-space position never moved.

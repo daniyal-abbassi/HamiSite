@@ -7,7 +7,6 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import type { RailProduct } from "@/lib/home-rails";
 import { ProductCard, type ProductCardData } from "@/components/shop/ProductCard";
 import { formatToman } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Reveal } from "@/components/home/Reveal";
 
 type NewArrivalProduct = RailProduct;
@@ -15,15 +14,14 @@ type NewArrivalProduct = RailProduct;
 /*
  * Fed from the seam on the server. `products` used to be null until an
  * `/api/products` call resolved, which is why the served homepage held none of
- * them; the skeleton branch stays for the same reason the label is still wrong —
- * see `lib/home-rails.ts` and T050.
+ * them. The loading and error branches that served that round-trip are gone with
+ * it — the rail now renders exactly what the server handed it, or the empty state
+ * if that was nothing.
  */
 export function NewArrivals({ products: initialProducts }: { products: NewArrivalProduct[] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", direction: "rtl", containScroll: "trimSnaps" });
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
-  const [products] = useState<NewArrivalProduct[] | null>(initialProducts);
-  const [error] = useState(false);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;
@@ -85,47 +83,28 @@ export function NewArrivals({ products: initialProducts }: { products: NewArriva
       </Reveal>
 
       <Reveal delay={80}>
-        {error ? (
-          <div className="mt-10 glass rounded-2xl p-8 text-center" role="status">
-            <b className="block font-extrabold">دریافت تازه‌واردها موقتاً ممکن نیست.</b>
-            <Link href="/shop" className="mt-3 inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
-              مشاهده همه محصولات <ArrowLeft className="size-3.5" />
-            </Link>
-          </div>
-        ) : (
-          <NewArrivalsRail products={products} emblaRef={emblaRef} />
-        )}
+        <NewArrivalsRail products={initialProducts} emblaRef={emblaRef} />
       </Reveal>
     </section>
   );
 }
 
 type RailProps = {
-  products: NewArrivalProduct[] | null;
+  products: NewArrivalProduct[];
   emblaRef: (node: HTMLElement | null) => void;
 };
 
 function NewArrivalsRail({ products, emblaRef }: RailProps) {
   return (
-    <div ref={emblaRef} className="mt-10 overflow-hidden" aria-busy={products === null} aria-label="ریل محصولات تازه‌وارد" aria-roledescription="carousel">
+    <div ref={emblaRef} className="mt-10 overflow-hidden" aria-label="ریل محصولات تازه‌وارد" aria-roledescription="carousel">
       <div className="flex touch-pan-y gap-5">
-        {products === null &&
-          Array.from({ length: 4 }).map((_, i) => (
-            <div key={i} className="min-w-0 flex-[0_0_45%] sm:flex-[0_0_46%] lg:flex-[0_0_32%]">
-              <div className="space-y-3">
-                <Skeleton className="aspect-[4/5] w-full" />
-                <Skeleton className="h-4 w-3/4" />
-                <Skeleton className="h-4 w-1/2" />
-              </div>
-            </div>
-          ))}
-        {products !== null && products.length === 0 && (
+        {products.length === 0 && (
           <div className="w-full glass rounded-2xl p-8 text-center" role="status">
             <b className="block font-extrabold">چیز تازه‌ای برای نمایش نداریم.</b>
             <p className="mt-2 text-sm text-foreground/60">اما موجودی فروشگاه همچنان در حال به‌روزرسانی است.</p>
           </div>
         )}
-        {products !== null && products.length > 0 && products.map((product) => <ArrivalCard key={product.id} product={product} />)}
+        {products.map((product) => <ArrivalCard key={product.id} product={product} />)}
       </div>
     </div>
   );

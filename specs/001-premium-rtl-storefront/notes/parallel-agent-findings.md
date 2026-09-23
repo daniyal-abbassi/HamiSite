@@ -133,3 +133,47 @@ carries the edge.
 - **The `prefers-contrast: more` block that already existed** for `.category-catalogue` (`--catalogue-muted:
   #21181a`, a 2px ink panel border) was written for the dark section. On paper those values still read as
   darkening, so they are correct by accident rather than by test — no forced-contrast capture was taken.
+
+---
+
+## T-P2 — the async-state jumps (T094) (2026-09-24)
+
+**Files touched:** `components/shop/AddToCartButton.tsx` (the fix), `components/home/FeaturedProducts.tsx`
+and `components/home/NewArrivals.tsx` (dead loading/error code removed), `components/home/OnlineServices.tsx`
+(the `#online-services` desktop void, answered under T-P1's review — see below). `components/layout/CartButton.tsx`
+was measured and **not** changed.
+
+Three of §7's four named defects do not exist in the current tree, and the fourth was understated. The full
+audit — including the measurement that killed each claim — is in
+`notes/parallel-agent-decisions.md` under "T-P2: three of the four named defects are not defects". Short
+version: items 1 and 2 describe a loading model that band 1 removed, so their skeleton branches are
+unreachable code rather than wrong code; item 3's badge is `position: absolute` and mounting it moved the
+header by exactly nothing at both widths.
+
+**What shipped instead:** a failed add now says why. `role="alert"`, Persian, keyed on the API's `error.code`
+rather than echoing its English `message`, held 4s, and the control returns to idle pressable. Card height is
+invariant across the whole failure: 392.06px at 360, 567.6px at 1280.
+
+**Two things this surfaced that are bigger than T-P2:**
+
+1. **The house error idiom fails AA on white.** `text-destructive` (`#E4573F`) on `#ffffff` measures
+   **3.66:1**, and its `bg-destructive/10` wash measures **1.13:1** against the same ground. That pattern is
+   in twelve files — `CheckoutClient`, `ProductDetail`, `CartPageClient`, `OrderDetailClient`, `LoginForm`,
+   `RegisterForm`, `PartnerForm` and six admin clients. Most of them sit on the dark canvas where #E4573F is
+   fine; the ones inside `.product-card` (which sets `--background: 255 255 255`) are not. I did not touch
+   them — this is a palette question, not a cart question.
+2. **A `role="alert"` assertion is not the same as a visible one.** My first version of this fix used
+   `sr-only` plus an icon swap and passed every check §7 asked for, including "visible in the accessibility
+   tree". It was still wrong, because the only live caller passes `iconOnly` and a sighted shopper would have
+   received no words at all. The screenshot is what caught it. Worth remembering for the T-P3 keyboard
+   walkthrough: read the tree *and* look at the page.
+
+**`#online-services` at 1280, from the driver's T-P1 review.** Fixed by moving the FAQ into the heading's
+column so the card's height is answered by content instead of air — 665px → 583px band, document 13,020 →
+12,938 at 1280, no overflow, and the contrast audit re-run clean afterwards (31 and 17 text nodes, zero
+failures). Rejected a second service card: `featuredOnlineService` is one record, and inventing a second to
+even out a grid spends Constitution I's budget, not mine.
+
+**Not verified.** The labelled (non-`iconOnly`) branch of `AddToCartButton` — the «افزودن»/«موفق نشد» text
+path — has no caller today, so it is unexercised by the browser pass above. It is the component's documented
+default and I left it intact rather than narrowing a shared API under someone else's feet.

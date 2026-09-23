@@ -6,50 +6,13 @@ import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { featuredTabs, type FeaturedTabKey } from "@/lib/content/home";
 import type { RailProduct } from "@/lib/home-rails";
-import { cn, formatToman } from "@/lib/utils";
-import { Skeleton } from "@/components/ui/skeleton";
+import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/home/Reveal";
 import { type ProductCardData } from "@/components/shop/ProductCard";
 import { ProductRail } from "@/components/shop/ProductRail";
 
 /** One tab and the records already resolved for it, from the seam on the server. */
 export type FeaturedRailTab = { key: FeaturedTabKey; label: string; products: RailProduct[] };
-
-function ProductSkeletonCard() {
-  return (
-    <article className="lux-card product-card card-obsidian frame-bleed">
-      <div className="lux-stage block">
-        <Skeleton className="aspect-[4/5] w-full rounded-b-none" />
-      </div>
-      <div className="lux-body">
-        <div className="flex items-baseline justify-between gap-3">
-          <Skeleton className="h-3 w-14" />
-          <Skeleton className="h-3 w-12" />
-        </div>
-
-        <Skeleton className="mt-2.5 h-5 w-3/4" />
-        <Skeleton className="mt-2 h-4 w-full" />
-
-        <div className="mt-auto pt-5">
-          <div className="lux-stock flex items-center justify-between gap-2 text-xs font-bold tracking-normal">
-            <div className="flex items-center gap-2">
-              <Skeleton className="h-3 w-12" />
-              <Skeleton className="h-3 w-10" />
-            </div>
-            <Skeleton className="hidden h-5 w-16 sm:block" />
-          </div>
-
-          <div className="lux-buy mt-2 flex items-end justify-between gap-3">
-            <div className="min-w-0">
-              <Skeleton className="h-4 w-20" />
-            </div>
-            <Skeleton className="h-10 w-24 rounded-full" />
-          </div>
-        </div>
-      </div>
-    </article>
-  );
-}
 
 /*
  * Both rails arrive already resolved. This section used to fetch `/api/products`
@@ -65,7 +28,6 @@ export function FeaturedProducts({ tabs }: { tabs: FeaturedRailTab[] }) {
   const [tab, setTab] = useState<FeaturedTabKey>(tabs[0]?.key ?? "newest");
   const active = tabs.find((t) => t.key === tab) ?? tabs[0];
   const products = active?.products ?? [];
-  const activeBadge = active?.label ? featuredTabs.find((t) => t.key === tab)?.badge ?? "" : "";
 
   return (
     <section id="featured" className="wrap py-16 md:py-20" aria-labelledby="featured-title">
