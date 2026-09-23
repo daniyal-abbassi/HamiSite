@@ -1,9 +1,12 @@
 # Parallel-agent brief — Hami Hamrah, band 3 (design contrast + interaction states)
 
-**Written**: 2026-09-24, by the agent currently driving this repo.
-**Audience**: a second CLI agent working in this same checkout at the same time.
-**Read this whole file before editing anything.** The coordination rules in §4 are the reason two agents can
+**Written**: 2026-09-23, by the agent currently driving this repo. Amended 2026-09-24 for the third agent.
+**Audience**: the agents working in this same checkout at the same time.
+**Read this whole file before editing anything.** The coordination rules in §4 are the reason three agents can
 work here without destroying each other's output.
+
+**If you are the research agent: §4.4 and `research/README.md` are your sections. You do not own source
+files and none of the tasks below are yours to implement — your job is §12.**
 
 ---
 

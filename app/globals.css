@@ -829,12 +829,17 @@
 /* ===========================================================================
    SOFT-EDGED FULL-BLEED BANDS
    ===========================================================================
-   #b2b and #online-services are the page's only darkened stretches. They
-   used to paint a flat `bg-ink/25` whose top/bottom edges met the canvas in
-   razor-sharp horizontal lines (and #b2b was additionally inset with `wrap`,
-   so two of its edges floated mid-air as hard vertical seams — the
-   fix-mix-pverLay / fix-inconsistancy captures). This fades the band's
-   ambience in and out instead; the edges stop existing.
+   A `band-soft` stretch darkens the ground behind its content with a vertical
+   fade, so the band's top and bottom edges meet the canvas gradually instead of
+   ending in a razor-sharp horizontal line. (#b2b was additionally inset with
+   `wrap`, so two of its edges floated mid-air as hard vertical seams — the
+   fix-mix-pverLay / fix-inconsistancy captures.)
+
+   As of T-P1 this class no longer describes the whole page: `#online-services`
+   is now a paper chapter, so `#b2b` is the only darkened stretch left. The
+   mechanism stays because a second dark band may still want it. What it is not
+   is exhaustive — do not read "the page's only darkened stretches" off this
+   comment again; count them in the DOM.
    =========================================================================== */
 .band-soft {
   background: linear-gradient(
