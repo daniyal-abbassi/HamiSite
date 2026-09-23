@@ -14,7 +14,10 @@ import type { ShopMeta, ShopProduct } from "./types";
 type ShopResultsProps = {
   products: ShopProduct[] | null;
   meta: ShopMeta | null;
-  error: boolean;
+  /** No longer set by the listing: the products arrive rendered from the
+     server, so there is no client fetch left that could fail. Optional so the
+     error branch stays available to any other caller. */
+  error?: boolean;
   activeSort: string;
   /**
    * A brand or category slug that matched nothing in the catalogue. Distinct from an
@@ -32,7 +35,7 @@ function pageWindow(page: number, totalPages: number): number[] {
   return Array.from({ length: end - start + 1 }, (_, index) => start + index);
 }
 
-export function ShopResults({ products, meta, error, activeSort, unknownFilter = null }: ShopResultsProps) {
+export function ShopResults({ products, meta, error = false, activeSort, unknownFilter = null }: ShopResultsProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();

@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import hamiWordmark from "@/public/brand/hami-wordmark-fa.png";
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
-import { resolveProductImage } from "@/lib/product-images";
+import { PLACEHOLDER_ALT, PLACEHOLDER_LABEL, isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
 import {
   brandAccent,
   brandLabel,
@@ -114,6 +114,8 @@ export function ProductCard({
   const buyable = isPurchasable(product);
   // The dot and its colour track the *label*, which is a different question.
   const outOfStock = product.stockType === "out_of_stock";
+  const productImage = resolveProductImage(product);
+  const noImage = isPlaceholderImage(productImage);
   const href = `/shop/${product.slug}`;
 
   return (
@@ -123,8 +125,8 @@ export function ProductCard({
     >
       <Link href={href} className="lux-stage block" aria-label={product.name}>
         <Image
-          src={resolveProductImage(product)}
-          alt={product.name}
+          src={productImage}
+          alt={isPlaceholderImage(productImage) ? PLACEHOLDER_ALT : product.name}
           width={720}
           height={720}
           /* Mirrors the grid this card sits in: 1 column, then 2, 3, 4. Without
@@ -133,6 +135,14 @@ export function ProductCard({
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 33vw, 390px"
         />
       </Link>
+
+      {/* FR-001: an absent product photograph is stated, not papered over by a
+            brand tile in the same slot at the same size. */}
+      {noImage && (
+        <span className="absolute end-3 top-3 z-10 rounded-full border border-champagne/25 bg-ink/80 px-2.5 py-1 font-mono text-[10px] tracking-wide text-foreground/70">
+          {PLACEHOLDER_LABEL}
+        </span>
+      )}
 
       <div className="lux-body">
         {/* Brand and model, together and quiet — they identify, they do not

@@ -209,46 +209,57 @@ only: both routes demand a session, and the unit suite wipes the accounts that w
 **Purpose**: browsing stops requiring an API round-trip, and the shape drift that caused the price defect
 becomes impossible to repeat silently. **Serves**: US2, US3. **Blocks**: band 2.
 
-- [ ] T038 [US2] Render `/shop` on the server through `lib/catalog.ts::queryProducts`: accept
+- [x] T038 [US2] Render `/shop` on the server through `lib/catalog.ts::queryProducts`: accept
   `searchParams` in `app/(main)/shop/page.tsx:13` (it accepts none today), pass them to the seam, and remove
   the `Suspense fallback={null}` at `:29-31` that makes the served document contain zero products.
-- [ ] T039 [US2] Delete the client catalog fetches that T038 supersedes in `components/shop/ShopClient.tsx:39-52,101`,
+- [x] T039 [US2] Delete the client catalog fetches that T038 supersedes in `components/shop/ShopClient.tsx:39-52,101`,
   keeping only the state that must remain client-side. Preserve every rule in
   `contracts/shop-url.md` — the keys and their semantics are unchanged, only who reads them moves.
-- [ ] T040 [US3] Do the same for the product page: `app/(main)/shop/[slug]/page.tsx` reads through the seam
+- [x] T040 [US3] Do the same for the product page: `app/(main)/shop/[slug]/page.tsx` reads through the seam
   server-side (it already does so for `generateMetadata` at `:9`) and `components/shop/ProductDetail.tsx:56`
   stops fetching `/api/products/[slug]`.
-- [ ] T041 [P] [US1] Server-render the two homepage rails: `components/home/FeaturedProducts.tsx:83` and
+- [x] T041 [P] [US1] Server-render the two homepage rails: `components/home/FeaturedProducts.tsx:83` and
   `components/home/NewArrivals.tsx:30` currently fetch client-side.
-- [ ] T042 [US3] Correct `types/store.ts:58-95` to the serializer's actual output and remove the unchecked
-  `apiGet<ProductDetail>` cast, so a future field rename is a compile error rather than a plausible string.
-  Quote `contracts/catalog-seam.md` rule 2: "Transport typing MUST be declared, not asserted."
-- [ ] T043 [US3] Assert the breach is closed and record the method in
+- [x] T042 [US3] **Done by a different route than written, on purpose.** The task said "correct
+  `types/store.ts:58-95`" — that type is also read by `components/admin/products/ProductForm.tsx:132,162,250`
+  (it consumes `analysis`, `isDigital`, `variant.unitPrice`, `matchedTier`), and the back office must not be
+  modified under Constitution III. So instead the shopper boundary was retyped:
+  `components/shop/ProductDetail.tsx` now imports `CatalogProduct` (`ReturnType<typeof serializeProduct>`)
+  and the `apiGet<ProductDetail>` cast is gone from the shopper path. The obligation — "Transport typing
+  MUST be declared, not asserted" — is met and **measured**: reintroducing `selectedVariant.unitPrice`
+  produces `TS2339` against the real emitted shape. `types/store.ts` is left as the admin's private shape
+  and band 2 should not touch it. See `notes/seam.md`.
+- [x] T043 [US3] Assert the breach is closed and record the method in
   `specs/001-premium-rtl-storefront/notes/seam.md`: `curl -s localhost:3000/shop | grep -c 'href="/shop/'`
   must be non-zero against the **served HTML**, for `/shop`, a product page, and the home rails.
-- [ ] T044 [US4] Implement FR-055's data-currency disclosure as one mechanism fed from the seam —
+- [x] T044 [US4] Implement FR-055's data-currency disclosure as one mechanism fed from the seam —
   `quickstart.md` §1 decision 8 may change the wording, not the obligation. FR-055: "the storefront MUST make
   the currency of that information discoverable, so a shopper is not left to assume a figure from a snapshot
   of unstated age is current. The form is a design decision; the obligation is not." Nothing today renders
   the export date or `updated_at`, which `lib/catalog.ts:293` uses for sorting only.
-- [ ] T045 [P] [US4] Replace the homepage-crash path: `lib/category-departments.ts:118-131` **throws** when
+- [x] T045 [P] [US4] Replace the homepage-crash path: `lib/category-departments.ts:118-131` **throws** when
   a hand-listed slug resolves to zero products, from the render path every visitor hits. Drop the department
   and log it, keeping 004's no-dead-door intent.
-- [ ] T046 [P] [US4] Remove the snapshot coupling in `lib/category-departments.ts`: the `kindTotal` literals at `:57-66` and
+- [x] T046 [P] [US4] Remove the snapshot coupling in `lib/category-departments.ts`: the `kindTotal` literals at `:57-66` and
   the `showsCount: total === seed.kindTotal` rule at `:139` in `lib/category-departments.ts`, deriving both at request time. FR-053 forbids
   embedding "the current counts, ratios, or thresholds of this snapshot".
-- [ ] T047 [P] [US4] Rewrite the assertions that restate snapshot totals so SC-005 becomes re-verifiable
+- [x] T047 [P] [US4] Rewrite the assertions that restate snapshot totals so SC-005 becomes re-verifiable
   after a refresh: `tests/unit/category-departments.test.ts:39-42,52-57` (`toBe(9)`, `toBe(189)`,
   `[8,134]`) and `tests/unit/product-images.test.ts:79-80,93` (`toEqual(["347 اپل آیدی"])`) become
   property-style assertions.
-- [ ] T048 [US1] Resolve the placeholder-vs-Principle-I collision as a written decision, not a silence:
+- [x] T048 [US1] Resolve the placeholder-vs-Principle-I collision as a written decision, not a silence:
   `lib/product-images.ts:69-83` fills the exact slot a product's own photograph occupies with
   `alt={product.name}` (`ProductCard.tsx:120-127`, `ProductDetail.tsx:228-235`), so record 347's missing
   image is not visibly missing. Either mark the absence or record the owner's waiver in
   `specs/001-premium-rtl-storefront/notes/owner-decisions.md`.
 
-**Checkpoint**: `curl`-level proof that products are in the served HTML, and the seam contract test passes
-against a deliberately wrong field name.
+**Checkpoint: MET 2026-09-23 — evidence in `notes/seam.md`.** Served HTML now contains 24 product links on
+`/shop`, on `?brand=`, and on the homepage (all were **0**); the product page carries its price in the
+served bytes; an unknown slug returns HTTP 404; `tsc`, the 170-test unit suite and `npm run build` are all
+clean; the browser pass confirms hydration, the URL filter contract (`?brand=` → «۳۰ محصول», AND
+semantics, clear-all) and that `lenis` easing and keyboard scrolling still work. The phantom-field
+experiment is recorded with its honest split: **`tsc` catches the bad read, the data-side contract test
+cannot** — it pins what the seam emits, which is a different and still useful job.
 
 ---
 

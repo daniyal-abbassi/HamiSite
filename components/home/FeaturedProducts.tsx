@@ -1,28 +1,19 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { motion } from "motion/react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { featuredTabs, type FeaturedTabKey } from "@/lib/content/home";
-import { apiGet } from "@/lib/api-client";
+import type { RailProduct } from "@/lib/home-rails";
 import { cn, formatToman } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Reveal } from "@/components/home/Reveal";
 import { type ProductCardData } from "@/components/shop/ProductCard";
 import { ProductRail } from "@/components/shop/ProductRail";
 
-type FeaturedProduct = {
-  id: number;
-  name: string;
-  englishName: string | null;
-  slug: string;
-  brand: { id: number; name: string; slug: string } | null;
-  mainCategory: { id: number; name: string; slug: string } | null;
-  displayPrice: number;
-  compareAtPrice: number | null;
-  stockType: string;
-};
+/** One tab and the records already resolved for it, from the seam on the server. */
+export type FeaturedRailTab = { key: FeaturedTabKey; label: string; products: RailProduct[] };
 
 function ProductSkeletonCard() {
   return (
@@ -60,46 +51,21 @@ function ProductSkeletonCard() {
   );
 }
 
-export function FeaturedProducts() {
-  const [tab, setTab] = useState<FeaturedTabKey>("newest");
-  const [products, setProducts] = useState<FeaturedProduct[] | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    setIsLoading(true);
-    setError(false);
-    // The default tab must NOT duplicate NewArrivals, which fetches the same
-    // bare newest-six query two sections below. «جدیدترین‌ها» here means
-    // newest *special offers* — a curation, not a second copy of the feed.
-    const params = new URLSearchParams({
-      pageSize: "6",
-      includeVariants: "false",
-      specialOffer: "true",
-      sort: "newest",
-    });
-    if (tab === "special") params.set("sort", "special");
-    apiGet<FeaturedProduct[]>(`/api/products?${params}`)
-      .then((data) => {
-        if (!cancelled) {
-          setProducts(data);
-          setIsLoading(false);
-        }
-      })
-      .catch(() => {
-        if (!cancelled) {
-          setError(true);
-          setIsLoading(false);
-        }
-      });
-    return () => {
-      cancelled = true;
-    };
-  }, [tab]);
-
-  const activeBadge = featuredTabs.find((t) => t.key === tab)?.badge ?? "";
-  const showSkeletons = isLoading && products === null;
+/*
+ * Both rails arrive already resolved. This section used to fetch `/api/products`
+ * on mount and again on every tab change, so the served homepage held no products
+ * at all — the round-trip Constitution III forbids for browsing. What is left here
+ * is the tab, which is genuinely client state.
+ *
+ * The default tab deliberately does not duplicate NewArrivals, which shows the
+ * bare six-record feed two sections below: «جدیدترین‌ها» here means newest *special
+ * offers*, a curation rather than a second copy of the feed.
+ */
+export function FeaturedProducts({ tabs }: { tabs: FeaturedRailTab[] }) {
+  const [tab, setTab] = useState<FeaturedTabKey>(tabs[0]?.key ?? "newest");
+  const active = tabs.find((t) => t.key === tab) ?? tabs[0];
+  const products = active?.products ?? [];
+  const activeBadge = active?.label ? featuredTabs.find((t) => t.key === tab)?.badge ?? "" : "";
 
   return (
     <section id="featured" className="wrap py-16 md:py-20" aria-labelledby="featured-title">
@@ -161,30 +127,7 @@ export function FeaturedProducts() {
             </div>
           </div>
 
-          {showSkeletons && !error && (
-            <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4" aria-busy="true">
-              {Array.from({ length: 6 }).map((_, i) => (
-                <ProductSkeletonCard key={i} />
-              ))}
-            </div>
-          )}
-
-          {error && (
-            <div className="rounded-2xl border border-line bg-ink-3/80 p-8 text-center text-foreground" role="status">
-              <b className="block font-extrabold">دریافت محصولات موقتاً ممکن نیست.</b>
-              <p className="mt-2 text-sm text-muted-foreground">می‌توانید کاتالوگ کامل را ببینید یا بعداً دوباره تلاش کنید.</p>
-              <div className="mt-5 flex justify-center gap-4">
-                <button type="button" onClick={() => setTab(tab)} className="rounded-full bg-oxblood px-4 py-2 text-xs font-bold text-foreground">
-                  تلاش دوباره
-                </button>
-                <Link href="/shop" className="inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
-                  مشاهده همه محصولات <ArrowLeft className="size-3.5" />
-                </Link>
-              </div>
-            </div>
-          )}
-
-          {products !== null && !error && products.length === 0 && (
+          {products.length === 0 && (
             <div className="rounded-2xl border border-line bg-ink-3/80 p-8 text-center text-foreground" role="status">
               <b className="block font-extrabold">محصولی برای نمایش در این انتخاب وجود ندارد.</b>
               <p className="mt-2 text-sm text-muted-foreground">محصولات جدید به‌زودی به این بخش اضافه می‌شوند.</p>
@@ -194,12 +137,9 @@ export function FeaturedProducts() {
             </div>
           )}
 
-          {products !== null && !error && products.length > 0 && (
+          {products.length > 0 && (
             <div>
-              <ProductRail
-                products={products as ProductCardData[]}
-                label={featuredTabs.find((t) => t.key === tab)?.label ?? "محصولات"}
-              />
+              <ProductRail products={products as unknown as ProductCardData[]} label={active?.label ?? "محصولات"} />
             </div>
           )}
         </div>

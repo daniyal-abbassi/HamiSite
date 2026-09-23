@@ -26,6 +26,7 @@ import { ShopWindow } from "@/components/home/ShopWindow";
 import { BrandTicker } from "@/components/home/BrandTicker";
 import { FlipWords } from "@/components/ui/flip-words";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
+import { featuredOfferRail, featuredSpecialRail, newArrivalsRail } from "@/lib/home-rails";
 import { NewArrivals } from "@/components/home/NewArrivals";
 import { BrandShowcase } from "@/components/home/BrandShowcase";
 import { AccessoryUniverse } from "@/components/home/AccessoryUniverse";
@@ -164,7 +165,19 @@ function Hero() {
   );
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  /*
+   * Read from the catalog seam on the server. Both product rails used to fetch
+   * `/api/products` after hydration, which left the served homepage holding no
+   * products at all — Constitution III says browsing must not need a round-trip,
+   * and `quickstart.md` §3 checks it with curl rather than by trust.
+   */
+  const featuredTabs = [
+    { key: "newest" as const, label: "جدیدترین‌ها", products: featuredOfferRail() },
+    { key: "special" as const, label: "پیشنهاد ویژه", products: featuredSpecialRail() },
+  ];
+  const arrivals = newArrivalsRail();
+
   return (
     <>
       <Hero />
@@ -178,13 +191,13 @@ export default function HomePage() {
           being persuaded about. Real stock with real prices comes first now,
           and the trust case moves to where it is actually needed: immediately
           before the final call to buy. */}
-      <FeaturedProducts />
+      <FeaturedProducts tabs={featuredTabs} />
       <CategoryHub />
       <BrandShowcase />
       {/* CampaignBanner removed (distill): it sold no offer, product, or
           urgency — generic ad copy plus the logo in the page's most expensive
           slot. Restore it only when there is a real campaign to carry. */}
-      <NewArrivals />
+      <NewArrivals products={arrivals} />
       <B2bSection />
       <AccessoryUniverse />
       <OnlineServices />

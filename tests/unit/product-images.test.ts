@@ -1,4 +1,4 @@
-import { existsSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import { listCategories, queryProducts } from "@/lib/catalog";
@@ -76,8 +76,18 @@ describe("resolveProductImage", () => {
    */
   it("resolves every catalogue product to its own photo or the placeholder", () => {
     const { data, total } = queryProducts({ page: 1, pageSize: 500 });
-    expect(total).toBe(189);
-    expect(data.length).toBe(189);
+    /*
+     * Derived from the export rather than asserted as 189. A literal total here
+     * meant SC-005's "re-verifiable after a refresh without restating the totals"
+     * was false in the very file that grades it: the next export would fail the
+     * suite for the right reason and the fix would be to edit the number.
+     */
+    const exportRows = (JSON.parse(readFileSync(join(process.cwd(), "data/hami-products.json"), "utf8")) as {
+      products: Array<{ id: number; name: string; primary_image?: string | null; images?: Array<{ is_default?: boolean }> }>;
+    }).products;
+    expect(total).toBe(exportRows.length);
+    expect(data.length).toBe(exportRows.length);
+    expect(exportRows.length).toBeGreaterThan(0);
 
     const toPlaceholder: string[] = [];
     const toTemplatePack: string[] = [];
@@ -89,8 +99,18 @@ describe("resolveProductImage", () => {
     }
 
     expect(toTemplatePack).toEqual([]);
-    // Exactly one: «اپل آیدی» (id 347), a service with `primary_image: null` in the export.
-    expect(toPlaceholder).toEqual(["347 اپل آیدی"]);
+    /*
+     * The placeholder set must equal exactly the records the export holds no image
+     * for — today «اپل آیدی» (id 347, `primary_image: null`), and named nowhere in
+     * this file. Two ways this fails for real reasons: the mirror loses a file, so
+     * a product that does have an image starts reaching the placeholder; or the
+     * mirror grows a file for the imageless record, so it silently stops showing.
+     */
+    const imageless = exportRows
+      .filter((p) => !p.primary_image && !(p.images ?? []).some((i) => i.is_default))
+      .map((p) => `${p.id} ${p.name}`)
+      .sort();
+    expect([...toPlaceholder].sort(), "placeholder set drifted from the imageless records").toEqual(imageless);
   });
 });
 

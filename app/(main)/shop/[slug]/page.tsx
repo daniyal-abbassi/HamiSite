@@ -23,15 +23,17 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
 export default async function ProductPage({ params }: { params: Params }) {
   const { slug } = await params;
   /*
-   * Resolved on the server so a missing product is an actual 404. It used to
-   * render a client component that fetched, printed «محصول پیدا نشد» and left a
-   * framework-default 200 behind — so a dead product link looked alive to
-   * anything that does not run JavaScript, and US3 scenario 9 was unmet.
+   * Read through the seam on the server, for two separate reasons. A missing
+   * product must be an actual 404 rather than a client component printing «محصول
+   * پیدا نشد» over a framework-default 200 (US3 scenario 9), and browsing must not
+   * require an API round-trip (Constitution III) — this route used to prerender an
+   * empty shell and fetch `/api/products/[slug]` after hydration.
    */
-  if (!findProductBySlug(slug)) notFound();
+  const product = findProductBySlug(slug);
+  if (!product) notFound();
   return (
     <div className="container py-10">
-      <ProductDetail slug={slug} />
+      <ProductDetail product={product} />
     </div>
   );
 }

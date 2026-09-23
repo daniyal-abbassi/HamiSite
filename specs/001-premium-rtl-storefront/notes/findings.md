@@ -93,3 +93,46 @@ bulk pricing out of scope, so removing it would be a behaviour change in frozen 
 **T033** — the three CSS-composition filler panels at `components/home/WhyHami.tsx:16-42` remain (band 3's
 T089 rebuilds or removes the section wholesale). **T002** — the 13-surface baseline is not captured; two
 screenshots exist at `/tmp/band0-*.png`, which is not a baseline.
+
+
+---
+
+## Band 1 — the seam (2026-09-23)
+
+Full record in [`seam.md`](./seam.md). Instruments: `curl` against served bytes, headed Chromium at
+1280×900, `tsc --noEmit`, 170 unit tests, `npm run build`. All four clean.
+
+**Constitution III's breach is closed and it is measurable, not asserted**: the served HTML of `/shop`,
+of `?brand=شیائومی` and of the homepage each contain 24 product links where they previously contained
+**none**; the product page's price is in the served bytes; an unknown slug is a real 404. Browsing no
+longer round-trips through `/api/products*` on any shopper surface — the API routes stay for the frozen
+cart/checkout/admin consumers.
+
+**The one deviation from the task list, recorded rather than buried.** T042 said to correct
+`types/store.ts`; that type is shared with `components/admin/products/ProductForm.tsx`, which reads
+`analysis`, `isDigital` and `variant.unitPrice` from it, and the back office is frozen. So the *shopper*
+boundary was retyped to the seam's real output instead and the admin file untouched. The obligation
+(declared, not asserted) is met and demonstrated: the phantom read now produces `TS2339`. The admin form
+still carries the same class of latent defect and is out of scope for 001 — this is the second time in this
+feature an audit claim has needed narrowing against what the file actually shares, so it is written here
+rather than discovered by the next person.
+
+**Measured and corrected in flight**: I initially wrote that the seam-shape test would also fail on a
+deliberate phantom read. It did not — it inspects what the seam emits, not what a component asks for.
+The type checker is the guard for the read. The note in `seam.md` states the split instead of the tidier
+version I first put down.
+
+**FR-055 landed as one mechanism**, not a badge: `catalogGeneratedAt()` reads the export's own
+`generated_at` and `components/shop/DataCurrencyNote.tsx` renders it through
+`Intl.DateTimeFormat("fa-IR")` — a Persian (Jalali) date with no hand-rolled calendar, per FR-061 — on the
+shop header and the product page's price block.
+
+**Refresh tolerance is now structural rather than hopeful**: `categoryDepartments()` drops and logs instead
+of throwing from the homepage render path, `kindTotal` is counted from the export at request time, and the
+two drift tests no longer restate `189`, `9`, `[8, 134]` or `["347 اپل آیدی"]` — they derive the same
+properties from the same file the seam reads. SC-005's "re-verifiable without restating the totals" is now
+true of the tests that grade it.
+
+**Known-inert after this band, and not papered over**: `serializeProduct` emits no `updatedAt`, so the
+homepage's «تازه‌ها» heading is still not a recency feed and the two featured tabs still resolve to
+identical lists. `lib/home-rails.ts` says so in its own comment. T050 (band 2) owns the comparator.

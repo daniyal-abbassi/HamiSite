@@ -1,42 +1,41 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Check, Copy, Minus, Phone, Plus, RotateCcw, ShoppingBag, Sparkles, TriangleAlert } from "lucide-react";
+import { Check, Copy, Minus, Phone, Plus, ShoppingBag, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
-import { ApiClientError, apiGet } from "@/lib/api-client";
+import { ApiClientError } from "@/lib/api-client";
 import { apiErrorToFa } from "@/lib/api-error-fa";
-import { paymentTermLabels } from "@/lib/content/order";
 import { stockLabels } from "@/lib/content/shop";
-import { resolveProductImage } from "@/lib/product-images";
 import { storeContact } from "@/lib/content/contact";
-import { cn, formatToman, toFaDigits } from "@/lib/utils";
-import { compareAtOf, isPurchasable, unitPriceOf } from "@/lib/product-identity";
 import { storeWarranty } from "@/lib/content/verified-facts";
+import { PLACEHOLDER_ALT, PLACEHOLDER_LABEL, isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
+import { compareAtOf, isPurchasable, unitPriceOf } from "@/lib/product-identity";
+import { cn, formatToman, toFaDigits } from "@/lib/utils";
+import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
 /*
- * `CatalogProduct` is `ReturnType<typeof serializeProduct>` — the shape the seam
- * actually emits. This component used to be typed by `apiGet<ProductDetail>`
- * against `types/store.ts`, which still describes the pre-seam Prisma payload:
- * that unchecked cast is what let `selectedVariant.unitPrice` compile while the
- * server sent no such key, and every product page printed «قیمت فروشگاه».
- * Importing the real shape makes the next such rename a build error.
+ * The record is typed by the seam itself — `ReturnType<typeof serializeProduct>`.
+ * This component used to be typed `apiGet<ProductDetail>` against `types/store.ts`,
+ * which still describes the pre-seam Prisma payload, and that unchecked cast is
+ * what let `selectedVariant.unitPrice` compile while the server sent no such key:
+ * every product page then printed «قیمت فروشگاه» instead of a price. Importing the
+ * real shape makes the next field rename a build error instead of a wrong number.
  *
- * `types/store.ts` is deliberately left alone: the admin product form still
+ * `types/store.ts` is deliberately left as it is — the admin product form still
  * reads the old shape and the back office is out of scope.
  */
-import type { CatalogProduct as ProductData } from "@/lib/catalog";
+import type { CatalogProduct } from "@/lib/catalog";
 
-type Props = { slug: string };
+type Props = { product: CatalogProduct };
 
 /**
- * The number as text a shopper can take with them. FR-039: the contact action
- * MUST work on a device where placing a call is not possible, and until this
- * existed the digits were only ever renderable, never copyable.
+ * The number as text a shopper can take with them. FR-039: the contact action MUST
+ * work on a device where placing a call is not possible, and until this existed the
+ * digits were only ever renderable, never copyable.
  */
 function CopyPhoneButton() {
   const [copied, setCopied] = useState(false);
@@ -58,94 +57,60 @@ function CopyPhoneButton() {
   );
 }
 
-/** B2B payment-term selector values (the API only accepts these two). */
-const PAYMENT_TERMS = ["CASH", "CREDIT_60_DAYS"] as const;
-
-export function ProductDetail({ slug }: Props) {
+/**
+ * The product page.
+ *
+ * It used to fetch itself. `/shop` and this route prerendered a shell and called
+ * `/api/products/*` from an effect after hydration, which is the round-trip
+ * Constitution III forbids and the seam where the price defect had hidden. The
+ * record now arrives from `app/(main)/shop/[slug]/page.tsx`, which reads it through
+ * the seam and returns a real 404 when the slug matches nothing — so there is no
+ * loading state, no fetch-failure state, and no «محصول پیدا نشد» that is actually
+ * a network error.
+ *
+ * The B2B payment-term selector went with the fetch. It existed to re-quote a price
+ * per quantity and term, the export carries no tiers at all
+ * (`lib/catalog.ts:179`), and a control whose only effect was to fire a request that
+ * could not change anything is what FR-043 calls inoperable.
+ */
+export function ProductDetail({ product }: Props) {
   const router = useRouter();
   const { user } = useAuth();
   const { addItem } = useCart();
 
-  const [product, setProduct] = useState<ProductData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [failed, setFailed] = useState(false);
-  const [missing, setMissing] = useState(false);
-  const [reloadKey, setReloadKey] = useState(0);
-
-  const [selectedVariantId, setSelectedVariantId] = useState<number | null>(null);
+  const [selectedVariantId, setSelectedVariantId] = useState<number | null>(
+    () => product.variants.find((variant) => variant.isDefault)?.id ?? product.variants[0]?.id ?? null,
+  );
   const [quantity, setQuantity] = useState(1);
-  const [paymentTerm, setPaymentTerm] = useState<(typeof PAYMENT_TERMS)[number]>("CASH");
-
   const [addState, setAddState] = useState<"idle" | "loading" | "done">("idle");
   const [actionError, setActionError] = useState<string | null>(null);
 
-  const isWholesale = user?.role === "WHOLESALE";
-  const effectiveTerm = isWholesale ? paymentTerm : "CASH";
-
-  // The product endpoint resolves B2B price tiers per requested quantity +
-  // paymentTerm, so quantity changes refetch and the price stays "alive".
-  useEffect(() => {
-    let cancelled = false;
-    setFailed(false);
-    setMissing(false);
-    setActionError(null);
-    setLoading((prev) => prev || product === null);
-
-    const params = new URLSearchParams({ quantity: String(quantity) });
-    if (effectiveTerm !== "CASH") params.set("paymentTerm", effectiveTerm);
-
-    apiGet<ProductData>(`/api/products/${slug}?${params.toString()}`)
-      .then((data) => {
-        if (cancelled) return;
-        setProduct(data);
-        setSelectedVariantId((prev) =>
-          data.variants.some((variant) => variant.id === prev)
-            ? prev
-            : (data.variants.find((variant) => variant.isDefault)?.id ?? data.variants[0]?.id ?? null),
-        );
-      })
-      .catch((cause) => {
-        if (cancelled) return;
-        /* "There is no such product" and "we could not load it" are different
-           statements, and FR-046 requires them to look different: a network blip
-           used to render as a claim about the catalogue. */
-        if (cause instanceof ApiClientError && cause.status === 404) setMissing(true);
-        else setFailed(true);
-      })
-      .finally(() => {
-        if (!cancelled) setLoading(false);
-      });
-
-    return () => {
-      cancelled = true;
-    };
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- `product` must not retrigger the fetch
-  }, [slug, quantity, effectiveTerm, reloadKey]);
-
   const selectedVariant = useMemo(() => {
-    if (!product || product.variants.length === 0) return null;
+    if (product.variants.length === 0) return null;
     return product.variants.find((variant) => variant.id === selectedVariantId) ?? null;
   }, [product, selectedVariantId]);
 
-  const colors = useMemo(() => {
-    if (!product) return [];
-    return [...new Set(product.variants.map((variant) => variant.color).filter((color): color is string => Boolean(color)))];
-  }, [product]);
+  const colors = useMemo(
+    () => [...new Set(product.variants.map((variant) => variant.color).filter((color): color is string => Boolean(color)))],
+    [product],
+  );
 
-  const storages = useMemo(() => {
-    if (!product) return [];
-    return [...new Set(product.variants.map((variant) => variant.storage).filter((storage): storage is string => Boolean(storage)))];
-  }, [product]);
+  const storages = useMemo(
+    () => [...new Set(product.variants.map((variant) => variant.storage).filter((storage): storage is string => Boolean(storage)))],
+    [product],
+  );
 
-  const stockType = selectedVariant?.stockType ?? product?.stockType ?? "call";
+  const stockType = selectedVariant?.stockType ?? product.stockType ?? "call";
   const maxQuantity = stockType === "limited" ? (selectedVariant?.stock ?? null) : null;
-  /* The merchant's own `purchasable` field, not the shelf label: 16 records read
-     "limited" while saying they cannot sell, and `product?.stock` never existed
-     on the serialized row at all. */
-  const purchasable = isPurchasable({ available: product?.available, stockType });
+  /*
+   * The merchant's own `purchasable` field, not the shelf label, and only when the
+   * state is one this site can interpret: sixteen records read «موجود محدود» while
+   * `purchasable` says they cannot be sold, and FR-056 requires an unknown state to
+   * fall back to contact rather than to a positive claim.
+   */
+  const purchasable = isPurchasable({ available: product.available, stockType });
 
   async function handleAddToCart() {
-    if (!product) return;
     setAddState("loading");
     setActionError(null);
     try {
@@ -154,7 +119,7 @@ export function ProductDetail({ slug }: Props) {
       window.setTimeout(() => setAddState("idle"), 1800);
     } catch (cause) {
       if (cause instanceof ApiClientError && cause.code === "AUTH_REQUIRED") {
-        router.push(`/login?next=${encodeURIComponent(`/shop/${slug}`)}`);
+        router.push(`/login?next=${encodeURIComponent(`/shop/${product.slug}`)}`);
         return;
       }
       setActionError(apiErrorToFa(cause));
@@ -163,7 +128,6 @@ export function ProductDetail({ slug }: Props) {
   }
 
   function pickByColor(color: string) {
-    if (!product) return;
     const sameStorage = product.variants.find(
       (variant) => variant.color === color && variant.storage === selectedVariant?.storage,
     );
@@ -172,7 +136,6 @@ export function ProductDetail({ slug }: Props) {
   }
 
   function pickByStorage(storage: string) {
-    if (!product) return;
     const sameColor = product.variants.find(
       (variant) => variant.storage === storage && variant.color === selectedVariant?.color,
     );
@@ -199,63 +162,18 @@ export function ProductDetail({ slug }: Props) {
     );
   }
 
-  if (loading && !product) {
-    return (
-      <div className="grid gap-8 lg:grid-cols-2">
-        <Skeleton className="aspect-square max-w-lg rounded-2xl" />
-        <div className="space-y-4">
-          <Skeleton className="h-4 w-24" />
-          <Skeleton className="h-9 w-3/4" />
-          <Skeleton className="h-6 w-40" />
-          <Skeleton className="h-12 w-64 rounded-full" />
-          <Skeleton className="h-24 w-full rounded-2xl" />
-        </div>
-      </div>
-    );
-  }
-
-  if (missing && !product) {
-    return (
-      <div className="glass mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
-        <TriangleAlert className="size-9 text-destructive" />
-        <h2 className="text-lg font-black">این محصول دیگر در فروشگاه نیست</h2>
-        <p className="text-sm text-muted-foreground">
-          اگر آدرس این صفحه را از جای دیگری گرفته‌اید، ممکن است حذف یا جایگزین شده باشد.
-        </p>
-        <Link href="/shop">
-          <Button size="sm" variant="oxblood">بازگشت به فروشگاه</Button>
-        </Link>
-      </div>
-    );
-  }
-
-  if (failed && !product) {
-    return (
-      <div className="glass mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
-        <TriangleAlert className="size-9 text-destructive" />
-        <h2 className="text-lg font-black">بارگذاری محصول انجام نشد</h2>
-        <p className="text-sm text-muted-foreground">اتصال به سرور برقرار نشد. دوباره تلاش کنید.</p>
-        <div className="flex gap-2">
-          <Button variant="ghost" size="sm" onClick={() => setReloadKey((key) => key + 1)}>
-            <RotateCcw className="size-4" />
-            تلاش دوباره
-          </Button>
-          <Link href="/shop">
-            <Button size="sm" variant="oxblood">
-              بازگشت به فروشگاه
-            </Button>
-          </Link>
-        </div>
-      </div>
-    );
-  }
-
-  if (!product) return null;
-
-  const unitPrice = unitPriceOf(selectedVariant?.price, product?.displayPrice);
-  const compareAtPrice = compareAtOf(unitPrice, selectedVariant?.compareAtPrice ?? product?.compareAtPrice);
   const variantTitle = [selectedVariant?.storage, selectedVariant?.color].filter(Boolean).join(" — ");
+  const productImage = resolveProductImage(product);
+  const noImage = isPlaceholderImage(productImage);
 
+  /*
+   * The seam emits `variant.price` and a product-level `displayPrice`; 0 means
+   * "no price listed", never free, so both go through helpers that turn it back
+   * into null. A comparison price only exists when it is strictly higher —
+   * 40 of the 311 variants carry one that is not.
+   */
+  const unitPrice = unitPriceOf(selectedVariant?.price, product.displayPrice);
+  const compareAtPrice = compareAtOf(unitPrice, selectedVariant?.compareAtPrice ?? product.compareAtPrice);
   return (
     /* pb clears the sticky mobile buy bar *and* the dock under it. Without it
        the tags row at the bottom of this page sits behind both. */
@@ -281,6 +199,11 @@ export function ProductDetail({ slug }: Props) {
         {/* Image */}
         {/* Image Vitrine */}
         <div className="relative aspect-square overflow-hidden rounded-3xl glass-smoked border border-champagne/25 shadow-monolith">
+          {noImage && (
+            <span className="absolute end-4 top-4 z-20 rounded-full border border-champagne/25 bg-ink/80 px-3 py-1.5 font-mono text-[11px] text-foreground/75">
+              {PLACEHOLDER_LABEL}
+            </span>
+          )}
           {product.specialOffer && (
             <span className="absolute start-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-champagne/30 bg-oxblood/90 px-3.5 py-1.5 font-mono text-xs tracking-[0.14em] text-champagne backdrop-blur-md shadow-glow-oxblood">
               <Sparkles className="size-3 text-champagne" />
@@ -288,8 +211,8 @@ export function ProductDetail({ slug }: Props) {
             </span>
           )}
           <Image
-            src={resolveProductImage(product)}
-            alt={product.name}
+            src={productImage}
+            alt={isPlaceholderImage(productImage) ? PLACEHOLDER_ALT : product.name}
             fill
             sizes="(min-width: 1024px) 40vw, 90vw"
             className="object-contain p-8 transition-transform duration-700 hover:scale-105"
@@ -320,6 +243,7 @@ export function ProductDetail({ slug }: Props) {
           </div>
 
           <div className="mt-6 rounded-2xl glass-smoked border border-champagne/25 p-6 shadow-card">
+            <DataCurrencyNote className="mb-3 text-[11px]" />
             {unitPrice !== null ? (
               <div className="flex flex-wrap items-baseline gap-3">
                 {compareAtPrice != null && compareAtPrice > unitPrice && (
@@ -365,18 +289,6 @@ export function ProductDetail({ slug }: Props) {
                     {colors.map((color) => (
                       <Chip key={color} label={`رنگ ${color}`} active={selectedVariant?.color === color} onClick={() => pickByColor(color)}>
                         {color}
-                      </Chip>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {isWholesale && (
-                <div>
-                  <p className="mb-2 font-mono text-xs tracking-[0.1em] text-muted-foreground/70">نوع تسویه</p>
-                  <div className="flex flex-wrap gap-2">
-                    {PAYMENT_TERMS.map((term) => (
-                      <Chip key={term} label={paymentTermLabels[term]} active={paymentTerm === term} onClick={() => setPaymentTerm(term)}>
-                        {paymentTermLabels[term]}
                       </Chip>
                     ))}
                   </div>

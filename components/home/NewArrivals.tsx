@@ -4,36 +4,26 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { apiGet } from "@/lib/api-client";
+import type { RailProduct } from "@/lib/home-rails";
 import { ProductCard, type ProductCardData } from "@/components/shop/ProductCard";
 import { formatToman } from "@/lib/utils";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Reveal } from "@/components/home/Reveal";
 
-type NewArrivalProduct = {
-  id: number;
-  name: string;
-  slug: string;
-  brand: { name: string } | null;
-  displayPrice: number;
-};
+type NewArrivalProduct = RailProduct;
 
-export function NewArrivals() {
+/*
+ * Fed from the seam on the server. `products` used to be null until an
+ * `/api/products` call resolved, which is why the served homepage held none of
+ * them; the skeleton branch stays for the same reason the label is still wrong —
+ * see `lib/home-rails.ts` and T050.
+ */
+export function NewArrivals({ products: initialProducts }: { products: NewArrivalProduct[] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", direction: "rtl", containScroll: "trimSnaps" });
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
-  const [products, setProducts] = useState<NewArrivalProduct[] | null>(null);
-  const [error, setError] = useState(false);
-
-  useEffect(() => {
-    let cancelled = false;
-    apiGet<NewArrivalProduct[]>("/api/products?pageSize=6&includeVariants=false")
-      .then((data) => !cancelled && setProducts(data))
-      .catch(() => !cancelled && setError(true));
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  const [products] = useState<NewArrivalProduct[] | null>(initialProducts);
+  const [error] = useState(false);
 
   const onSelect = useCallback(() => {
     if (!emblaApi) return;

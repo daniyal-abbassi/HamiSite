@@ -308,6 +308,21 @@ export function queryProducts(input: CatalogQuery) {
   };
 }
 
+/**
+ * The export's own provenance — `generated_at` in `data/hami-products.json`.
+ *
+ * FR-055 requires the currency of a displayed price or stock figure to be
+ * discoverable: this snapshot is dated 2026-09-09 and the owner has confirmed the
+ * availability figures in it are stale, so a shopper must not be left to assume a
+ * number of unstated age is current. The seam is the only place that knows the
+ * date, so the date leaves the file only through here.
+ */
+export function catalogGeneratedAt(): string | null {
+  const meta = (catalogJson as { meta?: { generated_at?: unknown } }).meta;
+  const value = meta?.generated_at;
+  return typeof value === "string" ? value : null;
+}
+
 export function findProductBySlug(slug: string) {
   const decoded = decodeURIComponent(slug);
   const p =
@@ -317,6 +332,24 @@ export function findProductBySlug(slug: string) {
     // characters percent-encoded differently; fall back to a loose match.
     raw.products.find((x) => slugify(x.slug) === slugify(decoded));
   return p ? serializeProduct(p, true) : null;
+}
+
+/**
+ * How many products carry each `kind`, counted from the export on every call.
+ *
+ * This exists so `lib/category-departments.ts` can decide whether a panel's route
+ * is the whole department without storing a snapshot of what the department
+ * contained on 2026-09-09. FR-053 forbids embedding "the current counts, ratios,
+ * or thresholds of this snapshot" in a display rule, and a literal count is exactly
+ * that — it silently becomes wrong for the next export rather than loudly.
+ */
+export function countProductsByKind(): Record<string, number> {
+  const counts: Record<string, number> = {};
+  for (const p of raw.products) {
+    const kind = p.kind ?? "(none)";
+    counts[kind] = (counts[kind] ?? 0) + 1;
+  }
+  return counts;
 }
 
 export function listBrands() {

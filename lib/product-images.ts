@@ -58,6 +58,25 @@ export type ProductImageSource = {
 export const PRODUCT_PLACEHOLDER_IMAGE = PRODUCT_PLACEHOLDER;
 
 /**
+ * Whether a resolved source is the brand placeholder rather than the product's own photograph.
+ *
+ * FR-001 in the constitution says missing data stays *visibly* missing, and the
+ * placeholder as first shipped broke that: it filled the exact slot the product's own
+ * picture occupies, at the same size, with `alt={product.name}` — so record 347 read
+ * on screen as a phone with a photo it does not have. The owner directed this one
+ * shared brand image on 2026-09-22, which is legitimate (it is brand material, never
+ * a guess about the merchandise), but it has to announce itself. These two constants
+ * are how a surface says so without each one inventing its own wording.
+ */
+export function isPlaceholderImage(src: string): boolean {
+  return src === PRODUCT_PLACEHOLDER;
+}
+
+/** The alt text and the visible label for a placeholder. One phrasing, site-wide. */
+export const PLACEHOLDER_ALT = "نشان حامی همراه — این کالا تصویری در فهرست فروشگاه ندارد";
+export const PLACEHOLDER_LABEL = "بدون تصویر محصول";
+
+/**
  * Resolve a product's image: its own photograph, or the brand placeholder.
  *
  * There is no third option. The previous fallback guessed a plausible picture

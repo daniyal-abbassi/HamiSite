@@ -38,25 +38,41 @@ const kindTotals = exportData.products.reduce<Record<string, number>>((acc, p) =
 const departments = categoryDepartments();
 const categoryBySlug = new Map(exportData.categories.map((c) => [c.slug, c]));
 
-/** Routes whose measured shortfall against their kind total is known and accepted. */
-const KNOWN_SHORTFALLS: Record<string, [number, number]> = {
-  phone: [8, 134],
-  charger: [9, 10],
-  powerbank: [6, 7],
-};
+/*
+ * Departments whose route is known to hold less than the whole kind today: the
+ * shop files some products under categories that are not the department's own.
+ *
+ * Names, not numbers. The previous version pinned `[8, 134]`, `[9, 10]` and
+ * `[6, 7]`, so a refreshed export failed the suite for an entirely correct reason
+ * and someone had to edit the test to match reality — which is the snapshot
+ * coupling FR-053 forbids, smuggled into the guard that was supposed to catch it.
+ * What is worth defending is the *shape*: a route never exceeds its kind, and any
+ * shortfall is one of these named cases rather than a surprise.
+ */
+const KNOWN_SHORTFALL_KINDS = new Set(["phone", "charger", "powerbank"]);
 
 describe("categoryDepartments", () => {
+  /*
+   * Property-style, not snapshot-style. An earlier version of this file asserted
+   * `9` and `189` directly, which meant SC-005's promise — "re-verifiable after an
+   * availability refresh without restating the totals" — was false by construction:
+   * a refreshed export broke the test for the right reason and looked like a
+   * regression. Every number below is now derived from the same export the seam
+   * reads, so the assertions hold for an export of any size and fail only when the
+   * coverage property itself breaks.
+   */
   it("presents exactly the populated kinds, one department each, covering the whole catalogue", () => {
     const populated = Object.keys(kindTotals).filter((k) => k !== "(none)");
-    expect(populated.length).toBe(9);
-    expect(DEPARTMENT_TOTAL).toBe(9);
+    expect(populated.length).toBeGreaterThan(0);
+    // Authored departments and rendered departments agree while the export is healthy.
+    expect(DEPARTMENT_TOTAL).toBe(populated.length);
+    expect(departments.length).toBe(populated.length);
     expect(departments.map((d) => d.kind).sort()).toEqual([...populated].sort());
 
-    // Sum of kind totals is every product: nothing browsable is invisible on the homepage's main
-    // orientation surface, which is the property the eight-badge alternative would have failed.
+    // Sum of kind totals is every product: nothing browsable is invisible on the
+    // homepage's main orientation surface, which the eight-badge alternative failed.
     const covered = Object.values(kindTotals).reduce((a, b) => a + b, 0);
-    expect(covered).toBe(189);
-    expect(exportData.products.length).toBe(189);
+    expect(covered).toBe(exportData.products.length);
   });
 
   it("resolves every slug to a real category in the export", () => {
@@ -96,14 +112,12 @@ describe("categoryDepartments", () => {
     expect(new Set(slugs).size).toBe(slugs.length);
   });
 
-  it("keeps the measured shortfalls to the three already accepted", () => {
+  it("keeps every route within its kind, and every shortfall among the named ones", () => {
     for (const d of departments) {
       const kindTotal = kindTotals[d.kind];
-      const known = KNOWN_SHORTFALLS[d.kind];
-      if (known) {
-        expect([d.reachableCount, kindTotal], d.slug).toEqual(known);
-      } else {
-        expect(d.reachableCount, `${d.slug} newly lost products`).toBe(kindTotal);
+      expect(d.reachableCount, `${d.slug} routes to more than its kind holds`).toBeLessThanOrEqual(kindTotal);
+      if (d.reachableCount < kindTotal) {
+        expect(KNOWN_SHORTFALL_KINDS.has(d.kind), `${d.slug} is a newly short route — review its category`).toBe(true);
       }
     }
   });
@@ -116,13 +130,13 @@ describe("categoryDepartments", () => {
       );
     }
 
-    // The three known shortfalls must all be silent about their size.
-    expect(departments.filter((d) => !d.showsCount).map((d) => d.kind).sort()).toEqual([
-      "charger",
-      "phone",
-      "powerbank",
-    ]);
-    expect(departments.find((d) => d.kind === "phone")!.showsCount).toBe(false);
+    // The named shortfalls must be silent about their size, and the mechanism must
+    // not be dead: if no panel ever showed a count, `showsCount` would have quietly
+    // become "always false" and this file would have stopped proving anything.
+    for (const d of departments) {
+      if (KNOWN_SHORTFALL_KINDS.has(d.kind) && d.reachableCount < d.kindTotal) expect(d.showsCount, d.slug).toBe(false);
+    }
+    expect(departments.some((d) => d.showsCount), "no panel shows a count at all").toBe(true);
   });
 
   it("declares a kind total that matches the export, so showsCount cannot drift", () => {
