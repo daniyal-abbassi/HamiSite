@@ -609,6 +609,17 @@ light theme — the ask is *travel within the dark palette*, not white.
   hero and closing CTA staying dark. Specified in full — mechanism, hazards, contrast numbers, acceptance —
   in `notes/parallel-agent-plan.md` §6, and assigned to the second agent working this checkout.
 
+- [ ] T117 [US1] **`--signal` / `text-destructive` fails on every light surface, and the pair just built
+  light surfaces.** `#E4573F` measures **3.66:1 on `#ffffff`** and **3.25:1 on the T116 paper `#f4f1ea`** —
+  under AA's 4.5:1 for body text — and the `bg-destructive/10` wash behind it measures **1.13:1** against the
+  same ground, so the "error" chip is nearly invisible on white while being loud on the dark canvas where it
+  was designed. 37 usages across the components; most sit on the dark canvas and are fine (5.60:1), which is
+  exactly why nobody noticed until the paper chapters landed. The partner worked around it inside
+  `AddToCartButton` with a solid `#8E1B10` chip and white text (9.07:1) rather than touching the palette.
+  Fix it at the token layer with T088, not per-component: a light-surface variant of `--destructive` and
+  `--signal`, scoped the same way `.band-paper` scopes `--foreground`. Acceptance: every text token at ≥ 4.5:1
+  against white, `#f4f1ea` and the dark canvas, measured across the sweep, not asserted.
+
 - [ ] T115 [US1] Make the ground reach the pixels it owns. `verification/ground-travel.mjs` reports the
   authored tone arriving at the gutter unpainted at only **9 of 13** scroll positions: at 25%, 42% and 58%
   the gutter shows `#110003` / `#0e070f` / `#10060d` where `lib/atmosphere/progression.ts` holds
