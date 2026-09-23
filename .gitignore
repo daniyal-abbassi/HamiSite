@@ -62,3 +62,4 @@ specs/001-premium-rtl-storefront/baseline/*.png
 !specs/001-premium-rtl-storefront/baseline/pdp-variant@*-fold.png
 
 # Live agent-pair coordination (this session only — the record lives in notes/)
+.agent-pair/
