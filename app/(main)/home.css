@@ -445,3 +445,248 @@
    `.cat-corner-glow` go with them: no component renders either class, and the cream
    «phantom shape» they drew is the surface 005's FR-039 forbids this section from becoming. */
 
+/* ===========================================================================
+   T-P1 — LIGHT CHAPTERS. Two opaque paper bands inside the dark tour.
+   ---------------------------------------------------------------------------
+   The owner's brief, twice and by name (`palatemcp.com`): the six-stop tone
+   tour is not enough on its own — "use white somewhere". What that reference
+   actually does is not a light theme: its `body` never changes, and each
+   `<section>` paints its own opaque colour with the text inverting inside it.
+   That is the device here. The page still opens dark and closes dark; the
+   light is the rooms in between, sequenced dark → paper → dark → paper → dark.
+
+   The previous attempt at this died for a boring reason: `[data-ambience="light"]`
+   (deleted above by T073/T090) styled a state nothing set, so ~110 lines of
+   cream overrides applied to a section that never asked for them. This version
+   hangs off a class on the section's own element, which cannot drift out of
+   existence without the section visibly changing.
+
+   ## Why overriding tokens is nearly the whole implementation
+   The palette is RGB-triplet custom properties consumed as
+   `rgb(var(--x) / <alpha-value>)` (tailwind.config.ts), so ~140
+   `text-foreground/NN` usages and every `border-line` flip from inside the band
+   with no component edits. `--foreground` on paper has to be ink: the page's
+   platinum `#F0ECE9` measures **1.04:1** against `#f4f1ea`, which is the
+   white-on-white failure this project has already hit twice.
+
+   ## What that trick cannot reach, and is fixed per-case below
+   `aqua`, `champagne`, `gold`, `ink` and `oxblood` are **literal hex** in the
+   Tailwind theme (the config says so: "literal hex so opacity modifiers just
+   work"). A utility like `text-aqua` compiles to `#E5D3B3` and no variable
+   overrides it — and champagne on paper is **1.30:1**, i.e. invisible. Those
+   are handled by scoped attribute rules, matching the `[class*=…]` idiom
+   `app/globals.css` already uses for the touch-target block.
+
+   ## The one alpha that cannot be saved by any ground
+   `text-foreground/55` measures 4.35:1 on paper, and no lighter ground fixes
+   it — pure white reaches only 4.50, because the composite is a mid-grey
+   whatever sits under it. So the tier is lifted, not the ground. See the
+   `:where([class~="text-foreground/55"])` rule.
+   =========================================================================== */
+
+.band-paper {
+  /* The band's own world, named once and referenced everywhere below. */
+  --paper: #f4f1ea;
+  --paper-ink: 17 4 8;          /* #110408 — the brand's edge-ink */
+  --paper-muted: 74 62 60;      /* #4A3E3C — 9.10:1 on paper */
+  --paper-brand: #640211;       /* Imperial Oxblood — 11.94:1, the inverse of champagne */
+
+  background-color: var(--paper);
+  color: rgb(var(--paper-ink));
+
+  /* Everything alpha'd against the page now inverts for free. */
+  --background: 244 241 234;
+  --foreground: var(--paper-ink);
+  --card: 255 255 255;
+  --card-foreground: var(--paper-ink);
+  --popover: 255 255 255;
+  --popover-foreground: var(--paper-ink);
+  --muted: 240 237 236;
+  --muted-foreground: var(--paper-muted);
+  --border: var(--paper-ink);
+  --input: var(--paper-ink);
+  --ring: 100 2 17;             /* focus goes oxblood; a champagne ring on ivory is no ring */
+
+  /* The brand accent, inverted. On the canvas this is champagne at 12%; on paper
+     the same hairline has to be ink, which is why `--line` is a variable at all. */
+  --line: rgba(17, 4, 8, 0.16);
+
+  /* Literal-hex tokens that *are* read directly by bespoke CSS (`.eyebrow`,
+     `.faq details[open]`) — overriding these is free and catches those rules. */
+  --aqua: #640211;
+  --champagne: #640211;
+  --gold: #640211;
+
+  /* The CTA fill. Champagne on ivory is 1.30:1 and the button dissolves into the
+     page; oxblood filled with paper text is the same weight in the opposite sign. */
+  --primary: 100 2 17;
+  --primary-foreground: 244 234 219;
+
+  /* A paper band separates from the canvas by value alone. The dark world's
+     shadows are near-black at 0.65+ and read as dirt under a light surface, so
+     the depth here is a hairline and a shallow warm shadow — the same treatment
+     `.product-card` already carries. */
+  box-shadow: 0 1px 0 rgba(17, 4, 8, 0.06), 0 26px 60px -40px rgba(17, 4, 8, 0.55);
+}
+
+/* --- Utilities the token override cannot reach: literal-hex brand accents. ---
+   Every one of these was champagne and therefore invisible on paper. */
+.band-paper :where([class*="text-aqua"], [class*="text-champagne"], [class*="text-gold"]) {
+  color: var(--paper-brand);
+}
+.band-paper :where([class*="bg-aqua"], [class*="bg-champagne"], [class*="bg-gold"]) {
+  background-color: rgba(100, 2, 17, 0.55);
+}
+.band-paper :where([class*="border-aqua"], [class*="border-champagne"], [class*="border-gold"]) {
+  border-color: rgba(100, 2, 17, 0.45);
+}
+.band-paper :where([class*="hover:text-aqua"]:hover),
+.band-paper :where([class*="hover:text-champagne"]:hover) {
+  color: #3d020b;
+}
+
+/* `text-foreground/55` is 4.35:1 on any paper (see the header). Lift the tier to
+   the lowest alpha that clears AA on this ground: 0.62 → 5.05:1. */
+.band-paper :where([class~="text-foreground/55"], [class~="text-foreground/5"]) {
+  color: rgb(var(--foreground) / 0.62);
+}
+
+/* --- Dark surfaces inside a light chapter must not stay dark. ---
+   `.glass` is an opaque near-black gradient with a champagne rim; a `glass` card
+   on ivory is a hole cut in the page — the exact complaint FR-039 makes about the
+   reverse case. Paper treatment: white surface, ink hairline, shallow shadow. */
+.band-paper .glass,
+.band-paper .glass-smoked {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(17, 4, 8, 0.06), 0 14px 30px -22px rgba(17, 4, 8, 0.45);
+}
+.band-paper .glass::before {
+  /* The two-tone champagne/oxblood rim. Keep the geometry, change the metal:
+     an ink hairline that fades, which is what makes it read as an edge and not a frame. */
+  background: linear-gradient(140deg, rgba(17, 4, 8, 0.22), transparent 38%, transparent 62%, rgba(100, 2, 17, 0.3));
+}
+.band-paper .glass-smoked:hover {
+  border-color: rgba(17, 4, 8, 0.3);
+  box-shadow: 0 2px 4px rgba(17, 4, 8, 0.08), 0 22px 40px -24px rgba(17, 4, 8, 0.55);
+}
+
+/* The eyebrow pill and the emphasis word are champagne-literal in globals.css. */
+.band-paper .eyebrow {
+  color: var(--paper-brand);
+  background: rgba(100, 2, 17, 0.06);
+  border-color: rgba(100, 2, 17, 0.28);
+  box-shadow: none;
+}
+.band-paper .eyebrow i {
+  background: var(--paper-brand);
+  box-shadow: none;
+}
+.band-paper .emphasis {
+  color: var(--paper-brand);
+}
+
+/* §6.2 warns that product photography may need a frame on paper. Neither band
+   carries a product photo today — the categories chapter is mounted above, and
+   #online-services has no images at all — so no rule is written for it. When a
+   band does gain one, it needs an ink hairline so a white box does not dissolve
+   into the ground; that is a real fix for a real surface, not a placeholder. */
+
+@media (prefers-contrast: more) {
+  .band-paper {
+    --line: rgba(17, 4, 8, 0.45);
+    --muted-foreground: 40 26 24;
+  }
+}
+
+@media (forced-colors: active) {
+  /* The band is a colour and colour is what forced-colours removes; the border is
+     what keeps a light chapter legible as a distinct region without it. */
+  .band-paper {
+    border: 1px solid CanvasText;
+    box-shadow: none;
+  }
+}
+
+/* --- The categories chapter. -------------------------------------------------
+   `.category-catalogue` already owns a four-variable palette of its own, which is
+   why flipping this section is a token reassignment rather than a rewrite. Note
+   what this reverses: 005's FR-039 kept this surface dark because its panels are
+   dark lacquer artwork with champagne line-work, and on cream they read as holes.
+   That objection is answered below, at the panels — the line-work and the active
+   label go ink/oxblood, because a band that ignores the reason it was rejected is
+   just the old bug with the sign inverted. */
+.category-catalogue.band-paper {
+  --catalogue-paper: var(--paper);
+  --catalogue-ink: #110408;
+  --catalogue-muted: #4a3e3c;
+  --catalogue-brand: #640211;
+  background: var(--catalogue-paper);
+  color: var(--catalogue-ink);
+}
+.category-catalogue.band-paper .cat-panel__label {
+  color: rgba(74, 62, 60, 0.92);
+}
+@media (hover: hover) and (pointer: fine) {
+  /* The dark world hovers this button *to* champagne, which on an ivory band is a
+     button that evaporates on approach. It deepens instead. */
+  .category-catalogue.band-paper .category-catalogue__all:hover {
+    background: #3d020b;
+    border-color: #3d020b;
+    color: #f4eadb;
+  }
+}
+.category-catalogue.band-paper .cat-panel[data-active="true"] .cat-panel__label {
+  /* `#f0ece9` on ivory is 1.04:1 — the active panel would be the one you cannot read. */
+  color: #110408;
+}
+.category-catalogue.band-paper .cat-panel__count {
+  color: rgba(74, 62, 60, 0.9);
+}
+.category-catalogue.band-paper .cat-panel__art {
+  /* The mount. These badges are dark lacquer artwork composed for the obsidian
+     canvas, and a dark rectangle on ivory reads as missing content no matter
+     what the type around it does — that half of FR-039's objection is about the
+     *artwork*, and it survives the token flip. What fixes it is what fixes any
+     dark object on paper: a mount. A white frame says "a thing displayed", and
+     the hairline outside it says where the object ends. */
+  border: 6px solid #ffffff;
+  box-shadow:
+    0 0 0 1px rgba(17, 4, 8, 0.16),
+    0 12px 26px -18px rgba(17, 4, 8, 0.5);
+}
+/* The depth cue, inverted with the ground.
+   --------------------------------------------------------------------------
+   On the obsidian canvas a receding panel is a *darker* panel, so
+   `.cat-panel__art::after` veils with `#0b0204`. On paper that same veil is the
+   sign turned wrong: it paints black rectangles onto ivory, which is precisely
+   what 005's FR-039 meant when it said dark lacquer artwork on cream "reads as
+   holes cut in the page". A light chapter's depth cue is haze, not shade — the
+   panel recedes toward the paper it rests on. Same `--d`, same curve, opposite
+   value, so the arc still reads as an arc. */
+.category-catalogue.band-paper .cat-panel__art::after {
+  background: var(--paper);
+}
+.category-catalogue.band-paper .cat-panel[data-active="true"] .cat-panel__art {
+  /* The mount stays white — it is the frame of the object, not the emphasis.
+     What deepens on the active panel is the hairline and the drop. */
+  box-shadow:
+    0 0 0 1px rgba(100, 2, 17, 0.55),
+    0 20px 38px -20px rgba(17, 4, 8, 0.6);
+}
+.category-catalogue.band-paper .cat-carousel__status {
+  color: rgba(74, 62, 60, 0.9);
+}
+.category-catalogue.band-paper .cat-carousel__nav button {
+  color: #640211;
+  border-color: rgba(100, 2, 17, 0.4);
+}
+.category-catalogue.band-paper .cat-carousel__nav button:hover:not(:disabled) {
+  background: rgba(100, 2, 17, 0.07);
+  border-color: rgba(100, 2, 17, 0.6);
+}
+.category-catalogue.band-paper .cat-carousel__nav button:focus-visible,
+.category-catalogue.band-paper .cat-panel:focus-visible {
+  outline-color: #640211;
+}
+

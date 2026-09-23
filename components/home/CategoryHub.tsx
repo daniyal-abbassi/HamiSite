@@ -16,7 +16,7 @@ export function CategoryHub() {
   const departments = categoryDepartments();
 
   return (
-    <section id="categories" className="category-catalogue wrap container" aria-labelledby="categories-title">
+    <section id="categories" className="category-catalogue band-paper wrap container" aria-labelledby="categories-title">
       <div className="category-catalogue__head">
         <div>
           <span className="category-kicker">دسته‌بندی محصولات</span>

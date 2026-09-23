@@ -5,11 +5,13 @@ import { SectionHead } from "@/components/home/SectionHead";
 import { featuredOnlineService, onlineServiceFaqs } from "@/lib/content/home";
 
 export function OnlineServices() {
-  // Same soft-edged full-bleed band as #b2b — the two sections are the
-  // page's only darkened stretches, and they used to disagree (one inset,
-  // one full-bleed, both with razor edges). See .band-soft in globals.css.
+  // T-P1: this is the page's second light chapter. It used to be `band-soft`, a
+  // half-opacity darkening of the ground — which is the tonal device the owner called
+  // "wayyy too boring". The band now paints its own opaque paper and inverts its own
+  // tokens (see `.band-paper` in home.css); the sequence down the page is
+  // dark → paper → dark → paper → dark, and this is the second paper.
   return (
-    <section id="online-services" className="band-soft py-16 md:py-20" aria-labelledby="online-services-title">
+    <section id="online-services" className="band-paper py-16 md:py-20" aria-labelledby="online-services-title">
       <div className="container">
       <div className="grid gap-10 lg:grid-cols-[1fr_1fr]">
         <Reveal>
