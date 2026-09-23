@@ -27,13 +27,13 @@ export default function NotFound() {
         <div className="site-shell flex min-h-screen flex-col relative">
           <Header />
           <main className="container relative z-10 flex flex-1 flex-col items-center justify-center gap-5 py-24 text-center">
-            <span className="font-mono text-xs tracking-[0.2em] text-champagne">۴۰۴</span>
+            <span className="font-mono text-xs tracking-normal text-champagne">۴۰۴</span>
             <h1 className="text-2xl font-black leading-snug text-foreground md:text-3xl">
               این صفحه در فروشگاه حامی همراه وجود ندارد.
             </h1>
             <p className="max-w-md text-sm leading-7 text-muted-foreground">
               ممکن است آدرس را اشتباه وارد کرده باشید، یا آن صفحه حذف یا جایگزین شده باشد. برای پیدا
-              کردن محصول، از جستجوی بالای صفحه یا فهرست فروشگاه استفاده کنید.
+              کردن محصول، از جست‌وجوی بالای صفحه یا فهرست فروشگاه استفاده کنید.
             </p>
             <div className="flex flex-wrap items-center justify-center gap-3">
               <Link href="/shop">

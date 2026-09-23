@@ -46,7 +46,7 @@ export function ProductGallery({ product }: { product: CatalogProduct }) {
           </span>
         )}
         {product.specialOffer && (
-          <span className="absolute start-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-champagne/30 bg-oxblood/90 px-3.5 py-1.5 font-mono text-xs tracking-[0.14em] text-champagne backdrop-blur-md shadow-glow-oxblood">
+          <span className="absolute start-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-champagne/30 bg-oxblood px-3.5 py-1.5 font-mono text-xs tracking-[0.14em] text-champagne shadow-glow-oxblood">
             <Sparkles className="size-3 text-champagne" />
             SPECIAL OFFER
           </span>

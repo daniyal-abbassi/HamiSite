@@ -58,7 +58,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
               </Link>
             </h3>
             {variantLabel(item) && (
-              <p className="mt-0.5 font-mono text-xs tracking-[0.06em] text-muted-foreground/70">
+              <p className="mt-0.5 font-mono text-xs tracking-normal text-muted-foreground/70">
                 {variantLabel(item)}
               </p>
             )}

@@ -35,8 +35,8 @@ export function TrustBento() {
         <Reveal>
           <div className="container mx-auto max-w-2xl text-center">
             <span className="eyebrow"><i /> چرا حامی همراه</span>
-            <h2 id="trust-title" className="mt-4 text-3xl font-black tracking-tight md:text-5xl">
-              اعتماد، با <span className="grad">واقعیت</span> ساخته می‌شود.
+            <h2 id="trust-title" className="mt-4 text-3xl font-black tracking-normal md:text-5xl">
+              اعتماد، با <span className="emphasis">واقعیت</span> ساخته می‌شود.
             </h2>
             <p className="mt-4 text-sm leading-8 text-foreground/60">
               تجربه‌ای که از انتخاب محصول شروع می‌شود و به خرید مطمئن و همکاری بلندمدت می‌رسد.
@@ -68,11 +68,6 @@ export function TrustBento() {
                   ))}
                 </ul>
               </div>
-              <div
-                className="pointer-events-none absolute inset-0 opacity-0 transition-opacity group-hover:opacity-100"
-                style={{ background: "radial-gradient(circle at top left, rgba(100,2,17,0.35), transparent 65%)" }}
-                aria-hidden="true"
-              />
             </article>
           </Reveal>
 

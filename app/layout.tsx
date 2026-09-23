@@ -44,7 +44,7 @@ export const metadata: Metadata = {
  * OWN-WORLD: near-black ink canvas (#0D0406) with atmospheric oxblood-ramp
  * glows (a 4-step burgundy scale, not a flat maroon fill), muted antique aqua
  * accents (#C9A227 family — not the previous champagne-yellow), fully rounded
- * geometry (pills, 20-34px radii) and frosted glass surfaces (backdrop-blur +
+ * geometry (pills, 20-34px radii) and — until band 3's T074 — frosted glass surfaces (backdrop-blur +
  * gradient hairline border) throughout. Eyebrow pills and aqua gradient-
  * shimmer text (one word per heading) are back — this world wants them.
  * STORY: a reseller/shop-owner lands, immediately reads this as a serious

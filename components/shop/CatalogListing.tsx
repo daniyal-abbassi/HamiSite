@@ -73,7 +73,7 @@ export function CatalogListing({
           <i />
           <p>{title}</p>
         </div>
-        <h1 className="mt-4 text-2xl font-black tracking-tight text-foreground md:text-3xl">{title}</h1>
+        <h1 className="mt-4 text-2xl font-black tracking-normal text-foreground md:text-3xl">{title}</h1>
         <p className="mt-2 max-w-xl text-sm leading-7 text-muted-foreground">{description}</p>
         <p className="mt-3 text-xs text-foreground/60" aria-live="polite">
           {shownTotal === total

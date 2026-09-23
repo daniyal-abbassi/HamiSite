@@ -46,8 +46,8 @@ export function NewArrivals({ products: initialProducts }: { products: NewArriva
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
             <span className="eyebrow"><i /> تازه‌ها</span>
-            <h2 id="new-arrivals-title" className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
-              تازه <span className="grad">رسیده‌اند.</span>
+            <h2 id="new-arrivals-title" className="mt-4 text-3xl font-black tracking-normal md:text-4xl">
+              تازه <span className="emphasis">رسیده‌اند.</span>
             </h2>
             <p className="mt-3 max-w-md text-sm leading-7 text-foreground/60">
               جدیدترین محصولاتی که به مجموعه حامی همراه اضافه شده‌اند.

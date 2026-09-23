@@ -42,7 +42,7 @@ export default async function ShopPage({
             <i />
             <p>فروشگاه حامی همراه</p>
           </div>
-          <h1 className="mt-4 text-2xl font-black tracking-tight md:text-3xl">
+          <h1 className="mt-4 text-2xl font-black tracking-normal md:text-3xl">
             همه محصولات، <em className="font-black not-italic text-aqua">یک‌جا.</em>
           </h1>
           <DataCurrencyNote className="mt-3 text-xs" />

@@ -95,7 +95,7 @@ export function FilterSheet({
           onClick={() => setOpen(true)}
           aria-haspopup="dialog"
           aria-expanded={open}
-          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-card/90 px-4 text-sm font-bold shadow-deep backdrop-blur-xl"
+          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-line bg-card px-4 text-sm font-bold shadow-deep"
         >
           <SlidersHorizontal className="size-4" aria-hidden="true" />
           فیلترها

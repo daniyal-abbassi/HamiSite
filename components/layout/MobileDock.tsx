@@ -87,7 +87,7 @@ export function MobileDock() {
 
   return (
     <nav
-      className="fixed inset-x-3 bottom-3 z-40 mx-auto flex max-w-md items-center justify-between rounded-full border border-champagne/25 bg-ink-2/90 px-2 py-1.5 shadow-monolith backdrop-blur-2xl md:hidden"
+      className="fixed inset-x-3 bottom-3 z-40 mx-auto flex max-w-md items-center justify-between rounded-full border border-champagne/25 bg-ink-2 px-2 py-1.5 shadow-monolith md:hidden"
       aria-label="ناوبری سریع فروشگاه"
     >
       {items.map((item) => {

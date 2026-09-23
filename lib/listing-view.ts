@@ -41,9 +41,8 @@ export function destinationDescription(input: {
   kind: "brand" | "category";
   subCategories?: number;
 }): string {
-  const count = toFaDigits(input.total);
-  if (input.kind === "brand") return `${input.name} — ${count} محصول از فروشگاه حضوری حامی همراه در مشهد.`;
   const subs = input.subCategories ?? 0;
-  if (subs > 0) return `${count} محصول در این دسته و ${toFaDigits(subs)} زیردستهٔ آن.`;
-  return `${count} محصول در دستهٔ ${input.name}.`;
+  if (input.kind === "brand") return `${input.name} — ${toFaDigits(input.total)} محصول از فروشگاه حضوری حامی همراه در مشهد.`;
+  if (subs > 0) return `${toFaDigits(input.total)} محصول در این دسته و ${toFaDigits(subs)} زیردستهٔ آن.`;
+  return `${toFaDigits(input.total)} محصول در دستهٔ ${input.name}.`;
 }

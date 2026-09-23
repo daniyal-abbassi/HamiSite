@@ -15,7 +15,7 @@ export default function CheckoutPage() {
           <i />
           <p>تسویه حساب</p>
         </div>
-        <h1 className="mt-4 text-2xl font-black tracking-tight md:text-3xl">
+        <h1 className="mt-4 text-2xl font-black tracking-normal md:text-3xl">
           تکمیل <em className="font-black not-italic text-aqua">خرید.</em>
         </h1>
       </header>

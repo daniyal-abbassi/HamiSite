@@ -1,5 +1,4 @@
 import { BrandRows } from "@/components/home/BrandRows";
-import { ModernWhiteWave } from "@/components/home/ModernWhiteWave";
 import { Reveal } from "@/components/home/Reveal";
 import { SectionHead } from "@/components/home/SectionHead";
 import { brandProductCounts } from "@/lib/brand-counts";
@@ -18,10 +17,11 @@ import { brandProductCounts } from "@/lib/brand-counts";
 export function BrandShowcase() {
   return (
     <section id="brands" className="wrap relative overflow-hidden pt-0 pb-14" aria-labelledby="brands-title">
-      {/* Modern White Wave — transitioning smoothly from the categories section */}
-      <ModernWhiteWave />
-
-      <div className="pointer-events-none absolute -top-40 start-1/2 h-96 w-96 -translate-x-1/2 rounded-full bg-champagne/10 blur-3xl" aria-hidden="true" />
+      {/* T070 deleted `ModernWhiteWave` — a stock page-builder divider with four
+          gradients, an SVG blur filter and dashed specular crests, and the element
+          least belonging to this brand world. T071 removed the 96×96 champagne blob
+          that used to float above it: a `blur-3xl` wash is not section depth, and the
+          section now separates from its neighbours with the space it already has. */}
       <div className="container relative">
         <Reveal>
           <SectionHead

@@ -15,18 +15,15 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               real document scroll, so unlike ScrollSmoother it creates no containing block and the
               fixed layers below need no special placement — see components/atmosphere/ScrollSmooth.tsx */}
           <ScrollSmooth />
-          {/* The scroll-driven ground, first so `.noir-stars` and the content still sit above it.
-              It is here rather than in the page because a transformed ancestor captures
-              `position: fixed`, and every homepage section is wrapped in `Reveal` — see
-              components/atmosphere/PageGround.tsx. It renders nothing off the homepage. */}
+          {/* The scroll ground, first, because a transformed ancestor captures
+              `position: fixed` and every homepage section is wrapped in `Reveal` — see
+              components/atmosphere/PageGround.tsx. It renders nothing off the homepage
+              until T083 widens it (owner decision 5).
+              T073 removed the two layers that used to sit under it: `.noir-stars`, a
+              20-point starfield drifting on 90s and 140s infinite loops, and
+              `.gradient-blur`, a fixed blurred scrim whose only job was to soften content
+              passing under a header that had its own opaque ground. */}
           <PageGround />
-          {/* Red-noir depth layers. Both are fixed, inert and sit beneath every
-              .wrap section; they add atmosphere without touching content. */}
-          <div className="noir-stars" aria-hidden="true">
-            <i />
-            <i />
-          </div>
-          <div className="gradient-blur" aria-hidden="true" />
           <Header />
           {/* The credentials marquee used to sit here and carried the padding
               that cleared the fixed header island. With it gone that clearance

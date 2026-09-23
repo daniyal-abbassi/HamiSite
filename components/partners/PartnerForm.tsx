@@ -384,7 +384,9 @@ export function PartnerForm() {
         {/* Branch-specific fields */}
         <div className="md:col-span-2">
           <div className="border-t border-line pt-5">
-            <h3 className="font-mono text-xs tracking-[0.08em] text-aqua">
+            {/* The Latin half of this label may keep its tracking; the Persian half may
+                not, and they share one element — so the element stops tracking. */}
+            <h3 className="font-mono text-xs tracking-normal text-aqua">
               {branchIsIndividual ? "INDIVIDUAL / حقیقی" : "LEGAL / حقوقی"}
             </h3>
             <div className="mt-4 grid gap-4 md:grid-cols-2">

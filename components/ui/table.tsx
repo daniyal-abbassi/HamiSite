@@ -43,7 +43,7 @@ const TH = React.forwardRef<HTMLTableCellElement, React.ThHTMLAttributes<HTMLTab
     <th
       ref={ref}
       className={cn(
-        "px-3 py-3 text-start font-mono text-xs font-bold tracking-[0.1em] text-muted-foreground/80",
+        "px-3 py-3 text-start font-mono text-xs font-bold tracking-normal text-muted-foreground/80",
         className,
       )}
       {...props}

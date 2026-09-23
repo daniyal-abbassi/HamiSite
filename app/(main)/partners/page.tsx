@@ -19,7 +19,7 @@ export default function PartnersPage() {
           <i />
           <p>{partnerPageCopy.eyebrow}</p>
         </div>
-        <h1 className="mt-4 text-3xl font-black leading-[1.4] tracking-tight md:text-4xl">
+        <h1 className="mt-4 text-3xl font-black leading-[1.4] tracking-normal md:text-4xl">
           {partnerPageCopy.titleLead}،
           <em className="block font-black not-italic text-aqua">{partnerPageCopy.titleTail}</em>
         </h1>
@@ -69,7 +69,7 @@ export default function PartnersPage() {
             <a
               href={storeContact.phoneHref}
               dir="ltr"
-              className="mt-3 inline-flex items-center gap-2 rounded-xl border border-aqua/40 px-3 py-1.5 font-mono text-xs tracking-[0.06em] text-aqua transition-colors hover:bg-aqua/10"
+              className="mt-3 inline-flex items-center gap-2 rounded-xl border border-aqua/40 px-3 py-1.5 font-mono text-xs tracking-normal text-aqua transition-colors hover:bg-aqua/10"
             >
               <Phone className="size-3.5" aria-hidden="true" />
               {storeContact.phoneDisplay}

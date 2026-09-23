@@ -50,3 +50,13 @@ specs/003-floating-product-presentation/trial/full/isolated/
 
 # Band verification probes write their measurements next to themselves.
 specs/**/verification/*-result.json
+
+# Full-page baseline screenshots are regenerable with verification/capture-baseline.mjs;
+# the manifests and the -fold crops are what get committed.
+# Full-page captures run to tens of megabytes per band and are regenerable with
+# verification/capture-baseline.mjs. The above-the-fold crops for the three surfaces
+# the band's claims are stated against are the evidence that gets committed.
+specs/001-premium-rtl-storefront/baseline/*.png
+!specs/001-premium-rtl-storefront/baseline/home@*-fold.png
+!specs/001-premium-rtl-storefront/baseline/shop@*-fold.png
+!specs/001-premium-rtl-storefront/baseline/pdp-variant@*-fold.png

@@ -11,7 +11,7 @@ import "./page-ground.css";
  *
  * One fixed, inert, aria-hidden layer whose only job is to carry the colour the hook resolved for the
  * shopper's current position. It is mounted in `app/(main)/layout.tsx` as the first child of
- * `.site-shell`, ahead of `.noir-stars` and `<main>`, and that placement is load-bearing:
+ * `.site-shell`, ahead of `<main>`, and that placement is load-bearing:
  *
  * **A transformed ancestor becomes the containing block for `position: fixed` descendants.** Every
  * homepage section is wrapped in `Reveal`, which animates `transform: translateY(26px)`, so a layer

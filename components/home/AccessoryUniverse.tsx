@@ -67,7 +67,7 @@ export function AccessoryUniverse() {
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_var(--lx,50%)_var(--ly,40%),rgba(201,162,39,0.14),transparent_55%)]" aria-hidden="true" />
             <div className="relative p-10 text-center" aria-live="polite">
               <span className="font-mono text-xs tracking-[0.14em] text-aqua">{current.label}</span>
-              <b className="mt-3 block text-5xl font-black tracking-tight text-foreground">{current.title}</b>
+              <b className="mt-3 block text-5xl font-black tracking-normal text-foreground">{current.title}</b>
               <p className="mt-3 text-sm text-foreground/60">{current.detail}</p>
               <Link href={current.href} className="mt-6 inline-flex items-center gap-1.5 rounded-full border border-aqua/50 px-4 py-2 text-xs font-bold text-aqua transition-colors duration-fast hover:bg-aqua/10">
                 مشاهده محصولات <ArrowLeft className="size-3.5" />

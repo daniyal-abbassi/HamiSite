@@ -15,7 +15,7 @@ export default function OrdersPage() {
           <i />
           <p>حساب کاربری</p>
         </div>
-        <h1 className="mt-4 text-2xl font-black tracking-tight md:text-3xl">
+        <h1 className="mt-4 text-2xl font-black tracking-normal md:text-3xl">
           سفارش‌های <em className="font-black not-italic text-aqua">من.</em>
         </h1>
       </header>

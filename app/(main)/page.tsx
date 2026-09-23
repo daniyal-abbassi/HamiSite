@@ -20,6 +20,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/home/Reveal";
 import { storeWarranty } from "@/lib/content/verified-facts";
 import { ShopWindow } from "@/components/home/ShopWindow";
@@ -58,70 +59,74 @@ const categoryIcons: Record<string, LucideIcon> = {
 
 function Hero() {
   return (
-    <section id="top" className="relative pb-20 pt-10 md:pb-28 md:pt-20" aria-labelledby="hero-title">
+    <section id="top" className="relative pb-12 pt-6 md:pb-24 md:pt-14" aria-labelledby="hero-title">
       {/* Two columns. In RTL the first child lands on the right, so the copy
           sits on the reading-start side and the shop window opposite it. */}
       {/* Equal columns. The split was 1.08fr / 0.92fr, which left the copy 112px
           from the right edge while the photograph sat 187px from the left — 75px
           of asymmetry, and in RTL the tighter margin fell on the reading side,
           so the whole frame read as crooked. */}
-      <div className="wrap container grid items-center gap-12 lg:grid-cols-2 lg:gap-16">
+      <div className="wrap container grid items-center gap-8 lg:grid-cols-2 lg:gap-16">
+        {/*
+         * T075 / T085 — the hero recomposed at 360 first, after the strip.
+         *
+         * The old order put a 271px, seven-line headline above everything, then two
+         * paragraphs, then the actions, and the trust row landed at y=774–838 on a
+         * 360×800 screen: cut in half by the fold, with the first merchandise at
+         * y=2016. FR-014 asks for positioning, one trust signal and one obvious next
+         * action *without scrolling*, on the owner's own target width — so the
+         * headline now carries the price position alone, the twenty-year claim moved
+         * into the lead where it reads as sense, and the whole stack lands inside the
+         * first viewport with the shop window beginning above the fold.
+         *
+         * `tracking-normal` is not a style tweak: `tracking-tight` on Persian pulls
+         * the joining strokes apart (FR-057), and it was applied to the one line
+         * nobody misreads.
+         */}
         <Reveal className="text-start">
-          {/* Badge with a live dot — the reference's opening device. */}
           <span className="eyebrow">
-            <span className="relative flex size-2" aria-hidden="true">
-              <span className="absolute inline-flex size-full animate-ping rounded-full bg-signal opacity-70" />
-              <span className="relative inline-flex size-2 rounded-full bg-signal" />
-            </span>
-            مشهد • حامی همراه • ۲۰ سال سابقه
+            <span className="relative inline-flex size-2 rounded-full bg-signal" aria-hidden="true" />
+            مشهد • ۲۰ سال سابقه
           </span>
 
           <h1
             id="hero-title"
-            className="mt-6 max-w-xl text-balance text-[2rem] font-black leading-[1.35] tracking-tight md:mt-7 md:text-[2.6rem] md:leading-[1.3] xl:text-5xl"
+            className="mt-4 max-w-xl text-balance text-[1.85rem] font-black leading-[1.42] tracking-normal md:mt-5 md:text-[2.5rem] md:leading-[1.32] xl:text-5xl"
           >
-            <span className="block text-foreground/90">حامی همراه؛ بیست سال اعتماد در بازار مشهد.</span>
-            {/* FR-017 allows the price-leadership position, not a comparative
-                nobody can substantiate — «بهترین» went. The nowrap threshold is
-                measured, not guessed: at 768px the lead-in plus the widest rotating
-                word is 930px of RTL text in a 576px box, so it overflows to the left
-                of the viewport and the page only hides it with `body { overflow-x:
-                hidden }` — FR-041 asks for composition, so the line breaks instead
-                until there is room to keep it on one. */}
-            <span className="mt-3 block lg:whitespace-nowrap">
-              قیمت روزِ بازار، مستقیم از مشهد برای{" "}
-              <span className="relative inline-block">
-                <FlipWords words={HERO_ROTATING_WORDS} className="grad font-extrabold" />
-                {/* Hand-drawn swash, sized to the rotator's widest word so it
-                    never redraws as the word changes. */}
-                <svg
-                  className="absolute -bottom-2 start-0 h-3 w-full text-champagne/60"
-                  viewBox="0 0 100 10"
-                  preserveAspectRatio="none"
-                  aria-hidden="true"
-                >
-                  <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="2" fill="none" />
-                </svg>
-              </span>
+            قیمت روزِ بازار، مستقیم از <span className="emphasis">مشهد</span> برای{" "}
+            <span className="relative inline-block">
+              <FlipWords words={HERO_ROTATING_WORDS} className="emphasis font-extrabold" />
+              {/* Hand-drawn swash, sized to the rotator's widest word so it
+                  never redraws as the word changes. */}
+              <svg
+                className="absolute -bottom-2 start-0 h-3 w-full text-champagne/60"
+                viewBox="0 0 100 10"
+                preserveAspectRatio="none"
+                aria-hidden="true"
+              >
+                <path d="M0 5 Q 50 10 100 5" stroke="currentColor" strokeWidth="2" fill="none" />
+              </svg>
             </span>
           </h1>
 
-          <p className="mt-6 max-w-none text-pretty text-[15px] leading-8 text-foreground/75 md:mt-8 md:text-base md:leading-9">
-            از فروش حضوری در قلب بازار مشهد تا پخش عمده برای همکاران — با{" "}
-            {storeWarranty.label}.
-          </p>
-          <p className="mt-2 max-w-none text-pretty text-sm leading-7 text-muted-foreground/80 md:mt-3 md:leading-9">
-            برای یک دستگاه یا برای خرید عمده، موجودی و قیمت روز را کارشناس فروشگاه
-            تلفنی اعلام می‌کند.
+          {/*
+           * The warranty clause came out of this sentence: it is the first item of the
+           * trust row twelve pixels below, and saying it twice in one screen is how a
+           * line stops reading as fact and starts reading as pitch. What is left is the
+           * one thing no card on the page can state — that a person quotes the price.
+           */}
+          <p className="mt-4 max-w-[46ch] text-pretty text-[15px] leading-8 text-foreground/75 md:mt-6 md:text-base md:leading-9">
+            حامی همراه؛ بیست سال اعتماد در بازار مشهد. برای یک دستگاه یا خرید عمده، موجودی و قیمت روز را
+            کارشناس فروشگاه تلفنی اعلام می‌کند.
           </p>
 
-          <div className="mt-7 flex flex-col items-stretch gap-3 sm:mt-9 sm:flex-row sm:items-center" aria-label="مسیرهای اصلی">
-            <Link href="/shop" className={buttonVariants({ variant: "oxblood", size: "default" })}>
+          <div className="mt-6 flex flex-row items-stretch gap-3 sm:mt-8" aria-label="مسیرهای اصلی">
+            <Link href="/shop" className={cn(buttonVariants({ variant: "oxblood", size: "default" }), "flex-1 sm:flex-none")}>
               مشاهده محصولات
             </Link>
             <Link
               href="/partners"
-              className="shiny-edge inline-flex h-12 items-center gap-2 px-8 text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-95"
+              className="cta-quiet inline-flex h-12 shrink-0 items-center gap-2 px-5 text-[14px] font-bold transition-transform hover:-translate-y-0.5 active:scale-95 sm:px-8 sm:text-[15px]"
             >
               شروع همکاری
               <ArrowLeft className="size-4" />
@@ -129,12 +134,12 @@ function Hero() {
           </div>
 
           {/* FR-006 admits four trust facts and no others. «اصالت کالا» was a
-              fifth with nothing behind it, so the row now reads straight from the
+              fifth with nothing behind it, so the row reads straight from the
               verified list instead of a per-component array. */}
-          <div className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-2" role="list" aria-label="نشانه‌های اعتماد حامی همراه">
+          <div className="mt-6 flex flex-wrap items-center gap-x-4 gap-y-1.5" role="list" aria-label="نشانه‌های اعتماد حامی همراه">
             {[storeWarranty.label, "بیست سال سابقه در بازار مشهد", "فروشگاه حضوری در مشهد"].map((item) => (
-              <span key={item} role="listitem" className="flex items-center gap-1.5 text-xs text-foreground/60">
-                <BadgeCheck className="size-4 text-aqua" /> {item}
+              <span key={item} role="listitem" className="flex items-center gap-1.5 text-[11px] text-foreground/60">
+                <BadgeCheck className="size-3.5 shrink-0 text-aqua" /> {item}
               </span>
             ))}
           </div>

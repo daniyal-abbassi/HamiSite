@@ -19,8 +19,8 @@ export function FinalConversion() {
       <div className="glow" aria-hidden="true" />
       <div className="container py-16 text-center">
         <Reveal>
-          <span className="font-mono text-xs tracking-[0.14em] text-aqua/80">{finalConversionCopy.eyebrow}</span>
-          <h2 id="final-conversion-title" className="mt-4 text-3xl font-black leading-[1.4] tracking-tight md:text-5xl md:leading-[1.35]">
+          <span className="font-mono text-xs tracking-normal text-aqua/80">{finalConversionCopy.eyebrow}</span>
+          <h2 id="final-conversion-title" className="mt-4 text-3xl font-black leading-[1.4] tracking-normal md:text-5xl md:leading-[1.35]">
             {finalConversionCopy.titleLead}،
             <em className="block font-black not-italic text-aqua">{finalConversionCopy.titleTail}</em>
           </h2>

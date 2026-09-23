@@ -25,10 +25,10 @@ export function B2bSection() {
               </span>
               <h2
                 id="b2b-title"
-                className="mt-4 text-3xl font-black leading-[1.45] tracking-tight md:text-4xl md:leading-[1.45]"
+                className="mt-4 text-3xl font-black leading-[1.45] tracking-normal md:text-4xl md:leading-[1.45]"
               >
                 برای همکاران،
-                <span className="grad block">فراتر از فروش.</span>
+                <span className="emphasis block">فراتر از فروش.</span>
               </h2>
               <p className="mt-4 max-w-md text-sm leading-8 text-foreground/65">
                 مسیر همکاری برای قیمت همکاری، تنوع محصول و ثبت سفارش کسب‌وکارها

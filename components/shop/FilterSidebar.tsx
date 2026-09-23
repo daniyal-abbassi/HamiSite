@@ -14,7 +14,7 @@ import type { CategoryFacet } from "@/lib/shop-query";
 const FILTER_KEYS = ["q", "category", "brand", "min", "max", "stock", "special"] as const;
 
 function SidebarHeading({ children }: { children: React.ReactNode }) {
-  return <h3 className="font-mono text-xs tracking-[0.08em] text-aqua">{children}</h3>;
+  return <h3 className="font-mono text-xs tracking-normal text-aqua">{children}</h3>;
 }
 
 export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: CategoryFacet[]; brands: ShopBrand[] }) {
@@ -81,8 +81,8 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="جستجو در محصولات…"
-          aria-label="جستجو در محصولات"
+          placeholder="جست‌وجو در محصولات…"
+          aria-label="جست‌وجو در محصولات"
           className="bg-background/40 pe-10"
         />
       </form>

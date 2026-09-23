@@ -8,7 +8,7 @@ export function TrustBar() {
   return (
     <section id="trust-bar" className="wrap border-b border-line" aria-labelledby="trust-bar-title">
       <div className="container py-12">
-        <h2 id="trust-bar-title" className="text-2xl font-black tracking-tight md:text-3xl">چهار دلیل برای اعتماد به حامی همراه</h2>
+        <h2 id="trust-bar-title" className="text-2xl font-black tracking-normal md:text-3xl">چهار دلیل برای اعتماد به حامی همراه</h2>
         <p className="mt-2 text-sm text-foreground/55">فروش حضوری، پخش عمده و اکوسیستم موبایل</p>
         <ul className="mt-8 grid list-none gap-8 p-0 sm:grid-cols-2 lg:grid-cols-4" role="list">
           {trustFeatures.map((feature, index) => (

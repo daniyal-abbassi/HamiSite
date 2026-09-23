@@ -64,17 +64,17 @@ export function FlipWords({
         </span>
       ))}
 
-      <AnimatePresence onExitComplete={() => setIsAnimating(false)}>
+      <AnimatePresence mode="wait" onExitComplete={() => setIsAnimating(false)}>
         <motion.span
           key={currentWord}
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ type: "spring", stiffness: 100, damping: 10 }}
+          transition={{ duration: 0.18, ease: [0.2, 0.7, 0.3, 1] }}
           exit={{
             opacity: 0,
-            y: -20,
-            filter: "blur(4px)",
+            y: -10,
             position: "absolute",
+            transition: { duration: 0.14, ease: [0.2, 0.7, 0.3, 1] },
           }}
           className="col-start-1 row-start-1 inline-block whitespace-nowrap"
           aria-hidden="true"

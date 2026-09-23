@@ -146,7 +146,7 @@ export function ProductCard({
       {/* FR-001: an absent product photograph is stated, not papered over by a
             brand tile in the same slot at the same size. */}
       {noImage && (
-        <span className="absolute end-3 top-3 z-10 rounded-full border border-champagne/25 bg-ink/80 px-2.5 py-1 font-mono text-[10px] tracking-wide text-foreground/70">
+        <span className="absolute end-3 top-3 z-10 rounded-full border border-champagne/25 bg-ink/80 px-2.5 py-1 font-mono text-[10px] tracking-normal text-foreground/70">
           {PLACEHOLDER_LABEL}
         </span>
       )}
@@ -156,7 +156,7 @@ export function ProductCard({
             announce. */}
         <div className="flex items-baseline justify-between gap-3">
           <span
-            className="font-mono text-xs font-bold tracking-[0.18em]"
+            className="font-mono text-xs font-bold tracking-normal"
             style={{ color: accent }}
           >
             {brandLabel(product.brand?.name)}
@@ -164,7 +164,7 @@ export function ProductCard({
           {model && (
             <span
               dir="ltr"
-              className="truncate font-mono text-xs tracking-[0.06em] text-foreground/70"
+              className="truncate font-mono text-xs tracking-normal text-foreground/70"
             >
               {model}
             </span>
@@ -190,7 +190,7 @@ export function ProductCard({
         {/* Everything below is the transaction, held to the bottom so cards in a
             row align on their prices however long the names run. */}
         <div className="mt-auto pt-5">
-          <div className="lux-stock flex items-center justify-between gap-2 text-xs font-bold tracking-[0.05em]">
+          <div className="lux-stock flex items-center justify-between gap-2 text-xs font-bold tracking-normal">
             <div className="flex items-center gap-2">
               <span
                 className="inline-flex items-center gap-1.5"
@@ -237,7 +237,7 @@ export function ProductCard({
                 </strong>
               ) : (
                 <strong
-                  className="block text-[26px] font-black leading-9 tracking-[-0.02em] tabular-nums"
+                  className="block text-[26px] font-black leading-9 tracking-normal tabular-nums"
                   style={{ color: "var(--lux-price)" }}
                 >
                   {formatToman(product.displayPrice)}

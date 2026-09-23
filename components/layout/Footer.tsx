@@ -100,7 +100,7 @@ export function Footer() {
         <div className="grid grid-cols-2 gap-x-4 gap-y-7 md:contents">
           {footerGroups.map((group) => (
             <nav key={group.title} aria-label={group.title}>
-              <h3 className="m-0 font-mono text-xs font-medium tracking-[0.04em] text-aqua">
+              <h3 className="m-0 font-mono text-xs font-medium tracking-normal text-aqua">
                 {group.title}
               </h3>
               {/* No space-y on mobile: the rows carry their own 44px height, so
@@ -122,14 +122,10 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Oversized outlined wordmark — presence without ink. Decorative only,
-          so it is hidden from assistive tech and cannot be selected. */}
-      <div className="flex select-none justify-center overflow-hidden py-3 md:py-6" aria-hidden="true">
-        <span className="text-stroke whitespace-nowrap text-[15vw] font-black leading-none tracking-tighter">
-          حامی همراه
-        </span>
-      </div>
-
+      {/* T074: the 15vw outlined wordmark is gone. It was `aria-hidden`,
+          unselectable, and repeated a name the footer already states twice — presence
+          purchased with ink the page does not have. The section now ends on the legal
+          line, and the brand mark at the top of this footer is the identity. */}
       <div className="border-t border-line">
         <div className="container flex flex-col items-center justify-between gap-2 py-5 text-[12.5px] text-muted-foreground/45 sm:flex-row">
           <p className="m-0">© ۱۴۰۵ حامی همراه — تمامی حقوق محفوظ است.</p>

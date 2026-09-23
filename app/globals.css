@@ -131,31 +131,23 @@
     @apply bg-background text-foreground font-sans antialiased;
     overflow-x: hidden;
   }
-  /* Imperial Luxury Velvet Ground with Travelling Atmospheric Glow */
+  /* Band 3 (T073): one canvas, one light.
+     ------------------------------------------------------------------
+     This rule used to stack five radial glows and add a fixed `body::before`
+     glow layer on top of them. FR-052 forbids premium that depends on glow, and
+     the practical cost was measurable: the homepage ran 17,520px at 360px for
+     twelve sections, and `baseline/manifest.json` counted 40 elements with a
+     backdrop-filter over them. What carries depth now is the scroll ground
+     (`components/atmosphere/PageGround.tsx`) plus composition — scale, space and
+     the hairline — which is what Constitution IV asks for and what the owner's
+     "extend it to every page" decision was about.
+     A single top-to-bottom depth ramp stays, because a flat #0B0204 field under
+     a fixed header reads as a dead surface rather than a quiet one. */
   body {
     background-color: #0B0204;
-    background-image:
-      radial-gradient(1300px 750px at 50% -8%, rgba(100, 2, 17, 0.45), transparent 75%),
-      radial-gradient(950px 650px at 92% 18%, rgba(61, 2, 11, 0.38), transparent 70%),
-      radial-gradient(950px 650px at 8% 45%, rgba(100, 2, 17, 0.32), transparent 70%),
-      radial-gradient(1100px 750px at 85% 72%, rgba(61, 2, 11, 0.35), transparent 75%),
-      radial-gradient(1300px 850px at 50% 100%, rgba(100, 2, 17, 0.42), transparent 80%);
+    background-image: linear-gradient(180deg, #100306 0%, #0B0204 42%, #0A0205 100%);
     background-attachment: scroll;
   }
-  body::before {
-    content: "";
-    position: fixed;
-    inset: 0;
-    pointer-events: none;
-    z-index: 0;
-    background:
-      radial-gradient(900px 550px at 50% 0%, rgba(142, 10, 30, 0.20), transparent 72%),
-      radial-gradient(700px 450px at 100% 50%, rgba(100, 2, 17, 0.14), transparent 65%);
-  }
-  /* No grid. The checkered ruling that used to live here was removed on
-     request — it read as technical clutter rather than depth, and the page has
-     travelling colour and per-section light to carry depth instead. The stars
-     stay; they are quiet. */
 
   ::selection {
     background: rgba(214, 207, 203, 0.30);
@@ -169,64 +161,12 @@
 }
 
 @layer components {
-  /* Light sources that pass as you scroll.
-     ------------------------------------------------------------------
-     The travelling base gradient fixes the colour standing still; this fixes
-     the *lighting* standing still. Every section carries its own soft glow,
-     thrown from alternating sides, so descending the page feels like walking
-     a room lit by lamps rather than staring at one wall.
-
-     Horizontal inset stays 0 on purpose. Bleeding these sideways is what put
-     a horizontal scrollbar on this page three times; the radial's own falloff
-     is enough, and costs nothing. */
+  /* T073: the per-section lamp system is gone — four nth-of-type radial glows and a
+     third-section darkening band, all of which painted over the scroll ground and
+     cancelled it. Section rhythm is now carried by space and by the hairline. */
   main > section {
     position: relative;
     scroll-margin-top: 6rem;
-  }
-  main > section::before {
-    content: "";
-    position: absolute;
-    inset: -6rem 0;
-    z-index: -1;
-    pointer-events: none;
-  }
-  main > section:nth-of-type(odd)::before {
-    background: radial-gradient(60% 62% at 8% 30%, rgba(190, 32, 58, 0.34), transparent 72%);
-  }
-  main > section:nth-of-type(even)::before {
-    background: radial-gradient(60% 62% at 92% 36%, rgba(214, 46, 74, 0.24), transparent 72%);
-  }
-  /* ...but every wine chapter having the same lamp in the same corner is its
-     own kind of uniformity. These two alternate the side and the height, so
-     consecutive wine chapters are lit differently. Same specificity as the rule
-     above, so they win on source order — keep them after it. The `inset: -6rem`
-     on the shared ::before means each glow bleeds into its neighbours, which
-     softens the boundaries further. */
-  main > section:nth-of-type(4n + 2)::before {
-    background:
-      radial-gradient(58% 58% at 88% 26%, rgba(214, 46, 74, 0.26), transparent 70%),
-      radial-gradient(44% 46% at 10% 86%, rgba(122, 18, 42, 0.32), transparent 72%);
-  }
-  main > section:nth-of-type(4n)::before {
-    background:
-      radial-gradient(64% 56% at 10% 36%, rgba(190, 32, 58, 0.25), transparent 72%),
-      radial-gradient(46% 42% at 92% 88%, rgba(152, 24, 50, 0.26), transparent 70%);
-  }
-  /* Every third section goes properly dark, so the rhythm has a night as well
-     as a lit side. */
-  main > section:nth-of-type(3n)::after {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    pointer-events: none;
-    background: linear-gradient(180deg, transparent, rgba(28, 4, 10, 0.40) 45%, transparent);
-  }
-
-  /* Category section local stage replaces generic section glow */
-  #categories::before,
-  #categories::after {
-    display: none !important;
   }
 
   /* Every section's content sits above the fixed atmosphere layer. */
@@ -336,16 +276,17 @@
     animation-delay: calc(var(--card-index, 0) * 70ms);
   }
 
-  /* Frosted glass surface — Imperial Luxury Smoked Obsidian Glass.
-     Gradient-masked 1px border simulates a two-tone hairline (champagne-lit on
-     one corner, oxblood-lit on the other) without an extra DOM layer. */
+  /* T074: the frosted-glass treatment is retired site-wide (40 elements were
+     blurring). What replaces it is the same geometry with an opaque ground, so a
+     panel separates from the canvas by value and edge rather than by translucency.
+     The alpha values below are the old translucent ones composited over #0B0204 —
+     the page looks the same colour, and stops costing a blur per card. The
+     gradient-masked two-tone hairline stays: it is a border, not a filter. */
   .glass {
     position: relative;
     border-radius: var(--radius);
-    background: linear-gradient(180deg, rgba(20, 6, 10, 0.78), rgba(13, 3, 6, 0.68));
+    background: linear-gradient(180deg, #14080C, #0D0407);
     border: 1px solid var(--line);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
     box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.65);
     overflow: hidden;
   }
@@ -365,10 +306,8 @@
   .glass-smoked {
     position: relative;
     border-radius: var(--radius);
-    background: linear-gradient(180deg, rgba(20, 6, 10, 0.82), rgba(13, 3, 6, 0.72));
+    background: linear-gradient(180deg, #15090D, #0E0508);
     border: 1px solid rgba(229, 211, 179, 0.13);
-    backdrop-filter: blur(22px);
-    -webkit-backdrop-filter: blur(22px);
     box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.7);
     transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 300ms cubic-bezier(0.16, 1, 0.3, 1), border-color 300ms cubic-bezier(0.16, 1, 0.3, 1);
   }
@@ -400,131 +339,44 @@
     background: var(--aqua);
     box-shadow: 0 0 10px var(--aqua);
   }
-  /* Gradient-shimmer text (.grad) — reserved for exactly one word per
-     heading. This world explicitly wants it; craft-floor's blanket "no
-     gradient text" ban is a default for the previous world, not a universal
-     law. Its single live implementation is the champagne sweep in the
-     "Aura" section further down this file, where the prefers-contrast
-     fallback sits beside it. */
-  /* sticky glass nav — static, no scroll-based recoloring. The previous
-     world's chapter-matching header (HeaderChapterWatcher) is retired along
-     with the light/dark chapter system it served: this world has no light
-     chapter to match against. */
+  /* Sticky nav — opaque, and static: no scroll-based recoloring, and no blur
+     since T074. A header that has to be opaque to stay legible over scrolling
+     content was already claiming an opacity it never had. */
   .site-header {
     @apply sticky top-0 z-50;
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
-    background: rgba(13, 4, 6, 0.72);
+    background: #0D0406;
     border-bottom: 1px solid var(--line);
   }
 }
 
 @layer components {
-  /* Top gradient scrim — the page fades into the fixed header instead of
-     sliding under a hard edge. Sits below the header (z-40) and above the
-     atmosphere. */
-  .gradient-blur {
-    position: fixed;
-    inset: 0 0 auto 0;
-    height: 110px;
-    z-index: 30;
-    pointer-events: none;
-    background: linear-gradient(to bottom, rgb(var(--background) / 0.85), transparent);
-    backdrop-filter: blur(7px);
-    -webkit-mask-image: linear-gradient(to bottom, #000 55%, transparent);
-    mask-image: linear-gradient(to bottom, #000 55%, transparent);
-  }
-
-  /* Slow parallax starfield. Two layers at different speeds; box-shadow is the
-     cheapest way to place many points without extra DOM nodes. */
-  .noir-stars {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    pointer-events: none;
-    overflow: hidden;
-  }
-  .noir-stars i {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
-    width: 1px;
-    height: 1px;
-    background: transparent;
-    border-radius: 9999px;
-  }
-  .noir-stars i:nth-child(1) {
-    box-shadow:
-      234px 124px rgba(236,238,243,.55), 654px 345px rgba(236,238,243,.35), 876px 12px rgba(236,238,243,.45),
-      1200px 800px rgba(236,238,243,.30), 400px 1500px rgba(236,238,243,.40), 1800px 200px rgba(236,238,243,.35),
-      100px 1000px rgba(236,238,243,.30), 900px 1900px rgba(236,238,243,.45), 500px 600px rgba(236,238,243,.35),
-      1400px 100px rgba(236,238,243,.30), 300px 400px rgba(236,238,243,.40), 1600px 1200px rgba(236,238,243,.30);
-    animation: noir-drift 90s linear infinite;
-  }
-  .noir-stars i:nth-child(2) {
-    width: 2px;
-    height: 2px;
-    box-shadow:
-      123px 456px rgba(240, 237, 235,.35), 789px 234px rgba(236,238,243,.28), 456px 890px rgba(240, 237, 235,.30),
-      1100px 300px rgba(236,238,243,.25), 200px 1200px rgba(240, 237, 235,.32), 1500px 500px rgba(236,238,243,.22),
-      600px 1700px rgba(240, 237, 235,.30), 1300px 900px rgba(236,238,243,.25);
-    animation: noir-drift 140s linear infinite;
-  }
+  /* T073: `.gradient-blur` (the fixed blurred top scrim) and `.noir-stars` (a 20-point
+     drifting starfield built from box-shadows) are deleted, along with their mounts in
+     `app/(main)/layout.tsx`. The header already has its own opaque ground, so the scrim
+     was hiding nothing; the stars were the single element most clearly decoration-for-its-
+     own-sake in the file, and 90s/140s infinite animations are exactly what FR-052 names. */
 }
 
 @layer components {
 
-  /* Spinning conic edge. The border is painted by a conic-gradient in
-     border-box while the fill stays flat in padding-box, so only the rim
-     animates. --edge-angle is registered below so the angle can tween at all. */
-  .shiny-edge {
-    position: relative;
-    isolation: isolate;
-    color: #110408;
-    border: 2px solid transparent;
+  /* T069: `.shiny-edge` — an 8s infinite conic-gradient gold rim with three glow
+     shadows and a dot texture — is deleted, along with its `@property --edge-angle`
+     registration and `edge-spin` keyframes. Its two users (the hero's secondary CTA
+     and the header's) now take `.cta-quiet`, which is the same affordance stated
+     without motion: a champagne hairline on the canvas, and a lift on hover.
+     T074: `.text-stroke` goes with it — the footer wordmark it styled was hidden from
+     assistive technology and carried no information (FR-005). */
+  .cta-quiet {
+    border: 1px solid rgba(229, 211, 179, 0.42);
     border-radius: 9999px;
-    background:
-      linear-gradient(135deg, #FFFDF9, #E5D3B3 60%, #D4AF37) padding-box,
-      conic-gradient(
-        from var(--edge-angle),
-        transparent 0%,
-        rgba(255, 255, 255, 0.95) 8%,
-        #D4AF37 18%,
-        #640211 32%,
-        transparent 45%,
-        transparent 100%
-      ) border-box;
-    animation: edge-spin 8s linear infinite;
-    box-shadow:
-      0 0 0 1px rgba(229, 211, 179, 0.4),
-      0 8px 30px -6px rgba(229, 211, 179, 0.35),
-      0 0 20px -8px rgba(100, 2, 17, 0.5);
+    color: #E5D3B3;
+    background: transparent;
+    transition: border-color 220ms cubic-bezier(0.2, 0.7, 0.3, 1), background-color 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
   }
-
-  /* Fine dot texture from the reference, sitting under the label. */
-  .shiny-edge::before {
-    content: "";
-    position: absolute;
-    inset: 0;
-    z-index: -1;
-    border-radius: inherit;
-    background: radial-gradient(circle at 50% 50%, rgb(var(--edge-ink)) 0.5px, transparent 0);
-    background-size: 4px 4px;
-    opacity: 0.07;
-    pointer-events: none;
+  .cta-quiet:hover {
+    border-color: rgba(229, 211, 179, 0.75);
+    background: rgba(229, 211, 179, 0.08);
   }
-
-  .text-stroke {
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(229, 211, 179, 0.16);
-  }
-}
-
-@property --edge-angle {
-  syntax: "<angle>";
-  initial-value: 0deg;
-  inherits: false;
 }
 
 /* The rotating headline word. Enters from below and settles — deliberately not
@@ -540,15 +392,6 @@
   animation: word-swap 460ms cubic-bezier(0.2, 0.7, 0.3, 1) both;
 }
 
-@keyframes edge-spin {
-  to { --edge-angle: 360deg; }
-}
-
-@keyframes noir-drift {
-  from { transform: translateY(0); }
-  to { transform: translateY(-2000px); }
-}
-
 /* The partner logo band (components/home/BrandTicker.tsx) is static. It used to
    carry a 42s seamless loop — keyframes, a doubled `w-max` track translating
    -50%, a hover/focus pause and an edge mask — all removed under feature 004's
@@ -556,18 +399,15 @@
    still. Only the band's colour is pinned here now; see BrandTicker for why.
    NOTE: if a moving element is ever reintroduced, never pair it with a Tailwind
    `duration-*` utility — those set animation-duration as well as
-   transition-duration and outrank this layer. That trap once spun
-   `.shiny-edge` sixty times too fast. */
+   transition-duration and outrank this layer. That trap once spun the rim of
+   `.shiny-edge` (T069 removed the rim) sixty times too fast. */
 
 /* The atmosphere is decoration. Under reduced motion it holds still — the
    depth remains, the drift and the spinning rim stop. */
 @media (prefers-reduced-motion: reduce) {
-  /* The star animations are declared on :nth-child selectors, so a plain
-     `.noir-stars i` override loses on specificity and the drift survives the
-     media query. Match the original selectors exactly. */
-  .noir-stars i:nth-child(1),
-  .noir-stars i:nth-child(2),
-  .shiny-edge,
+  /* T073 removed the two entries that used to lead this list — the starfield's
+     :nth-child animations, which had to be repeated here because a plain
+     `.noir-stars i` override lost on specificity, and the spinning rim. */
   .word-swap,
   .product-card {
     animation: none;
@@ -615,28 +455,18 @@
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
 }
 
-/* The single .grad implementation (text shimmer, champagne sweep). Moved
-   into @layer components at the top of the file — it previously lived here
-   UNLAYERED while a competing silver-ice copy sat inside @layer components,
-   and cascade order picked this one by accident of file position. */
+/* T072's one accent treatment lives in @layer components above, as `.emphasis`.
+   This block used to hold a second, unlayered `.grad` implementation that won by
+   accident of file position over a competing one — the reason a gradient heading had
+   three definitions in this file. The lesson is kept where the code was. */
 @layer components {
-  .grad {
-    background: linear-gradient(135deg, #FFFDF8 0%, #E5D3B3 50%, #C5A059 100%);
-    background-size: 200% auto;
-    -webkit-background-clip: text;
-    background-clip: text;
-    color: transparent;
-  }
-}
-
-/* Forced-contrast users get the gradient collapsed to a solid near-white:
-   background-clip:text paints per-pixel stops that a forced palette can
-   invert against, and audit tools read `color: transparent` as a 1:1
-   contrast. A solid glyph is legible everywhere and loses only the shimmer. */
-@media (prefers-contrast: more) {
-  .grad {
-    background: none;
-    color: #F5EFE4;
+  /* T072: one accent treatment for emphasis, applied uniformly — champagne ink on
+     the canvas, at the weight the heading already carries. The gradient-shimmer
+     version painted glyphs with a clipped background sweep, which is the exact
+     device FR-052 excludes, and it made `background-clip: text` the reason a
+     forced-contrast fallback had to exist. Seven headings used it. */
+  .emphasis {
+    color: #E5D3B3;
   }
 }
 
@@ -658,11 +488,9 @@
    Unlayered so it outranks the utilities in the markup, including the oxblood
    hairlines and the muted claim text, which would otherwise be wine-on-wine. */
 .brand-ticker-band {
-  background: linear-gradient(90deg, rgba(16, 5, 8, 0.95) 0%, rgba(61, 2, 11, 0.75) 50%, rgba(16, 5, 8, 0.95) 100%);
+  background: linear-gradient(90deg, #100508 0%, #3D020B 50%, #100508 100%);
   color: #F0ECE9;
   border-color: rgba(229, 211, 179, 0.2) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
   box-shadow: 0 4px 24px -6px rgba(0, 0, 0, 0.6);
 }
 .brand-ticker-band [class*="border-oxblood"] {
@@ -800,9 +628,7 @@
   --lux-price: #E5D3B3;
   --lux-plinth: linear-gradient(180deg, #FBF8F4, #E9E1D5);
   --accent-ground: dark;
-  background: rgba(18, 7, 10, 0.88);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
+  background: #12070A;
   box-shadow:
     0 2px 4px rgba(0, 0, 0, 0.45),
     0 14px 24px -10px rgba(0, 0, 0, 0.55),

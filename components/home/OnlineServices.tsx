@@ -30,9 +30,9 @@ export function OnlineServices() {
           <article className="glass rounded-2xl p-7">
             <div className="flex items-center justify-between">
               <span className="font-mono text-xs text-aqua">{featuredOnlineService.index}</span>
-              <small className="font-mono text-xs tracking-[0.1em] text-foreground/60">{featuredOnlineService.status}</small>
+              <small className="font-mono text-xs tracking-normal text-foreground/60">{featuredOnlineService.status}</small>
             </div>
-            <p className="mt-5 font-mono text-xs tracking-[0.1em] text-foreground/55">{featuredOnlineService.label}</p>
+            <p className="mt-5 font-mono text-xs tracking-normal text-foreground/55">{featuredOnlineService.label}</p>
             <h3 className="mt-1 text-2xl font-black">{featuredOnlineService.title}</h3>
             <i className="my-4 block h-px w-16 bg-aqua/60" aria-hidden="true" />
             <p className="text-sm leading-8 text-foreground/70">{featuredOnlineService.description}</p>
@@ -51,7 +51,7 @@ export function OnlineServices() {
 
       <Reveal delay={140}>
         <div className="faq mt-12 grid gap-8 md:grid-cols-[0.6fr_1.4fr]">
-          <p className="m-0 font-mono text-xs tracking-[0.12em] text-aqua">SHORT FAQ / سؤال‌های کوتاه</p>
+          <p className="m-0 font-mono text-xs tracking-normal text-aqua">SHORT FAQ / سؤال‌های کوتاه</p>
           <div>
             {onlineServiceFaqs.map((faq) => (
               <details key={faq.question}>

@@ -9,7 +9,7 @@ import { CartButton } from "@/components/layout/CartButton";
 import { UserMenu } from "@/components/layout/UserMenu";
 import { PillNav, type PillNavItem } from "@/components/layout/PillNav";
 import { storeContact } from "@/lib/content/contact";
-import hamiMark from "@/public/brand/hami-mark.png";
+import hamiWordmark from "@/public/brand/قسمت-فارسی-لوگو.png";
 import { cn } from "@/lib/utils";
 
 const navItems: PillNavItem[] = [
@@ -89,24 +89,31 @@ export function Header() {
           "mx-auto flex max-w-6xl items-center gap-2 transition-all duration-300 md:gap-3",
           scrolled
             ? "px-1 py-0"
-            : "rounded-full border border-champagne/20 bg-[#14060A] px-3 py-2 shadow-monolith backdrop-blur-2xl"
+            : "rounded-full border border-champagne/20 bg-[#14060A] px-3 py-2 shadow-monolith"
         )}
       >
+        {/*
+         * T082: the identity is the shop's own supplied wordmark, not a redrawn
+         * derivative. This used to be `hami-mark.png` — a 1254×1254 source file
+         * scaled into a 36px square, with the name it stands for hidden below `sm`,
+         * so at 360 and 390 the header carried a shape no shopper could read as a
+         * shop name. The Assumption is that the official files are used as supplied
+         * and not redrawn, and `قسمت-فارسی-لوگو.png` is exactly that: the Persian
+         * lockup on the brand's own oxblood, which is why it needs no plate, no
+         * ring and no gradient behind it. It is the name, so nothing repeats it.
+         */}
         <Link
           href="/"
-          className="flex min-h-11 shrink-0 items-center gap-2.5 px-1 md:min-h-0 md:ps-1 md:pe-0"
+          className="flex min-h-11 shrink-0 items-center px-1 md:min-h-0 md:ps-1 md:pe-0"
           aria-label="حامی همراه — صفحه اصلی"
         >
           <Image
-            src={hamiMark}
-            alt=""
+            src={hamiWordmark}
+            alt="حامی همراه"
             priority
-            sizes="36px"
-            className="size-9 rounded-xl bg-white/95 ring-1 ring-champagne/40"
+            sizes="(min-width: 768px) 92px, 78px"
+            className="h-10 w-[78px] rounded-lg md:h-11 md:w-[92px]"
           />
-          <span className="hidden text-[15px] font-black tracking-tight text-foreground sm:block">
-            حامی همراه
-          </span>
         </Link>
 
         <PillNav
@@ -125,12 +132,12 @@ export function Header() {
             can fill it; from md it collapses to its content and `ms-auto`
             pushes it to the end, which is the desktop layout unchanged. */}
         <div className="ms-auto flex min-w-0 flex-1 items-center gap-2 md:flex-none">
-          <form action="/shop" role="search" aria-label="جستجوی محصول" className="min-w-0 flex-1 md:flex-none">
+          <form action="/shop" role="search" aria-label="جست‌وجوی محصول" className="min-w-0 flex-1 md:flex-none">
             <Input
               type="search"
               name="q"
-              placeholder="جستجوی محصول…"
-              aria-label="جستجوی محصول"
+              placeholder="جست‌وجوی محصول…"
+              aria-label="جست‌وجوی محصول"
               className="h-11 w-full rounded-full border border-champagne/20 bg-ink/60 px-4 text-xs transition-colors placeholder:text-muted-foreground/60 focus:border-champagne/50 md:h-9 md:w-52"
             />
           </form>
@@ -175,7 +182,7 @@ export function Header() {
            */}
           <Link
             href="/partners"
-            className="shiny-edge hidden h-12 items-center gap-2 px-8 text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-95 md:inline-flex"
+            className="cta-quiet hidden h-12 items-center gap-2 px-8 text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-95 md:inline-flex"
           >
             شروع همکاری
             <ArrowLeft className="size-4" />

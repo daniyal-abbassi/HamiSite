@@ -63,13 +63,13 @@ export function ProductsAdminClient() {
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="جستجوی نام یا slug…"
-              aria-label="جستجوی محصول"
+              placeholder="جست‌وجوی نام یا slug…"
+              aria-label="جست‌وجوی محصول"
               className="w-64 pe-9"
             />
           </div>
           <Button type="submit" size="sm" variant="ghost">
-            جستجو
+            جست‌وجو
           </Button>
         </form>
         <div className="flex items-center gap-3">

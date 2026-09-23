@@ -31,7 +31,7 @@ function ProductSkeletonCard() {
         <Skeleton className="mt-2 h-4 w-full" />
 
         <div className="mt-auto pt-5">
-          <div className="lux-stock flex items-center justify-between gap-2 text-xs font-bold tracking-[0.05em]">
+          <div className="lux-stock flex items-center justify-between gap-2 text-xs font-bold tracking-normal">
             <div className="flex items-center gap-2">
               <Skeleton className="h-3 w-12" />
               <Skeleton className="h-3 w-10" />
@@ -74,8 +74,8 @@ export function FeaturedProducts({ tabs }: { tabs: FeaturedRailTab[] }) {
           <div className="flex flex-wrap items-end justify-between gap-6">
             <div>
               <span className="eyebrow"><i /> ویترین منتخب</span>
-              <h2 id="featured-title" className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
-                محصولات <span className="grad">منتخب.</span>
+              <h2 id="featured-title" className="mt-4 text-3xl font-black tracking-normal md:text-4xl">
+                محصولات <span className="emphasis">منتخب.</span>
               </h2>
               <p className="mt-3 max-w-md text-sm leading-7 text-muted-foreground">
                 انتخابی از محبوب‌ترین و تازه‌ترین محصولات حامی همراه
@@ -97,7 +97,7 @@ export function FeaturedProducts({ tabs }: { tabs: FeaturedRailTab[] }) {
       <Reveal delay={80} className="mx-auto mt-10 w-full max-w-[1560px] px-3 sm:px-4">
         <div className="tray-field">
           <div className="flex justify-center sm:justify-start pb-6">
-            <div className="inline-flex items-center gap-1.5 p-1 rounded-full border border-champagne/25 bg-ink/70 backdrop-blur-md shadow-card" role="tablist" aria-label="فیلتر محصولات منتخب">
+            <div className="inline-flex items-center gap-1.5 p-1 rounded-full border border-champagne/25 bg-ink shadow-card" role="tablist" aria-label="فیلتر محصولات منتخب">
               {featuredTabs.map((t) => {
                 const active = tab === t.key;
                 return (

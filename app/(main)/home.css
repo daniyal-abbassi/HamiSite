@@ -21,97 +21,6 @@
   }
 }
 
-/* ---------- category mosaic & light atmosphere pop-out ---------- */
-#categories {
-  transition: color 0.5s ease;
-}
-
-#categories[data-ambience="light"],
-[data-ambience="light"]#categories {
-  --foreground: 22 8 12;
-  --muted-foreground: 105 75 80;
-  color: rgb(var(--foreground));
-}
-
-#categories[data-ambience="light"] h2,
-[data-ambience="light"]#categories h2 {
-  color: #16080C;
-}
-
-#categories[data-ambience="light"] h2 .grad,
-[data-ambience="light"]#categories h2 .grad {
-  background: linear-gradient(135deg, #640211 0%, #9E0E25 45%, #C5A059 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-#categories[data-ambience="light"] p,
-[data-ambience="light"]#categories p {
-  color: rgba(22, 8, 12, 0.72) !important;
-}
-
-#categories[data-ambience="light"] .eyebrow,
-[data-ambience="light"]#categories .eyebrow {
-  color: #640211;
-  background: rgba(100, 2, 17, 0.07);
-  border-color: rgba(100, 2, 17, 0.22);
-  box-shadow: 0 2px 10px rgba(100, 2, 17, 0.08);
-}
-
-#categories[data-ambience="light"] .eyebrow i,
-[data-ambience="light"]#categories .eyebrow i {
-  background: #640211;
-  box-shadow: 0 0 8px rgba(100, 2, 17, 0.4);
-}
-
-#categories[data-ambience="light"] a.text-aqua,
-[data-ambience="light"]#categories a.text-aqua {
-  color: #640211 !important;
-}
-
-/* Scoped ambient vitrine stage inside categories */
-.cat-ambient-stage {
-  position: absolute;
-  inset: 0;
-  border-radius: 36px;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: -1;
-  background: rgba(18, 6, 9, 0.45);
-  border: 1px solid rgba(229, 211, 179, 0.14);
-  box-shadow: 0 20px 50px -15px rgba(0, 0, 0, 0.7);
-  transition: border-color 0.5s ease, box-shadow 0.5s ease;
-}
-
-#categories[data-ambience="light"] .cat-ambient-stage {
-  border-color: rgba(229, 211, 179, 0.35);
-  box-shadow: 0 25px 70px -18px rgba(0, 0, 0, 0.8), 0 0 35px -5px rgba(229, 211, 179, 0.15);
-}
-
-.cat-corner-glow {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  /* The gradient MUST end transparent. It used to end at opaque #DFD3BF,
-     so mid-reveal the clip-path circle showed a hard cream rim against the
-     dark stage — a floating «phantom shape» cut off at its arc (and harder
-     still where the stage's overflow clipped it straight). Fading to 0 by
-     ~82% makes the reveal a soft wash of light under any clip radius. */
-  background:
-    radial-gradient(circle 1400px at 0% 0%, #FAF8F5 0%, #F5F0E6 30%, rgba(236, 228, 214, 0.55) 55%, rgba(223, 211, 191, 0) 82%);
-  /* No inset box-shadow: its 1px white top hairline painted at the div's
-     own bounds — another straight hard edge during the reveal. */
-  will-change: clip-path, opacity;
-}
-.cat-corner-glow::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: radial-gradient(circle 700px at 4% 4%, rgba(255, 255, 255, 0.95), transparent 75%);
-  pointer-events: none;
-}
 
 
 
@@ -500,26 +409,9 @@
   z-index: -2;
   background: linear-gradient(170deg, #160709, #0D0406 70%);
 }
-.final-conversion .beam {
-  position: absolute;
-  top: -30%;
-  right: 12%;
-  width: 1px;
-  height: 160%;
-  z-index: -1;
-  background: linear-gradient(to bottom, transparent, rgba(214, 207, 203, 0.55), transparent);
-}
-.final-conversion .glow {
-  position: absolute;
-  bottom: -140px;
-  left: 50%;
-  width: 480px;
-  height: 280px;
-  transform: translateX(-50%);
-  z-index: -1;
-  background: radial-gradient(ellipse at center, rgba(100, 2, 17, 0.35), transparent 70%);
-  filter: blur(10px);
-}
+/* T071: the hairline "beam" and the blurred elliptical "glow" that used to sit
+   behind the closing call are deleted. The section keeps its own gradient ground
+   above, which is what actually separates it from the one before. */
 
 /* ---------- online services FAQ (native details) ---------- */
 .faq details {
@@ -545,70 +437,11 @@
   color: rgb(var(--foreground) / 0.65);
 }
 
-/* ---------- store experience & trust light atmosphere ---------- */
-#store-experience,
-#trust {
-  transition: color 0.5s ease;
-}
-
-#store-experience[data-ambience="light"],
-#trust[data-ambience="light"] {
-  --foreground: 22 8 12;
-  --muted-foreground: 105 75 80;
-  color: rgb(var(--foreground));
-}
-
-#store-experience[data-ambience="light"] h2,
-#trust[data-ambience="light"] h2 {
-  color: #16080C;
-}
-
-#store-experience[data-ambience="light"] h2 .grad,
-#trust[data-ambience="light"] h2 .grad {
-  background: linear-gradient(135deg, #640211 0%, #9E0E25 45%, #C5A059 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-#store-experience[data-ambience="light"] p,
-#trust[data-ambience="light"] p {
-  color: rgba(22, 8, 12, 0.72) !important;
-}
-
-#store-experience[data-ambience="light"] .eyebrow,
-#trust[data-ambience="light"] .eyebrow {
-  color: #640211;
-  background: rgba(100, 2, 17, 0.07);
-  border-color: rgba(100, 2, 17, 0.22);
-}
-
-#store-experience[data-ambience="light"] .eyebrow i,
-#trust[data-ambience="light"] .eyebrow i {
-  background: #640211;
-  box-shadow: 0 0 8px rgba(100, 2, 17, 0.4);
-}
-
-#trust[data-ambience="light"] .glass-smoked {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.88), rgba(247, 242, 235, 0.78));
-  border: 1px solid rgba(100, 2, 17, 0.16);
-  box-shadow: 0 16px 40px -12px rgba(30, 8, 14, 0.14);
-  color: #1A080D;
-}
-
-#trust[data-ambience="light"] .glass-smoked blockquote p {
-  color: #16080C !important;
-}
-
-#trust[data-ambience="light"] .glass-smoked [class*="text-foreground"] {
-  color: #16080C !important;
-}
-
-#trust[data-ambience="light"] .glass-smoked [class*="text-champagne"] {
-  color: #640211 !important;
-}
-
-#trust[data-ambience="light"] .glass-smoked [class*="border-champagne"] {
-  border-color: rgba(100, 2, 17, 0.22) !important;
-}
+/* T073 / T090: the `[data-ambience="light"]` chapter system is deleted here and above.
+   Nothing in the repo sets that attribute any more — the light/dark chapters were retired
+   with HeaderChapterWatcher — so ~110 lines of cream-on-wine overrides were styling a state
+   that cannot occur, including a second `.grad` implementation, which is why the emphasis
+   treatment depended on which rule file happened to load last. `.cat-ambient-stage` and
+   `.cat-corner-glow` go with them: no component renders either class, and the cream
+   «phantom shape» they drew is the surface 005's FR-039 forbids this section from becoming. */
 

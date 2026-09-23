@@ -245,7 +245,7 @@ export function ProductDetail({ product }: Props) {
 
         {/* Buy box */}
         <div>
-          <span className="font-mono text-xs tracking-[0.14em] text-champagne">
+          <span className="font-mono text-xs tracking-normal text-champagne">
             {product.brand?.name ?? "—"}
             {product.englishName ? ` · ${product.englishName}` : ""}
           </span>
@@ -272,7 +272,7 @@ export function ProductDetail({ product }: Props) {
                 {compareAtPrice != null && compareAtPrice > unitPrice && (
                   <del className="text-sm text-foreground/50">{formatToman(compareAtPrice)}</del>
                 )}
-                <strong className="text-3xl font-black text-champagne tracking-tight" aria-live="polite">
+                <strong className="text-3xl font-black text-champagne tracking-normal" aria-live="polite">
                   {formatToman(unitPrice * quantity)}
                 </strong>
                 {quantity > 1 && (
@@ -326,7 +326,7 @@ export function ProductDetail({ product }: Props) {
             <div className="mt-6 space-y-4">
               {storages.length > 0 && (
                 <div>
-                  <p className="mb-2 font-mono text-xs tracking-[0.1em] text-muted-foreground/70">حافظه</p>
+                  <p className="mb-2 font-mono text-xs tracking-normal text-muted-foreground/70">حافظه</p>
                   <div className="flex flex-wrap gap-2">
                     {storages.map((storage) => (
                       <Chip key={storage} label={`حافظه ${storage}`} active={selectedVariant?.storage === storage} onClick={() => pickByStorage(storage)}>
@@ -338,7 +338,7 @@ export function ProductDetail({ product }: Props) {
               )}
               {colors.length > 0 && (
                 <div>
-                  <p className="mb-2 font-mono text-xs tracking-[0.1em] text-muted-foreground/70">رنگ</p>
+                  <p className="mb-2 font-mono text-xs tracking-normal text-muted-foreground/70">رنگ</p>
                   <div className="flex flex-wrap gap-2">
                     {colors.map((color) => (
                       <Chip key={color} label={`رنگ ${color}`} active={selectedVariant?.color === color} onClick={() => pickByColor(color)}>
@@ -479,7 +479,7 @@ export function ProductDetail({ product }: Props) {
 
       {product.tags.length > 0 && (
         <div className="mt-8 flex flex-wrap items-center gap-2">
-          <span className="font-mono text-xs tracking-[0.12em] text-champagne">برچسب‌ها:</span>
+          <span className="font-mono text-xs tracking-normal text-champagne">برچسب‌ها:</span>
           {product.tags.map((tag) => (
             <span key={tag} className="rounded-full border border-champagne/15 bg-champagne/5 px-3 py-1 font-mono text-xs text-foreground/70">
               {tag}
@@ -489,9 +489,10 @@ export function ProductDetail({ product }: Props) {
       )}
 
       {/* ---------------------------------------------------------------
-          Sticky buy bar — mobile only.
-          Elevated to smoked obsidian glass with champagne gold accents. */}
-      <div className="fixed inset-x-0 bottom-[calc(3.75rem+env(safe-area-inset-bottom))] z-40 border-t border-champagne/25 bg-ink/90 px-4 py-3 backdrop-blur-xl shadow-monolith md:hidden">
+          Sticky buy bar — mobile only. Opaque, not glass: T074 took the
+          backdrop-filter off it, and a bar that must be readable over any
+          product photograph has no business being translucent. */}
+      <div className="fixed inset-x-0 bottom-[calc(3.75rem+env(safe-area-inset-bottom))] z-40 border-t border-champagne/25 bg-ink px-4 py-3 shadow-monolith md:hidden">
         <div className="flex items-center gap-3">
           <div className="min-w-0 flex-1">
             {unitPrice !== null ? (

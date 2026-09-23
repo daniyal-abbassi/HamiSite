@@ -15,8 +15,8 @@ export function StoreExperience() {
       <Reveal>
         <div className="text-center">
           <span className="eyebrow"><i /> تجربه حضوری</span>
-          <h2 id="store-experience-title" className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
-            خرید را <span className="grad">لمس کنید.</span>
+          <h2 id="store-experience-title" className="mt-4 text-3xl font-black tracking-normal md:text-4xl">
+            خرید را <span className="emphasis">لمس کنید.</span>
           </h2>
           <p className="mt-3 text-sm text-foreground/60">از انتخاب محصول تا دریافت مشاوره، حامی همراه در کنار شماست.</p>
         </div>

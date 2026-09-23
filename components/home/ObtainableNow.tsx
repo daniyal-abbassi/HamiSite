@@ -26,8 +26,8 @@ export function ObtainableNow() {
           <span className="eyebrow">
             <i /> موجودی همین حالا
           </span>
-          <h2 id="obtainable-now-title" className="mt-4 text-2xl font-black tracking-tight md:text-4xl">
-            همین حالا <span className="grad">قابل خرید.</span>
+          <h2 id="obtainable-now-title" className="mt-4 text-2xl font-black tracking-normal md:text-4xl">
+            همین حالا <span className="emphasis">قابل خرید.</span>
           </h2>
           <p className="mt-3 max-w-md text-sm leading-7 text-foreground/60">
             {toFaDigits(total)} محصول از فروشگاه که همین امروز می‌توانید به سبد اضافه کنید — ارزان‌ترین‌ها اول.

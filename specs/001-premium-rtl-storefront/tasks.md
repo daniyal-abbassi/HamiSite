@@ -31,8 +31,8 @@ before-images.
   visitor, fails to resolve in production, and delays the `load` event that
   `components/atmosphere/useAtmosphereGround.ts:102` depends on. Delete the
   `<!-- impeccable-live-start -->`/`-end` markers and their script tag.
-- [ ] T002 Capture before-images for the 13 surfaces listed in `quickstart.md` §4 into
-  `specs/001-premium-rtl-storefront/baseline/` at 360×800 and 1280×900. `audits/05` had to compute
+- [x] T002 Capture before-images for the 13 surfaces listed in `quickstart.md` §4 into
+  `specs/001-premium-rtl-storefront/baseline/` at 360×800 and 1280×900. **Done 2026-09-23** — §4 lists twelve surfaces, not thirteen; all twelve captured at both widths by `verification/capture-baseline.mjs`, with a manifest of page height, mounted sections, the decoration census and the fold positions `audits/05` had to estimate. `audits/05` had to compute
   fold positions from 002's 2026-09-22 captures because nothing was listening on :3000 — re-measure
   against a live server before band 3 relies on any position claim.
 - [x] T003 **DONE 2026-09-23** — all eight answers recorded in
@@ -394,37 +394,37 @@ Depends on T003 for decisions 1, 2, 5.
 
 ### FR-052: strip first, then re-earn
 
-- [ ] T069 [US1] Remove `.shiny-edge` (the 8s infinite conic-gradient gold rim with three glow shadows at
+- [x] T069 [US1] Remove `.shiny-edge` (the 8s infinite conic-gradient gold rim with three glow shadows at
   `app/globals.css:481-516`) from the hero's secondary CTA (`app/(main)/page.tsx:118`) and the header
   (`components/layout/Header.tsx:144`). FR-052: premium "MUST NOT depend on decorative excess, glow, or
   visual noise."
-- [ ] T070 [P] [US5] Delete `components/home/ModernWhiteWave.tsx` and its mount — a stock page-builder
+- [x] T070 [P] [US5] Delete `components/home/ModernWhiteWave.tsx` and its mount — a stock page-builder
   divider with four gradients, a `feGaussianBlur` glow filter and dashed "specular crests"
   (`:18-99`), and the element least belonging to this brand world.
-- [ ] T071 [P] [US1] Remove the decorative blur blobs: `blur-3xl` champagne at
+- [x] T071 [P] [US1] Remove the decorative blur blobs: `blur-3xl` champagne at
   `components/home/BrandShowcase.tsx:24`, the `blur-2xl` wash plus `.beam`/`.glow` ellipse at
   `app/(main)/home.css:503-522`, and the hover-only radial red wash at
   `components/home/TrustBento.tsx:70-74`.
-- [ ] T072 [P] [US5] Retire `.grad` gradient-shimmer text (`app/globals.css:623-629`, used at
+- [x] T072 [P] [US5] Retire `.grad` gradient-shimmer text (`app/globals.css:623-629`, used at
   `app/(main)/page.tsx:88,112`) and the `animate-ping` hero dot (`:70`); choose one accent treatment for
   emphasis and apply it uniformly, which is the single binding visual rule in Constitution IV.
-- [ ] T073 [P] [US5] Reduce the ground's work to what the content cannot: the five stacked body radial
+- [x] T073 [P] [US5] Reduce the ground's work to what the content cannot: the five stacked body radial
   glows (`app/globals.css:137-142`), the `body::before` glow layer (`:145-154`), the per-section
   alternating radial glow and third-section darkening band (`:186-224`), the fixed blurred top scrim
   (`:426-436`), and the 20-point drifting starfield (`:440-473`) — which is also why the page runs
   16,566px at 360px for 11 sections. Coordinate with `components/atmosphere/PageGround.tsx` so the scroll
   ground and the removed layers are one decision, not two partial ones, and with owner decision 5.
-- [ ] T074 [P] [US5] Replace the site-wide `backdrop-filter: blur(20-22px)` frosted-glass card treatment
+- [x] T074 [P] [US5] Replace the site-wide `backdrop-filter: blur(20-22px)` frosted-glass card treatment
   (`app/globals.css:342-379`) and the 15vw `-webkit-text-stroke` footer wordmark
   (`components/layout/Footer.tsx:117-121`, hidden from assistive tech and carrying no information).
-- [ ] T075 [US1] Re-compose the hero in `app/(main)/page.tsx:56-161` and the section headers in
+- [x] T075 [US1] Re-compose the hero in `app/(main)/page.tsx:56-161` and the section headers in
   `components/home/SectionHead.tsx` (styles in `app/(main)/home.css`) to carry the premium after the strip —
   this is the substantive design task, not a cleanup: deliberate hierarchy, proportion and whitespace per
   Constitution IV, judged in the browser at 360 before 1280.
 
 ### Typography and numerals (Constitution II, the parts that fail)
 
-- [ ] T076 [P] [US5] Zero the tracking on Persian text — 45 declarations in 31 files reach ~50 Persian
+- [x] T076 [P] [US5] Zero the tracking on Persian text — 45 declarations in 31 files reach ~50 Persian
   strings (`audits/04`). Start with the highest-traffic: `.eyebrow` `letter-spacing: 0.08em`
   (`app/globals.css:611`) on 6 homepage eyebrows, `tracking-tight` on every `<h1>`/`<h2>`
   (`app/(main)/page.tsx:78`, `shop/page.tsx:24`, `checkout/page.tsx:18`, `components/home/SectionHead.tsx:61-122`,
@@ -432,7 +432,7 @@ Depends on T003 for decisions 1, 2, 5.
   name, repeating on all 189 cards) and `components/shop/ProductDetail.tsx:240,267,297,309,321,416`.
   FR-057: "Tracking breaks letter joining in Persian script." Apply the existing precedent at
   `app/(main)/home.css:291-307`; leave Latin-only decorative labels alone, which FR-057 exempts.
-- [ ] T077 [P] [US5] Insert the ZWNJ in the 8 «جستجو» occurrences: `components/layout/Header.tsx:127,131,132`,
+- [x] T077 [P] [US5] Insert the ZWNJ in the 8 «جستجو» occurrences: `components/layout/Header.tsx:127,131,132`,
   `components/admin/products/ProductsAdminClient.tsx:66,67,72`,
   `components/shop/FilterSidebar.tsx:71,72`. FR-058. Note the count *grew* from the 3 the checklist
   recorded, which is the argument for T084.
@@ -459,7 +459,7 @@ Depends on T003 for decisions 1, 2, 5.
 
 ### Identity and coherence (US5)
 
-- [ ] T082 [US1] Put a supplied official logo file into the header identity: the four assets in `public/`
+- [x] T082 [US1] Put a supplied official logo file into the header identity: the four assets in `public/`
   (`HamiHamrah(حامی همراه)-Logo.png`, `طرح اصلی لوگو-انگلیسی.png`, `قسمت-فارسی-لوگو.png`,
   `قسمت-فارسی-لوگو-رنگ-برعکس.png`) are imported by nothing, while `components/layout/Header.tsx:11,100-105`
   renders a 1254×1254 derivative at 36px and re-typesets the name behind `hidden … sm:block`
@@ -475,7 +475,7 @@ Depends on T003 for decisions 1, 2, 5.
   page, `/cart`, `/orders` and `/partners` inherit the scroll ground — the owner chose "extend it to all
   pages" (`notes/owner-decisions.md` §5). Order matters: extending before T073 strips would multiply the
   glow field across six surfaces instead of one.
-- [ ] T084 [P] [US5] Add the guard tests in `tests/unit/persian-typography.test.ts` that stop the
+- [x] T084 [P] [US5] Add the guard tests in `tests/unit/persian-typography.test.ts` that stop the
   typographic band regressing: a unit pass over the
   authored string sources asserting zero non-zero `letter-spacing` on Persian literals, ZWNJ presence in the
   words FR-058 names, and no Latin digits in interface-authored strings. `audits/04` found zero coverage for
@@ -487,7 +487,7 @@ Depends on T003 for decisions 1, 2, 5.
 - [ ] T086 [P] [US1] Fix the header collapse at 360px: `components/layout/Header.tsx:142-148` keeps
   «شروع همکاری» visible on phone (`h-12 px-8`, ~174 of 336px), squeezing the search field to a ~58px empty
   pill, and duplicating the hero's CTA in the same screen.
-- [ ] T087 [P] [US1] Fix the rotating headline word — illegible for ~460ms of every 2.8s, with the existing
+- [x] T087 [P] [US1] Fix the rotating headline word — illegible for ~460ms of every 2.8s, with the existing
   baseline capture showing two to three words superimposed (`components/ui/flip-words.tsx`, used at
   `app/(main)/page.tsx:86-90`). Reduced-motion already settles it; the default state must read.
 - [ ] T088 [P] [US5] Reconcile the undeclared design-system pin with FR-051 and Constitution IV:

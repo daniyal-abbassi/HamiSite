@@ -27,7 +27,7 @@ export function ProductListRow({ product }: { product: ShopProduct }) {
       </Link>
       <div className="flex min-w-0 flex-1 flex-col p-4 md:p-5">
         <div className="flex flex-wrap items-center gap-2">
-          <span className="font-mono text-xs tracking-[0.1em] text-aqua/80">{product.brand?.name ?? "—"}</span>
+          <span className="font-mono text-xs tracking-normal text-aqua/80">{product.brand?.name ?? "—"}</span>
           {product.specialOffer && (
             <span className="rounded-xl bg-aqua/15 px-1.5 py-0.5 font-mono text-xs tracking-[0.08em] text-aqua">
               SPECIAL OFFER
