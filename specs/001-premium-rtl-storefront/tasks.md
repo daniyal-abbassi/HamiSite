@@ -564,7 +564,7 @@ measured at the gutter pixel: `#1D0308 → #150105 → #110104 → #0E0103 → #
 16,384px, so the whole back half of the page moves three units in one channel. Owner explicitly rejected a
 light theme — the ask is *travel within the dark palette*, not white.
 
-- [x] T105 [US1] Give the scroll ground real travel. `lib/atmosphere/progression.ts` moves from the
+- [x] T112 [US1] Give the scroll ground real travel. `lib/atmosphere/progression.ts` moves from the
   four-stop descent to a six-stop tour — `#3A0C12` arrival → `#2A0713` goods → `#1A0A16` shelves →
   `#0E1122` ink at the trade chapter → `#320B0A` ember at the store → `#160406` close — every leg ≥ ΔE 9,
   no stage within ΔE 6 of the one two places along, worst text contrast 5.59:1 across the 500-step sweep,
@@ -575,7 +575,7 @@ light theme — the ask is *travel within the dark palette*, not white.
   `tests/unit/atmosphere-progression.test.ts` is replaced by the four guards above (it had been proving
   monotone luminance, which the invisible palette passed). Recorded as 002 Amendment Record #4 against
   FR-001, FR-003 and the "Coherence beats variety" assumption.
-- [ ] T106 [US1] First-load choreography for `/shop`. The surface has **zero** entrance motion today —
+- [ ] T113 [US1] First-load choreography for `/shop`. The surface has **zero** entrance motion today —
   `app/(main)/shop/page.tsx` and `components/shop/ShopResults.tsx` contain no `Reveal`, no `animate-*`, no
   transition — so the listing arrives all at once while the homepage reveals in stages. Three beats:
   header and search settle, banner lines, then the grid in a ~50ms stagger capped at six items. Hard
@@ -583,13 +583,13 @@ light theme — the ask is *travel within the dark palette*, not white.
   2 made the listing server-rendered so a crawler and a slow connection see 24 products in the document —
   an entrance that hides content until hydration throws that away), `prefers-reduced-motion` returns the
   finished state immediately (FR-047), and the first text paint is never delayed.
-- [ ] T107 [US1] The store photograph returns to `components/home/ShopWindow.tsx`, per the owner on
+- [x] T114 [US1] The store photograph returns to `components/home/ShopWindow.tsx`, per the owner on
   2026-09-23, reversing decision 2. Use the merchant's own file (`public/store/shop-upright.jpg`,
   orientation-corrected only), not `shop.jpg`, which is an AI re-lit derivative of it; and do not re-add the
   "MASHHAD FLAGSHIP" / "SHOWROOM" badges or the invented brand lightboxes that were on the old frame.
   Principle I still forbids the image standing for something the shop does not have.
 
-- [ ] T108 [US1] Make the ground reach the pixels it owns. `verification/ground-travel.mjs` reports the
+- [ ] T115 [US1] Make the ground reach the pixels it owns. `verification/ground-travel.mjs` reports the
   authored tone arriving at the gutter unpainted at only **9 of 13** scroll positions: at 25%, 42% and 58%
   the gutter shows `#110003` / `#0e070f` / `#10060d` where `lib/atmosphere/progression.ts` holds
   `#220915` / `#130e1d` / `#180f1b`, i.e. a section painting its own opaque background over the ground, and

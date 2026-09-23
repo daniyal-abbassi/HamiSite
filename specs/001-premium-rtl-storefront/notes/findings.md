@@ -327,7 +327,7 @@ mouse does not need them and every prose link on the site would otherwise have b
 `.lux-card:hover { transform: none }` moved to `@media (hover: none)` on the same reasoning: the bug it
 prevents is a tap leaving the card lifted, and that happens on a wide phone too.
 
-### The scroll ground was invisible, and the suite could not see it (T105)
+### The scroll ground was invisible, and the suite could not see it (T112)
 
 The owner's complaint — *"the same colour all along"* — is correct at the pixel level. Sampled in the
 gutter down the live homepage: `#1D0308 → #150105 → #110104 → #0E0103 → #0C0002 → #0B0003 → #0B0104`, i.e.
@@ -351,14 +351,53 @@ its own opaque background over the ground — and at 8% the left and right gutte
 strong enough that this is the limiting factor on how much of it a shopper sees, so it belongs with T083's
 extension rather than being filed as decoration.
 
-### FR-014 is still not met at 360, and the hero comment claims it is
+### A fold measurement that was wrong, and the instrument that made it wrong
 
-`manifest-after.json` puts the hero's trust text row at **y=916** on a 360×800 screen — below the fold —
-while the comment at `app/(main)/page.tsx:73-79` states that after the recompose "the whole stack lands
-inside the first viewport with the shop window beginning above the fold". The first merchandise did move up
-(2,016 → 1,640), so the recompose bought something real. What it did not buy is the trust row: the
-shop-window panel stacks between the hero actions and that row on a phone, and the row sits exactly where
-the panel ends. The `533–572` figure quoted in this band's scratch notes was a different element (the
-eyebrow inside the hero) read by a different instrument, and it is not FR-014's measurement — recorded here
-so it is not repeated as one. T085 stays open, and T107 (the photograph returning) changes that panel's
-height, so the fold is re-measured after it rather than now.
+An earlier paragraph in this section claimed the hero's trust row landed at y=916 and that FR-014 was
+therefore unmet at 360. **It was wrong, and the reason is worth keeping**: `capture-baseline.mjs` defines
+`trustTextRow` as the first childless element matching `/گارانتی|ضمانت/`, which is the **warranty line at the
+bottom of the shop-window panel**, not the hero's trust row. Re-measured element by element at 360×800:
+
+```
+eyebrow 120 · h1 167 · lead 309 · actions 429 · trust row 501–540 · shop window begins 572
+```
+
+Everything FR-014 asks for — positioning, one trust signal, one obvious next action without scrolling — is
+above the fold, and the first merchandise is at y=1,640 (down from 2,016). T085 stays open on the stock
+half of that sentence, not the trust half. Two lessons: a probe that matches on *text* rather than on
+identity reports whatever happens to contain the word, and a number copied between instruments has to
+carry its definition with it — the `533–572` figure in the scratch notes was the same row, measured
+correctly, and I disbelieved it because a different script said 916.
+
+### The shop photograph returns, and the two files are not the same room (T114)
+
+`public/store/` holds five files and only two of them are the merchant's camera. Compared pixel for pixel:
+`shop-upright.jpg` (3000×4000, the owner's shot with the EXIF rotation applied) shows a counter stacked with
+roughly fifteen phone cartons, a PS5 box, two plants and dome cameras on a matte tiled floor. The AI steps
+after it remove **all of that** and stand four phones in a row under wall spotlights, add a lit strip under
+the counter and a mirror-polished floor. So `shop.jpg`, the file that used to sit in the hero, is not a
+re-grade of the shop — it is a different shop. That is the whole of the Principle I objection, and it is why
+the reinstated frame points at `shop-upright.jpg`.
+
+What came back and what did not: the photograph, the «HAMI HAMRAH / MASHHAD» line and «فروشگاه حضوری در
+مشهد» — all things that are true of the room. `MASHHAD FLAGSHIP`, `SHOWROOM` and the street address stayed
+out (the badges were UI text laid over the frame; the address is decision 3's, and a photo of a premises is
+where an invented one reads hardest as fact). The «SAMSUNG» and «ACCESSORIES» lightboxes are fixtures,
+visible in the original file, and the earlier note calling them invented was wrong.
+
+Measured after the change, at 360×800: eyebrow 120, h1 167, lead 309, actions 429, trust row 501–540,
+**photograph begins at 572** — so the frame is above the fold on a phone, which is the only place it can do
+its work. Page height 16,384 → 16,547 (+163px, the panel growing from a 400px text block to 563px), first
+product card 1,640 → 1,804. At 1280 the hero column is now tall enough that `obtainable-now` no longer
+peeks into the first viewport, which `manifest-after.json` records as `aboveFold=[top]` where the previous
+capture had two sections. Decoration counts are unchanged at 0 across all 24 captures — the caption scrim is
+one linear gradient over an image, not a second light source.
+
+Asset weights: `shop-hero.jpg` 1200×1600 at 136KB and `shop-hero@2x.jpg` at 212KB, both generated with the
+repo's own `sharp` (progressive, mozjpeg). The 2.63MB source stays in the tree as provenance and is never
+fetched by a browser.
+
+One consequence for the ground: `ground-travel.mjs` now reports the authored tone reaching the gutter at
+**8 of 13** positions where it reported 9 — the panel is full-bleed on a phone and opaque, so it covers a
+strip of ground it used to let through. That is the photograph doing its job and T115 getting slightly
+harder, not a regression to undo.

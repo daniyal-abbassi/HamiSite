@@ -1,5 +1,5 @@
 {
- "capturedAt": "2026-09-23T20:09:23.765Z",
+ "capturedAt": "2026-09-23T21:21:52.618Z",
  "base": "http://localhost:3000",
  "mode": "after",
  "surfaces": {
@@ -9,7 +9,7 @@
     "status": 200,
     "finalUrl": "/",
     "screenshot": "home@360-after.png",
-    "docHeight": 16384,
+    "docHeight": 16547,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [
@@ -45,80 +45,80 @@
     "fold": {
      "h1": 167,
      "heroPrimaryCta": 0,
-     "trustRow": 9583,
-     "trustTextRow": 916,
-     "firstProductCard": 1640
+     "trustRow": 9747,
+     "trustTextRow": 1093,
+     "firstProductCard": 1804
     },
     "sectionsAboveFold": [
      {
       "id": "top",
       "top": 96,
-      "height": 1143,
+      "height": 1307,
       "visibleWithoutScrolling": true
      },
      {
       "id": "obtainable-now",
-      "top": 1325,
+      "top": 1489,
       "height": 780,
       "visibleWithoutScrolling": false
      },
      {
       "id": "featured",
-      "top": 2105,
+      "top": 2268,
       "height": 878,
       "visibleWithoutScrolling": false
      },
      {
       "id": "categories",
-      "top": 3022,
+      "top": 3186,
       "height": 1251,
       "visibleWithoutScrolling": false
      },
      {
       "id": "brands",
-      "top": 4314,
+      "top": 4477,
       "height": 1124,
       "visibleWithoutScrolling": false
      },
      {
       "id": "new-arrivals",
-      "top": 5437,
+      "top": 5601,
       "height": 800,
       "visibleWithoutScrolling": false
      },
      {
       "id": "b2b",
-      "top": 6237,
+      "top": 6400,
       "height": 1395,
       "visibleWithoutScrolling": false
      },
      {
       "id": "accessories",
-      "top": 7632,
+      "top": 7796,
       "height": 962,
       "visibleWithoutScrolling": false
      },
      {
       "id": "online-services",
-      "top": 8594,
+      "top": 8758,
       "height": 989,
       "visibleWithoutScrolling": false
      },
      {
       "id": "store-experience",
-      "top": 9583,
+      "top": 9747,
       "height": 1901,
       "visibleWithoutScrolling": false
      },
      {
       "id": "trust",
-      "top": 11484,
+      "top": 11648,
       "height": 3603,
       "visibleWithoutScrolling": false
      },
      {
       "id": "final-conversion",
-      "top": 15128,
+      "top": 15291,
       "height": 452,
       "visibleWithoutScrolling": false
      }
@@ -189,7 +189,7 @@
     "status": 200,
     "finalUrl": "/",
     "screenshot": "home@1280-after.png",
-    "docHeight": 13239,
+    "docHeight": 13430,
     "viewportHeight": 900,
     "horizontalOverflow": null,
     "sections": [
@@ -223,82 +223,82 @@
      "modernWhiteWave": 0
     },
     "fold": {
-     "h1": 219,
+     "h1": 315,
      "heroPrimaryCta": 39,
-     "trustRow": 9410,
-     "trustTextRow": 498,
-     "firstProductCard": 1090
+     "trustRow": 9601,
+     "trustTextRow": 713,
+     "firstProductCard": 1281
     },
     "sectionsAboveFold": [
      {
       "id": "top",
       "top": 112,
-      "height": 703,
+      "height": 894,
       "visibleWithoutScrolling": true
      },
      {
       "id": "obtainable-now",
-      "top": 815,
+      "top": 1006,
       "height": 1600,
-      "visibleWithoutScrolling": true
+      "visibleWithoutScrolling": false
      },
      {
       "id": "featured",
-      "top": 2414,
+      "top": 2606,
       "height": 1677,
       "visibleWithoutScrolling": false
      },
      {
       "id": "categories",
-      "top": 4132,
+      "top": 4323,
       "height": 1219,
       "visibleWithoutScrolling": false
      },
      {
       "id": "brands",
-      "top": 5391,
+      "top": 5582,
       "height": 1092,
       "visibleWithoutScrolling": false
      },
      {
       "id": "new-arrivals",
-      "top": 6483,
+      "top": 6675,
       "height": 946,
       "visibleWithoutScrolling": false
      },
      {
       "id": "b2b",
-      "top": 7430,
+      "top": 7621,
       "height": 655,
       "visibleWithoutScrolling": false
      },
      {
       "id": "accessories",
-      "top": 8084,
+      "top": 8275,
       "height": 661,
       "visibleWithoutScrolling": false
      },
      {
       "id": "online-services",
-      "top": 8745,
+      "top": 8936,
       "height": 665,
       "visibleWithoutScrolling": false
      },
      {
       "id": "store-experience",
-      "top": 9410,
+      "top": 9601,
       "height": 980,
       "visibleWithoutScrolling": false
      },
      {
       "id": "trust",
-      "top": 10390,
+      "top": 10582,
       "height": 1839,
       "visibleWithoutScrolling": false
      },
      {
       "id": "final-conversion",
-      "top": 12270,
+      "top": 12461,
       "height": 466,
       "visibleWithoutScrolling": false
      }
@@ -337,19 +337,19 @@
      {
       "tag": "h1",
       "text": "قیمت روزِ بازار، مستقیم از مشهد برای موبایلل",
-      "top": 219,
+      "top": 315,
       "visible": true
      },
      {
       "tag": "a",
       "text": "مشاهده محصولات",
-      "top": 479,
+      "top": 575,
       "visible": true
      },
      {
       "tag": "a",
       "text": "شروع همکاری",
-      "top": 479,
+      "top": 575,
       "visible": true
      }
     ],
@@ -836,7 +836,7 @@
      "heroPrimaryCta": 39,
      "trustRow": null,
      "trustTextRow": 327,
-     "firstProductCard": 973
+     "firstProductCard": 989
     },
     "sectionsAboveFold": [
      {
@@ -1473,7 +1473,7 @@
     "status": 200,
     "finalUrl": "/cart",
     "screenshot": "cart@360-after.png",
-    "docHeight": 1434,
+    "docHeight": 1476,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [],
@@ -1497,7 +1497,7 @@
      "h1": 200,
      "heroPrimaryCta": 0,
      "trustRow": null,
-     "trustTextRow": 808,
+     "trustTextRow": 850,
      "firstProductCard": null
     },
     "sectionsAboveFold": [],
@@ -1506,24 +1506,6 @@
       "tag": "h1",
       "text": "بازبینی سفارش.",
       "top": 200,
-      "visible": true
-     },
-     {
-      "tag": "h2",
-      "text": "وارد حساب خود شوید",
-      "top": 361,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "ورود / ثبت‌نام",
-      "top": 505,
-      "visible": true
-     },
-     {
-      "tag": "button",
-      "text": "ورود / ثبت‌نام",
-      "top": 505,
       "visible": true
      },
      {
@@ -2311,7 +2293,7 @@
     "status": 200,
     "finalUrl": "/orders",
     "screenshot": "orders@360-after.png",
-    "docHeight": 1108,
+    "docHeight": 1372,
     "viewportHeight": 800,
     "horizontalOverflow": null,
     "sections": [],
@@ -2335,7 +2317,7 @@
      "h1": 200,
      "heroPrimaryCta": 0,
      "trustRow": null,
-     "trustTextRow": 482,
+     "trustTextRow": 746,
      "firstProductCard": null
     },
     "sectionsAboveFold": [],
@@ -2344,66 +2326,6 @@
       "tag": "h1",
       "text": "سفارش‌های من.",
       "top": 200,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "۰۹۳۳ ۱۲۱ ۴۰۰۰",
-      "top": 634,
-      "visible": true
-     },
-     {
-      "tag": "h3",
-      "text": "فروشگاه",
-      "top": 688,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "همه محصولات",
-      "top": 708,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "موبایل",
-      "top": 728,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "ایرپاد و هدفون",
-      "top": 749,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "ساعت هوشمند",
-      "top": 769,
-      "visible": true
-     },
-     {
-      "tag": "h3",
-      "text": "حامی همراه",
-      "top": 688,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "همکاری عمده (B2B)",
-      "top": 708,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "درباره ما",
-      "top": 728,
-      "visible": true
-     },
-     {
-      "tag": "a",
-      "text": "تماس با ما",
-      "top": 749,
       "visible": true
      },
      {
@@ -2421,6 +2343,24 @@
      {
       "tag": "a",
       "text": "سبد",
+      "top": 733,
+      "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "همکاری",
+      "top": 733,
+      "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "تماس",
+      "top": 733,
+      "visible": true
+     },
+     {
+      "tag": "a",
+      "text": "حساب",
       "top": 733,
       "visible": true
      }

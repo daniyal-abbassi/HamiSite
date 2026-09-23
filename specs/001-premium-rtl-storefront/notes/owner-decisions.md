@@ -59,17 +59,32 @@ decorates an image that is leaving.
 The reversal is about the **photograph**, not about the claims that were painted over it, and the two are
 kept apart deliberately:
 
-- **Use `public/store/shop-upright.jpg`** — the merchant's own file with the orientation corrected, nothing
+- **Use `public/store/shop-upright.jpg`** — the merchant's own file with the orientation applied, nothing
   else done to it. **Not `shop.jpg`**, which is the last step of an AI chain
-  (`shop-original → shop-upright → shop-ai-relight → shop-hero-master → shop.jpg`): re-lit and rebuilt, i.e.
-  a picture of a shop that does not exist in that light. Principle I is about exactly that.
-- **The badges do not come back.** `MASHHAD FLAGSHIP`, `SHOWROOM` and the brand lightboxes were invented
-  over the photograph; the photograph is not what made them false. Twenty years, Mashhad, the phone number
-  and the hours stay in words, as above.
+  (`shop-original → shop-upright → shop-ai-relight → shop-hero-master → shop.jpg`). Looked at side by side
+  the difference is not a grade or a white balance: **the AI steps cleared the counter of every box in the
+  room** — the real shop has a counter stacked with roughly fifteen phone cartons, a PS5 box and two
+  plants, and the derived image replaces all of it with four phones standing in a row under showroom
+  spotlights, a lit strip under the counter and a polished reflective floor that the tiles in the original
+  do not have. It is a picture of a shop that does not exist, of a business that does. Principle I is about
+  exactly that.
+- **The two UI badges do not come back.** `MASHHAD FLAGSHIP` and `SHOWROOM` were text laid over the frame;
+  they were never in the room. The «SAMSUNG» and «ACCESSORIES» lightboxes **are** fixtures — visible in the
+  merchant's own photograph — and an earlier draft of this note called them invented, which was wrong and
+  is corrected here rather than quietly deleted. What may not return is the caption that was attached to
+  the AI file: «فضای واقعی مجموعه» ("the real space of the collection") is a true sentence about
+  `shop-upright.jpg` and a false one about every step after it.
+- **No address.** Decision 3 stands: the street address is out until the merchant supplies it, and a photo
+  of a premises is precisely where an invented one would read as fact. The caption carries «فروشگاه حضوری
+  در مشهد», which is the most the verified list allows.
 - FR-006's clause — no store imagery standing in for proof — is **not** amended, because the photo returns
   as the premises, not as evidence. If it is ever captioned as proof of anything, that clause bites again.
 
-Recorded as T107.
+Implemented as T114: the photograph sits at the top of the hero's shop-window panel (42vh capped at 380px on
+a phone, 460px on a desktop column), the four FR-006 facts in a two-up grid under it, warranty last. Web
+derivatives generated from the merchant's file with the repo's own `sharp`:
+`public/store/shop-hero.jpg` (1200×1600, 136KB) and `shop-hero@2x.jpg` (1800×2400, 212KB). The 2.6MB source
+stays in the repo as the record of provenance and is not what the browser fetches.
 
 ## 3. Address and email — removed until supplied
 

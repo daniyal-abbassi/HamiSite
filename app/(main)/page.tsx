@@ -76,12 +76,12 @@ function Hero() {
          * y=2016. FR-014 asks for positioning, one trust signal and one obvious next
          * action *without scrolling*, on the owner's own target width — so the
          * headline now carries the price position alone, the twenty-year claim moved
-         * into the lead where it reads as sense, and the eyebrow, headline, lead and
-         * both actions sit inside the first 800px at 360. What does NOT, measured in
-         * `baseline/manifest-after.json`: the trust row lands at y=916, because the
-         * shop-window panel stacks between the actions and it on a phone. First
-         * merchandise moved 2016 → 1640. T085 stays open until that row clears the
-         * fold — not until this comment claims it does.
+         * into the lead where it reads as sense, and the stack lands inside the first
+         * viewport: eyebrow 120, h1 167, lead 309, actions 429, trust row 501–540, the
+         * shop window beginning at 572. All of that is above the fold at 360×800.
+         * What is not is the merchandise — first product card at y=1640, down from
+         * 2016 — which is why T085 stays open on the stock half of the promise while
+         * the trust half is met.
          *
          * `tracking-normal` is not a style tweak: `tracking-tight` on Persian pulls
          * the joining strokes apart (FR-057), and it was applied to the one line
