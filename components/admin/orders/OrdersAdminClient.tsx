@@ -2,7 +2,7 @@
 
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, RotateCcw } from "lucide-react";
+import { ArrowRight, RotateCcw } from "lucide-react";
 import { Pagination } from "@/components/admin/Pagination";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Select } from "@/components/ui/select";
@@ -128,7 +128,7 @@ export function OrdersAdminClient() {
           <Pagination page={page} pageSize={PAGE_SIZE} total={meta?.total ?? 0} hasNextPage={meta?.hasNextPage ?? false} onPageChange={setPage} />
           <p className="mt-3 text-center text-xs">
             <Link href="/admin" className="flex items-center justify-center gap-1 text-[12px] font-bold text-aqua hover:underline">
-              <ArrowLeft className="size-3.5" /> بازگشت به داشبورد
+              <ArrowRight className="size-3.5" /> بازگشت به داشبورد
             </Link>
           </p>
         </>

@@ -125,6 +125,25 @@ describe("FR-011 — a number a shopper reads is a Persian numeral", () => {
     expect([...new Set(offenders)]).toEqual([]);
   });
 
+  it("writes a display ordinal in Persian digits wherever the content module declares one", () => {
+    /*
+     * `index`, `number` and `ordinal` are not data — they are the numerals a shopper
+     * reads next to a Persian sentence («۰۱ موبایل», «۰۲ تأیید»). The B2B steps and the
+     * accessory categories carried "01", "02", "03" while the row above them carried
+     * «۰۱», so the same page had two numeral systems in the same column, which is the
+     * mixed-screen case SC-007 is about. A property name is the only signal that
+     * survives scanning, so the rule is written against the name.
+     */
+    const offenders: string[] = [];
+    for (const file of sources((p) => p.endsWith(".ts"), ["lib/content"])) {
+      const text = stripComments(read(file));
+      for (const match of text.matchAll(/\b(?:index|number|ordinal)\s*:\s*"([^"]*)"/g)) {
+        if (/[0-9]/.test(match[1])) offenders.push(`${file}: ${match[1]}`);
+      }
+    }
+    expect(offenders).toEqual([]);
+  });
+
   it("folds the discount badge, the worst case in audits/02", () => {
     const card = read("components/shop/ProductCard.tsx");
     expect(card).toMatch(/toFaDigits\(off\)/);

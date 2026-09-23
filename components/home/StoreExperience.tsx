@@ -102,9 +102,11 @@ export function StoreExperience() {
             >
               {storeContact.phoneDisplay}
             </a>
-            <Link href="#store-experience" className={buttonVariants({ variant: "outline" })}>
-              اطلاعات فروشگاه <ArrowLeft className="size-4" />
-            </Link>
+            {/* T091: this used to be a button labelled «اطلاعات فروشگاه» linking
+                to `#store-experience` — the section it sits inside, which is why
+                pressing it moved the page a few pixels at best. The store's
+                information is what this section is; the phone number above is the
+                action, so the button goes rather than being pointed somewhere new. */}
           </div>
         </div>
       </Reveal>

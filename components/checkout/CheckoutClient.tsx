@@ -12,6 +12,7 @@ import { useCart } from "@/components/providers/CartProvider";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { ApiClientError, apiGet, apiPost } from "@/lib/api-client";
 import { paymentTermLabels, shippingOptions, type ShippingOptionKey } from "@/lib/content/order";
+import { isValidIranianPostalCode } from "@/lib/validators";
 import { cn, formatToman } from "@/lib/utils";
 import type { Address, CouponValidation, OrderCreationResult, PaymentInitiation } from "@/types/store";
 
@@ -104,6 +105,11 @@ export function CheckoutClient() {
     if (newAddress.city.trim().length < 2) return "شهر را وارد کنید.";
     if (newAddress.addressText.trim().length < 5) return "نشانی کامل را وارد کنید.";
     if (newAddress.phone.trim().length < 5) return "شماره تماس را وارد کنید.";
+    // FR-064: the field is optional, so an empty one stays acceptable — but a
+    // partially-typed code that cannot be a postal code must not reach the server.
+    if (newAddress.postalCode.trim() && !isValidIranianPostalCode(newAddress.postalCode)) {
+      return "کد پستی باید ۱۰ رقم باشد.";
+    }
     return null;
   }, [addressMode, selectedAddressId, newAddress]);
 
@@ -307,8 +313,24 @@ export function CheckoutClient() {
                 <label htmlFor="co-postalCode" className="mb-1 block text-xs font-bold text-foreground/80">کد پستی</label>
                 {/* An Iranian postal code is ten digits. Without inputMode the
                     phone opens a full alphabetic keyboard for a field that can
-                    only ever take numbers. */}
-                <Input id="co-postalCode" className={inputClass} inputMode="numeric" value={newAddress.postalCode} onChange={newAddressField("postalCode")} autoComplete="postal-code" />
+                    only ever take numbers; without `dir="ltr"` the digits render
+                    right-to-left and a pasted code reads backwards; and without
+                    the hint the shopper has to guess the length. FR-064. */}
+                <Input
+                  id="co-postalCode"
+                  className={inputClass}
+                  inputMode="numeric"
+                  dir="ltr"
+                  maxLength={10}
+                  placeholder="۱۰ رقم"
+                  aria-describedby="co-postalCode-hint"
+                  value={newAddress.postalCode}
+                  onChange={newAddressField("postalCode")}
+                  autoComplete="postal-code"
+                />
+                <span id="co-postalCode-hint" className="mt-1 block text-[11px] text-muted-foreground">
+                  کد پستی ۱۰ رقمی (اختیاری)
+                </span>
               </div>
               {(addresses ?? []).length > 0 && (
                 <button
@@ -436,14 +458,12 @@ export function CheckoutClient() {
       </div>
 
       {/* Summary */}
-      {/* `order-first` on mobile only.
-          In the DOM the summary follows the form, which is right for a desktop
-          two-column layout where it sits in the right rail. Stacked on a phone
-          that puts the total and the item list *below* address, shipping and
-          payment — so the shopper fills in three sections without ever seeing
-          what they are paying. Source order stays as-is for screen readers and
-          desktop; only the visual order flips. */}
-      <aside className="glass order-first h-fit rounded-2xl p-6 lg:order-none lg:sticky lg:top-24">
+      {/* T097 / FR-044: the summary used to carry `order-first` below `lg`, so on a
+          phone it painted above the address and shipping controls that come earlier
+          in the DOM — keyboard and screen-reader order ran one way and the screen the
+          other. The order override is gone; on a phone the summary now follows the
+          controls, which is also the reading order of a checkout. */}
+      <aside className="glass h-fit rounded-2xl p-6 lg:sticky lg:top-24">
         <h2 className="text-base font-black">سفارش شما</h2>
         <div className="brand-hairline my-4" />
         <ul className="max-h-52 space-y-2.5 overflow-y-auto pe-1">

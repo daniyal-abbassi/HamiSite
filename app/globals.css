@@ -931,66 +931,6 @@ nav[aria-label="ناوبری سریع فروشگاه"] {
     font-size: 12px;
   }
 
-  /* --- Touch targets -----------------------------------------------------
-     Measured at 390px: 78 interactive elements rendered below 44×44.
-
-     Two different bars are in play and it is worth being precise about which.
-     WCAG 2.5.8 (AA) asks for 24×24 CSS px and explicitly exempts links inline
-     in a sentence. The 44×44 figure is Apple's HIG (and Material's 48dp) and
-     applies to *controls* — the things a thumb aims at. Holding every link in
-     the page to 44px would double the height of every link list on the site to
-     satisfy a rule that was never about them, so the two are treated
-     differently: controls get 44, prose links keep their layout.
-
-     Icon-only controls are the ones where a miss actually costs something, and
-     they are the smallest: 40px in the header, 36px in the accessory grid, 32px
-     in PillNav. This expands the *hit area* with a centred pseudo-element and
-     leaves the painted circle exactly where it is, so nothing reflows — the
-     alternative, growing the box, would push the header pill taller and change
-     the chrome to fix a problem the user cannot see.
-
-     `size-11` is already 44px and is deliberately not listed. */
-  :where(a, button, [role="button"], summary):is(
-    [class*="size-8"], [class*="size-9"], [class*="size-10"]
-  ) {
-    position: relative;
-  }
-  :where(a, button, [role="button"], summary):is(
-    [class*="size-8"], [class*="size-9"], [class*="size-10"]
-  )::after {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: max(100%, 44px);
-    height: max(100%, 44px);
-    transform: translate(-50%, -50%);
-    /* Hit area only — must never paint, and must not swallow the icon. */
-    background: none;
-    pointer-events: auto;
-  }
-
-  /* The two brand wordmarks with no licensed glyph (TCH, OAK) are set as text,
-     so their links are only as wide as the word — 35px. Everything else in that
-     grid is a symbol and already clears the minimum. */
-  #brands a,
-  #brands button {
-    min-width: 44px;
-  }
-
-  /* Text controls — tabs, pill CTAs and the «مشاهده همه» links, which render
-     between 16px and 42px tall. These are flex/inline-flex containers, so a
-     min-height actually applies to them; a bare prose link is inline and would
-     ignore it, which is exactly the distinction wanted here. Footer and nav
-     link lists are plain anchors and deliberately do not match — they are
-     spacing problems, not target problems, and are handled where they live. */
-  button:not([class*="size-"]),
-  [role="tab"],
-  a[class*="inline-flex"],
-  a[class*="rounded-full"] {
-    min-height: 44px;
-  }
-
   /* --- The card at two-up width ------------------------------------------
      At 45% of the rail a card is ~154px wide, so its body has ~124px of
      content. The desktop internals do not survive that: the 26px price wraps
@@ -1156,10 +1096,89 @@ nav[aria-label="ناوبری سریع فروشگاه"] {
       0 1px 2px rgba(0, 0, 0, 0.38),
       0 10px 20px -12px rgba(0, 0, 0, 0.55);
   }
+}
 
-  /* Hover lift is meaningless on touch and leaves cards stuck in the lifted
-     state after a tap, because :hover sticks until the next tap elsewhere. */
+/* --- Hover lift, by input modality (same axis as T093) ----------------------
+   Was inside `@media (max-width: 767px)` with the mobile card rules, so a
+   landscape phone kept the lift — and `:hover` sticks there until the next tap
+   elsewhere, which is the exact bug the rule exists to kill. The condition it
+   was always testing is "this device has no real hover", not "this screen is
+   narrow". */
+@media (hover: none) {
   .lux-card:hover {
     transform: none;
   }
+}
+
+/* --- Touch targets, by input modality (T093 / FR-045) -----------------------
+   This block used to live inside `@media (max-width: 767px)`, so a phone held in
+   landscape (844px wide), a tablet, and any coarse-pointer laptop got the desktop
+   rules and their 32-40px controls. Width was the wrong axis: the thing being
+   protected is a thumb, and a thumb does not get smaller when the screen rotates.
+   `pointer: coarse` is the condition the rules were always about; desktops keep
+   their compact controls.
+   ------------------------------------------------------------------------- */
+@media (pointer: coarse) {
+  /* Measured at 390px: 78 interactive elements rendered below 44×44.
+
+     Two different bars are in play and it is worth being precise about which.
+     WCAG 2.5.8 (AA) asks for 24×24 CSS px and explicitly exempts links inline
+     in a sentence. The 44×44 figure is Apple's HIG (and Material's 48dp) and
+     applies to *controls* — the things a thumb aims at. Holding every link in
+     the page to 44px would double the height of every link list on the site to
+     satisfy a rule that was never about them, so the two are treated
+     differently: controls get 44, prose links keep their layout.
+
+     Icon-only controls are the ones where a miss actually costs something, and
+     they are the smallest: 40px in the header, 36px in the accessory grid, 32px
+     in PillNav. This expands the *hit area* with a centred pseudo-element and
+     leaves the painted circle exactly where it is, so nothing reflows — the
+     alternative, growing the box, would push the header pill taller and change
+     the chrome to fix a problem the user cannot see.
+
+     `size-11` is already 44px and is deliberately not listed. */
+  :where(a, button, [role="button"], summary):is(
+    [class*="size-8"], [class*="size-9"], [class*="size-10"]
+  ) {
+    position: relative;
+  }
+  :where(a, button, [role="button"], summary):is(
+    [class*="size-8"], [class*="size-9"], [class*="size-10"]
+  )::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+    /* Hit area only — must never paint, and must not swallow the icon. */
+    background: none;
+    pointer-events: auto;
+  }
+
+  /* The two brand wordmarks with no licensed glyph (TCH, OAK) are set as text,
+     so their links are only as wide as the word — 35px. Everything else in that
+     grid is a symbol and already clears the minimum. */
+  #brands a,
+  #brands button {
+    min-width: 44px;
+  }
+
+  /* Text controls — tabs, pill CTAs and the «مشاهده همه» links, which render
+     between 16px and 42px tall. These are flex/inline-flex containers, so a
+     min-height actually applies to them; a bare prose link is inline and would
+     ignore it, which is exactly the distinction wanted here. `*="flex"` rather
+     than `*="inline-flex"` so the row-level flex links (footer nav, the trust
+     chips) are caught too — they used to carry `min-h-11 md:min-h-0`, which
+     re-tied the thumb to a width breakpoint and dropped it at 844px landscape.
+     Inline links inside a paragraph are the ones deliberately left alone: they
+     are content, not targets, and a 44px line-box there would shred the type. */
+  button:not([class*="size-"]),
+  [role="tab"],
+  a[class*="flex"],
+  a[class*="rounded-full"] {
+    min-height: 44px;
+  }
+
 }

@@ -52,3 +52,22 @@ export function isValidIranianMobile(input: string): boolean {
   if (/^\+989\d{9}$/.test(digits)) return true;
   return false;
 }
+/**
+ * FR-063: the shop phone a partner submits is a landline more often than a mobile,
+ * and until now nothing in the repo said what a landline is — `min(7).max(20)` with no
+ * shape accepts "1", "abcdefgh" and a US number alike.
+ *
+ * The shape is the national one: trunk prefix `0`, a two-digit area code, then a 7- or
+ * 8-digit subscriber number. `+98`/`0098` forms are read as the same number, and a
+ * `09…` line is rejected because that is a mobile and `isValidIranianMobile` covers it.
+ */
+export function isValidIranianLandline(input: string): boolean {
+  const digits = toLatinDigits(input).replace(/[\s()-]/g, "");
+  let national: string;
+  if (digits.startsWith("+98")) national = digits.slice(3);
+  else if (digits.startsWith("0098")) national = digits.slice(4);
+  else if (digits.startsWith("0")) national = digits.slice(1);
+  else return false;
+  if (!/^[1-8]\d\d{7,8}$/.test(national)) return false;
+  return !national.startsWith("9");
+}

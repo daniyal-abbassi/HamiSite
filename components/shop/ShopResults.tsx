@@ -16,8 +16,9 @@ type ShopResultsProps = {
   meta: ShopMeta | null;
   /** No longer set by the listing: the products arrive rendered from the
      server, so there is no client fetch left that could fail. Optional so the
-     error branch stays available to any other caller. */
-  error?: boolean;
+     the error branch that used to sit here is deleted: since band 1 the listing is
+     rendered on the server, so a failed read is the route's error boundary, not a
+     prop — and the «تلاش دوباره» it rendered linked back to the page it was on. */
   activeSort: string;
   /**
    * Filters currently applied, already labelled. FR-026 requires them "visible as
@@ -46,7 +47,6 @@ function pageWindow(page: number, totalPages: number): number[] {
 export function ShopResults({
   products,
   meta,
-  error = false,
   activeSort,
   unknownFilter = null,
   activeFilters = [],
@@ -117,7 +117,7 @@ export function ShopResults({
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl glass px-4 py-3">
         <p className="text-xs text-foreground/60" aria-live="polite">
-          {error || unknownFilter ? "—" : products === null ? "در حال بارگذاری…" : `${toFaDigits(meta?.total ?? products.length)} محصول`}
+          {unknownFilter ? "—" : products === null ? "در حال بارگذاری…" : `${toFaDigits(meta?.total ?? products.length)} محصول`}
         </p>
         <div className="flex items-center gap-2">
           <label className="sr-only" htmlFor="shop-sort">مرتب‌سازی</label>
@@ -176,18 +176,7 @@ export function ShopResults({
       )}
 
       {/* Error */}
-      {!unknownFilter && error && (
-        <div className="mt-6 rounded-xl glass p-10 text-center" role="status">
-          <b className="block font-extrabold">دریافت محصولات موقتاً ممکن نیست.</b>
-          <p className="mt-2 text-sm text-foreground/60">اتصال خود را بررسی کنید و دوباره تلاش کنید.</p>
-          <Link href="/shop" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
-            تلاش دوباره
-          </Link>
-        </div>
-      )}
-
-      {/* Loading */}
-      {!unknownFilter && products === null && !error && (
+      {!unknownFilter && products === null && (
         <div className={cn("mt-6", listView ? "space-y-4" : "grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3")} aria-busy="true">
           {Array.from({ length: 6 }).map((_, index) => (
             <div key={index} className="space-y-3">
@@ -200,7 +189,7 @@ export function ShopResults({
       )}
 
       {/* Empty */}
-      {!unknownFilter && products !== null && !error && products.length === 0 && (
+      {!unknownFilter && products !== null && products.length === 0 && (
         <div className="mt-6 rounded-xl glass p-12 text-center" role="status">
           <PackageSearch className="mx-auto size-10 text-aqua/60" aria-hidden="true" />
           <b className="mt-4 block font-extrabold">محصولی با این فیلترها پیدا نشد.</b>
@@ -212,7 +201,7 @@ export function ShopResults({
       )}
 
       {/* Results + pagination */}
-      {!unknownFilter && products !== null && !error && products.length > 0 && (
+      {!unknownFilter && products !== null && products.length > 0 && (
         <>
           {listView ? (
             <div className="mt-6 space-y-4">

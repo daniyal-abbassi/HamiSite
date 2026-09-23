@@ -4,14 +4,8 @@ import { useId, useState } from "react";
 import { Check, Loader2, UploadCloud } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
-import {
-  isValidEconomicCode,
-  isValidIranianMobile,
-  isValidIranianNationalCode,
-  isValidIranianPostalCode,
-  isValidLegalNationalId,
-} from "@/lib/validators";
+import { cn, toFaDigits } from "@/lib/utils";
+import { isValidEconomicCode, isValidIranianMobile, isValidIranianNationalCode, isValidIranianPostalCode, isValidLegalNationalId, isValidIranianLandline } from "@/lib/validators";
 import {
   partnerEntityOptions,
   partnerFileTypesNote,
@@ -66,7 +60,11 @@ function clientValidate(values: FormValues, files: FormFiles, entity: PartnerEnt
 
   if (entity === "INDIVIDUAL") {
     if (!isValidIranianPostalCode(values.postalCode)) errors.postalCode = "کد پستی باید ۱۰ رقم باشد";
-    if (values.shopPhone.trim().length < 7) errors.shopPhone = "تلفن فروشگاه معتبر نیست";
+    // A shop line is a landline more often than a mobile, and `length < 7` accepted
+    // either by accident and a great deal else besides. FR-063.
+    if (values.shopPhone.trim() && !isValidIranianMobile(values.shopPhone) && !isValidIranianLandline(values.shopPhone)) {
+      errors.shopPhone = "تلفن فروشگاه را با پیش‌شماره وارد کنید (مثلاً ۰۵۱۳۱۲۳۴۵۶۷)";
+    }
     if (!files.leaseDocument) errors.leaseDocument = "عکس اجاره‌نامه الزامی است";
     if (!files.businessLicense) errors.businessLicense = "عکس جواز کسب الزامی است";
   } else {
@@ -91,9 +89,10 @@ function clientValidate(values: FormValues, files: FormFiles, entity: PartnerEnt
 }
 
 function formatFileSize(bytes: number): string {
-  if (bytes < 1024) return `${bytes} بایت`;
-  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} کیلوبایت`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} مگابایت`;
+  // FR-011: the unit is Persian, so the quantity beside it cannot be Latin.
+  if (bytes < 1024) return `${toFaDigits(bytes)} بایت`;
+  if (bytes < 1024 * 1024) return `${toFaDigits(Math.round(bytes / 1024))} کیلوبایت`;
+  return `${toFaDigits((bytes / (1024 * 1024)).toFixed(1))} مگابایت`;
 }
 
 /** Editorial field wrapper with label + inline error. */

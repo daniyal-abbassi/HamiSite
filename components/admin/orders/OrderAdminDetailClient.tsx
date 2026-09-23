@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowLeft, Check, Truck } from "lucide-react";
+import { ArrowRight, Check, Truck } from "lucide-react";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -262,7 +262,7 @@ export function OrderAdminDetailClient({ orderId }: { orderId: string }) {
 
       <p className="text-center text-xs">
         <Link href="/admin/orders" className="flex items-center justify-center gap-1 text-[12px] font-bold text-aqua hover:underline">
-          <ArrowLeft className="size-3.5" /> بازگشت به فهرست سفارش‌ها
+          <ArrowRight className="size-3.5" /> بازگشت به فهرست سفارش‌ها
         </Link>
       </p>
     </div>

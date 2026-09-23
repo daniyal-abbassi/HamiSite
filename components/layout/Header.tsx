@@ -104,7 +104,7 @@ export function Header() {
          */}
         <Link
           href="/"
-          className="flex min-h-11 shrink-0 items-center px-1 md:min-h-0 md:ps-1 md:pe-0"
+          className="flex shrink-0 items-center px-1 md:ps-1 md:pe-0"
           aria-label="حامی همراه — صفحه اصلی"
         >
           <Image

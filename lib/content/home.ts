@@ -9,13 +9,9 @@
 import { toFaDigits } from "@/lib/utils";
 
 /** Header marquee — real, confirmed facts only (no fabricated stats). */
-export const tickerItems = [
-  "عرضه تخصصی موبایل و اکسسوری",
-  "پشتیبانی خرید عمده برای همکاران (B2C + B2B)",
-  "نمایندگی رسمی برند TCH",
-  "همکار معتبر Redmi در مشهد",
-  "گارانتی ۱۸ ماهه شرکتی",
-] as const;
+/* T090: `tickerItems` is deleted. The credential band renders the brand marks from
+   `partnerMarks`, and these five strings — a restatement of the trust claims with no
+   source of their own — were asserted by nothing and rendered by nothing. */
 
 export const featuredTabs = [
   { key: "newest", label: "جدیدترین‌ها", badge: "NEW" },
@@ -182,9 +178,9 @@ export const b2bFeatures = [
 ] as const;
 
 export const b2bWorkflow = [
-  { index: "01", title: "ثبت‌نام", description: "اطلاعات همکاری را ثبت می‌کنید." },
-  { index: "02", title: "تأیید", description: "حساب همکاری بررسی و فعال می‌شود." },
-  { index: "03", title: "سفارش", description: "دسترسی همکاری برای سفارش آماده می‌شود." },
+  { index: "۰۱", title: "ثبت‌نام", description: "اطلاعات همکاری را ثبت می‌کنید." },
+  { index: "۰۲", title: "تأیید", description: "حساب همکاری بررسی و فعال می‌شود." },
+  { index: "۰۳", title: "سفارش", description: "دسترسی همکاری برای سفارش آماده می‌شود." },
 ] as const;
 
 export const b2bSupplyAreas = ["موبایل", "لوازم جانبی", "چندبرندی", "همکاری مستمر"] as const;
@@ -192,17 +188,17 @@ export const b2bSupplyAreas = ["موبایل", "لوازم جانبی", "چند�
 // `اسپیکر و Party Box` was removed here too: its category (`اسپیکر-پارتی-باکس`) has zero
 // products, so the row would only ever lead to an empty listing.
 export const accessoryCategories = [
-  { key: "audio", index: "01", label: "AUDIO", title: "صدا", detail: "ایرباد و هدفون", href: categoryLinks.audio },
-  { key: "power", index: "02", label: "POWER", title: "توان", detail: "پاوربانک", href: categoryLinks.power },
-  { key: "charging", index: "03", label: "CHARGING", title: "شارژ", detail: "آداپتور و کابل", href: categoryLinks.charging },
-  { key: "wearables", index: "04", label: "WEARABLES", title: "پوشیدنی", detail: "ساعت هوشمند", href: categoryLinks.watch },
+  { key: "audio", index: "۰۱", label: "AUDIO", title: "صدا", detail: "ایرباد و هدفون", href: categoryLinks.audio },
+  { key: "power", index: "۰۲", label: "POWER", title: "توان", detail: "پاوربانک", href: categoryLinks.power },
+  { key: "charging", index: "۰۳", label: "CHARGING", title: "شارژ", detail: "آداپتور و کابل", href: categoryLinks.charging },
+  { key: "wearables", index: "۰۴", label: "WEARABLES", title: "پوشیدنی", detail: "ساعت هوشمند", href: categoryLinks.watch },
 ] as const;
 
 export type AccessoryCategoryKey = (typeof accessoryCategories)[number]["key"];
 
 export const featuredOnlineService = {
   key: "apple-id",
-  index: "01",
+  index: "۰۱",
   label: "APPLE ID",
   title: "Apple ID",
   description: "ساخت و آماده‌سازی Apple ID برای نیازهای دیجیتال شما.",
@@ -265,9 +261,9 @@ export const whyHamiQuote = "اعتماد، چیزی نیست که نوشته ش
 export const whyHamiTrustStrip = ["فروش حضوری", "فروش آنلاین", "پخش عمده", "خدمات دیجیتال", "چندبرندی"] as const;
 
 export const storeExperiencePoints = [
-  { index: "01", title: "مشاهده و انتخاب", description: "محصول را ببینید، مقایسه کنید و انتخاب کنید." },
-  { index: "02", title: "مشاوره تخصصی", description: "پیش از خرید، انتخاب مناسب خودتان را پیدا کنید." },
-  { index: "03", title: "پشتیبانی پس از خرید", description: "همراه شما بعد از خرید." },
+  { index: "۰۱", title: "مشاهده و انتخاب", description: "محصول را ببینید، مقایسه کنید و انتخاب کنید." },
+  { index: "۰۲", title: "مشاوره تخصصی", description: "پیش از خرید، انتخاب مناسب خودتان را پیدا کنید." },
+  { index: "۰۳", title: "پشتیبانی پس از خرید", description: "همراه شما بعد از خرید." },
 ] as const;
 
 export const storeExperienceSlots = [

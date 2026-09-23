@@ -22,7 +22,7 @@ function BlobDecor() {
 const sideBanners = [
   {
     src: "/images/banners/headphone.png",
-    eyebrow: "SHOP / 03",
+    eyebrow: "SHOP / ۰۳",
     title: "صوت، با جزئیات دقیق",
     href: categoryLinks.audio,
   },

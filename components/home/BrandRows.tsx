@@ -90,16 +90,22 @@ export function BrandRows({ counts }: { counts: Record<string, number> }) {
               ) : null}
             </span>
 
-            <button
-              type="button"
-              className="brand-rows__expand"
-              aria-expanded={emphasised}
-              aria-controls={row.detailId}
-              aria-label={emphasised ? row.collapseLabel : row.expandLabel}
-              onClick={() => setActive(emphasised ? null : row.name)}
-            >
-              <ChevronDown className="brand-rows__chevron" aria-hidden="true" />
-            </button>
+            {/* FR-043: only a row with a story has something to reveal. The
+                control used to render on all six, and on the three without one it
+                emphasised the row and opened a fixed-height band containing
+                nothing — the chevron promised a story and delivered padding. */}
+            {story && (
+              <button
+                type="button"
+                className="brand-rows__expand"
+                aria-expanded={emphasised}
+                aria-controls={row.detailId}
+                aria-label={emphasised ? row.collapseLabel : row.expandLabel}
+                onClick={() => setActive(emphasised ? null : row.name)}
+              >
+                <ChevronDown className="brand-rows__chevron" aria-hidden="true" />
+              </button>
+            )}
           </li>
         );
       })}

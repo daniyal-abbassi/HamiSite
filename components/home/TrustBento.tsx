@@ -107,7 +107,7 @@ export function TrustBento() {
                     <Link
                       key={signal.label}
                       href={signal.href}
-                      className="flex min-h-11 items-center gap-1.5 text-xs text-foreground/70 hover:text-champagne transition-colors md:min-h-0"
+                      className="flex items-center gap-1.5 text-xs text-foreground/70 hover:text-champagne transition-colors"
                     >
                       <BadgeCheck className="size-3.5 text-champagne" aria-hidden="true" />
                       {signal.label}

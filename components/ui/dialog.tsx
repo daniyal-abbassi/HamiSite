@@ -13,7 +13,7 @@ type DialogProps = {
   className?: string;
 };
 
-/** Lightweight glass modal — same pattern as CartDrawer/MobileNav
+/** Lightweight glass modal — same pattern as CartDrawer
  * (backdrop + scroll-lock + Escape). No headless-ui dependency. */
 export function Dialog({ open, onClose, title, description, children, className }: DialogProps) {
   useEffect(() => {
