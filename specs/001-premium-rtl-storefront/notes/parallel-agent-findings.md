@@ -177,3 +177,75 @@ even out a grid spends Constitution I's budget, not mine.
 **Not verified.** The labelled (non-`iconOnly`) branch of `AddToCartButton` — the «افزودن»/«موفق نشد» text
 path — has no caller today, so it is unexercised by the browser pass above. It is the component's documented
 default and I left it intact rather than narrowing a shared API under someone else's feet.
+
+---
+
+## T-P3 — the tab semantics (T095) (2026-09-24)
+
+**Files touched:** `components/home/FeaturedProducts.tsx`.
+
+The pattern is finished rather than dropped, as §8 preferred: `role="tablist"` now owns `ArrowLeft` /
+`ArrowRight` / `Home` / `End`, each tab has an `id` and an `aria-controls`, both tabs control **one**
+`role="tabpanel"` that is `aria-labelledby` the selected tab, the tabindex roves, and selection follows focus
+because the rails are already resolved on the server and there is no fetch left to defer.
+
+**`ArrowLeft` advances.** RTL, so reading forward runs left — the same rule feature 005 ships for the
+categories carousel (FR-028, contract K2). Two RTL surfaces on one page disagreeing about which arrow means
+"next" is worse than either convention on its own.
+
+**One panel, not two.** A tab whose `aria-controls` points at a node that is not rendered is the same broken
+reference as one with no id, so the empty-state block and the rail both live inside the panel.
+
+Everything below was read off the DOM after each keypress, not off the source — and the first run of the probe
+passed all of it while pressing nothing, because it blurred the tab and then "Tabbed" from a heading that
+focuses nothing. `focusedId` was `""` for every step and the assertions still held. That is the exact failure
+mode §8's "read it off the DOM" instruction invites, and it is worth carrying into T-P5.
+
+| key | focused | aria-selected | tabindex roving | panel labelledby → resolves |
+|---|---|---|---|---|
+| focus entry | `featured-tab-newest` | newest=true | 0 / −1 | newest ✓ |
+| ArrowLeft | `featured-tab-special` | special=true | −1 / 0 | special ✓ |
+| ArrowLeft | `featured-tab-newest` | newest=true | 0 / −1 | newest ✓ |
+| ArrowRight | `featured-tab-special` | special=true | −1 / 0 | special ✓ |
+| End | `featured-tab-special` | special=true | −1 / 0 | special ✓ |
+| Home | `featured-tab-newest` | newest=true | 0 / −1 | newest ✓ |
+
+Tab stops in the tablist: **1**. `aria-controls` resolves on both tabs. Panel `tabindex=0`, and tabbing out of
+the list lands on `#featured-panel` with a computed `outline: 2px solid rgb(229,211,179)` while
+`:focus-visible` matches. Focus never lands in a hidden panel.
+
+**I removed an `outline-none` I had just written.** The panel is focusable and my first pass suppressed its
+ring, which is a worse accessibility outcome than the unlabelled panel T095 started from. The global
+`:where(a, button, input, select, textarea, summary):focus-visible` rule does not cover `div`s, so the ring
+has to be declared on the element.
+
+### The defect under the defect: the two tabs cannot show different products
+
+**The panel's content does not change.** Both tabs render the same six records, in the same order — verified
+by reading the six `article` headings from `#featured-panel` on each tab and comparing them: identical.
+
+The reason is arithmetic, not a bug in the component. `lib/home-rails.ts:31-40` builds both rails with
+`specialOffer: true` and differs only in `sort`:
+
+- `newest` → `updated_at` descending (`lib/catalog.ts:324`).
+- `special` → offer-flag descending, **then** `updated_at` descending (`lib/catalog.ts:327-331`).
+
+Every record in the set already has `special_offer === true`, so the comparator's first key is always `0` and
+it falls through to the second — which is `newest`. The two sorts are provably the same function on this
+input.
+
+So the section advertises a distinction it cannot deliver, which is FR-047's actual complaint and a
+Constitution I question, not an ARIA one. **I did not fix it**, because both available fixes leave this lane:
+
+1. Give `special` a comparator that is not offer-then-recency — discount depth is what «پیشنهاد ویژه» promises
+   a shopper. That edits `lib/catalog.ts`, which also drives `/shop?sort=special` and
+   `contracts/shop-url.md`. Seam and contract, not mine to spend.
+2. Drop the tablist and show one rail. The repo has done exactly this before — CampaignBanner was removed
+   because "it sold no offer" while occupying the page's most expensive slot.
+
+T-P3's a11y work is shipped regardless: a keyboard user can now operate the control that is on the page, and
+if the resolution is to delete it, that costs one commit. It is not worth leaving the control unoperable while
+the curation question is settled.
+
+**Not verified.** The `Home`/`End`/wrap behaviour on a tablist of exactly two is weak evidence — every
+"advance" here is also "the other one". A three-tab list would test the arithmetic; `featuredTabs` has two.

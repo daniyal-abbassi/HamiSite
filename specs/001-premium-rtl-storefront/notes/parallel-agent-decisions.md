@@ -95,3 +95,15 @@ before, during and after. The button's box looked like it grew 6px until the poi
 `hover:scale-105` on the control, not the error state. Its apparent 127px vertical jump afterwards was
 Playwright scrolling to take the element screenshot — `scrollY` 954→827 against `btnY` 480.1→607.1, which
 cancel exactly, so the document-space position never moved.
+
+## 2026-09-24 — T-P3: finish the ARIA pattern, report the curation defect, do not touch the seam
+
+**Chosen:** complete the tablist/tab/tabpanel pattern as §8 asked, and file the discovery that the two tabs
+cannot show different products — without editing `lib/catalog.ts` or `lib/home-rails.ts`.
+**Rejected:** (a) dropping the tablist, which is the honest UI answer but decides a business question about
+what «پیشنهاد ویژه» means; (b) writing a discount-depth comparator, which changes `/shop?sort=special` and
+`contracts/shop-url.md` — seam and contract, outside this lane. Finishing the ARIA work is not wasted either
+way: if the tablist goes, it costs one commit to delete a pattern that was correct.
+**Verified by:** `.scratch/tabs-walk.mjs` (focus, `aria-selected`, tabindex and panel labelling read off the DOM
+after each keypress) and `.scratch/tabs-content.mjs` (the six article headings from `#featured-panel` on each
+tab — `identical: true`). `npx tsc --noEmit` clean; `npx vitest run tests/unit` 221/221.

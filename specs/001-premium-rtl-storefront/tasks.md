@@ -556,9 +556,19 @@ Depends on T003 for decisions 1, 2, 5.
   392.06px/567.6px. Evidence: `notes/parallel-agent-decisions.md` §"three of the four named defects".
   **Follow-up this task surfaced, not fixed here:** `text-destructive` on white measures 3.66:1, and the idiom
   appears in twelve files — the ones inside `.product-card` fail AA.
-- [ ] T095 [US5] Complete the tab semantics at `components/home/FeaturedProducts.tsx:135-160`: `role="tab"`
+- [x] T095 [US5] Complete the tab semantics at `components/home/FeaturedProducts.tsx:135-160`: `role="tab"`
   and `tablist` with no `aria-controls`, no `tabpanel` and no arrow-key handling — two tab stops that behave
   as buttons (FR-044, FR-047's "no information available only through interaction pattern").
+  **Pattern finished 2026-09-24 (T-P3)**, verified off the DOM: roving tabindex (one stop), `ArrowLeft`
+  advances per FR-028/K2, `Home`/`End`, `aria-controls` → `#featured-panel`, panel `aria-labelledby` the
+  selected tab and focusable with a real ring. **But the task's premise was wrong about which half matters:**
+  the two tabs render the *same six records in the same order*, because both rails filter
+  `specialOffer: true` and `sort: "special"`'s first comparator key is therefore always equal — it falls
+  through to `updated_at`, which is `sort: "newest"` (`lib/home-rails.ts:31-40`, `lib/catalog.ts:324-331`).
+  A control advertising a distinction it cannot deliver is a Constitution I question, not an ARIA one, so it
+  is reported rather than fixed here: either `special` gets a comparator that means «ویژه» (discount depth),
+  which also changes `/shop?sort=special`, or the tablist goes. See
+  `notes/parallel-agent-findings.md` §"The defect under the defect".
 - [x] T096 [P] [US5] **Closed as verified-not-a-defect, 2026-09-24 — the flash is not in the
 g  current code.** See `notes/findings.md`. Original task text:
   Fix the `Reveal` flash: `components/home/Reveal.tsx:26-37` SSR-paints below-fold
