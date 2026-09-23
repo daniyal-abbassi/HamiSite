@@ -4,6 +4,7 @@ import { CatalogListing } from "@/components/shop/CatalogListing";
 import { brandLabel } from "@/lib/product-identity";
 import { listBrands, queryProducts } from "@/lib/catalog";
 import { resolveSortKey } from "@/lib/content/shop";
+import { destinationDescription } from "@/lib/listing-view";
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -59,18 +60,20 @@ export default async function BrandPage({
     page: 1,
     pageSize: 60,
   });
+  const obtainableCount = queryProducts({ brandId: brand.id, purchasableOnly: true, page: 1, pageSize: 1 }).total;
 
   return (
     <CatalogListing
       eyebrow="BRAND"
       title={`محصولات ${brandLabel(brand.name)}`}
-      description={`${brandLabel(brand.name)} — ${total} محصول از فروشگاه حضوری حامی همراه در مشهد.`}
+      description={destinationDescription({ total, name: brandLabel(brand.name), kind: "brand" })}
       total={total}
       shownTotal={shownTotal}
       products={data}
       breadcrumb={[{ label: "فروشگاه", href: "/shop" }]}
       basePath={`/brands/${encodeURIComponent(brand.slug)}`}
       view={view}
+      obtainableCount={obtainableCount}
     />
   );
 }

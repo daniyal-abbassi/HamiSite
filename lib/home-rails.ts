@@ -54,3 +54,23 @@ export function newArrivalsRail(): RailProduct[] {
   return queryProducts({ includeVariants: false, page: 1, pageSize: 6 })
     .data as unknown as RailProduct[];
 }
+
+/**
+ * Everything the merchant currently says can be bought, cheapest first.
+ *
+ * This is the only homepage rail whose heading is an availability claim, so the
+ * predicate is the strict one: the `purchasable` flag *and* a price on the record.
+ * A price-less product is not buyable however the stock field reads, and a shelf
+ * that listed it would be selling «تماس بگیرید» under a promise of «قابل خرید».
+ *
+ * `total` is the whole count rather than the rendered count, so the section can say
+ * how many there really are when the export grows past what the rail displays.
+ */
+export function obtainableNowRail(limit = 6): { products: RailProduct[]; total: number } {
+  const all = queryProducts({ purchasableOnly: true, sort: "price-asc", page: 1, pageSize: 1_000 })
+    .data.filter((p) => p.displayPrice > 0);
+  return {
+    products: all.slice(0, limit) as unknown as RailProduct[],
+    total: all.length,
+  };
+}

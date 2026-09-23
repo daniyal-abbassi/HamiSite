@@ -216,6 +216,15 @@ Variant options come from the export's own keys (`رنگ`, and `دامنه`/`س�
 the price and the stock line, which is T066's whole requirement, and no longer resets the gallery index
 because no variant in the export carries its own image.
 
+One audit figure needed narrowing while walking these states: `audits/03`'s "40 variants whose compare-at
+is not above their price" measures **31** under the rule the seam actually applies (`compare_at_price <= price`
+with both non-zero). The 9 extra are variants whose own price is absent, where the comparison is not between
+two numbers at all; the strike is dropped for them by the same helper, so the behaviour is unchanged and
+only the count in that older document was looser than it looked. The `equal-compare-at` case in the table
+above is record 40 at *product* level (compare-at ۶۸٬۴۵۰٬۰۰۰ above a price of ۶۸٬۰۰۰٬۰۰۰ — a real discount,
+correctly shown); the variant-level version of that case is asserted by the seam's own per-variant rule in
+`lib/catalog.ts:160`, not by eye, because reaching it needs a specific colour selected first.
+
 ### The category vocabulary is one list now (T056), and it moved a panel's target
 
 `lib/shop-category-tiles.ts` no longer scans roots: the shop page's tiles, the sidebar facet and 005's
@@ -237,3 +246,41 @@ Task A «a Xiaomi phone»: **3 interactions** by the department door, **2** by s
 Task B «the cheapest power bank that is actually available»: **4** from the homepage, **3** from `/shop`,
 against a criterion of three — **not met**, and the arithmetic of why is in `notes/discovery.md` with the
 three ways to close it, ranked. Before this band the task was not drivable at all.
+
+### Band 2 follow-up the same day: SC-002's three ranked fixes, applied and re-measured
+
+The owner's answer to the two asks was "apply the ranked fixes", so T059 was settled for
+navigate-on-first-press, 005's FR-010 and contract A2 carry an amendment, and the three fixes landed as
+one change set. Re-measured with `verification/sc002-interactions.mjs` against the **production build**,
+each step asserting the navigation it claims:
+
+| Task | Before | Now | Path |
+|---|---|---|---|
+| A — a Xiaomi phone | 3 | **2** | press «گوشی موبایل» → tap the first card (a Poco X7 Pro, heading read back) |
+| B — cheapest power bank actually available | 4 from home, 3 from `/shop`, and the criterion is 3 | **3** | press «پاوربانک» → tap «ارزان‌ترینِ قابل خرید ۱» → tap the «پاوربانک کامتل OP18S» card at ۲٬۸۰۰٬۰۰۰ تومان |
+| B′ — the same question, from the shelf | not askable | **2** | «همین حالا قابل خرید» → its «مشاهده همه» → a card |
+
+Both tasks end on an open product page, not on "the answer is somewhere on this screen".
+
+Two things worth keeping from how the measurement went wrong first, because both are the failure mode this
+feature exists to notice:
+
+- **A click is not a navigation.** The probe's first version counted any step where Playwright reported a
+  successful click, so its own output said "task B met in 3" while its third step was still on the category
+  page. Every step now waits for the URL to change and reports which one timed out.
+- **A fixed sleep is a fake bound.** Against `next dev`, the phone department's 60-card route takes longer
+  to compile than 2.5 seconds, so a working first press looked like a dead door — and the earlier
+  "no reachable panel" reading came from hit-testing a page the probe had not scrolled, which is a broken
+  instrument reporting a broken shop. Polling, plus production, plus letting the driver do the hit-testing
+  fixed all three.
+
+Also found and fixed while verifying the new shelf's copy: a destination's description sentence printed
+**Latin** digits («6 محصول در دستهٔ پاور بانک.») two lines under a correct Persian count (۶). The sentence
+is now one shared, tested function (`destinationDescription`) used by both routes. And `obtainableNowRail()`
+is the one rail on the homepage whose heading is an availability claim, so its test pins the predicate
+rather than the five records: purchasable **and** priced, cheapest first, the heading's number being the
+whole set.
+
+Band 2's checks after all of this: `tsc --noEmit` clean, **205 unit tests / 21 files** passing, `npm run
+build` clean, the 20-page × 3-width overflow sweep still fitting with the clip disabled, and the press
+contract passing in production.

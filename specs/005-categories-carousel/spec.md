@@ -6,6 +6,12 @@
 
 **Status**: Draft
 
+## Amendment Record
+
+| Date | Change | Reason | Classification |
+| --- | --- | --- | --- |
+| 2026-09-23 | **FR-010 reversed** — a panel navigates on the first press; centring is no longer a gate on reaching a category. Contract A2 rewritten to match. | Feature 001's T059 measured the cost of the original rule against its own success criterion: a shopper following "the cheapest power bank that is actually available" spends one of three allowed interactions re-pressing a panel that has already answered to a swipe. 004 ruled the same way for its brand rows for the same reason ("the reference's two-tap interception is not acceptable on a storefront"), which left the site with two opposite answers to the same question about a storefront card. The site's own coherence contract for this feature (contract **X3**: "a press on a destination always navigates and is never intercepted to reveal decoration first") had been contradicting FR-010 since it was written; the amendment settles 005 against itself as well as against 001. Owner chose navigate-on-first-press. Movement keeps five other mechanisms, Embla already suppresses the click that closes a drag, and FR-015's remembered position still applies on return. | **MINOR** — one interaction rule reversed; the carousel's presentation, movement, accessibility and count requirements are untouched |
+
 **Input**: User description: "Use this style for categories (figure out the background's color — text's color and font and weight and floating state yourself)."
 
 **Reference**: the attached implementation — a horizontally looping carousel that renders each item as an
@@ -271,7 +277,7 @@ steps.
 - **FR-008**: One panel MUST be identifiable as the active one at all times, without requiring the shopper to
   interpret the geometry.
 - **FR-009**: Tapping the active panel MUST navigate to that category's products.
-- **FR-010**: Tapping a non-active panel MUST bring it to active position rather than navigate.
+- **FR-010** *(amended 2026-09-23, see the Amendment Record)*: Tapping any panel MUST navigate to that category's products on the first press. Moving a panel to the active position MUST NOT be a precondition for reaching its products; swipe, wheel, drag, arrow keys and the direction buttons remain the ways to browse without committing.
 - **FR-011**: Movement MUST settle onto exactly one active panel after a swipe, a wheel action, or a release,
   and MUST NOT rest between two.
 - **FR-012**: Every panel in the set MUST be reachable from any other, and the looping MUST NOT skip or strand

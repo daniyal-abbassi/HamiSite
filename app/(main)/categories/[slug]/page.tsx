@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { CatalogListing } from "@/components/shop/CatalogListing";
 import { categorySubtreeCounts, descendantCategoryIds, listCategories, queryProducts } from "@/lib/catalog";
 import { resolveSortKey } from "@/lib/content/shop";
+import { destinationDescription } from "@/lib/listing-view";
 import { normalizeSlug } from "@/lib/shop-filters";
 
 type Params = Promise<{ slug: string }>;
@@ -69,6 +70,12 @@ export default async function CategoryPage({
     page: 1,
     pageSize: 60,
   });
+  const obtainableCount = queryProducts({
+    categorySubtreeId: category.id,
+    purchasableOnly: true,
+    page: 1,
+    pageSize: 1,
+  }).total;
 
   const subCount = descendantCategoryIds(category.id).size - 1;
 
@@ -76,17 +83,14 @@ export default async function CategoryPage({
     <CatalogListing
       eyebrow="CATEGORY"
       title={category.name}
-      description={
-        subCount > 0
-          ? `${total} محصول در این دسته و ${subCount} زیردستهٔ آن.`
-          : `${total} محصول در دستهٔ ${category.name}.`
-      }
+      description={destinationDescription({ total, name: category.name, subCategories: subCount, kind: "category" })}
       total={total}
       shownTotal={shownTotal}
       products={data}
       breadcrumb={[{ label: "فروشگاه", href: "/shop" }]}
       basePath={`/categories/${encodeURIComponent(category.slug)}`}
       view={view}
+      obtainableCount={obtainableCount}
     />
   );
 }

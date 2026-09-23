@@ -2,20 +2,9 @@ import Link from "next/link";
 import { ProductCard } from "@/components/shop/ProductCard";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
 import { sortOptions } from "@/lib/content/shop";
+import { isFilteredView, listingViewHref, type ListingView } from "@/lib/listing-view";
 import { cn, toFaDigits } from "@/lib/utils";
 import type { CatalogProduct } from "@/lib/catalog";
-
-export type ListingView = { sort: string; obtainable: boolean };
-
-/** One href per control, carrying the *other* control's value so they compose. */
-function viewHref(basePath: string, view: ListingView, next: Partial<ListingView>) {
-  const merged = { ...view, ...next };
-  const params = new URLSearchParams();
-  if (merged.sort) params.set("sort", merged.sort);
-  if (merged.obtainable) params.set("obtainable", "1");
-  const q = params.toString();
-  return q ? `${basePath}?${q}` : basePath;
-}
 
 /**
  * A dedicated destination for one brand or one category.
@@ -45,6 +34,7 @@ export function CatalogListing({
   breadcrumb,
   basePath,
   view,
+  obtainableCount,
 }: {
   eyebrow: string;
   title: string;
@@ -57,7 +47,10 @@ export function CatalogListing({
   breadcrumb: { label: string; href: string }[];
   basePath: string;
   view: ListingView;
+  /** How many of this destination's records can actually be sold today. */
+  obtainableCount: number;
 }) {
+  const viewHref = (next: Partial<ListingView>) => listingViewHref(basePath, view, next);
   return (
     <div className="container py-10">
       <nav aria-label="مسیر صفحه" className="mb-6 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground/70">
@@ -93,7 +86,7 @@ export function CatalogListing({
       <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2">
         <div className="flex items-center gap-1.5" role="group" aria-label="وضعیت موجودی">
           <Link
-            href={viewHref(basePath, view, { obtainable: false })}
+            href={viewHref({ obtainable: false })}
             aria-pressed={!view.obtainable}
             className={cn(
               "rounded-full border px-3.5 py-1.5 text-xs font-bold transition-colors",
@@ -103,7 +96,7 @@ export function CatalogListing({
             همه
           </Link>
           <Link
-            href={viewHref(basePath, view, { obtainable: true })}
+            href={viewHref({ obtainable: true })}
             aria-pressed={view.obtainable}
             className={cn(
               "rounded-full border px-3.5 py-1.5 text-xs font-bold transition-colors",
@@ -112,13 +105,48 @@ export function CatalogListing({
           >
             فقط قابل خرید
           </Link>
+
+          {/*
+           * The shortcut, and the reason it is here rather than two more taps: T061
+           * measured «the cheapest power bank that is actually available» at four
+           * interactions even after both controls worked. This one is three, and its URL
+           * is byte-identical to pressing them in turn (`listingViewHref`), so there is
+           * no second, divergent way to mean the same thing. Only offered where the
+           * destination has something to obtain — a chip onto an empty list is a door
+           * that lies.
+           */}
+          {obtainableCount > 0 && (
+            <Link
+              href={
+                view.sort === "price-asc" && view.obtainable
+                  ? viewHref({ sort: "", obtainable: false })
+                  : viewHref({ sort: "price-asc", obtainable: true })
+              }
+              aria-pressed={view.sort === "price-asc" && view.obtainable}
+              className={cn(
+                "rounded-full border px-3.5 py-1.5 text-xs font-bold transition-colors",
+                view.sort === "price-asc" && view.obtainable
+                  ? "border-aqua text-aqua"
+                  : "border-line text-foreground/70 hover:border-aqua/40",
+              )}
+            >
+              ارزان‌ترینِ قابل خرید
+              <span className="ms-1.5 font-mono text-[10px] opacity-60">{toFaDigits(obtainableCount)}</span>
+            </Link>
+          )}
+
+          {isFilteredView(view) && (
+            <Link href={viewHref({ sort: "", obtainable: false })} className="px-1 text-xs font-bold text-muted-foreground underline-offset-4 hover:underline">
+              پاک کردن
+            </Link>
+          )}
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5" role="group" aria-label="مرتب‌سازی">
           {sortOptions.map((option) => (
             <Link
               key={option.key}
-              href={viewHref(basePath, view, { sort: view.sort === option.key ? "" : option.key })}
+              href={viewHref({ sort: view.sort === option.key ? "" : option.key })}
               aria-pressed={view.sort === option.key}
               className={cn(
                 "rounded-full border px-3.5 py-1.5 text-xs font-bold transition-colors",

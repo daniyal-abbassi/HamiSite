@@ -249,6 +249,15 @@ export function CategoryCarousel({ departments }: { departments: Department[] })
               aria-roledescription="slide"
               aria-label={`${toFaDigits(index + 1)} از ${toFaDigits(count)}`}
             >
+              /*
+               * Every panel is a destination and a press reaches it on the first press — 005's
+               * contract A2 as amended 2026-09-23, its X3, and 001's T059. There is deliberately no
+               * click handler here: it used to `preventDefault()` on any panel that was not the active
+               * one, and calling `goTo()` from the press also breaks navigation, because scrolling the
+               * track inside the click makes Embla treat the gesture as a drag and swallow it.
+               * Browsing without committing stays available through swipe, wheel, drag, arrow keys
+               * and the two direction buttons, which is what FR-010 now says.
+               */
               <Link
                 href={department.href}
                 className="cat-panel"
@@ -257,18 +266,6 @@ export function CategoryCarousel({ departments }: { departments: Department[] })
                 // active one, so keyboard position and visual position can never disagree (K3).
                 tabIndex={isActive ? 0 : -1}
                 aria-current={isActive ? "true" : undefined}
-                onClick={(event) => {
-                  // 005 contract A2 / FR-010: a press on the active panel navigates, a press on any
-                  // other brings it to centre. This deliberately diverges from 004's brand rows,
-                  // which navigate on the first press — 001's T059 asked for that behaviour here too
-                  // and 005's spec forbids it, so the conflict is the owner's to settle, not this
-                  // component's to quietly pick a side of. See
-                  // specs/001-premium-rtl-storefront/notes/band2-decisions.md.
-                  if (!isActive) {
-                    event.preventDefault();
-                    goTo(index);
-                  }
-                }}
               >
                 <span className="cat-panel__art">
                   {department.badge ? (

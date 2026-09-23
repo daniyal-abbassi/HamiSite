@@ -308,16 +308,18 @@ cannot** — it pins what the seam emits, which is a different and still useful 
   `components/layout/Header.tsx:137`, so a signed-in phone shopper can reach `/orders` but can never sign
   out (FR-042). Decide between surfacing it and reviving the complete-but-unimported
   `components/layout/MobileNav.tsx`.
-- [ ] T059 [US2] **NOT DONE — left for the owner, and the reason is recorded rather than assumed.**
-  005's own spec mandates the behaviour this task asks to remove (FR-010: "Tapping a non-active panel MUST
-  bring it to active position rather than navigate"), so a task in 001 cannot delete it; see
-  `notes/band2-decisions.md` §4 for the two ways to settle it and why SC-002 does not decide it. What
-  *was* fixed is the comment, which justified the double press by citing 004's brand rows (which rule the
-  opposite way) and 001's FR-038 (which is about non-purchasable action wording, not panels).
-  Original task:
-  `components/home/CategoryCarousel.tsx:260-268` calls `preventDefault()` on the first press of any
-  non-active panel, contradicting 004's own ruling that a card navigates on first press
-  (`components/home/BrandRows.tsx:16-21`, 004 C24) and costing SC-002 an extra interaction per door.
+- [x] T059 [US2] Remove the double-press tax on the categories carousel — **settled by the owner on
+  2026-09-23 in favour of this task.** `components/home/CategoryCarousel.tsx:260-268` called
+  `preventDefault()` on the first press of any non-active panel, contradicting 004's ruling that a card
+  navigates on first press (`components/home/BrandRows.tsx:16-21`, 004 C24) and costing SC-002 an extra
+  interaction per door. 005's FR-010 mandated the opposite and said so in a MUST, so the conflict was
+  escalated (the reasoning is kept in `notes/band2-decisions.md` §4) and the owner resolved it: 005's
+  FR-010 and contract A2 are amended — its own contract X3 had contradicted them since they were written —
+  the carousel now carries no click handler at all, and `verification/panel-press-navigates.mjs` measures
+  one press navigating. Centring stays available through swipe, wheel, drag, arrow keys and the direction
+  buttons; calling `goTo()` from the press is specifically avoided, because Embla reads a track scroll
+  inside the click as a drag and swallows the navigation.
+
 - [x] T060 [P] [US2] Prove FR-041/SC-008 as composition rather than clipping: `app/globals.css:132`
   `overflow-x: hidden` on `body` is what currently makes the 360px measurement pass. Find the element that
   overflows and fix its layout; then re-measure at 360/768/1440.
@@ -356,7 +358,11 @@ cannot** — it pins what the seam emits, which is a different and still useful 
   that cannot dial. The number exists only as Persian digits at `lib/content/contact.ts:16` and no clipboard
   affordance exists anywhere in the repo.
 
-**Checkpoint — band 2 run 2026-09-23. 19 of 20 tasks done; T059 left open on purpose (see its note).**
+**Checkpoint — band 2 run 2026-09-23, then closed the same day. All 20 tasks done: T059 was left open as a
+cross-feature conflict for the owner, who settled it for navigate-on-first-press, and the three ranked
+SC-002 fixes in `notes/discovery.md` were applied with it (005's FR-010 amended, a composite
+«ارزان‌ترینِ قابل خرید» control on both destinations, and the homepage's «همین حالا قابل خرید» shelf).
+SC-002 now measures **met** on both tasks — 2 and 3 interactions — against the production build.**
 
 *Measured*, in a browser or against the served HTML, with the instrument named in
 `notes/findings.md#band-2`: the six availability classes of `quickstart.md` §2 at 360px; the related rail
@@ -366,7 +372,7 @@ returning ۵ محصول; the four sort orders producing four distinct lists with
 in both price directions; two genuine horizontal overflows (1626px thumb row, 929px hero at 768) found
 with the body clip disabled and then re-measured to fit at 360/390/768/1024/1100/1280/1440; the dock's
 dial tab at 56×48 across six items on a 360px bar; SC-002 counted interaction by interaction in
-`notes/discovery.md`, where task B is reported as **not met**.
+`notes/discovery.md`, where task B was reported as **not met** and is now met at 3 interactions.
 
 *Asserted by test* rather than looked at: the subtree/facet agreement, the related-products relationship
 predicate, the obtainable-first ranking, and the count-shown-only-when-honest rule — 18 new cases across

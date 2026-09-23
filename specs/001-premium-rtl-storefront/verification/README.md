@@ -26,6 +26,14 @@ export is refreshed; the probes then re-read the pages, not the old numbers.
   controls, and the dock/header chrome at three widths.
 - `department-first-card.mjs` — no browser: what a department's page serves, and whether the first card is
   the match T061's task A needs. The product links here are the served HTML's, which is also Principle III.
+- `panel-press-navigates.mjs` — the press contract on its own: does one press on a carousel panel open the
+  department? Exit 2 means the probe could not press anything, which is the probe's problem, not the shop's.
+- `sc002-interactions.mjs` — SC-002 measured: each finding task driven step by step, every step required to
+  actually change the URL, the opened product's heading read back. Run it against the built output
+  (`BASE_URL=http://localhost:3100 node …`); against `next dev` the first hit compiles the route and a
+  fixed wait reads a slow navigation as a dead door.
 
-They are probes, not tests: no assertions, no CI. `npm run typecheck` and `npx vitest run tests/unit` are
+Some assert by exit code (`panel-press-navigates`, `sc002-interactions`) because the behaviour
+they grade is a click and a scroll position, which the node-only unit suite cannot reach. They are otherwise
+probes, not tests. `npm run typecheck` and `npx vitest run tests/unit` are
 the gates; these answer the questions a gate cannot, which is what the page shows a shopper.

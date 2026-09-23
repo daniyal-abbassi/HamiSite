@@ -63,7 +63,22 @@ through `descendantCategoryIds()` / `categorySubtreeCounts()`.
   `KNOWN_SURPLUS_KINDS` so a third one fails the suite. `contracts/shop-url.md` carries the semantics.
 
 
-## 4. T059 — the carousel's double press stays, and the spec conflict is escalated rather than decided
+## 4. T059 — settled by the owner on 2026-09-23: panels navigate on the first press
+
+*Resolution, after this section was first written.* The owner's instruction was to apply the ranked
+SC-002 fixes, and fix 1 was this conflict. It was settled for navigate-on-first-press, so the change is
+made here rather than left as an ask: 005's FR-010 and contract A2 carry an amendment (its own contract X3
+had been contradicting FR-010 since it was written, so the reversal settles 005 against itself as well),
+`CategoryCarousel.tsx` lost its click handler entirely, and
+`verification/panel-press-navigates.mjs` measures the result. Two facts worth keeping from the original
+escalation: a `goTo()` call inside the press makes Embla treat the gesture as a drag and swallow the
+navigation — the reason there is no handler rather than a handler that centres — and this feature's own
+`Resolved Qn` entries and another feature's MUSTs are still not this band's to relitigate uninvited.
+
+---
+
+### Original text (kept, because the reasoning still applies to the next conflict)
+
 
 `tasks.md` T059 asked to remove `components/home/CategoryCarousel.tsx`'s first-press
 `preventDefault()`, on the grounds that 004's brand rows navigate on the first press.

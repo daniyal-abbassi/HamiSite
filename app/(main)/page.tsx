@@ -28,6 +28,7 @@ import { FlipWords } from "@/components/ui/flip-words";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { featuredOfferRail, featuredSpecialRail, newArrivalsRail } from "@/lib/home-rails";
 import { NewArrivals } from "@/components/home/NewArrivals";
+import { ObtainableNow } from "@/components/home/ObtainableNow";
 import { BrandShowcase } from "@/components/home/BrandShowcase";
 import { AccessoryUniverse } from "@/components/home/AccessoryUniverse";
 import { MobileQuickRoutes } from "@/components/home/TrustBar";
@@ -194,6 +195,11 @@ export default async function HomePage() {
           being persuaded about. Real stock with real prices comes first now,
           and the trust case moves to where it is actually needed: immediately
           before the final call to buy. */}
+      {/* First, and deliberately ahead of the two curated rails: with the export's
+          current figures this is the only shelf on the site that can say «you can buy
+          this today» and be held to it. FeaturedProducts and NewArrivals both lead with
+          records the shop cannot sell. */}
+      <ObtainableNow />
       <FeaturedProducts tabs={featuredTabs} />
       <CategoryHub />
       <BrandShowcase />

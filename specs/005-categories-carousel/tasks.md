@@ -126,8 +126,10 @@ motion polish at all.
   Sign follows the inline axis, not physical left/right (FR-026).
 - [x] T011 [US1] In `components/home/CategoryCarousel.tsx`, render each panel as a real `<Link>` to its
   `href` with the live-text label and badge, and
-  implement the press contract: pressing the active panel navigates, pressing any other brings it to centre
-  and does not navigate (A2, FR-009, FR-010, and the interaction half of FR-038 shared with `004/C24`).
+  implement the press contract as written at the time — pressing the active panel navigates, pressing any
+  other centres without navigating. **(Amended 2026-09-23:** 005's FR-010 and contract A2 were reversed by
+  the owner at 001's T059's request, so every panel navigates on the first press; `CategoryCarousel.tsx`
+  now carries no click handler at all, and `001/verification/panel-press-navigates.mjs` proves it.**)**
 - [x] T012 [US1] Cap inertia travel in `components/home/CategoryCarousel.tsx`: watch Embla's `select` event
   `skipped` count and re-`scrollTo` the bounded target so a hard flick advances a small fixed maximum
   (FR-014, SC-004). Embla's physics are velocity-driven and will otherwise skip three panels.

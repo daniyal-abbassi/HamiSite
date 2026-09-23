@@ -36,8 +36,10 @@ section falls back to `FallbackPresentation` — it does not partially work.
 
 - **A1** One and only one panel is identifiable as active at all times, without reading the geometry. Emphasis
   is colour plus scale, not colour alone. (FR-008.)
-- **A2** Pressing the active panel navigates to its products. Pressing any other panel brings it to centre and
-  does not navigate. (FR-009, FR-010, and the FR-038 interaction contract shared with `004`.)
+- **A2** *(amended 2026-09-23 — see 005's Amendment Record)* Pressing **any** panel navigates to its products,
+  on the first press, active or not. Centring is a browsing act and stays available through swipe, wheel, drag,
+  arrow keys and the direction buttons. This is now the same rule `004` set for its brand rows: on a storefront,
+  a card that is a destination answers to one press. (FR-009, FR-010.)
 - **A3** After any release — pointer-up, flick, wheel step, key press — movement settles onto exactly one
   panel. It never rests between two. (FR-011.)
 - **A4** Every panel is reachable from every other, in both directions, through the loop, with none skipped or
