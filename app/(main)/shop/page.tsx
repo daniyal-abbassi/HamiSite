@@ -4,7 +4,7 @@ import { ShopBanner } from "@/components/shop/ShopBanner";
 import { ShopClient } from "@/components/shop/ShopClient";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
 import { buildShopView } from "@/lib/shop-query";
-import { stockedRootCategorySlugs } from "@/lib/shop-category-tiles";
+import { shopCategoryTiles } from "@/lib/shop-category-tiles";
 
 export const metadata: Metadata = {
 /* The template in app/layout.tsx appends the brand: «فروشگاه | حامی همراه». */
@@ -50,7 +50,7 @@ export default async function ShopPage({
         {/* Kept for the client children that still read useSearchParams; the
             results themselves no longer wait on it. */}
         <Suspense fallback={null}>
-          <ShopClient view={view} tileSlugs={stockedRootCategorySlugs()} />
+          <ShopClient view={view} tiles={shopCategoryTiles()} />
         </Suspense>
       </div>
     </>

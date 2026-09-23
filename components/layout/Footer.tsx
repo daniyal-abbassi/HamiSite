@@ -20,8 +20,17 @@ const footerGroups = [
     title: "حامی همراه",
     links: [
       { href: "/partners", label: "همکاری عمده (B2B)" },
-      { href: "/about", label: "درباره ما" },
-      { href: "/contact", label: "تماس با ما" },
+      /*
+       * Both used to point at routes that were never built — `/about` and
+       * `/contact` — so the footer, on every page, shipped two 404s. Neither is
+       * an invented page now: «درباره ما» is the store-experience section that
+       * already carries the twenty-years and Mashhad facts, and «تماس با ما» is
+       * the one verified contact channel there is. (FR-007 forbids an address or
+       * email until the merchant supplies one, so a /contact page would have
+       * nothing honest to hold.)
+       */
+      { href: "/#store-experience", label: "درباره ما" },
+      { href: storeContact.phoneHref, label: "تماس با ما" },
     ],
   },
   {
@@ -29,7 +38,7 @@ const footerGroups = [
     links: [
       { href: "/login", label: "ورود" },
       { href: "/register", label: "ثبت‌نام" },
-      { href: "/my-orders", label: "سفارش‌های من" },
+      { href: "/orders", label: "سفارش‌های من" },
     ],
   },
 ];

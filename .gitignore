@@ -47,3 +47,6 @@ playwright-report/
 # the 188 derived WebPs are reproducible with scripts/isolate-catalog-images.py.
 specs/003-floating-product-presentation/trial/isolated/
 specs/003-floating-product-presentation/trial/full/isolated/
+
+# Band verification probes write their measurements next to themselves.
+specs/**/verification/*-result.json

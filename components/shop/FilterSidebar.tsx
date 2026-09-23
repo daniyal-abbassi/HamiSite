@@ -5,9 +5,11 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn, toFaDigits } from "@/lib/utils";
+import { brandLabel } from "@/lib/product-identity";
 import { stockOptions } from "@/lib/content/shop";
-import type { ShopBrand, ShopCategory } from "./types";
+import type { ShopBrand } from "./types";
+import type { CategoryFacet } from "@/lib/shop-query";
 
 const FILTER_KEYS = ["q", "category", "brand", "min", "max", "stock", "special"] as const;
 
@@ -15,7 +17,7 @@ function SidebarHeading({ children }: { children: React.ReactNode }) {
   return <h3 className="font-mono text-xs tracking-[0.08em] text-aqua">{children}</h3>;
 }
 
-export function FilterSidebar({ categories, brands }: { categories: ShopCategory[]; brands: ShopBrand[] }) {
+export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: CategoryFacet[]; brands: ShopBrand[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -44,7 +46,18 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
     router.push(queryString ? `${pathname}?${queryString}` : pathname);
   }
 
-  const rootCategories = categories.filter((category) => category.parentId === null).slice(0, 8);
+  /*
+   * The departments, from the server-built view — not the export's top-level
+   * categories. `slice(0, 8)` of those used to be the list, which put three empty
+   * roots on the page (FR-028's "28 empty doors" in miniature) and, after band 2
+   * made a category mean its subtree, offered «موبایل» (8) beside «موبایل و تبلت»
+   * (135) as two answers to one question. A facet is now the same nine kinds the
+   * homepage carousel and the tile row are built from (T056).
+   *
+   * `showsCount` is the department's own honesty rule: a route that is a subset of
+   * its kind prints no number, because 8 behind a door named «موبایل» is not the
+   * department and the shopper should not be told a figure for it.
+   */
 
   return (
     <aside
@@ -75,15 +88,15 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
       </form>
 
       {/* Categories */}
-      {rootCategories.length > 0 && (
+      {categoryFacets.length > 0 && (
         <div className="space-y-2.5">
           <SidebarHeading>دسته‌بندی</SidebarHeading>
           <div className="flex flex-wrap gap-2">
-            {rootCategories.map((category) => {
+            {categoryFacets.map((category) => {
               const active = category.slug === activeCategory;
               return (
                 <button
-                  key={category.id}
+                  key={category.slug}
                   type="button"
                   aria-pressed={active}
                   onClick={() =>
@@ -99,7 +112,10 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
                       : "border-line text-foreground/70 hover:border-aqua/50 hover:text-foreground",
                   )}
                 >
-                  {category.name}
+                  {category.label}
+                  {category.showsCount && (
+                    <span className="ms-1.5 font-mono text-[10px] opacity-60">{toFaDigits(category.count)}</span>
+                  )}
                 </button>
               );
             })}
@@ -112,7 +128,12 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
         <div className="space-y-2.5">
           <SidebarHeading>برند</SidebarHeading>
           <div className="flex flex-wrap gap-2">
-            {brands.slice(0, 12).map((brand) => {
+            /*
+             * All of them, not the first twelve. `listBrands()` already excludes brands
+             * with no products, so the slice only ever hid real doors — ترانیو and
+             * COMTEL were reachable from nothing in the interface (FR-029, SC-014).
+             */
+            {brands.map((brand) => {
               const active = brand.slug === activeBrand;
               return (
                 <button
@@ -132,7 +153,10 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
                       : "border-line text-foreground/70 hover:border-aqua/50 hover:text-foreground",
                   )}
                 >
-                  {brand.name}
+                  {brandLabel(brand.name)}
+                  {(brand.productCount ?? 0) > 0 && (
+                    <span className="ms-1.5 font-mono text-[10px] opacity-60">{toFaDigits(brand.productCount!)}</span>
+                  )}
                 </button>
               );
             })}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductDetail } from "@/components/shop/ProductDetail";
+import { RelatedProducts } from "@/components/shop/RelatedProducts";
 import { findProductBySlug } from "@/lib/catalog";
 
 type Params = Promise<{ slug: string }>;
@@ -34,6 +35,7 @@ export default async function ProductPage({ params }: { params: Params }) {
   return (
     <div className="container py-10">
       <ProductDetail product={product} />
+      <RelatedProducts productId={product.id} />
     </div>
   );
 }

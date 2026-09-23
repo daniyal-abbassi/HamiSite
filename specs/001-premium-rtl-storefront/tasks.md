@@ -270,88 +270,113 @@ cannot** — it pins what the seam emits, which is a different and still useful 
 
 ### Discovery (US2)
 
-- [ ] T049 [P] [US2] Add Persian search normalisation in `lib/shop-filters.ts` before matching: NFKC, map
+- [x] T049 [P] [US2] Add Persian search normalisation in `lib/shop-filters.ts` before matching: NFKC, map
   `ي`→`ی` and `ك`→`ک`, strip U+200C from query and haystack, fold Persian/Arabic digits to Latin, order with
   `Intl.Collator("fa")`. Measured failures (`audits/02`): `سیستم‌عامل`→2 vs `سیستم عامل`→0, `۱۰۵`→0 vs
   `105`→2, `موبايل`→0 vs `موبایل`→133. No new dependency — research D6.
-- [ ] T050 [P] [US2] Implement the missing comparators in `lib/catalog.ts:264-295` for `newest` and
+- [x] T050 [P] [US2] Implement the missing comparators in `lib/catalog.ts:264-295` for `newest` and
   `featured`, or delete those options from `lib/content/shop.ts:4,7`. Today `:264` branches only on the two
   price keys, so both return byte-identical lists to no sort at all. Preserve the verified zero-price rule:
   the 5 unpriced records must stay at positions 184–188 in **both** price directions.
-- [ ] T051 [P] [US2] Make availability narrowing answer the question a shopper is actually asking
+- [x] T051 [P] [US2] Make availability narrowing answer the question a shopper is actually asking
   (`lib/catalog.ts:258`, `lib/content/shop.ts:12-18`): «موجود» (`unlimited`) matches 0 records and
   «موجود محدود» returns 21 of which only 5 are purchasable. FR-022 must let a shopper narrow to
   obtainability. Same change fixes the `min`/`max` asymmetry where `priceOf()`'s 0-coercion silently
   deletes or admits the 5 unpriced records (`audits/02` FR-022).
-- [ ] T052 [US2] Surface applied filters as removable chips outside the filter panel, with a working
+- [x] T052 [US2] Surface applied filters as removable chips outside the filter panel, with a working
   clear-all reachable on phone: `FilterSidebar.tsx:223-233` already clears, but `audits/02` measured **zero**
   elements outside `<aside>` carrying the active label at 360px while the panel is `hidden lg:block` /
   a closed sheet (`FilterSheet.tsx:83-107`). FR-026.
-- [ ] T053 [US2] Replace the undifferentiated entry lists in `components/shop/FilterSidebar.tsx:47,115` —
+- [x] T053 [US2] Replace the undifferentiated entry lists in `components/shop/FilterSidebar.tsx:47,115` —
   blind `slice(0,8)` of root categories (3 empty) and `slice(0,12)` of brands — with the curated, counted,
   non-empty selection FR-028 demands, and add counts to `components/shop/CategoryTiles.tsx:29-50`, which
   currently renders names only.
-- [ ] T054 [P] [US2] Create `app/(main)/brands/[slug]/page.tsx` and
+- [x] T054 [P] [US2] Create `app/(main)/brands/[slug]/page.tsx` and
   `app/(main)/categories/[slug]/page.tsx` as real destinations per research D10 — FR-029: "MUST be able to
   reach the products of a given brand and of a given category from a dedicated place, not only through a
   filter." Neither exists; `/brands` and `/categories` both 404 today.
-- [ ] T055 [US2] Point 004's brand rows (`lib/content/home.ts:165,168`) and 005's category panels
+- [x] T055 [US2] Point 004's brand rows (`lib/content/home.ts:165,168`) and 005's category panels
   (`lib/category-departments.ts:133`) at the new routes instead of `/shop?` query strings.
-- [ ] T056 [P] [US2] Merge the three competing category vocabularies — 005's kind-departments in
+- [x] T056 [P] [US2] Merge the three competing category vocabularies — 005's kind-departments in
   `lib/category-departments.ts`, the shop filter's root categories in `components/shop/FilterSidebar.tsx:47`, and
   `components/shop/CategoryTiles.tsx` — so «موبایل» (8), «گوشی موبایل» and «موبایل و تبلت» (0) stop
   being three doors onto three different subsets of one 134-record department.
-- [ ] T057 [P] [US2] Fix the seven dead doors listed in `audits/02`: `components/layout/Footer.tsx:22`
+- [x] T057 [P] [US2] Fix the seven dead doors listed in `audits/02`: `components/layout/Footer.tsx:22`
   (`/about`), `:23` (`/contact`), `:31` (`/my-orders`, real route is `/orders`), three empty category chips
   from `FilterSidebar.tsx:47`, and the `stock=unlimited` option from `lib/content/shop.ts:14`. SC-014.
-- [ ] T058 [P] [US2] Restore account parity on phone: `UserMenu` is `hidden … md:flex` at
+- [x] T058 [P] [US2] Restore account parity on phone: `UserMenu` is `hidden … md:flex` at
   `components/layout/Header.tsx:137`, so a signed-in phone shopper can reach `/orders` but can never sign
   out (FR-042). Decide between surfacing it and reviving the complete-but-unimported
   `components/layout/MobileNav.tsx`.
-- [ ] T059 [US2] Remove the double-press tax on the categories carousel:
+- [ ] T059 [US2] **NOT DONE — left for the owner, and the reason is recorded rather than assumed.**
+  005's own spec mandates the behaviour this task asks to remove (FR-010: "Tapping a non-active panel MUST
+  bring it to active position rather than navigate"), so a task in 001 cannot delete it; see
+  `notes/band2-decisions.md` §4 for the two ways to settle it and why SC-002 does not decide it. What
+  *was* fixed is the comment, which justified the double press by citing 004's brand rows (which rule the
+  opposite way) and 001's FR-038 (which is about non-purchasable action wording, not panels).
+  Original task:
   `components/home/CategoryCarousel.tsx:260-268` calls `preventDefault()` on the first press of any
   non-active panel, contradicting 004's own ruling that a card navigates on first press
   (`components/home/BrandRows.tsx:16-21`, 004 C24) and costing SC-002 an extra interaction per door.
-- [ ] T060 [P] [US2] Prove FR-041/SC-008 as composition rather than clipping: `app/globals.css:132`
+- [x] T060 [P] [US2] Prove FR-041/SC-008 as composition rather than clipping: `app/globals.css:132`
   `overflow-x: hidden` on `body` is what currently makes the 360px measurement pass. Find the element that
   overflows and fix its layout; then re-measure at 360/768/1440.
-- [ ] T061 [US2] Re-verify SC-002 with the interaction count recorded in
+- [x] T061 [US2] Re-verify SC-002 with the interaction count recorded in
   `specs/001-premium-rtl-storefront/notes/discovery.md` for "a Xiaomi phone" and "the cheapest power bank
   that is actually available" — both must land in ≤3 interactions, and the second is unreachable while
   `brand+category` returns 0.
 
 ### Product presentation (US3)
 
-- [ ] T062 [US3] Build the specifications block in `components/shop/ProductDetail.tsx` reading
+- [x] T062 [US3] Build the specifications block in `components/shop/ProductDetail.tsx` reading
   `product.specs` (`lib/catalog.ts:213`), scannable per FR-032 and absent when the array is empty (FR-005).
   166 records carry specs and no component reads them; 23 carry none and must show no empty frame.
-- [ ] T063 [P] [US3] Add the real-relationship rail FR-035 requires in
+- [x] T063 [P] [US3] Add the real-relationship rail FR-035 requires in
   `components/shop/RelatedProducts.tsx`, mounted by `app/(main)/shop/[slug]/page.tsx:22-29`: same brand or
   same category, selected by a named predicate — "MUST NOT be an arbitrary sample of the catalog presented
   as a recommendation". No related-products section exists anywhere (`audits/03`).
-- [ ] T064 [US3] Find the actual variant option keys in `data/hami-products.json` and map them correctly at
+- [x] T064 [US3] Find the actual variant option keys in `data/hami-products.json` and map them correctly at
   `lib/catalog.ts:169` — the «حافظه» lookup matches 0 of 311 variants, so storage capacities never appear
   while FR-033 promises colours **and** capacities. Include record 347's دامنه/سرور/نوع keys in the survey.
-- [ ] T065 [US3] Implement the gallery in `components/shop/ProductGallery.tsx`, replacing the single
+- [x] T065 [US3] Implement the gallery in `components/shop/ProductGallery.tsx`, replacing the single
   `<Image>` block at `components/shop/ProductDetail.tsx:221-235` and sourcing views through
   `lib/product-images.ts`: FR-031 and US3 scenarios 6–7 require when more than one view is
   genuinely available, show count and current position; when there is one, emit no dots, no thumbnails, no
   affordance. The 56 records without a second view must be indistinguishable in polish from the 133 with
   one, and the composition MUST NOT depend on the remote host — so extra views are offered, never required.
-- [ ] T066 [US3] Fix the PDP's variant-selection feedback so choosing a colour changes something readable
+- [x] T066 [US3] Fix the PDP's variant-selection feedback so choosing a colour changes something readable
   (price and stock line) at `components/shop/ProductDetail.tsx:293-318`; US3 scenario 4 requires the chosen
   option to be unambiguous **and** its consequences visible.
-- [ ] T067 [P] [US3] Make the "obtain but not today" case honest across FR-054: verify the composition for
+- [x] T067 [P] [US3] Make the "obtain but not today" case honest across FR-054: verify the composition for
   one product in each of the 13 states listed in `quickstart.md` §2, including the sparsest record (id 347,
   no image, no brand, no specs, 18 unmapped variants) and the richest.
-- [ ] T068 [US4] Implement FR-039 properly: a contact action reachable within one interaction from **any**
+- [x] T068 [US4] Implement FR-039 properly: a contact action reachable within one interaction from **any**
   product — none exists on a product surface today (`ProductDetail.tsx:277-280` is text plus an icon with no
   number and no link; `MobileDock.tsx:26-30` dropped its «تماس» tab) — and a copyable number for devices
   that cannot dial. The number exists only as Persian digits at `lib/content/contact.ts:16` and no clipboard
   affordance exists anywhere in the repo.
 
-**Checkpoint**: US2 and US3 are each independently testable per their spec sections, and the seam contract
-test still passes.
+**Checkpoint — band 2 run 2026-09-23. 19 of 20 tasks done; T059 left open on purpose (see its note).**
+
+*Measured*, in a browser or against the served HTML, with the instrument named in
+`notes/findings.md#band-2`: the six availability classes of `quickstart.md` §2 at 360px; the related rail
+present on 13 walked records and absent on «اپل آیدی»; the gallery emitting a strip and a counter only on
+multi-view records; the search folds on the three pairs `audits/02` measured broken; `?stock=purchasable`
+returning ۵ محصول; the four sort orders producing four distinct lists with the five unpriced records last
+in both price directions; two genuine horizontal overflows (1626px thumb row, 929px hero at 768) found
+with the body clip disabled and then re-measured to fit at 360/390/768/1024/1100/1280/1440; the dock's
+dial tab at 56×48 across six items on a 360px bar; SC-002 counted interaction by interaction in
+`notes/discovery.md`, where task B is reported as **not met**.
+
+*Asserted by test* rather than looked at: the subtree/facet agreement, the related-products relationship
+predicate, the obtainable-first ranking, and the count-shown-only-when-honest rule — 18 new cases across
+`tests/unit/band2-seams.test.ts`, `shop-category-tiles.test.ts` and `category-departments.test.ts`.
+`192 tests / 19 files` green, `tsc --noEmit` clean, `npm run build` clean, and the built bundle booted
+with `next start` to confirm the product links are in the served HTML.
+
+*Not verified*: the 40-second half of SC-002 (hardware rule), anything requiring the human panel (band 4),
+and the checkout path under the new `variantSoldOut` gate — the storefront no longer offers a zero-stock
+variant, but the API would still accept it if asked, and the back end is frozen by Constitution III.
 
 ---
 

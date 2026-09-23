@@ -51,6 +51,22 @@ const categoryBySlug = new Map(exportData.categories.map((c) => [c.slug, c]));
  */
 const KNOWN_SHORTFALL_KINDS = new Set(["phone", "charger", "powerbank"]);
 
+/**
+ * A route that reaches **more** than its kind, which band 2's vocabulary merge (T056)
+ * made visible by counting the subtree the destination actually lists:
+ *
+ * - `phone` — `موبایل و تبلت` reaches 135, and the 135th is id 311
+ *   «شارژر فوق سریع 66W», a `charger` filed under the «داریا باند» child.
+ * - `charger` — `آداپتور | کابل و شارژر` reaches 12: nine of its ten `charger`
+ *   records (the tenth sits under that same «داریا باند» child) plus the three
+ *   `car_charger` records, because «شارژر فندکی» is a **child** of it.
+ *
+ * That is the export's filing, not a claim the panel makes — `showsCount` is false
+ * precisely where the two numbers disagree, so no panel promises a breadth it has
+ * not got. A *new* surplus kind is still a surprise worth a failing test.
+ */
+const KNOWN_SURPLUS_KINDS = new Set(["phone", "charger"]);
+
 describe("categoryDepartments", () => {
   /*
    * Property-style, not snapshot-style. An earlier version of this file asserted
@@ -112,12 +128,17 @@ describe("categoryDepartments", () => {
     expect(new Set(slugs).size).toBe(slugs.length);
   });
 
-  it("keeps every route within its kind, and every shortfall among the named ones", () => {
+  it("keeps every route within its kind, and every disagreement among the named ones", () => {
     for (const d of departments) {
       const kindTotal = kindTotals[d.kind];
-      expect(d.reachableCount, `${d.slug} routes to more than its kind holds`).toBeLessThanOrEqual(kindTotal);
       if (d.reachableCount < kindTotal) {
         expect(KNOWN_SHORTFALL_KINDS.has(d.kind), `${d.slug} is a newly short route — review its category`).toBe(true);
+      }
+      if (d.reachableCount > kindTotal) {
+        expect(KNOWN_SURPLUS_KINDS.has(d.kind), `${d.slug} newly reaches outside its kind — review its category`).toBe(true);
+        // The safety property the old `<=` was really guarding: a route that does not
+        // match its kind exactly must not announce a number.
+        expect(d.showsCount, `${d.slug} shows a count over a route wider than its kind`).toBe(false);
       }
     }
   });
@@ -155,9 +176,11 @@ describe("categoryDepartments", () => {
     }
   });
 
-  it("href carries a percent-encoded Persian slug, never a hand-typed Latin one", () => {
+  it("routes each panel to its dedicated category page, percent-encoded", () => {
+    // T055: FR-029 asked for a destination rather than a filter link, and the
+    // panels are the homepage's doors, so they moved with it.
     for (const d of departments) {
-      expect(d.href).toBe(`/shop?category=${encodeURIComponent(d.slug)}`);
+      expect(d.href).toBe(`/categories/${encodeURIComponent(d.slug)}`);
       expect(d.href).toContain("%");
     }
   });

@@ -15,12 +15,12 @@ result set.
 | Key | Values | Semantics |
 |---|---|---|
 | `q` | free text, Persian | substring match on `name`, `english_name`, `slug` (`lib/catalog.ts:244-249`) |
-| `category` | a category **slug**, Persian, URL-encoded | main category **or** any secondary (`:250-257`) |
+| `category` | a category **slug**, Persian, URL-encoded | that category **or anything filed below it**, by `parent_id`. Amended in band 2: see the destination rules below. |
 | `brand` | a brand slug | AND-combines with `category` |
 | `min`, `max` | integer Toman | see the absent-price rule below |
-| `stock` | `unlimited` \| `limited` \| `call` \| `out_of_stock` | **does not mean obtainability** — see FR-022 gap |
+| `stock` | `purchasable` \| `limited` \| `call` \| `out_of_stock` | `purchasable` is obtainability (the merchant's flag); the other three are shelf states |
 | `special` | `1` | `special_offer` true; 11 records |
-| `sort` | `price-asc` \| `price-desc` \| `newest` \| `special` | only the two price keys have comparators today |
+| `sort` | `price-asc` \| `price-desc` \| `newest` \| `special` | all four have comparators since band 2 (T050); validated by `resolveSortKey()`, so an unknown key is no sort rather than a cast |
 | `page` | integer, **omitted at 1** | `:297-304` |
 
 ## Rules that MUST survive the rework
@@ -33,10 +33,13 @@ result set.
 3. **A slug that resolves to nothing MUST say so.** `lib/shop-filters.ts:48-61` refuses to silently drop an
    unresolvable slug and `ShopClient.tsx:70-82` surfaces it. This is 004's destination-resolution precedent
    and MUST NOT regress into "no results" or, worse, the whole catalog.
-4. **Absent price is never a price.** `priceOf()` maps missing → `0` (`:106-112`), so today any `min`
-   silently deletes the 5 call-for-price records and any `max` silently admits them. After band 2 the
-   filters MUST treat those 5 as "unpriced": included unless explicitly excluded, and never sorted as the
-   cheapest items.
+4. **Absent price is never a price.** `priceOf()` maps missing → `0` (`:106-112`). **Amended during band
+   2 (2026-09-23):** when a `min` or `max` bound is present, unpriced records are **excluded**. The draft
+   said "included unless explicitly excluded", which does not survive contact with a URL a shopper shares —
+   an "up to ۵ میلیون" list holding items of unknown price misstates its own bounds. What MUST hold, and
+   now does: an unpriced record is never admitted to a numeric range, never sorted as the cheapest item
+   (rule 5), and never displayed as «۰» or a bare currency word (FR-003).
+
 5. **Zero-price sorts to the end in both directions** (FR-024). `:264-277` short-circuits `pa<=0`/`pb<=0`
    *before* applying the direction, verified over all 189 rows: the 5 unpriced records land at positions
    184–188 under `price-asc` **and** `price-desc`. Preserve that ordering exactly.
@@ -50,18 +53,54 @@ result set.
    is a closed sheet and the applied state is a single digit badge — zero elements outside `<aside>` carry
    the active label at 360px. The URL must remain the truth while the chips become the visible layer.
 
-## Known gaps this contract does not yet close
+## The gaps band 2 was written to close, and how each now reads
 
-- `sort=newest` and `sort=special` have **no comparator**: `:264` branches only on the two price keys, so
-  both fall into the default block and return byte-identical lists to no sort at all, while
-  `lib/content/shop.ts:4,7` still advertises them in the select. Band 2's fix is a comparator plus removing
-  any label the data cannot support.
-- `q` has **no Persian normalisation**: `سیستم‌عامل` → 2 results, `سیستم عامل` → 0; `۱۰۵` → 0, `105` → 2;
-  `موبايل` → 0, `موبایل` → 133. See `research.md` D6.
-- `stock=unlimited` («موجود») matches **0 records** (`lib/content/shop.ts:14`), so the most useful
-  availability question a shopper can ask — "what can I actually buy" — is a dead control.
+- **Resolved in band 2** (T050): `sort=newest` and `sort=special` had no comparator and returned the
+  default order byte for byte. `newest` is `updated_at` descending; `special` is offers-first then recency.
+  `updated_at` is the only recency signal the export carries, and there is no popularity or
+  curated-placement field anywhere, so no option may claim «محبوب‌ترین».
+- **Resolved in band 2** (T049, `research.md` D6): `q` now folds ZWNJ, Persian and Arabic digits and the
+  Arabic letter variants (`ي`→`ی`, `ك`→`ک`) on both sides of the comparison, so the measured pairs
+  `سیستم‌عامل`/`سیستم عامل`, `۱۰۵`/`105` and `موبايل`/`موبایل` return equal results. No new dependency.
+
+- **Resolved in band 2** (T051): `stock=unlimited` («موجود») matched **0 records**, so the most useful
+  availability question was a dead control. `stock=purchasable` («قابل خرید») now reads the merchant's
+  own `purchasable` flag, and `unlimited` is *removed* from the option list rather than kept: an option
+  that matches nothing today will match something arbitrary the moment the export starts emitting it.
+  The four remaining `stock` values are shelf states, and a shelf state is not obtainability — 16 records
+  read «موجود محدود» while saying they cannot be sold.
 - Band 1's server rendering changes *who reads* these keys (the page component rather than a client hook),
   not *what they mean*. The semantics above are the invariant across that move.
+
+## Contract B — the dedicated destinations (`/categories/<slug>`, `/brands/<slug>`)
+
+FR-029 asked for "a dedicated place, not only through a filter"; T054 created the two routes and T055
+repointed every homepage door at them. Their URL surface is deliberately smaller than `/shop`'s.
+
+| Key | Values | Absent means |
+|---|---|---|
+| `sort` | the `sortOptions` keys, validated against the list in `resolveSortKey()` — an unrecognised value is no sort, never a cast | default order |
+| `obtainable` | `1` | the whole destination |
+
+Rules:
+
+- **A category is its subtree, in both places.** `/categories/<slug>` and `/shop?category=<slug>` both
+  resolve through `descendantCategoryIds()`, and the number printed beside the name comes from
+  `categorySubtreeCounts()`. Band 2 first kept the facet exact, on the reasoning that a filter should mean
+  exactly what it says; that was wrong here, because the sidebar's number *is* the doorway's number, so an
+  exact filter under a subtree count renders «موبایل و تبلت ۱۳۵» and returns nothing — the export files
+  those records under brand-shaped children rather than under the parent. The facet is single-select, so
+  the double counting that made exact matching attractive cannot occur. Guarded by
+  `tests/unit/band2-seams.test.ts`, which asserts the two surfaces return the same total.
+- **A destination's existence is decided by what it covers, not by what a control leaves on screen.**
+  `total === 0` against the covered set is a 404 (FR-028's "empty door"); `?obtainable=1` returning
+  nothing is an empty state with a link back to the whole destination, because "nothing buyable today" is
+  an answer the shopper needs and not a missing page.
+- **No pagination parameter.** These pages list what the seam resolves in one pass; a destination that
+  grew past that is a different decision, and a dead `page=2` link is exactly the class of defect this
+  contract exists to prevent.
+- Every control is a link, so the same test as contract A applies: paste the URL into a fresh context and
+  the view is identical.
 
 ## Verification
 

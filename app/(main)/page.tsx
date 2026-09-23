@@ -81,10 +81,13 @@ function Hero() {
           >
             <span className="block text-foreground/90">حامی همراه؛ بیست سال اعتماد در بازار مشهد.</span>
             {/* FR-017 allows the price-leadership position, not a comparative
-                nobody can substantiate — «بهترین» went. nowrap only from md up:
-                below that the lead-in plus the rotator's widest word cannot fit
-                one line, and forcing it pushes the grid past the viewport. */}
-            <span className="mt-3 block md:whitespace-nowrap">
+                nobody can substantiate — «بهترین» went. The nowrap threshold is
+                measured, not guessed: at 768px the lead-in plus the widest rotating
+                word is 930px of RTL text in a 576px box, so it overflows to the left
+                of the viewport and the page only hides it with `body { overflow-x:
+                hidden }` — FR-041 asks for composition, so the line breaks instead
+                until there is room to keep it on one. */}
+            <span className="mt-3 block lg:whitespace-nowrap">
               قیمت روزِ بازار، مستقیم از مشهد برای{" "}
               <span className="relative inline-block">
                 <FlipWords words={HERO_ROTATING_WORDS} className="grad font-extrabold" />

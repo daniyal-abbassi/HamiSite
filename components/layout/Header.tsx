@@ -3,11 +3,12 @@
 import { useEffect, useState, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Phone } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { CartButton } from "@/components/layout/CartButton";
 import { UserMenu } from "@/components/layout/UserMenu";
 import { PillNav, type PillNavItem } from "@/components/layout/PillNav";
+import { storeContact } from "@/lib/content/contact";
 import hamiMark from "@/public/brand/hami-mark.png";
 import { cn } from "@/lib/utils";
 
@@ -134,14 +135,47 @@ export function Header() {
             />
           </form>
 
-          <div className="hidden items-center gap-1 md:flex">
+          {/*
+           * Visible at every width now. It was `hidden … md:flex`, and `UserMenu` is
+           * the only shopper-facing sign-out in the app — so a signed-in phone
+           * shopper could reach /orders and could never leave the account (FR-042
+           * asks phone and desktop to reach the same destinations). The control is
+           * itself already responsive (name chip above sm, avatar below).
+           */}
+          <div className="flex items-center gap-1">
             <UserMenu />
           </div>
           <CartButton />
 
+          {/*
+           * FR-039: one interaction from any product to a human. On a phone the
+           * dock carries the dial request; this is its desktop equivalent, because
+           * the only other route to a number on this site is the footer, which on
+           * a product page is twenty screens of scrolling below the buy box.
+           * Compact at md (icon only) so it does not repeat the squeeze that made
+           * «شروع همکاری» hide below md; the digits return at lg.
+           */}
+          <a
+            href={storeContact.phoneHref}
+            aria-label={`تماس با فروشگاه ${storeContact.phoneDisplay}`}
+            className="hidden h-11 shrink-0 items-center gap-2 rounded-full border border-champagne/25 bg-ink/60 px-3 text-xs font-bold text-foreground/80 transition-colors hover:border-champagne/50 hover:text-foreground md:inline-flex lg:h-9"
+          >
+            <Phone className="size-4 text-champagne" aria-hidden="true" />
+            <b dir="ltr" className="hidden font-mono lg:inline">
+              {storeContact.phoneDisplay}
+            </b>
+          </a>
+
+          {/*
+           * Hidden below md. At 360px this CTA took ~174 of 336px and squeezed the
+           * search field into a ~58px empty pill, and «شروع همکاری» already appears
+           * twice in the first screen because the hero repeats it (audits/05). The
+           * footer and the dock both reach /partners, so nothing is lost on phone —
+           * FR-041 asked for composition rather than clipping, and this is that.
+           */}
           <Link
             href="/partners"
-            className="shiny-edge inline-flex h-12 items-center gap-2 px-8 text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-95"
+            className="shiny-edge hidden h-12 items-center gap-2 px-8 text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-95 md:inline-flex"
           >
             شروع همکاری
             <ArrowLeft className="size-4" />

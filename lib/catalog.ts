@@ -1,5 +1,6 @@
 import catalogJson from "@/data/hami-products.json";
 import mirroredImages from "@/data/catalog-images.json";
+import { persianIncludes } from "@/lib/persian";
 
 /**
  * The catalogue, read from a JSON export of the live shop instead of the
@@ -166,7 +167,16 @@ function serializeProduct(p: RawProduct, includeVariants: boolean) {
     ? (p.variants ?? []).map((v) => ({
         id: v.id,
         color: v.options?.["رنگ"] ?? null,
+        /*
+         * The export has no «حافظه» key on any of its 311 variants — the option
+         * vocabulary is `رنگ` for 293 of them and `دامنه`/`سرور`/`نوع` for the 18
+         * records under «اپل آیدی». So a capacity chosen from a name that does not
+         * exist is why FR-033's storage selector never appeared, while product 347
+         * had 18 real options and no way to pick any of them. `options` below is
+         * the honest generalisation: whatever keys a product actually uses.
+         */
         storage: v.options?.["حافظه"] ?? null,
+        options: Object.entries(v.options ?? {}).map(([label, value]) => ({ label, value })),
         guarantee: null,
         price: v.price ?? price,
         // Same rule as `compareAtOf` above, applied per variant: 40 of the 311
@@ -228,7 +238,24 @@ export type CatalogQuery = {
   q?: string;
   brandId?: number;
   categoryId?: number;
+  /**
+   * Everything filed under this category **or any category below it**, by
+   * `parent_id`. `categoryId` above is exact, and exact is what the shop's own
+   * filter has always meant, so it stays. This exists because the export files
+   * phones under brand-shaped children of «موبایل و تبلت» — thirty under
+   * «شیائومی | XIAOMI», forty-five under «آیفون استوک» — and none under the
+   * parent itself, which is why three of the eight sidebar doors led to an empty
+   * listing (FR-028's "28 empty doors"). A destination should show what is under
+   * it; a filter should mean exactly what it says.
+   */
+  categorySubtreeId?: number;
   stockType?: string;
+  /**
+   * FR-022's missing question: "what can I actually buy today". `stockType`
+   * describes the shelf («موجود محدود» is a shelf state, and 16 records in it are
+   * not sellable at all); this reads the merchant's `purchasable` flag.
+   */
+  purchasableOnly?: boolean;
   specialOffer?: boolean;
   minPrice?: number;
   maxPrice?: number;
@@ -246,12 +273,24 @@ export function queryProducts(input: CatalogQuery) {
   // showing twenty-seven items. The live shop lists them all and lets the stock
   // badge say what is what; this matches that.
   if (input.q) {
-    const needle = input.q.toLowerCase();
+    // Folded on both sides — see lib/persian.ts. The stored form of a name is
+    // Persian typed on a Persian keyboard; the typed query arrives with ZWNJ
+    // missing, digits in either shape, and ي/ك instead of ی/ک often enough that
+    // a plain substring match was quietly returning nothing.
     items = items.filter((p) =>
-      [p.name, p.english_name, p.slug].some((f) => f?.toLowerCase().includes(needle)),
+      [p.name, p.english_name, p.slug].some((f) => f && persianIncludes(f, input.q!)),
     );
   }
   if (input.brandId != null) items = items.filter((p) => p.brand?.id === input.brandId);
+  if (input.purchasableOnly) items = items.filter((p) => p.stock?.purchasable === true);
+  if (input.categorySubtreeId != null) {
+    const ids = descendantCategoryIds(input.categorySubtreeId);
+    items = items.filter(
+      (p) =>
+        (p.category?.id != null && ids.has(p.category.id)) ||
+        (p.other_categories ?? []).some((c) => ids.has(c.id)),
+    );
+  }
   if (input.categoryId != null) {
     items = items.filter(
       (p) =>
@@ -261,11 +300,37 @@ export function queryProducts(input: CatalogQuery) {
   }
   if (input.stockType) items = items.filter((p) => stockTypeOf(p) === input.stockType);
   if (input.specialOffer != null) items = items.filter((p) => Boolean(p.special_offer) === input.specialOffer);
-  if (input.minPrice != null) items = items.filter((p) => priceOf(p) >= input.minPrice!);
-  if (input.maxPrice != null) items = items.filter((p) => priceOf(p) <= input.maxPrice!);
+  /*
+   * A price bound applies to priced records only. `priceOf()` returns 0 for the
+   * five call-for-price rows, so the old pair of filters made those five vanish
+   * under any minimum and appear as the cheapest goods under any maximum — both
+   * wrong, one of them reading as «free phones». Excluding them is the stated
+   * semantic; see `contracts/shop-url.md` rule 4.
+   */
+  if (input.minPrice != null || input.maxPrice != null) {
+    items = items.filter((p) => priceOf(p) > 0);
+    if (input.minPrice != null) items = items.filter((p) => priceOf(p) >= input.minPrice!);
+    if (input.maxPrice != null) items = items.filter((p) => priceOf(p) <= input.maxPrice!);
+  }
 
   const sorted = [...items];
-  if (input.sort === "price-asc" || input.sort === "price-desc") {
+  if (input.sort === "newest") {
+    /*
+     * FR-024 asked for a newest ordering and none existed: `newest` fell through
+     * to the default block and returned the same list as no sort at all, while the
+     * select still offered it and the homepage labelled a section «تازه‌ها».
+     * `updated_at` is the only recency signal the export carries.
+     */
+    sorted.sort((a, b) => (b.updated_at ?? "").localeCompare(a.updated_at ?? ""));
+  } else if (input.sort === "special") {
+    // Offers first, then recency within them — see the same gap above.
+    sorted.sort((a, b) => {
+      const offer = Number(Boolean(b.special_offer)) - Number(Boolean(a.special_offer));
+      if (offer !== 0) return offer;
+      return (b.updated_at ?? "").localeCompare(a.updated_at ?? "");
+    });
+  }
+  else if (input.sort === "price-asc" || input.sort === "price-desc") {
     // A price of 0 means "ring the shop", not "free". Sorting it as the cheapest
     // put five call-for-price rows at the head of the cheapest-first list, which
     // reads as a catalogue of free phones. They sort to the end of either
@@ -352,10 +417,94 @@ export function countProductsByKind(): Record<string, number> {
   return counts;
 }
 
+/**
+ * Products genuinely related to one record, with the reason each was picked.
+ *
+ * FR-035 forbids "an arbitrary sample of the catalog presented as a recommendation",
+ * so the predicate is explicit and narrow: **same brand**, then **same main or
+ * secondary category** to fill out, never a recency or popularity feed dressed up as
+ * taste. There is no co-purchase, view or rating data anywhere in the export, which
+ * is why nothing here may say «پرطرفدارترین» or «پیشنهاد ما».
+ *
+ * Ordering inside each tier is not random either: obtainable first, then offers, then
+ * recency — the same rule the default listing uses, so a related rail can never show
+ * more of the shop than the shop itself would.
+ */
+export function relatedProducts(productId: number, limit = 8): Array<{ product: CatalogProduct; reason: "same-brand" | "same-category" }> {
+  const source = raw.products.find((p) => p.id === productId);
+  if (!source) return [];
+
+  const sameBrand = raw.products.filter(
+    (p) => p.id !== productId && source.brand?.id != null && p.brand?.id === source.brand.id,
+  );
+  const sourceCategories = new Set<number>(
+    [source.category?.id, ...(source.other_categories ?? []).map((c) => c.id)].filter((x): x is number => x != null),
+  );
+  const sameCategory = raw.products.filter(
+    (p) =>
+      p.id !== productId &&
+      !sameBrand.includes(p) &&
+      [p.category?.id, ...(p.other_categories ?? []).map((c) => c.id)].some((id) => id != null && sourceCategories.has(id)),
+  );
+
+  const rank = (a: (typeof raw.products)[number], b: (typeof raw.products)[number]) => {
+    const buyable = Number(Boolean(b.stock?.purchasable)) - Number(Boolean(a.stock?.purchasable));
+    if (buyable !== 0) return buyable;
+    const offer = Number(Boolean(b.special_offer)) - Number(Boolean(a.special_offer));
+    if (offer !== 0) return offer;
+    return (b.updated_at ?? "").localeCompare(a.updated_at ?? "");
+  };
+
+  return [
+    ...[...sameBrand].sort(rank).map((p) => ({ product: serializeProduct(p, false), reason: "same-brand" as const })),
+    ...[...sameCategory].sort(rank).map((p) => ({ product: serializeProduct(p, false), reason: "same-category" as const })),
+  ].slice(0, limit);
+}
+
 export function listBrands() {
   return raw.brands
     .filter((b) => (b.product_count ?? 0) > 0)
     .map((b) => ({ id: b.id, name: b.name, slug: slugify(b.name), productCount: b.product_count ?? 0 }));
+}
+
+/** Every category id at or below `id`, following `parent_id` (not `level`, which the export mislabels). */
+export function descendantCategoryIds(id: number): Set<number> {
+  const children = new Map<number, number[]>();
+  for (const c of raw.categories) {
+    if (c.parent_id == null) continue;
+    const list = children.get(c.parent_id) ?? [];
+    list.push(c.id);
+    children.set(c.parent_id, list);
+  }
+  const seen = new Set<number>([id]);
+  const queue = [id];
+  while (queue.length) {
+    for (const child of children.get(queue.shift()!) ?? []) {
+      if (!seen.has(child)) {
+        seen.add(child);
+        queue.push(child);
+      }
+    }
+  }
+  return seen;
+}
+
+/**
+ * Products reachable per category, counting its subtree — the number a doorway
+ * must show, since a shopper pressing «موبایل و تبلت» expects what is under it.
+ */
+export function categorySubtreeCounts(): Map<number, number> {
+  const out = new Map<number, number>();
+  for (const c of raw.categories) {
+    const ids = descendantCategoryIds(c.id);
+    out.set(
+      c.id,
+      raw.products.filter(
+        (p) => (p.category?.id != null && ids.has(p.category.id)) || (p.other_categories ?? []).some((x) => ids.has(x.id)),
+      ).length,
+    );
+  }
+  return out;
 }
 
 export function listCategories() {

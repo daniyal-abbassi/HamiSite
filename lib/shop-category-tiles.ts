@@ -1,27 +1,29 @@
-import { listCategories, queryProducts } from "@/lib/catalog";
+import { categoryDepartments } from "@/lib/category-departments";
 
 /**
- * Which top-level categories deserve a tile on the shop page.
+ * The shop page's category tiles, drawn from the same department list the homepage
+ * carousel uses (`lib/category-departments.ts`).
  *
- * `components/shop/CategoryTiles.tsx` used to take whatever `/api/categories` returned and
- * show the first six roots. Three of those — `موبایل-و-تبلت`, `لوازم-جانبی` and
- * `لوازم-جانبی-لپ-تاپ` — have **no products of their own**, and `queryProducts` matches
- * `categoryId` exactly with no walk down the tree, so pressing one landed on an empty
- * listing. A tile that leads nowhere is worse than one fewer tile.
+ * This file used to pick top-level categories out of the export and offer the stocked
+ * ones. That is where the duplicate door came from: the export holds both
+ * `موبایل و تبلت` — 135 products beneath it — and a `موبایل` leaf holding 8, plus an
+ * `ارسال رایگان ویژه` root that is a promotion rather than a department. T056's merge is
+ * exactly that these stop being three vocabularies describing one catalogue: the kinds
+ * are decided once, the label a shopper reads is written once, and the count beside it is
+ * the count that doorway's own route holds.
  *
- * The categories API carries no product counts and is frozen by Principle III, so the
- * count is resolved here, server-side, from the same catalogue the API reads, and handed
- * down as a short list of slugs.
- *
- * Note what "has products" means: products whose **own** main or secondary category is
- * this root. A parent whose children are stocked but that is never referenced directly
- * still measures zero, and that is correct — it is exactly what the shop's filter does
- * when the tile is pressed.
+ * Which also bounds what a tile may say. `countLabel` is null wherever the route is a
+ * subset of its kind, so a tile can never promise 134 phones over a door that opens on
+ * something else — the rule feature 005 established for its panels, now shared with the
+ * shop page rather than reinvented beside it.
  */
-export function stockedRootCategorySlugs(limit = 6): string[] {
-  return listCategories()
-    .filter((category) => category.parentId === null)
-    .filter((category) => queryProducts({ categoryId: category.id, page: 1, pageSize: 1 }).total > 0)
-    .slice(0, limit)
-    .map((category) => category.slug);
+export type ShopTile = { slug: string; label: string; href: string; countLabel: string | null };
+
+export function shopCategoryTiles(limit = 6): ShopTile[] {
+  return categoryDepartments().slice(0, limit).map((department) => ({
+    slug: department.slug,
+    label: department.label,
+    href: department.href,
+    countLabel: department.showsCount ? `${department.reachableCount.toLocaleString("fa-IR")} محصول` : null,
+  }));
 }

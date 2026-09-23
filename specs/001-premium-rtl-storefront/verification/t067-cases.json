@@ -1,0 +1,110 @@
+{
+ "variant_with_price": {
+  "id": 5,
+  "slug": "گوشی-موبایل-شیائومی-مدل-poco-x7-pro-دو-سیم-کارت-ظرفیت-512-گیگابایت-و-رم-12-گیگابایت-گلوبال",
+  "name": "گوشی موبایل شیائومی مدل Poco X7 Pro دو سیم کارت ",
+  "views": 22,
+  "price": 115000000,
+  "state": "limited",
+  "purch": true
+ },
+ "priced_no_variants": {
+  "id": 246,
+  "slug": "گوشی-موبایل-اپل-استوک-مدل-iphone-16-pro-حافظه-128-گیگ",
+  "name": "گوشی موبایل اپل - استوک - مدل Iphone 16 Pro حافظ",
+  "views": 1,
+  "price": 1500000,
+  "state": "out_of_stock",
+  "purch": false
+ },
+ "call_for_price": {
+  "id": 15,
+  "slug": "گوشی-موبایل-شیائومی-مدل-redmi-note-14-pro-4g-دو-سیم-کارت-ظرفیت-512-گیگابایت-و-رم-12-گیگابایت",
+  "name": "گوشی موبایل شیائومی مدل Redmi Note 14 Pro 4G دو ",
+  "views": 15,
+  "price": 0,
+  "state": "out_of_stock",
+  "purch": false
+ },
+ "limited_not_sellable": {
+  "id": 40,
+  "slug": "گوشی-موبایل-سامسونگ-مدل-galaxy-a36-دو-سیم-کارت-ظرفیت-128-گیگابایت-و-رم-8-گیگابایت-ویتنام",
+  "name": "گوشی موبایل سامسونگ مدل Galaxy A36 دو سیم کارت ظ",
+  "views": 30,
+  "price": 68000000,
+  "state": "limited",
+  "purch": false
+ },
+ "purchasable": {
+  "id": 5,
+  "slug": "گوشی-موبایل-شیائومی-مدل-poco-x7-pro-دو-سیم-کارت-ظرفیت-512-گیگابایت-و-رم-12-گیگابایت-گلوبال",
+  "name": "گوشی موبایل شیائومی مدل Poco X7 Pro دو سیم کارت ",
+  "views": 22,
+  "price": 115000000,
+  "state": "limited",
+  "purch": true
+ },
+ "genuine_discount": {
+  "id": 5,
+  "slug": "گوشی-موبایل-شیائومی-مدل-poco-x7-pro-دو-سیم-کارت-ظرفیت-512-گیگابایت-و-رم-12-گیگابایت-گلوبال",
+  "name": "گوشی موبایل شیائومی مدل Poco X7 Pro دو سیم کارت ",
+  "views": 22,
+  "price": 115000000,
+  "state": "limited",
+  "purch": true
+ },
+ "equal_compare_at": {
+  "id": 40,
+  "slug": "گوشی-موبایل-سامسونگ-مدل-galaxy-a36-دو-سیم-کارت-ظرفیت-128-گیگابایت-و-رم-8-گیگابایت-ویتنام",
+  "name": "گوشی موبایل سامسونگ مدل Galaxy A36 دو سیم کارت ظرفیت 128 گیگ",
+  "note": "variant compare_at == variant price: no strike, no badge"
+ },
+ "no_specs": {
+  "id": 314,
+  "slug": "شارژر-دیواری-20-وات-اپل-مدل-a2344-تایپ-سی",
+  "name": "شارژر دیواری 20 وات اپل مدل (A2344) تایپ سی",
+  "note": "23 records carry no specs"
+ },
+ "has_specs": {
+  "id": 5,
+  "slug": "گوشی-موبایل-شیائومی-مدل-poco-x7-pro-دو-سیم-کارت-ظرفیت-512-گیگابایت-و-رم-12-گیگابایت-گلوبال",
+  "name": "گوشی موبایل شیائومی مدل Poco X7 Pro دو سیم کارت ",
+  "views": 22,
+  "price": 115000000,
+  "state": "limited",
+  "purch": true
+ },
+ "one_view": {
+  "id": 246,
+  "slug": "گوشی-موبایل-اپل-استوک-مدل-iphone-16-pro-حافظه-128-گیگ",
+  "name": "گوشی موبایل اپل - استوک - مدل Iphone 16 Pro حافظه 128 گیگ",
+  "note": "56 records hold a single view"
+ },
+ "many_views": {
+  "id": 5,
+  "slug": "گوشی-موبایل-شیائومی-مدل-poco-x7-pro-دو-سیم-کارت-ظرفیت-512-گیگابایت-و-رم-12-گیگابایت-گلوبال",
+  "name": "گوشی موبایل شیائومی مدل Poco X7 Pro دو سیم کارت ",
+  "views": 22,
+  "price": 115000000,
+  "state": "limited",
+  "purch": true
+ },
+ "no_image": {
+  "id": 347,
+  "slug": "اپل-آیدی",
+  "name": "اپل آیدی",
+  "views": 0,
+  "price": 50000,
+  "state": "out_of_stock",
+  "purch": false
+ },
+ "longest_name": {
+  "id": 138,
+  "slug": "ساعت-هوشمند-تی-سی-اچ-مدل-tch-hd1-3d-hero1-دارای-قابلیت-های-کنترل-موسیقی-music-player-قابلیت-مکالمه-از-طریق-بلوتوث-پشتیبانی-از-زبان-فارسی-در-منو-و-سیستمعامل-قابلیت-تغییر-طرح-ساعت-یا-تم-بند-چرم-مصنوعی",
+  "name": "ساعت هوشمند تی سی اچ مدل TCH HD1 3D Hero1 دارای ",
+  "views": 13,
+  "price": 4200000,
+  "state": "out_of_stock",
+  "purch": false
+ }
+}

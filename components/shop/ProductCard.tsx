@@ -13,7 +13,7 @@ import {
   splitProductName,
 } from "@/lib/product-identity";
 import { storeWarranty } from "@/lib/content/verified-facts";
-import { cn, formatToman } from "@/lib/utils";
+import { cn, formatToman, toFaDigits } from "@/lib/utils";
 
 /**
  * The product card.
@@ -81,6 +81,13 @@ export type ProductCardData = {
   compareAtPrice?: number | null;
   stockType?: string | null;
   images?: unknown;
+  /**
+   * The merchant's own sellability flag. Declared because the card's cart control
+   * now reads it (`isPurchasable`) and an omitted value resolves to "not
+   * purchasable" — a caller that left it out would silently disable every button
+   * rather than fail loudly.
+   */
+  available?: boolean;
 };
 
 const stockLabels: Record<string, string> = {
@@ -199,8 +206,11 @@ export function ProductCard({
               {off != null && (
                 <>
                   <i className="h-3 w-px" style={{ background: "var(--lux-rule)" }} aria-hidden="true" />
+                  {/* FR-011: the number is Persian even inside an LTR run, because
+                      the run exists to keep the minus sign on the left, not to
+                      switch the digits back to Latin. */}
                   <span dir="ltr" className="font-mono text-champagne">
-                    −{off}٪
+                    −{toFaDigits(off)}٪
                   </span>
                 </>
               )}

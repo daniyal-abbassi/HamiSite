@@ -4,12 +4,20 @@ export type ShopCategory = {
   slug: string;
   parentId: number | null;
   children?: ShopCategory[];
+  /**
+   * Products reachable at or below this category, resolved server-side. FR-028 asks
+   * for entry points "with meaningful grouping and counts", and an entry point with
+   * no number next to it is the undifferentiated list the requirement names.
+   */
+  productCount?: number;
 };
 
 export type ShopBrand = {
   id: number;
   name: string;
   slug: string;
+  /** Same reason as on the category. */
+  productCount?: number;
 };
 
 export type ShopProduct = {

@@ -26,7 +26,7 @@
  * did so silently — which is why the guard is the acceptance test rather than a comment.
  */
 
-import { countProductsByKind, listCategories, queryProducts } from "@/lib/catalog";
+import { categorySubtreeCounts, countProductsByKind, listCategories } from "@/lib/catalog";
 
 export type DepartmentKind =
   | "phone"
@@ -53,12 +53,19 @@ export type DepartmentKind =
  * re-derives both from the export, so a panel cannot promise 134 phones and deliver 8 —
  * it just no longer needs anyone to remember to update a number.
  */
-const DEPARTMENT_SEED: ReadonlyArray<{  kind: DepartmentKind;
+const DEPARTMENT_SEED: ReadonlyArray<{ kind: DepartmentKind;
   label: string;
   slug: string;
   badge: string | null;
 }> = [
-  { kind: "phone", label: "گوشی موبایل", slug: "موبایل", badge: "/brand/categories/mobile.svg" },
+  {
+    kind: "phone",
+    label: "گوشی موبایل",
+    // Band 2 merged the vocabularies (T056): the phone department is the root the
+    // export actually files phones under, not the `موبایل` leaf beside it that holds 8.
+    slug: "موبایل-و-تبلت",
+    badge: "/brand/categories/mobile.svg",
+  },
   { kind: "audio", label: "هدفون و ایرپاد", slug: "هدفون-ایرپاد-و-هندزفری", badge: "/brand/categories/audio.svg" },
   { kind: "charger", label: "شارژر و کابل", slug: "آداپتور-کابل-و-شارژر", badge: "/brand/categories/charger.svg" },
   { kind: "smartwatch", label: "ساعت هوشمند", slug: "ساعت-و-مچ-بند-هوشمند", badge: "/brand/categories/smartwatch.svg" },
@@ -86,9 +93,10 @@ export type Department = {
   kindTotal: number;
   /**
    * False wherever the route is a subset of the kind. FR-005: a panel "MUST NOT imply breadth it does not
-   * have", and it must not understate it with a confident small number either. Three routes are short —
-   * phones by 126, chargers and power banks by one each — so none of the three shows a count. Computed
-   * rather than declared so a fourth shortfall cannot silently appear.
+   * have", and it must not understate it with a confident small number either. The routes that are short
+   * show no number at all — the phone department reaches one charger alongside its 134 phones, and
+   * chargers and power banks are each one record short. Computed rather than declared so a fourth
+   * shortfall cannot silently appear.
    */
   showsCount: boolean;
 };
@@ -139,7 +147,13 @@ export function categoryDepartments(): Department[] {
       continue;
     }
 
-    const { total } = queryProducts({ categoryId: category.id, page: 1, pageSize: 1 });
+    /*
+     * The subtree, not the exact category, because `/categories/<slug>` lists the
+     * subtree — this number has to be the one the panel's own destination shows, or
+     * the doorway understates itself, which is the `موبایل`-holds-8 defect T056
+     * merged the vocabularies to remove.
+     */
+    const total = categorySubtreeCounts().get(category.id) ?? 0;
     if (total < 1) {
       console.warn(`categoryDepartments: "${seed.slug}" resolves but holds no products — panel skipped (FR-002 forbids an empty doorway)`);
       continue;
@@ -151,7 +165,7 @@ export function categoryDepartments(): Department[] {
       label: seed.label,
       slug: seed.slug,
       categoryId: category.id,
-      href: `/shop?category=${encodeURIComponent(seed.slug)}`,
+      href: `/categories/${encodeURIComponent(seed.slug)}`,
       badge: seed.badge,
       reachableCount: total,
       kindTotal,

@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, ShoppingBag, Store, UserRound, Handshake } from "lucide-react";
+import { House, ShoppingBag, Store, UserRound, Handshake, Phone } from "lucide-react";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
+import { storeContact } from "@/lib/content/contact";
 import { cn } from "@/lib/utils";
 
 /**
@@ -24,10 +25,15 @@ import { cn } from "@/lib/utils";
  * Mounting it in the layout fixes both, and route state now comes from
  * `usePathname()` rather than a literal.
  *
- * The «تماس» entry was dropped. It pointed at `#contact`, an in-page anchor that
- * resolves to nothing on any route except the home page — a dead tab on four of
- * the five pages it now appears on. Account took the slot, which is also where
- * the header's account control went when search claimed that space.
+ * The «تماس» entry came back, but not as it was. The old tab pointed at
+ * `#contact`, an in-page anchor that resolves to nothing on any route except the
+ * home page — a dead tab on four of the five pages it appeared on. This one is a
+ * `tel:` request, so it works wherever it is rendered, which is what FR-039 asks
+ * for: reach a human in one interaction from any product, including from a grid
+ * of cards, where no single card should carry a phone button.
+ *
+ * Account shares the bar with it, which is also where the header's account
+ * control went when search claimed that space.
  *
  * ## Interface
  *
@@ -44,6 +50,13 @@ type DockItem = {
   badge?: number;
   /** Matches nested routes too — /shop is active on /shop/some-phone. */
   prefix?: boolean;
+  /**
+   * A dial request rather than a route: rendered as a plain anchor, because no
+   * `active` state can apply and the router has nothing to do with it. This is
+   * what makes FR-039's "one interaction from any product" true on a phone
+   * without a call button on every one of 189 cards.
+   */
+  dial?: boolean;
 };
 
 export function MobileDock() {
@@ -56,6 +69,7 @@ export function MobileDock() {
     { href: "/shop", label: "فروشگاه", Icon: Store, prefix: true },
     { href: "/cart", label: "سبد", Icon: ShoppingBag, badge: itemCount },
     { href: "/partners", label: "همکاری", Icon: Handshake, prefix: true },
+    { href: storeContact.phoneHref, label: "تماس", Icon: Phone, dial: true },
     // Signed-out users get the login screen; signed-in users get their orders.
     // `status` is "loading" on first paint, and sending someone to /login by
     // mistake is the more annoying of the two errors, so loading follows the
@@ -78,9 +92,11 @@ export function MobileDock() {
     >
       {items.map((item) => {
         const active = isActive(item);
-        const { Icon, badge } = item;
+        const { Icon, badge, dial } = item;
+        // A dial request is not a route, so it must not go through the router.
+        const Item = dial ? "a" : Link;
         return (
-          <Link
+          <Item
             key={item.label}
             href={item.href}
             aria-current={active ? "page" : undefined}
@@ -103,7 +119,7 @@ export function MobileDock() {
               )}
             </span>
             <span>{item.label}</span>
-          </Link>
+          </Item>
         );
       })}
     </nav>

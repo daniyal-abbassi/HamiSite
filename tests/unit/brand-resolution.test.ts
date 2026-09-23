@@ -104,7 +104,7 @@ describe("homepage brand links resolve against the real catalogue", () => {
 
   it("builds each story href from the slug it stores", () => {
     for (const story of brandStories) {
-      expect(story.href).toBe(`/shop?brand=${encodeURIComponent(story.slug)}`);
+      expect(story.href).toBe(`/brands/${encodeURIComponent(story.slug)}`);
     }
   });
 });
@@ -113,15 +113,35 @@ describe("homepage category links resolve against the real catalogue", () => {
   const categories = listCategories();
   const links: Set<string> = new Set(Object.values(categoryLinks));
 
-  const requestedSlug = (href: string) =>
-    new URL(href, "http://hami.test").searchParams.get("category");
+  /*
+   * T055 moved these destinations from `/shop?category=<slug>` to the dedicated
+   * `/categories/<slug>` route, so the slug is now a path segment. The guard is
+   * unchanged in strength: the href must carry a slug that exists verbatim in the
+   * catalogue and whose products are reachable, which is the assumption that broke
+   * silently when eleven homepage links started returning the whole unfiltered list.
+   */
+  const requestedSlug = (href: string) => {
+    const segment = new URL(href, "http://hami.test").pathname.split("/").pop() ?? "";
+    try {
+      return decodeURIComponent(segment);
+    } catch {
+      return segment;
+    }
+  };
 
   it.each(Object.entries(categoryLinks))("%s points at a category that has products", (_key, href) => {
     const outcome = resolveFilter(categories, requestedSlug(href));
     expect(outcome.status).toBe("resolved");
     if (outcome.status === "resolved") {
-      expect(queryProducts({ categoryId: outcome.item.id, page: 1, pageSize: 1 }).total).toBeGreaterThan(0);
+      // The destination is `/categories/<slug>`, which lists the subtree, so the
+      // subtree is what has to be non-empty — an exact match would re-introduce the
+      // empty door under the parent's own name (T056).
+      expect(queryProducts({ categorySubtreeId: outcome.item.id, page: 1, pageSize: 1 }).total).toBeGreaterThan(0);
     }
+  });
+
+  it("is a dedicated category route, not a shop query string", () => {
+    for (const href of links) expect(href.startsWith("/categories/")).toBe(true);
   });
 
   it("matches a category slug verbatim, not through the name fallback", () => {

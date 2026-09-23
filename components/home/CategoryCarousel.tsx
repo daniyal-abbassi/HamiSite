@@ -258,9 +258,12 @@ export function CategoryCarousel({ departments }: { departments: Department[] })
                 tabIndex={isActive ? 0 : -1}
                 aria-current={isActive ? "true" : undefined}
                 onClick={(event) => {
-                  // Contract A2 / FR-010: a press on the active panel navigates; a press on any other
-                  // brings it to centre instead of taking the shopper somewhere unexpected. Same
-                  // semantics feature 004's brand rows established, per FR-038's interaction contract.
+                  // 005 contract A2 / FR-010: a press on the active panel navigates, a press on any
+                  // other brings it to centre. This deliberately diverges from 004's brand rows,
+                  // which navigate on the first press — 001's T059 asked for that behaviour here too
+                  // and 005's spec forbids it, so the conflict is the owner's to settle, not this
+                  // component's to quietly pick a side of. See
+                  // specs/001-premium-rtl-storefront/notes/band2-decisions.md.
                   if (!isActive) {
                     event.preventDefault();
                     goTo(index);

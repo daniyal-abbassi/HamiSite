@@ -1,10 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Check, Copy, Minus, Phone, Plus, ShoppingBag, Sparkles } from "lucide-react";
+import { Check, Copy, Minus, Phone, Plus, ShoppingBag } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
@@ -13,10 +12,10 @@ import { apiErrorToFa } from "@/lib/api-error-fa";
 import { stockLabels } from "@/lib/content/shop";
 import { storeContact } from "@/lib/content/contact";
 import { storeWarranty } from "@/lib/content/verified-facts";
-import { PLACEHOLDER_ALT, PLACEHOLDER_LABEL, isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
 import { compareAtOf, isPurchasable, unitPriceOf } from "@/lib/product-identity";
 import { cn, formatToman, toFaDigits } from "@/lib/utils";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
+import { ProductGallery } from "@/components/shop/ProductGallery";
 /*
  * The record is typed by the seam itself — `ReturnType<typeof serializeProduct>`.
  * This component used to be typed `apiGet<ProductDetail>` against `types/store.ts`,
@@ -90,6 +89,25 @@ export function ProductDetail({ product }: Props) {
     return product.variants.find((variant) => variant.id === selectedVariantId) ?? null;
   }, [product, selectedVariantId]);
 
+  /*
+   * Variant options, grouped by the key the export actually uses. The selector used
+   * to be hard-wired to «رنگ» and «حافظه»; «حافظه» exists on none of the 311
+   * variants, and product 347's 18 variants use دامنه/سرور/نوع — so FR-033's capacity
+   * choice never appeared and that product offered no selector at all despite
+   * having real options.
+   */
+  const optionGroups = useMemo(() => {
+    const groups = new Map<string, string[]>();
+    for (const variant of product.variants) {
+      for (const option of variant.options ?? []) {
+        const list = groups.get(option.label) ?? [];
+        if (!list.includes(option.value)) list.push(option.value);
+        groups.set(option.label, list);
+      }
+    }
+    return [...groups.entries()].filter(([, values]) => values.length > 1);
+  }, [product]);
+
   const colors = useMemo(
     () => [...new Set(product.variants.map((variant) => variant.color).filter((color): color is string => Boolean(color)))],
     [product],
@@ -103,12 +121,36 @@ export function ProductDetail({ product }: Props) {
   const stockType = selectedVariant?.stockType ?? product.stockType ?? "call";
   const maxQuantity = stockType === "limited" ? (selectedVariant?.stock ?? null) : null;
   /*
+   * The seam emits `variant.price` and a product-level `displayPrice`; 0 means
+   * "no price listed", never free, so both go through helpers that turn it back
+   * into null. A comparison price only exists when it is strictly higher —
+   * 40 of the 311 variants carry one that is not.
+   */
+  const unitPrice = unitPriceOf(selectedVariant?.price, product.displayPrice);
+  const compareAtPrice = compareAtOf(unitPrice, selectedVariant?.compareAtPrice ?? product.compareAtPrice);
+
+  /*
    * The merchant's own `purchasable` field, not the shelf label, and only when the
    * state is one this site can interpret: sixteen records read «موجود محدود» while
    * `purchasable` says they cannot be sold, and FR-056 requires an unknown state to
-   * fall back to contact rather than to a positive claim.
+   * fall back to contact rather than to a positive claim. A live cart control also
+   * needs a number to put in the cart: no record is both obtainable and unpriced
+   * today, but the export refreshes, and an add-to-cart that files a price-less
+   * line is the failure FR-040 says a page must not ship. Such a record gets the
+   * call action instead.
    */
-  const purchasable = isPurchasable({ available: product.available, stockType });
+  /*
+   * A chosen variant under `limited` has its own quantity, and on two records it is
+   * zero while the product's default colour has one (ids 5 and 309). Before this,
+   * picking مشکی on the Poco kept a live «افزودن به سبد» over a price for something
+   * the warehouse says it does not have — the exact control FR-040 forbids. Only
+   * `limited` reads the variant number: under other states a zero is an absence of
+   * tracking, not a claim of emptiness.
+   */
+  const sellableRecord = isPurchasable({ available: product.available, stockType }) && unitPrice !== null;
+  const variantSoldOut =
+    sellableRecord && stockType === "limited" && selectedVariant != null && (selectedVariant.stock ?? 0) <= 0;
+  const purchasable = sellableRecord && !variantSoldOut;
 
   async function handleAddToCart() {
     setAddState("loading");
@@ -143,6 +185,19 @@ export function ProductDetail({ product }: Props) {
     if (next) setSelectedVariantId(next.id);
   }
 
+  /** Select the variant matching every chosen option, falling back to the first that matches this one. */
+  function pickOption(label: string, value: string) {
+    const chosen = new Map(optionGroups.map(([groupLabel]) => [groupLabel, selectedVariant?.options?.find((o) => o.label === groupLabel)?.value]));
+    chosen.set(label, value);
+    const match =
+      product.variants.find((variant) =>
+        [...chosen.entries()].every(([groupLabel, groupValue]) =>
+          groupValue == null || variant.options?.some((o) => o.label === groupLabel && o.value === groupValue),
+        ),
+      ) ?? product.variants.find((variant) => variant.options?.some((o) => o.label === label && o.value === value));
+    if (match) setSelectedVariantId(match.id);
+  }
+
   function Chip({ active, children, onClick, label }: { active: boolean; children: React.ReactNode; onClick: () => void; label: string }) {
     return (
       <button
@@ -163,17 +218,7 @@ export function ProductDetail({ product }: Props) {
   }
 
   const variantTitle = [selectedVariant?.storage, selectedVariant?.color].filter(Boolean).join(" — ");
-  const productImage = resolveProductImage(product);
-  const noImage = isPlaceholderImage(productImage);
 
-  /*
-   * The seam emits `variant.price` and a product-level `displayPrice`; 0 means
-   * "no price listed", never free, so both go through helpers that turn it back
-   * into null. A comparison price only exists when it is strictly higher —
-   * 40 of the 311 variants carry one that is not.
-   */
-  const unitPrice = unitPriceOf(selectedVariant?.price, product.displayPrice);
-  const compareAtPrice = compareAtOf(unitPrice, selectedVariant?.compareAtPrice ?? product.compareAtPrice);
   return (
     /* pb clears the sticky mobile buy bar *and* the dock under it. Without it
        the tags row at the bottom of this page sits behind both. */
@@ -186,7 +231,7 @@ export function ProductDetail({ product }: Props) {
         {product.mainCategory && (
           <>
             <span aria-hidden="true">/</span>
-            <Link href={`/shop?category=${product.mainCategory.slug}`} className="transition-colors hover:text-aqua">
+            <Link href={`/categories/${encodeURIComponent(product.mainCategory.slug)}`} className="transition-colors hover:text-aqua">
               {product.mainCategory.name}
             </Link>
           </>
@@ -196,29 +241,7 @@ export function ProductDetail({ product }: Props) {
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-2">
-        {/* Image */}
-        {/* Image Vitrine */}
-        <div className="relative aspect-square overflow-hidden rounded-3xl glass-smoked border border-champagne/25 shadow-monolith">
-          {noImage && (
-            <span className="absolute end-4 top-4 z-20 rounded-full border border-champagne/25 bg-ink/80 px-3 py-1.5 font-mono text-[11px] text-foreground/75">
-              {PLACEHOLDER_LABEL}
-            </span>
-          )}
-          {product.specialOffer && (
-            <span className="absolute start-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-champagne/30 bg-oxblood/90 px-3.5 py-1.5 font-mono text-xs tracking-[0.14em] text-champagne backdrop-blur-md shadow-glow-oxblood">
-              <Sparkles className="size-3 text-champagne" />
-              SPECIAL OFFER
-            </span>
-          )}
-          <Image
-            src={productImage}
-            alt={isPlaceholderImage(productImage) ? PLACEHOLDER_ALT : product.name}
-            fill
-            sizes="(min-width: 1024px) 40vw, 90vw"
-            className="object-contain p-8 transition-transform duration-700 hover:scale-105"
-            priority
-          />
-        </div>
+        <ProductGallery product={product} />
 
         {/* Buy box */}
         <div>
@@ -259,16 +282,47 @@ export function ProductDetail({ product }: Props) {
                 )}
               </div>
             ) : (
-              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+              /* The audit found this line to be text plus an icon with no number
+                 and no link, which is a claim about a phone call rather than a way
+                 to make one. FR-039 asks for the latter. */
+              <a
+                href={storeContact.phoneHref}
+                className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
+              >
                 <Phone className="size-4 text-aqua" />
                 برای استعلام قیمت تماس بگیرید
-              </div>
+                <b dir="ltr" className="font-mono text-xs font-bold text-champagne">
+                  {storeContact.phoneDisplay}
+                </b>
+              </a>
             )}
 
           </div>
 
           {/* Variant selection */}
-          {(colors.length > 0 || storages.length > 0) && (
+          {optionGroups.length > 0 && (
+            <div className="mt-6 space-y-4">
+              {optionGroups.map(([label, values]) => (
+                <div key={label}>
+                  <p className="mb-2 font-mono text-xs text-muted-foreground/70">{label}</p>
+                  <div className="flex flex-wrap gap-2">
+                    {values.map((value) => (
+                      <Chip
+                        key={`${label}-${value}`}
+                        label={`${label}: ${value}`}
+                        active={selectedVariant?.options?.some((option) => option.label === label && option.value === value) ?? false}
+                        onClick={() => pickOption(label, value)}
+                      >
+                        {value}
+                      </Chip>
+                    ))}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {(colors.length > 0 || storages.length > 0) && optionGroups.length === 0 && (
             <div className="mt-6 space-y-4">
               {storages.length > 0 && (
                 <div>
@@ -369,6 +423,15 @@ export function ProductDetail({ product }: Props) {
             </p>
           )}
 
+          {/* The other half of T066: a choice has to say what it cost. Without this
+              the sold-out colour simply loses its «حداکثر …» line, which a shopper
+              can read as nothing having changed. */}
+          {variantSoldOut && (
+            <p className="mt-2.5 text-xs text-muted-foreground" role="status">
+              این انتخاب در انبار موجود نیست. انتخاب دیگری ببینید یا برای هماهنگی تماس بگیرید.
+            </p>
+          )}
+
           {actionError && (
             <p role="alert" className="mt-3 rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
               {actionError}
@@ -378,7 +441,29 @@ export function ProductDetail({ product }: Props) {
         </div>
       </div>
 
-      {/* Description / analysis / tags */}
+      {/*
+       * Specifications. `product.specs` has carried name/value pairs for 166 of
+       * the 189 records and nothing on this page read them: the block that existed
+       * printed `product.analysis`, a field the seam never emits, so the section
+       * was permanently absent and FR-032 was unmet for the 166 while passing
+       * vacuously for the 23 that have none (FR-005).
+       */}
+      {product.specs.length > 0 && (
+        <section className="mt-12">
+          <h2 className="text-base font-black text-foreground">مشخصات</h2>
+          <div className="brand-hairline my-3.5" />
+          <dl className="grid gap-x-8 gap-y-0 sm:grid-cols-2">
+            {product.specs.map((spec) => (
+              <div key={`${spec.name}-${spec.value}`} className="flex items-baseline justify-between gap-4 border-b border-line/60 py-2.5">
+                <dt className="text-xs text-muted-foreground">{spec.name}</dt>
+                <dd className="text-xs font-bold text-foreground/85">{spec.value}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
+      )}
+
+      {/* Description / tags */}
       <div className="mt-12 grid gap-6 lg:grid-cols-2">
         {product.description && (
           <section className="glass-smoked rounded-2xl p-7 border border-champagne/20 shadow-card">

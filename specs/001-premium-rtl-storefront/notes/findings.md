@@ -136,3 +136,104 @@ true of the tests that grade it.
 **Known-inert after this band, and not papered over**: `serializeProduct` emits no `updatedAt`, so the
 homepage's «تازه‌ها» heading is still not a recency feed and the two featured tabs still resolve to
 identical lists. `lib/home-rails.ts` says so in its own comment. T050 (band 2) owns the comparator.
+
+---
+
+## Band 2 — finishing the shop (2026-09-23)
+
+**Instruments**: `npx vitest run tests/unit` (**192 tests, 19 files, all passing**), `npx tsc --noEmit`
+(clean), `npm run build` (clean) and a **production** boot (`next start -p 3100`) curled route by route,
+plus headless Chromium at 360/390/768/1280/1440 driven against `next dev`. Every number below was read
+off a served page or the export; anything inferred says so. No timing or frame-rate claim appears.
+
+### Principle III still holds in the built output, not just in dev
+
+| Route | product links in the **served HTML** | status |
+|---|---|---|
+| `/` | 24 | 200 |
+| `/shop` | 24 | 200 |
+| `/shop?q=شیائومی` | 24 | 200 |
+| `/categories/موبایل-و-تبلت` | 120 (60 products × 2 anchors) | 200 |
+| `/brands/اپل` | 98 | 200 |
+| `/shop/اپل-آیدی` | 0 — no rail, and the breadcrumb is `/categories/…` now | 200 |
+| `/no-such-page` | — | **404** |
+
+No `NaN` and no standalone «۰ تومان» anywhere in that output. The zero-price grep that first looked like
+a hit was matching `…۰۰۰ تومان` inside real figures; the precise pattern returns nothing, which is
+recorded because the sloppy version of the check would have been reported as a pass by accident.
+
+### Two horizontal-overflow defects found by removing the clip, not by trusting it (T060)
+
+`app/globals.css` sets `overflow-x: hidden` on `body`, so a document-level measurement cannot distinguish
+composition from clipping. Forcing it to `visible` in the browser and re-measuring found two genuine ones,
+both mine from this band:
+
+1. **The gallery's thumbnail strip** was a flex row that never wrapped: 22 thumbs measured **1626px** in a
+   360px viewport, 30 thumbs 2202px, and it broke the same way at 768 and 1440 because the desktop column
+   is narrower than the row. Fixed by wrapping (`ProductGallery.tsx`), not by scrolling.
+2. **The hero's second line** carried `md:whitespace-nowrap`, and at 768px the lead-in plus the widest
+   rotating word is 930px of RTL text inside a 576px box — the document reached **929px against a 768
+   viewport** and only the clip hid it. Moved to `lg:`; the widest line is now measured to fit at
+   360/390/768/1024/1100/1280/1440.
+
+After both fixes, **20 page × width measurements** (`/`, `/shop`, two product pages, a category, a brand,
+`/cart`, `/partners` at 360/768/1440) report `document.scrollWidth == viewport` with the clip disabled.
+Deliberately off-viewport content (005's carousel panels, the brand ticker, `product-rail` children inside
+their own scroller) is excluded by checking each element's ancestor chain for a scroll container, and that
+exclusion is the one place this section asks the reader to trust the instrument rather than the number.
+
+### The availability answer is now two questions, told apart on screen (T051, T067)
+
+`quickstart.md` §2's classes were driven one page each at 360px, reading the buy box rather than the
+document (an unscoped first pass mistook a related-products card's strike for the product's own):
+
+| Record | price | cart control | what else |
+|---|---|---|---|
+| 5 Poco X7 Pro (`limited`, purchasable) | ۱۱۵٬۰۰۰٬۰۰۰ | live, «افزودن به سبد» | «حداکثر ۱ عدد در انبار موجود است.» |
+| 40 Galaxy A36 (`limited`, **not** purchasable) | ۶۸٬۰۰۰٬۰۰۰ | none; «تماس برای اطلاع از موجودی» + copy | no variant notice (correct: no colour of it is sellable) |
+| 15 Redmi Note 14 Pro (no price) | «برای استعلام قیمت تماس بگیرید» **with the number, as a link** | none | sticky bar «تماس بگیرید» |
+| 246 Iphone 16 Pro (single view) | ۱٬۵۰۰٬۰۰۰ | none | no dots, no strip, no counter |
+| 347 اپل آیدی (no image, no brand, no specs) | ۵۰٬۰۰۰ | none | «بدون تصویر محصول», **no related rail** |
+| 138 TCH HD1 (longest name) | ۴٬۲۰۰٬۰۰۰ | none | 24 spec rows, no clipping, page fits at 360 |
+
+Two defects surfaced by that walk and fixed here:
+
+- **A sold-out colour stayed buyable.** Product 5's variants are سبز `stock 1`, مشکی `0`, زرد `0`; picking
+  مشکی changed the price to ۱۰۸٬۳۰۰٬۰۰۰ and left a live add-to-cart over a quantity the export says is
+  zero. Records 5 and 309 are the only two in the catalogue where a purchasable product has a zero-stock
+  variant, and in both the *default* variant is stocked, so this was invisible until something was clicked.
+  The control now yields to the call action with a readable reason (`variantSoldOut`), gated on `limited`
+  so an untracked zero cannot be read as an emptiness claim.
+- **The discount badge printed Latin digits** (`−2٪`) while FR-011 requires Persian. Now `−۲٪`. Measured on
+  the page, not in the source.
+
+### Related products, gallery, options (T063, T064, T065)
+
+The rail renders on 13 of 14 walked records (8 cards each) and disappears entirely on 347 «اپل آیدی», the
+one record whose category holds no sibling — FR-035's predicate in the seam, FR-005's empty frame absent.
+Variant options come from the export's own keys (`رنگ`, and `دامنه`/`سرور`/`نوع` on 347's 18 variants), so
+347 now has a selector where it had none, and the invented «حافظه» lookup is gone. Choosing a colour changes
+the price and the stock line, which is T066's whole requirement, and no longer resets the gallery index
+because no variant in the export carries its own image.
+
+### The category vocabulary is one list now (T056), and it moved a panel's target
+
+`lib/shop-category-tiles.ts` no longer scans roots: the shop page's tiles, the sidebar facet and 005's
+carousel are all `categoryDepartments()`. Consequences measured against the export:
+
+- the phone department is `موبایل و تبلت` (**135** reachable) rather than the `موبایل` leaf (**8**) that
+  sat beside it on the shop page as a second phone door;
+- `ارسال رایگان ویژه`, a promotion, is no longer offered as a category;
+- the facet is subtree too, because its own label counts the subtree — an exact filter under a «۱۳۵» label
+  returns nothing (see `notes/band2-decisions.md` §3 for the reversal and `contracts/shop-url.md` for the
+  rule);
+- two departments now *exceed* their kind rather than falling short — `موبایل و تبلت` holds one charger
+  (id 311, filed under «داریا باند») and `آداپتور | کابل و شارژر` holds the three car chargers beneath it.
+  Both print no count, and `KNOWN_SURPLUS_KINDS` makes a third one a failing test.
+
+### SC-002 (T061)
+
+Task A «a Xiaomi phone»: **3 interactions** by the department door, **2** by search — met.
+Task B «the cheapest power bank that is actually available»: **4** from the homepage, **3** from `/shop`,
+against a criterion of three — **not met**, and the arithmetic of why is in `notes/discovery.md` with the
+three ways to close it, ranked. Before this band the task was not drivable at all.

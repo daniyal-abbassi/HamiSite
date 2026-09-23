@@ -46,16 +46,16 @@ export const mobileQuickRoutes = [
  * guard in tests/unit/brand-resolution.test.ts fails the build if that stops being true.
  */
 export const categoryLinks = {
-  mobile: `/shop?category=${encodeURIComponent("موبایل")}`,
-  audio: `/shop?category=${encodeURIComponent("هدفون-ایرپاد-و-هندزفری")}`,
-  charging: `/shop?category=${encodeURIComponent("آداپتور-کابل-و-شارژر")}`,
-  power: `/shop?category=${encodeURIComponent("پاور-بانک")}`,
-  watch: `/shop?category=${encodeURIComponent("ساعت-و-مچ-بند-هوشمند")}`,
-  services: `/shop?category=${encodeURIComponent("خدمات-آنلاین")}`,
+  mobile: `/categories/${encodeURIComponent("موبایل-و-تبلت")}`,
+  audio: `/categories/${encodeURIComponent("هدفون-ایرپاد-و-هندزفری")}`,
+  charging: `/categories/${encodeURIComponent("آداپتور-کابل-و-شارژر")}`,
+  power: `/categories/${encodeURIComponent("پاور-بانک")}`,
+  watch: `/categories/${encodeURIComponent("ساعت-و-مچ-بند-هوشمند")}`,
+  services: `/categories/${encodeURIComponent("خدمات-آنلاین")}`,
 } as const;
 
 export const categoryMosaic = [
-  { key: "mobile", number: "۰۱", title: "موبایل", eyebrow: "MOBILE / CORE", detail: "Samsung · TCH", href: categoryLinks.mobile, icon: "smartphone", layout: "mobile" },
+  { key: "mobile", number: "۰۱", title: "موبایل", eyebrow: "MOBILE / CORE", detail: "Apple · Samsung · Xiaomi · TCH", href: categoryLinks.mobile, icon: "smartphone", layout: "mobile" },
   { key: "audio", number: "۰۲", title: "ایرپاد و هدفون", eyebrow: "AUDIO / PERSONAL", detail: "AirPods · Headphones", href: categoryLinks.audio, icon: "headphones", layout: "audio" },
   { key: "charging", number: "۰۳", title: "شارژر و آداپتور", eyebrow: "POWER / ESSENTIAL", detail: "Adapters · Cables", href: categoryLinks.charging, icon: "plug", layout: "charging" },
   { key: "power", number: "۰۴", title: "پاوربانک", eyebrow: "POWER / READY", detail: "همیشه آماده", href: categoryLinks.power, icon: "battery", layout: "power" },
@@ -70,7 +70,7 @@ export const brandStories = [
     slug: "اپل",
     title: "مینیمال، دقیق، بی‌حاشیه.",
     text: "روایتی آرام از متریال و طراحی خالص.",
-    href: `/shop?brand=${encodeURIComponent("اپل")}`,
+    href: `/brands/${encodeURIComponent("اپل")}`,
   },
   {
     key: "samsung",
@@ -78,7 +78,7 @@ export const brandStories = [
     slug: "سامسونگ",
     title: "قدرتی که با جزئیات دیده می‌شود.",
     text: "قابلیت، حضور بصری و انتخابی گسترده‌تر.",
-    href: `/shop?brand=${encodeURIComponent("سامسونگ")}`,
+    href: `/brands/${encodeURIComponent("سامسونگ")}`,
   },
   {
     key: "xiaomi",
@@ -86,7 +86,7 @@ export const brandStories = [
     slug: "شیائومی",
     title: "فناوری پویا، با انتخابی روشن.",
     text: "نگاه معاصر، کارایی دقیق، ریتمی فعال‌تر.",
-    href: `/shop?brand=${encodeURIComponent("شیائومی")}`,
+    href: `/brands/${encodeURIComponent("شیائومی")}`,
   },
 ] as const;
 
@@ -162,7 +162,12 @@ export const brandWall: ReadonlyArray<{ name: string; slug: string; story?: Bran
 ];
 
 /** The single way a brand destination is built, so no link is ever hand-spelled again. */
-export const brandHref = (slug: string) => `/shop?brand=${encodeURIComponent(slug)}`;
+/**
+ * A brand's dedicated destination (FR-029). Used to be a `/shop?brand=` filter link,
+ * which is why a brand had no place to say what it contains — and why three
+ * category vocabularies could each claim to be the phones.
+ */
+export const brandHref = (slug: string) => `/brands/${encodeURIComponent(slug)}`;
 
 /** Display name → catalogue slug. Rows and wall draw from here, never from a literal. */
 export const brandSlugByName: Readonly<Record<string, string>> = Object.fromEntries(

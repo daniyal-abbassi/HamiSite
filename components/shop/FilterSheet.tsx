@@ -4,7 +4,8 @@ import { useEffect, useRef, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { SlidersHorizontal, X } from "lucide-react";
 import { FilterSidebar } from "@/components/shop/FilterSidebar";
-import type { ShopBrand, ShopCategory } from "./types";
+import type { ShopBrand } from "./types";
+import type { CategoryFacet } from "@/lib/shop-query";
 
 /** The query keys FilterSidebar writes. Kept in step with FILTER_KEYS there. */
 const FILTER_KEYS = ["q", "category", "brand", "min", "max", "stock", "special"] as const;
@@ -43,10 +44,10 @@ const FILTER_KEYS = ["q", "category", "brand", "min", "max", "stock", "special"]
  * the overlay and leaves the user somewhere else when they close it.
  */
 export function FilterSheet({
-  categories,
+  categoryFacets,
   brands,
 }: {
-  categories: ShopCategory[];
+  categoryFacets: CategoryFacet[];
   brands: ShopBrand[];
 }) {
   const [open, setOpen] = useState(false);
@@ -81,7 +82,7 @@ export function FilterSheet({
     <>
       {/* Desktop: unchanged — the sidebar sits in the row as before. */}
       <div className="hidden lg:block lg:w-72 lg:shrink-0">
-        <FilterSidebar categories={categories} brands={brands} />
+        <FilterSidebar categoryFacets={categoryFacets} brands={brands} />
       </div>
 
       {/* Mobile trigger. Sticky so it stays reachable however far the shopper
@@ -141,7 +142,7 @@ export function FilterSheet({
 
             {/* The panel scrolls, not the page behind it. */}
             <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain p-4">
-              <FilterSidebar categories={categories} brands={brands} />
+              <FilterSidebar categoryFacets={categoryFacets} brands={brands} />
             </div>
 
             <div className="shrink-0 border-t border-line p-4 pb-[calc(1rem+env(safe-area-inset-bottom))]">

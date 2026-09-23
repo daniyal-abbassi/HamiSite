@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ChevronLeft, ChevronRight, LayoutGrid, List, PackageSearch } from "lucide-react";
+import { ChevronLeft, ChevronRight, LayoutGrid, List, PackageSearch, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn, toFaDigits } from "@/lib/utils";
 import { sortOptions } from "@/lib/content/shop";
@@ -20,6 +20,14 @@ type ShopResultsProps = {
   error?: boolean;
   activeSort: string;
   /**
+   * Filters currently applied, already labelled. FR-026 requires them "visible as
+   * removable controls" — and below `lg` the filter panel is a closed sheet, so
+   * without this row a phone shopper can neither see nor lift what is narrowing
+   * their results. `audits/02` measured zero elements outside `<aside>` carrying
+   * the active label at 360px.
+   */
+  activeFilters?: { key: string; label: string }[];
+  /**
    * A brand or category slug that matched nothing in the catalogue. Distinct from an
    * empty result set on purpose: "we don't carry that" and "nothing matches your
    * filters" are different facts, and conflating them is how a broken link survives.
@@ -35,7 +43,14 @@ function pageWindow(page: number, totalPages: number): number[] {
   return Array.from({ length: end - start + 1 }, (_, index) => start + index);
 }
 
-export function ShopResults({ products, meta, error = false, activeSort, unknownFilter = null }: ShopResultsProps) {
+export function ShopResults({
+  products,
+  meta,
+  error = false,
+  activeSort,
+  unknownFilter = null,
+  activeFilters = [],
+}: ShopResultsProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -61,8 +76,44 @@ export function ShopResults({ products, meta, error = false, activeSort, unknown
     router.push(queryString ? `${pathname}?${queryString}` : pathname);
   }
 
+  function removeFilter(key: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete(key);
+    params.delete("page");
+    const queryString = params.toString();
+    router.push(queryString ? `${pathname}?${queryString}` : pathname);
+  }
+
+  function clearAllFilters() {
+    router.push(pathname);
+  }
+
   return (
     <div className="min-w-0 flex-1">
+      {activeFilters.length > 0 && (
+        <div className="mb-3 flex flex-wrap items-center gap-2" role="group" aria-label="فیلترهای فعال">
+          {activeFilters.map((filter) => (
+            <button
+              key={`${filter.key}-${filter.label}`}
+              type="button"
+              onClick={() => removeFilter(filter.key)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-champagne/30 bg-champagne/10 px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-champagne/60"
+            >
+              {filter.label}
+              <X className="size-3.5" aria-hidden="true" />
+              <span className="sr-only">حذف فیلتر {filter.label}</span>
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={clearAllFilters}
+            className="text-xs font-bold text-aqua underline-offset-4 hover:underline"
+          >
+            حذف همه فیلترها
+          </button>
+        </div>
+      )}
+
       {/* Toolbar */}
       <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl glass px-4 py-3">
         <p className="text-xs text-foreground/60" aria-live="polite">
