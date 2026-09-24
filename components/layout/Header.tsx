@@ -133,10 +133,18 @@ export function Header() {
             pushes it to the end, which is the desktop layout unchanged. */}
         <div className="ms-auto flex min-w-0 flex-1 items-center gap-2 md:flex-none">
           <form action="/shop" role="search" aria-label="جست‌وجوی محصول" className="min-w-0 flex-1 md:flex-none">
+            {/*
+             * T086: the visible hint is shorter than the field's name on purpose.
+             * Measured at 360px the search box is 104px wide with 24px of padding,
+             * so it has ~78px of text area, and «جست‌وجوی محصول…» renders 109px in
+             * the page's own 12px face — it was being cut mid-word on every phone.
+             * No padding change closes a 31px gap, so the hint gives way and the
+             * accessible name does not: `aria-label` still says the whole phrase.
+             */}
             <Input
               type="search"
               name="q"
-              placeholder="جست‌وجوی محصول…"
+              placeholder="جست‌وجو…"
               aria-label="جست‌وجوی محصول"
               className="h-11 w-full rounded-full border border-champagne/20 bg-ink/60 px-4 text-xs transition-colors placeholder:text-muted-foreground/60 focus:border-champagne/50 md:h-9 md:w-52"
             />
@@ -159,30 +167,42 @@ export function Header() {
            * dock carries the dial request; this is its desktop equivalent, because
            * the only other route to a number on this site is the footer, which on
            * a product page is twenty screens of scrolling below the buy box.
-           * Compact at md (icon only) so it does not repeat the squeeze that made
-           * «شروع همکاری» hide below md; the digits return at lg.
+           *
+           * T086: this opened at `md`, and measured at 768px the control sat at
+           * x=-8..34 — eight of its 42px past the left edge, clipped by the
+           * `overflow-x` on the wrapper, so it was invisible to a pointer and still
+           * reachable by Tab. It starts at `lg`, where it measures 146..290 and is
+           * wholly on canvas. Compact at lg (icon only); the digits return at xl.
            */}
           <a
             href={storeContact.phoneHref}
             aria-label={`تماس با فروشگاه ${storeContact.phoneDisplay}`}
-            className="hidden h-11 shrink-0 items-center gap-2 rounded-full border border-champagne/25 bg-ink/60 px-3 text-xs font-bold text-foreground/80 transition-colors hover:border-champagne/50 hover:text-foreground md:inline-flex lg:h-9"
+            className="hidden h-11 shrink-0 items-center gap-2 rounded-full border border-champagne/25 bg-ink/60 px-3 text-xs font-bold text-foreground/80 transition-colors hover:border-champagne/50 hover:text-foreground lg:inline-flex xl:h-9"
           >
             <Phone className="size-4 text-champagne" aria-hidden="true" />
-            <b dir="ltr" className="hidden font-mono lg:inline">
+            <b dir="ltr" className="hidden font-mono xl:inline">
               {storeContact.phoneDisplay}
             </b>
           </a>
 
           {/*
-           * Hidden below md. At 360px this CTA took ~174 of 336px and squeezed the
+           * Hidden below xl. At 360px this CTA took ~174 of 336px and squeezed the
            * search field into a ~58px empty pill, and «شروع همکاری» already appears
-           * twice in the first screen because the hero repeats it (audits/05). The
-           * footer and the dock both reach /partners, so nothing is lost on phone —
-           * FR-041 asked for composition rather than clipping, and this is that.
+           * twice in the first screen because the hero repeats it (audits/05).
+           *
+           * T086 moved the cut from `md` to `xl` because hiding it at 360 did not
+           * fix the row, it moved the failure: at 768px this link measured
+           * -194..-16 and at 1024px -40..138 — the primary B2B call-to-action was
+           * entirely off-canvas at the first breakpoint where the class said to
+           * show it, and partly off at the second. `hidden` is honest about that
+           * (no focus stop on an invisible control); being clipped is not.
+           * The footer's «همکاری عمده (B2B)» and the dock both reach /partners on
+           * every width, so FR-042's same-destinations rule still holds — FR-041
+           * asked for composition rather than clipping, and this is that.
            */}
           <Link
             href="/partners"
-            className="cta-quiet hidden h-12 items-center gap-2 px-8 text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-95 md:inline-flex"
+            className="cta-quiet hidden h-12 items-center gap-2 px-8 text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-95 xl:inline-flex"
           >
             شروع همکاری
             <ArrowLeft className="size-4" />
