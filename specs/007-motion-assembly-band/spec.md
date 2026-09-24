@@ -169,9 +169,10 @@ activates every time. Confirm its rendered digits are Persian-formatted and its 
 
 ### Functional Requirements
 
-- **FR-001**: The three named sections MUST present their headings with the arrival treatment — a lift into
-  place while resolving from soft to sharp — as a single, once-per-visit event tied to the heading entering
-  the viewport.
+- **FR-001**: The band MUST present its headings with the arrival treatment — a lift into place while
+  resolving from soft to sharp — firing **once per page load**, tied to the heading entering the viewport.
+  *(Owner ruling, 2026-09-24, replacing this requirement's earlier "once per visit". A shopper who scrolls
+  back through the band sees it settled; the promise is simpler to keep and the replay was never the point.)*
 - **FR-002**: The unit of the arrival treatment MUST be the **word or the line, never the letter**. Persian
   letters change shape according to which neighbours they join; separating them for animation is not a style
   choice but a rendering defect. *(Verified in this checkout on 2026-09-24: the same heading set to one
@@ -250,6 +251,16 @@ activates every time. Confirm its rendered digits are Persian-formatted and its 
 - **FR-018 — the phone number never moves.** Resolved **A**. FR-007 stands exactly as written: positional
   fixity, not merely reachability. It is the shop's most valuable action and it is exempt from the
   choreography.
+
+### Rulings made at the plan gate *(owner, 2026-09-24 — recorded here so the spec and the build agree)*
+
+- **Static locked composition is the accepted fallback on engines that cannot scrub.** No JavaScript-driven
+  scrub substitute; the content simply presents in its final arrangement.
+- **The «فروشگاه حضوری» self-link is retired.** It pointed at the section containing it — the same defect
+  class T091 removed elsewhere on this page.
+- **The two «مشاهده محصولات» links merge into the one immovable action.** One fewer repeated claim on the
+  page, and the merged action inherits FR-007's positional fixity.
+- **The heading arrival is once per page load** (folded into FR-001 above).
 
 ## Success Criteria *(mandatory)*
 
