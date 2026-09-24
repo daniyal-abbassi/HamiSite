@@ -1,32 +1,38 @@
 import Link from "next/link";
-import { ArrowLeft, BadgeCheck } from "lucide-react";
+import { BadgeCheck } from "lucide-react";
 import { Reveal } from "@/components/home/Reveal";
 import { storeWarranty } from "@/lib/content/verified-facts";
 import { buttonVariants } from "@/components/ui/button";
-import { WhyHamiProofs } from "@/components/home/WhyHami";
 import { TrustGlyph } from "@/components/home/primitives";
-import { toFaDigits } from "@/lib/utils";
-import {
-  customerContentNote,
-  customerJourney,
-  customerTrustSignals,
-  trustFeatures,
-  whyHamiQuote,
-} from "@/lib/content/home";
+import { trustFeatures } from "@/lib/content/home";
 
 /**
- * One trust section, replacing three.
+ * The trust section, cut down to the four things the business can name.
  *
- * The page previously ran TrustBar → WhyHami → CustomerTrust as three separate
- * full sections, each opening with its own heading that argued the same point.
- * Saying "trust us" three times reads weaker than saying it once, so their
- * content is merged here into a single asymmetric bento: one tall anchor card,
- * one wide card, two small ones — then the proof grid that carried the actual
- * evidence.
+ * This used to be **3,603px at 360 — 22% of the whole homepage** — three merged sections arguing one point
+ * in four voices. What was in it:
  *
- * Nothing was dropped: the four trust features, the quote, the customer
- * journey, the pending-content note, the trust signals and the shop CTA all
- * still render.
+ *  - a `<blockquote>` holding `whyHamiQuote`, which is the shop's own slogan. A quote with no speaker is a
+ *    testimonial shape, under a heading that reads «اعتماد، با واقعیت ساخته می‌شود» — trust is built with
+ *    reality. The shape was claiming a customer voice the shop does not have.
+ *  - `customerContentNote`, telling shoppers in prose that customer content "will be published after
+ *    permission and source verification". An internal to-do rendered as UI — and the second place on this
+ *    page where the site apologised for something it lacks (see `WhyHami`'s deleted «تصویر واقعی فروشگاه در
+ *    انتظار افزودن»).
+ *  - `WhyHamiProofs`: four cards of typographic composition standing in for photography, laid out in mono
+ *    as "CURATED PRODUCTS / SELECTED WITH CARE", "MULTI / BRAND", "PARTNER ROUTE". Not a false claim about
+ *    the business, but a section named *proofs* whose evidence is decorative text, and it took most of the
+ *    section's height.
+ *  - `customerJourney` (انتخاب → مشاوره → خرید → همراهی) and `customerTrustSignals`: five chips linking to
+ *    `#store-experience`, `#b2b`, `#brands`, `#featured` — a table of contents placed *after* the chapters it
+ *    points at, on a page the shopper has already scrolled end to end.
+ *
+ * Kept: the four capabilities — in-person, wholesale, range, the 18-month company warranty — the warranty
+ * itself, and one way into the shop. `id="trust"` stays because `lib/atmosphere/progression.ts` anchors a
+ * ground stage to it and a drift guard compares the section order against the rendered page.
+ *
+ * FR-008 is the rule doing the work: a place with nothing true to say stays empty. This section has four
+ * true things to say, so now it is four things long.
  */
 export function TrustBento() {
   return (
@@ -39,99 +45,41 @@ export function TrustBento() {
               اعتماد، با <span className="emphasis">واقعیت</span> ساخته می‌شود.
             </h2>
             <p className="mt-4 text-sm leading-8 text-foreground/60">
-              تجربه‌ای که از انتخاب محصول شروع می‌شود و به خرید مطمئن و همکاری بلندمدت می‌رسد.
+              چهار چیزی که درباره حامی همراه دقیق است؛ بقیه را در فروشگاه بپرسید.
             </p>
           </div>
         </Reveal>
 
-        {/* Asymmetric bento in luxury smoked glass */}
-        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
-          <Reveal className="lg:col-span-2 lg:row-span-2">
-            <article className="glass-smoked group relative flex h-full flex-col justify-between overflow-hidden rounded-2xl p-8 transition-all duration-300 hover:border-champagne/40">
-              <div>
-                <blockquote className="m-0">
-                  <p className="m-0 text-xl font-black leading-9 text-foreground/90 md:text-2xl md:leading-10">
-                    {whyHamiQuote}
-                  </p>
-                </blockquote>
-                <ul className="mt-8 grid list-none gap-5 p-0 sm:grid-cols-2" role="list">
-                  {trustFeatures.map((feature) => (
-                    <li key={feature.key} className="flex items-start gap-3">
-                      <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-champagne/35 text-champagne bg-champagne/5">
-                        <TrustGlyph name={feature.key} />
-                      </span>
-                      <div>
-                        <h3 className="m-0 text-base font-black">{feature.title}</h3>
-                        <p className="mt-1 text-xs leading-6 text-foreground/65">{feature.description}</p>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </article>
-          </Reveal>
-
-          <Reveal delay={80} className="lg:col-span-2">
-            <article className="glass-smoked h-full rounded-2xl p-8 transition-all duration-300 hover:border-champagne/40">
-              <span className="font-mono text-xs tracking-[0.14em] text-champagne">CUSTOMER JOURNEY</span>
-              <h3 className="mt-3 text-base font-black">ارتباط بعد از خرید تمام نمی‌شود.</h3>
-              <ol className="m-0 mt-5 list-none space-y-3 p-0">
-                {customerJourney.map((step, index) => (
-                  <li key={step} className="flex items-center gap-3 text-xs">
-                    <b className="font-mono font-bold text-champagne">{toFaDigits(String(index + 1).padStart(2, "0"))}</b>
-                    <i className="h-px flex-1 bg-champagne/15" aria-hidden="true" />
-                    <span className="font-medium text-foreground/80">{step}</span>
-                  </li>
-                ))}
-              </ol>
-            </article>
-          </Reveal>
-
-          <Reveal delay={140}>
-            <article className="glass-smoked h-full rounded-2xl p-6 transition-all duration-300 hover:border-champagne/40">
-              <span className="font-mono text-xs tracking-[0.14em] text-champagne">VERIFIED TRUST</span>
-              <BadgeCheck className="mt-4 size-7 text-champagne" strokeWidth={1.5} aria-hidden="true" />
-              <h3 className="mt-3 text-base font-black">رضایت و اعتماد ماندگار</h3>
-              <p className="mt-2 text-xs leading-6 text-foreground/65">
-                بیش از بیست سال سابقه در بازار موبایل مشهد، و {storeWarranty.label} روی کالاهای فروشگاه.
-              </p>
-            </article>
-          </Reveal>
-
-          <Reveal delay={200}>
-            <article className="glass-smoked flex h-full flex-col justify-between rounded-2xl p-6 transition-all duration-300 hover:border-champagne/40">
-              <div>
-                <span className="font-mono text-xs tracking-[0.14em] text-champagne">TRUST SIGNALS</span>
-                <div className="mt-4 flex flex-wrap gap-x-3 gap-y-2">
-                  {customerTrustSignals.map((signal) => (
-                    <Link
-                      key={signal.label}
-                      href={signal.href}
-                      className="flex items-center gap-1.5 text-xs text-foreground/70 hover:text-champagne transition-colors"
-                    >
-                      <BadgeCheck className="size-3.5 text-champagne" aria-hidden="true" />
-                      {signal.label}
-                    </Link>
-                  ))}
+        <Reveal delay={80}>
+          <ul className="mx-auto mt-10 grid max-w-3xl list-none gap-x-6 gap-y-7 p-0 sm:grid-cols-2" role="list">
+            {trustFeatures.map((feature) => (
+              <li key={feature.key} className="flex items-start gap-3.5">
+                <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-champagne/35 bg-champagne/5 text-champagne">
+                  <TrustGlyph name={feature.key} />
+                </span>
+                <div>
+                  <h3 className="m-0 text-base font-black">{feature.title}</h3>
+                  <p className="mt-1 text-[13px] leading-7 text-foreground/65">{feature.description}</p>
                 </div>
-              </div>
-              {/* The champagne fill is the money CTA — buying starts here —
-                  so it maps to the Button system's default variant instead of
-                  a one-off hand-rolled pill. */}
-              <Link
-                href="/shop"
-                className={buttonVariants({ variant: "default", className: "mt-6" })}
-              >
-                شروع خرید <ArrowLeft className="size-4" />
-              </Link>
-            </article>
-          </Reveal>
-        </div>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
 
-        {/* The evidence cards that survived the merge. */}
-        <div className="container">
-          <WhyHamiProofs />
-        </div>
+        <Reveal delay={140}>
+          <div className="mx-auto mt-10 flex max-w-3xl flex-col items-start gap-4 border-t border-line pt-7 sm:flex-row sm:items-center sm:justify-between">
+            <p className="m-0 flex items-center gap-2 text-sm text-foreground/75">
+              <BadgeCheck className="size-4 shrink-0 text-champagne" aria-hidden="true" />
+              {storeWarranty.label}
+            </p>
+            {/* The champagne fill is the money CTA, so it goes through the Button system rather than a
+                hand-rolled pill. Its label is the same string the hero's primary action uses — one verb
+                for one destination. */}
+            <Link href="/shop" className={buttonVariants({ variant: "default" })}>
+              مشاهده محصولات
+            </Link>
+          </div>
+        </Reveal>
       </div>
     </section>
   );

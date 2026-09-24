@@ -212,54 +212,6 @@ export const onlineServiceFaqs = [
   { question: "برای دریافت خدمت چه اطلاعاتی لازم است؟", answer: "پیش از شروع، اطلاعات لازم متناسب با درخواست شما روشن و با شما هماهنگ می‌شود." },
   { question: "خدمت چگونه پیگیری می‌شود؟", answer: "مسیر انجام خدمت و روش پیگیری، پیش از آغاز درخواست به‌صورت شفاف مشخص می‌شود." },
 ] as const;
-
-export const whyHamiProofs = [
-  {
-    key: "store",
-    eyebrow: "PHYSICAL STORE",
-    title: "حضوری هم کنار شما هستیم.",
-    description: "برای دیدن محصولات و دریافت راهنمایی، مسیر حضوری نیز در کنار تجربه آنلاین در دسترس است.",
-    media: "store-photo-pending",
-    mediaNote: "",
-    href: "#store-experience",
-    cta: "اطلاعات فروشگاه",
-  },
-  {
-    key: "assurance",
-    eyebrow: "CURATED CHOICE",
-    title: "انتخاب با اطمینان.",
-    description: "تمرکز ما روی ارائه محصول معتبر و تجربه خریدی است که جزئیات آن روشن باشد.",
-    media: "product-composition",
-    mediaNote: "محصولات منتخب، با نگاه دقیق‌تر.",
-    href: "#featured",
-    cta: "مشاهده محصولات",
-  },
-  {
-    key: "brands",
-    eyebrow: "MULTI-BRAND",
-    title: "انتخاب محدود نیست.",
-    description: "برندهای مختلف، در یک مقصد و در کنار نیازهای متفاوت شما قرار می‌گیرند.",
-    media: "brand-composition",
-    mediaNote: "چندبرندی، در یک تجربه منسجم.",
-    href: "#brands",
-    cta: "برندها را ببینید",
-  },
-  {
-    key: "b2b",
-    eyebrow: "FOR BUSINESS",
-    title: "برای همکاران، فراتر از فروش.",
-    description: "مسیر همکاری برای قیمت همکاری، تنوع محصول و ثبت سفارش کسب‌وکارها طراحی شده است.",
-    media: "b2b-route",
-    mediaNote: "یک مسیر روشن برای همکاری حرفه‌ای.",
-    href: "#b2b",
-    cta: "بخش همکاری",
-  },
-] as const;
-
-export const whyHamiQuote = "اعتماد، چیزی نیست که نوشته شود؛ تجربه‌ای است که ساخته می‌شود.";
-
-export const whyHamiTrustStrip = ["فروش حضوری", "فروش آنلاین", "پخش عمده", "خدمات دیجیتال", "چندبرندی"] as const;
-
 export const storeExperiencePoints = [
   { index: "۰۱", title: "مشاهده و انتخاب", description: "محصول را ببینید، مقایسه کنید و انتخاب کنید." },
   { index: "۰۲", title: "مشاوره تخصصی", description: "پیش از خرید، انتخاب مناسب خودتان را پیدا کنید." },
@@ -272,22 +224,6 @@ export const storeExperienceSlots = [
 ] as const;
 
 export const storeExperienceStatement = "از صفحه نمایش تا فروشگاه، همراه شما هستیم.";
-
-export const customerContentNote = {
-  message: "محتوای تجربه مشتریان پس از دریافت اجازه و تأیید منبع منتشر می‌شود.",
-  helper: "برای نمایش نظر، عکس یا محتوای اجتماعی، منبع و رضایت صاحب محتوا لازم است.",
-} as const;
-
-export const customerJourney = ["انتخاب", "مشاوره", "خرید", "همراهی"] as const;
-
-export const customerTrustSignals = [
-  { label: "فروش حضوری", href: "#store-experience" },
-  { label: "فروش آنلاین", href: "/shop" },
-  { label: "پشتیبانی", href: "#store-experience" },
-  { label: "همکاری عمده", href: "#b2b" },
-  { label: "تنوع برند", href: "#brands" },
-] as const;
-
 export const finalConversionCopy = {
   eyebrow: "HAMI HAMRAH / FINAL NOTE",
   titleLead: "همراه شما",

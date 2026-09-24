@@ -448,3 +448,49 @@ Still open in T083: the `pathname === "/"` gate at `components/atmosphere/PageGr
 interior arc before it can be removed — the tour's six stages are anchored to homepage sections, and
 `stageBoundaries()` would otherwise spread them evenly across a 4,547px listing page, which is a different
 journey.
+
+### T089 — the back half of the page, measured before anything was cut
+
+Every homepage section at 360×800, from the rendered DOM (height, visible text, images, distinct link
+targets):
+
+| section | height | words | img | links out |
+|---|---|---|---|---|
+| top | 1,307 | 118 | 1 | `/shop`, `/partners` |
+| obtainable-now | 780 | 111 | 10 | 5 real products |
+| featured | 878 | 97 | 12 | 6 real products |
+| categories | 769 | 56 | 9 | 9 categories |
+| brands | 1,124 | 57 | 0 | 6 brands |
+| new-arrivals | 800 | 107 | 12 | 6 real products |
+| b2b | 1,395 | 89 | 0 | `/partners` |
+| accessories | 962 | 36 | 0 | 4 categories + `/shop` |
+| online-services | 977 | 63 | 0 | 1 category |
+| store-experience | 1,685 | 141 | 0 | a `tel:` link |
+| trust | **3,603** | 260 | 0 | four same-page anchors |
+| final-conversion | 452 | 29 | 0 | 3 links |
+
+The bottom six carried **645 words in 8,074px — 50% of the page — with zero images**. That is the shape of
+the problem T089 was written against, and it is a different problem from "eight sections are filler": four of
+those six are doing something real (the phone number, the B2B route, the closer) and are simply too tall for
+what they say.
+
+**`trust` was cut first, and it was the worst by a distance: 3,603px, 22% of the page, for a slogan, a
+four-step journey, five links to chapters the shopper had already passed, an apology for missing customer
+content, and four "proof" cards whose imagery was mono type laid out to read "CURATED PRODUCTS / SELECTED
+WITH CARE".** The last one is the reason the section existed at that size — `WhyHamiProofs` rendered
+decorative compositions as evidence, under a heading claiming trust is built with reality. The blockquote was
+also the sharpest honesty problem: a quote with no speaker is a testimonial shape, and the shop has no
+customer quotes; `customerContentNote` then told shoppers, in prose, that such content waits on permission —
+an internal to-do rendered as UI, and the second apology on the page.
+
+Now: the four capabilities, the warranty, one CTA. **3,603 → 824px; page 16,065 → 13,058px (−18.7%, about
+3.8 screens).** `id="trust"` kept because the ground anchors a stage to it and the section-order drift guard
+reads the rendered page. `WhyHami.tsx` deleted along with six exports that only it used (`brandWall` stays —
+it feeds a name→slug map inside `lib/content/home.ts`, and my first regex skipped it because of the type
+annotation, which is the right accident). 228 tests / 23 files still pass; `tsc` clean.
+
+**Not done, and the measurements say they are next:** `store-experience` at 1,685px for 141 words and one
+`tel:` link, now that the photograph it was built around lives in the hero; `b2b` at 1,395px for 89 words and
+one link, still carrying the step-03 promise its own file says has no panel; `accessories` at 962px for 36
+words whose four category links already appeared 2,000px earlier in `categories`. Those three are 4,042px —
+another 25% of the page — for 188 words between them.
