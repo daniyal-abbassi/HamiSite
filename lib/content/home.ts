@@ -187,14 +187,6 @@ export const b2bSupplyAreas = ["موبایل", "لوازم جانبی", "چند�
 
 // `اسپیکر و Party Box` was removed here too: its category (`اسپیکر-پارتی-باکس`) has zero
 // products, so the row would only ever lead to an empty listing.
-export const accessoryCategories = [
-  { key: "audio", index: "۰۱", label: "AUDIO", title: "صدا", detail: "ایرباد و هدفون", href: categoryLinks.audio },
-  { key: "power", index: "۰۲", label: "POWER", title: "توان", detail: "پاوربانک", href: categoryLinks.power },
-  { key: "charging", index: "۰۳", label: "CHARGING", title: "شارژ", detail: "آداپتور و کابل", href: categoryLinks.charging },
-  { key: "wearables", index: "۰۴", label: "WEARABLES", title: "پوشیدنی", detail: "ساعت هوشمند", href: categoryLinks.watch },
-] as const;
-
-export type AccessoryCategoryKey = (typeof accessoryCategories)[number]["key"];
 
 export const featuredOnlineService = {
   key: "apple-id",

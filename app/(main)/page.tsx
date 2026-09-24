@@ -31,7 +31,6 @@ import { featuredOfferRail, featuredSpecialRail, newArrivalsRail } from "@/lib/h
 import { NewArrivals } from "@/components/home/NewArrivals";
 import { ObtainableNow } from "@/components/home/ObtainableNow";
 import { BrandShowcase } from "@/components/home/BrandShowcase";
-import { AccessoryUniverse } from "@/components/home/AccessoryUniverse";
 import { MobileQuickRoutes } from "@/components/home/MobileQuickRoutes";
 import { TrustBento } from "@/components/home/TrustBento";
 import { CategoryHub } from "@/components/home/CategoryHub";
@@ -217,7 +216,6 @@ export default async function HomePage() {
           slot. Restore it only when there is a real campaign to carry. */}
       <NewArrivals products={arrivals} />
       <B2bSection />
-      <AccessoryUniverse />
       <OnlineServices />
       <StoreExperience />
       <TrustBento />

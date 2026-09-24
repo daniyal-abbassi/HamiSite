@@ -3,7 +3,6 @@ import { listBrands, listCategories, queryProducts } from "@/lib/catalog";
 import { flattenTree, normalizeSlug, resolveFilter, type FilterItem } from "@/lib/shop-filters";
 import { partnerMarks } from "@/components/brand/BrandMarks";
 import {
-  accessoryCategories,
   brandSlugByName,
   brandStories,
   brandWall,
@@ -152,8 +151,9 @@ describe("homepage category links resolve against the real catalogue", () => {
 
   it("is the only source of category hrefs the homepage may use", () => {
     const consumers = [
+      // `accessoryCategories` left with the accessories section (T089, 2026-09-24); this guard
+      // still covers every authored href the homepage actually renders.
       ...categoryMosaic,
-      ...accessoryCategories,
       featuredOnlineService,
     ] as Array<{ href: string }>;
     for (const item of consumers) expect(links.has(item.href)).toBe(true);

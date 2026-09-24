@@ -34,12 +34,24 @@ export const HOMEPAGE_SECTIONS = [
   "brands",
   "new-arrivals",
   "b2b",
-  "accessories",
   "online-services",
   "store-experience",
   "trust",
   "final-conversion",
 ] as const;
+
+/**
+ * Sections that render on the homepage and deliberately carry no ground stage.
+ *
+ * This list exists because the drift guard used to compare `HOMEPAGE_SECTIONS` against a JSON record
+ * captured at T001 — a file anyone editing the page can also edit, which is what I did on 2026-09-24 when
+ * the accessories chapter came out. The guard passed by construction, so it was not a guard. It now reads
+ * the section list off the **rendered DOM** (`baseline/manifest-after.json`, regenerated at each
+ * checkpoint), and every rendered section must be either an anchor above or named here. `obtainable-now`
+ * sits between the hero and the featured rail and is short enough that no stage boundary wants to live
+ * inside it; if that changes, move it to `HOMEPAGE_SECTIONS` rather than deleting it from this list.
+ */
+export const UNANCHORED_SECTIONS = ["obtainable-now"] as const;
 
 export type SectionAnchor = (typeof HOMEPAGE_SECTIONS)[number];
 

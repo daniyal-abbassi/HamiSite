@@ -494,3 +494,32 @@ annotation, which is the right accident). 228 tests / 23 files still pass; `tsc`
 one link, still carrying the step-03 promise its own file says has no panel; `accessories` at 962px for 36
 words whose four category links already appeared 2,000px earlier in `categories`. Those three are 4,042px —
 another 25% of the page — for 188 words between them.
+
+### The accessories chapter, and a guard I had to weaken by accident and then make real
+
+`AccessoryUniverse` was 962px for 36 words. Its interactive panel — the thing that justified a client
+component, a `useState`, and its own section — rendered **one Persian word at 5xl inside a glass box with a
+radial glow**, plus a link to a category. Four words total (`صدا`, `توان`, `شارژ`, `پوشیدنی`) cycling between
+each other, and the four category links it pointed at were already given, with names and counts, by
+`categories` two screens earlier. Gone: 13,058 → 12,096px at 360. The page is down from **16,065 → 12,096
+(−24.7%, ~5 screens)** across the two T089 cuts, with decoration counts still 0 and rendered Persian
+letter-spacing still 0.
+
+Its glow was also the last surviving pixel of a colour the design no longer admits: the panel painted
+`rgba(201,162,39,0.14)` — `#C9A227`, the exact "muted antique aqua" the direction contract in
+`app/layout.tsx` named before I rewrote that file. T073 swept the named glow classes and missed this one
+because it was an arbitrary value inline in a component. A strip that greps for class names does not find
+what was never a class.
+
+**Then I broke a guard, and the breaking is the useful part.** The drift test asserted
+`HOMEPAGE_SECTIONS` matched `baseline/ground-record.json`. To remove the section I edited that record to
+match — and the test passed, which told me nothing, because the input and the change were both mine. Worse,
+comparing the two sources showed the guard had *already* missed a section: `obtainable-now` renders on the
+page and appears in neither `HOMEPAGE_SECTIONS` nor the record's order, so a section had been added since
+T001 without the guard ever noticing.
+
+It now reads the section list off the **rendered DOM** (`manifest-after.json`, regenerated at each
+checkpoint) and every rendered section must be either a ground anchor or named in
+`UNANCHORED_SECTIONS` — which turns `obtainable-now`'s exemption into a stated decision instead of a hole.
+Control-run before trusting it: inject a section the code does not account for, watch it fail, restore,
+watch it pass. 228 tests / 23 files green.

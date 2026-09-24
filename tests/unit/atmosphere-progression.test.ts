@@ -13,6 +13,7 @@ import {
   luminanceOf,
   reducedMotionTone,
   stageBoundaries,
+  UNANCHORED_SECTIONS,
   toneAt,
 } from "@/lib/atmosphere/progression";
 
@@ -34,16 +35,29 @@ const STEPS = 500;
 const sweep = Array.from({ length: STEPS + 1 }, (_, i) => i / STEPS);
 
 describe("homepage section anchors", () => {
-  it("matches the eleven sections actually rendered, from the T001 baseline record", () => {
-    const record = JSON.parse(
-      readFileSync(join(process.cwd(), "specs/002-scroll-atmosphere/baseline/ground-record.json"), "utf8"),
-    );
-    expect(HOMEPAGE_SECTIONS).toEqual(record["360px"].sectionOrder);
-    expect(HOMEPAGE_SECTIONS).toHaveLength(11);
-  });
-});
+  /**
+   * The rendered section list comes from `manifest-after.json` — captured from the live DOM by
+   * `verification/capture-baseline.mjs` — and NOT from `baseline/ground-record.json`.
+   *
+   * The old version compared `HOMEPAGE_SECTIONS` to that frozen T001 record, which meant the person
+   * changing the page could make the guard pass by editing the record. That is not hypothetical: it is what
+   * happened on 2026-09-24 when the accessories chapter was removed. A guard whose input you can rewrite to
+   * match your change is decoration (see `notes/parallel-agent-plan.md` §5.1).
+   */
+  it("covers every section the browser actually rendered, each one anchored or explicitly exempt", () => {
+    const manifest = JSON.parse(
+      readFileSync(join(process.cwd(), "specs/001-premium-rtl-storefront/baseline/manifest-after.json"), "utf8"),
+    ) as { surfaces: { home: { "360px": { sections: string[] } } } };
+    const rendered = manifest.surfaces.home["360px"].sections;
+    const accountedFor = new Set<string>([...HOMEPAGE_SECTIONS, ...UNANCHORED_SECTIONS]);
 
-describe("atmosphere progression shape", () => {
+    expect(rendered.length).toBe(accountedFor.size);
+    for (const id of rendered) expect(accountedFor.has(id), `${id} renders but is neither anchored nor exempt`).toBe(true);
+    // Anchors must appear in the same relative order as the DOM, or the ground moves backwards.
+    const order = rendered.filter((id) => (HOMEPAGE_SECTIONS as readonly string[]).includes(id));
+    expect(order).toEqual([...HOMEPAGE_SECTIONS]);
+  });
+
   it("has more than one stage — FR-001 makes a single stage invalid by definition", () => {
     expect(PROGRESSION.length).toBeGreaterThan(1);
   });
