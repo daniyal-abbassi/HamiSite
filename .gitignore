@@ -7,6 +7,7 @@ dist/
 tsconfig.tsbuildinfo
 .superpowers/
 actuall_old_webSite_api_token.txt
+jev.txt
 graphify-out/
 data/uploads/
 .worktrees/
@@ -63,3 +64,10 @@ specs/001-premium-rtl-storefront/baseline/*.png
 
 # Live agent-pair coordination (this session only — the record lives in notes/)
 .agent-pair/
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+.beads/proxieddb/
+*.gate.lock*

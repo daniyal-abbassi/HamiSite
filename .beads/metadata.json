@@ -1,0 +1,7 @@
+{
+  "database": "dolt",
+  "backend": "dolt",
+  "dolt_mode": "embedded",
+  "dolt_database": "HamiSite_basic_structure",
+  "project_id": "b0357736-1379-4406-9ee7-9d48590e5e3f"
+}
