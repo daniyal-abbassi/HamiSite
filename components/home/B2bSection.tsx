@@ -5,15 +5,16 @@ import { buttonVariants } from "@/components/ui/button";
 import { b2bFeatures, b2bSupplyAreas, b2bWorkflow } from "@/lib/content/home";
 
 export function B2bSection() {
-  // Full-bleed soft-edged band. The old `wrap bg-ink/25` painted an inset
+  // Full-bleed, no background of its own. The old `wrap bg-ink/25` painted an inset
   // rectangle whose four edges floated mid-air against the canvas — two of
-  // them read as hard vertical seams (the fix-mix-pverLay capture). The
-  // inner .container still constrains the content; only the ambience is
-  // full-bleed now, and .band-soft fades its top/bottom edges out.
+  // them read as hard vertical seams (the fix-mix-pverLay capture) — and the
+  // `.band-soft` veil that replaced it darkened the travelling ground by 50% at
+  // the gutter, which is the defect T115 removed. The inner .container still
+  // constrains the content; the ambience is the page's, not the band's.
   return (
     <section
       id="b2b"
-      className="band-soft py-16 md:py-20"
+      className="py-16 md:py-20"
       aria-labelledby="b2b-title"
     >
       <div className="container">

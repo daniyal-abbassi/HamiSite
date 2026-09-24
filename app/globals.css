@@ -836,19 +836,19 @@
 .swap-card-3 .swap-card-body { color: rgba(58, 10, 22, 0.72); }
 
 /* ===========================================================================
-   SOFT-EDGED FULL-BLEED BANDS
+   SOFT-EDGED FULL-BLEED BANDS — deleted by T115
    ===========================================================================
-   A `band-soft` stretch darkens the ground behind its content with a vertical
-   fade, so the band's top and bottom edges meet the canvas gradually instead of
-   ending in a razor-sharp horizontal line. (#b2b was additionally inset with
-   `wrap`, so two of its edges floated mid-air as hard vertical seams — the
-   fix-mix-pverLay / fix-inconsistancy captures.)
-
-   As of T-P1 this class no longer describes the whole page: `#online-services`
-   is now a paper chapter, so `#b2b` is the only darkened stretch left. The
-   mechanism stays because a second dark band may still want it. What it is not
-   is exhaustive — do not read "the page's only darkened stretches" off this
-   comment again; count them in the DOM.
+   `.band-soft` used to darken the canvas behind a band with a vertical fade, so
+   its top and bottom edges met the page gradually. That is the mechanism the
+   scroll ground replaced: `#b2b` is now the only place it ever applied and it
+   painted rgba(11,2,4,.5) over a fixed layer whose whole job is to be a
+   different colour at every scroll position, so it erased the arc where the arc
+   is most legible — measured at ΔE 7.5 in the 360 gutter and ΔE 10.4 at desktop.
+   Every other dark band (`#featured`, `#brands`, `#new-arrivals`, `#trust`)
+   paints nothing and reads the travelling ground exactly. `#b2b` now does the
+   same, so the class is gone rather than left as an empty hook; if a band ever
+   genuinely needs to sit *darker* than the ground, it should say so per band and
+   not repaint the gutter.
    =========================================================================== */
 /* T117 — the same re-choosing for the paper chapters. Their own token overrides live in
    `app/(main)/home.css` under `.band-paper` (the second agent's file); this block adds only the
@@ -859,16 +859,6 @@
 [data-ground="paper"] {
   --destructive: 142 27 16;
   --destructive-foreground: 255 245 245;
-}
-
-.band-soft {
-  background: linear-gradient(
-    180deg,
-    rgba(11, 2, 4, 0) 0%,
-    rgba(11, 2, 4, 0.5) 12%,
-    rgba(11, 2, 4, 0.5) 88%,
-    rgba(11, 2, 4, 0) 100%
-  );
 }
 
 /* ===========================================================================

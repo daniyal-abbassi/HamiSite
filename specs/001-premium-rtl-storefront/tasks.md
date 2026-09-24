@@ -686,13 +686,27 @@ light theme — the ask is *travel within the dark palette*, not white.
   `--signal`, scoped the same way `.band-paper` scopes `--foreground`. Acceptance: every text token at ≥ 4.5:1
   against white, `#f4f1ea` and the dark canvas, measured across the sweep, not asserted.
 
-- [ ] T115 [US1] Make the ground reach the pixels it owns. `verification/ground-travel.mjs` reports the
+- [x] T115 [US1] Make the ground reach the pixels it owns. `verification/ground-travel.mjs` reports the
   authored tone arriving at the gutter unpainted at only **9 of 13** scroll positions: at 25%, 42% and 58%
   the gutter shows `#110003` / `#0e070f` / `#10060d` where `lib/atmosphere/progression.ts` holds
   `#220915` / `#130e1d` / `#180f1b`, i.e. a section painting its own opaque background over the ground, and
   at 8% the left and right gutters disagree. Now that the arc has amplitude this is the limiting factor on
   how much of it a shopper sees, so it belongs with T083's extension to the interior pages rather than as
   decoration work.
+  **Landed with three carve-outs, all measured rather than assumed.** (1) The two paint-overs were
+  `.band-soft` on `#b2b` (ΔE 7.5 in the 360 gutter, 10.4 at desktop) and `.final-conversion::before`
+  (ΔE 1.3 from the `close` stage the arc already paints there); both deleted, and the gate now fails if a
+  *dark* band holds column 0 or the gutter — control-run: restoring the veil returns FAIL at 58%.
+  (2) The two paper chapters own 2 middle and 2 edge positions each and that is by design, so they are
+  reported as declared coverage instead of counted against the ground. (3) The instrument was measuring the
+  fixed header (its sample line was y=20, inside a 65px `position: fixed` `z-index: 50` header) and sampling
+  mid-glide behind Lenis's ~1s smooth scroll; both fixed, which is what turned "wrong at 10 of 13" and
+  "reaches at 10 of 13" into the same page seen from two pixels. Residual error at 360 and 820 is ≤ ΔE 1.3,
+  under the just-noticeable difference. **Still open, and not a ground bug:** `#categories` is described as an
+  inset rounded panel but measures 0px inset at 360, 820 and 1280, so its ivory does reach column 0 —
+  attempted fix (`margin-inline: clamp(.75rem, 2vw, 1.5rem)`) pushed the document to 372px of scrollWidth at
+  a 360 viewport and is reverted; the carousel's off-screen slides are unclipped to x=503, so the inset is
+  coupled to `category-carousel.css`, which is the IDE agent's file.
 
 **Checkpoint**: the `quickstart.md` §4 walk at 360 and 1280, per surface, against T002's baseline. Band 3's
 honest end-state is "built, walked, screenshotted, awaiting the panel" — not "done" (research D11).

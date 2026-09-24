@@ -402,16 +402,12 @@
   overflow: hidden;
   isolation: isolate;
 }
-.final-conversion::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background: linear-gradient(170deg, #160709, #0D0406 70%);
-}
-/* T071: the hairline "beam" and the blurred elliptical "glow" that used to sit
-   behind the closing call are deleted. The section keeps its own gradient ground
-   above, which is what actually separates it from the one before. */
+/* T115 deleted the `.final-conversion::before` gradient (170deg #160709 → #0D0406).
+   It painted the whole section box, gutter included, with a tone within ΔE 1.3 of
+   the `close` stage the travelling ground already supplies at that scroll position
+   (progression.ts: #160406) — a duplicate repaint that cost the arc its last leg
+   and bought nothing visually. The separation this block used to claim comes from
+   the arc itself now, plus the T071 deletion above it. */
 
 /* ---------- online services FAQ (native details) ---------- */
 .faq details {
