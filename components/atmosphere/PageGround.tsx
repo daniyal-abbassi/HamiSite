@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 import { usePathname } from "next/navigation";
-import { FALLBACK_TONE } from "@/lib/atmosphere/progression";
+import { FALLBACK_TONE, interiorGround } from "@/lib/atmosphere/progression";
 import { useAtmosphereGround, GROUND_PROPERTY } from "./useAtmosphereGround";
 import "./page-ground.css";
 
@@ -38,17 +38,29 @@ import "./page-ground.css";
  * Contract A3 and G1: nothing here is in the accessibility tree, nothing here carries meaning, and
  * deleting the component entirely leaves the page complete.
  *
- * **Homepage only.** The spec scopes this feature to the first page — "the listing, product,
- * partnership, and administrative pages … inherit the page's existing single ground unchanged". The
- * layer is mounted in the layout because that is the only place it escapes the `Reveal` transforms, so
+ * **Which pages, and what each one gets.** Owner decision 5 extended the atmosphere past the homepage, and
+ * the two halves of that are different mechanisms:
+ *
+ *  - `/` — the six-stop scroll tour, driven by `useAtmosphereGround`.
+ *  - a shopper route in `INTERIOR_GROUNDS` — **one settled tone**, borrowed from the homepage chapter that
+ *    route belongs to. No hook, no listener, no measurement; the colour is in the inline style and never
+ *    changes.
+ *  - everything else — `/admin`, anything unlisted — renders nothing at all. The operations surface is not a
+ *    shopper page and it keeps the flat canvas it has always had.
+ *
+ * The layer is mounted in the layout because that is the only place it escapes the `Reveal` transforms, so
  * it gates itself on the pathname instead. The hook stays registered either way (hooks cannot be
- * conditional); it exits before adding any listener.
+ * conditional); on an interior route it is handed `enabled = false` and exits before adding any listener.
  */
 export function PageGround() {
   const pathname = usePathname();
-  const enabled = pathname === "/";
+  const interior = interiorGround(pathname);
+  const isHome = pathname === "/";
+  const enabled = isHome || interior !== null;
   const surface = useRef<HTMLDivElement>(null);
-  useAtmosphereGround(enabled, surface);
+  // Only the homepage arc is scroll-driven; an interior page's tone is constant, so the hook is not
+  // mounted for it at all and no listener, measurement or frame loop exists on those routes.
+  useAtmosphereGround(isHome, surface);
 
   if (!enabled) return null;
 
@@ -57,7 +69,11 @@ export function PageGround() {
       ref={surface}
       className="hami-page-ground"
       aria-hidden="true"
-      style={{ backgroundColor: `var(${GROUND_PROPERTY}, ${FALLBACK_TONE})` }}
+      style={{
+        backgroundColor: isHome
+          ? `var(${GROUND_PROPERTY}, ${FALLBACK_TONE})`
+          : (interior ?? FALLBACK_TONE),
+      }}
     />
   );
 }

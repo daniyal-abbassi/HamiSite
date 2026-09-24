@@ -153,6 +153,54 @@ export function contrastOn(text: string, ground: string): number {
 }
 
 /**
+ * The interior shopper pages — owner decision 5: "extend the atmosphere to every shopper page".
+ *
+ * Extending it is not the same as extending *the tour*. FR-001 binds the homepage ("The homepage page
+ * ground MUST change across the length of the page"), and the six stages are anchored to eleven homepage
+ * sections that a listing page does not have. Running the tour on `/shop` would spread six chapters across
+ * a 4,547px document that has three visual events in it, and FR-002 — the shift must read as belonging to
+ * the page's structure — would be violated by construction: the ground would be moving where nothing moves.
+ *
+ * So an interior page gets **one settled tone, borrowed from the homepage chapter it belongs to.** Every
+ * browse route — the listing, a product page, a category, a brand — takes the goods tone, because prefix
+ * matching cannot tell `/shop` from `/shop/گوشی-…` without learning the route table, and a product page is
+ * the same kind of room as the listing that led to it. The checkout takes the closing dark, the account
+ * family the deep neutral, the B2B form the ink of the trade chapter. The atmosphere is therefore
+ * continuous across the site without pretending every page is a journey, and the colour a shopper sees on a
+ * route is a statement about what that route is for.
+ *
+ * No scroll listener, no rAF, no measurement: a static layer. The listing page in particular used to pay
+ * for eleven `getElementById` reads on mount to place stages that could not be felt.
+ */
+export const INTERIOR_GROUNDS = {
+  "/shop": "#2A0713",
+  "/categories": "#2A0713",
+  "/brands": "#2A0713",
+  "/cart": "#220708",
+  "/checkout": "#160406",
+  "/orders": "#130104",
+  "/account": "#130104",
+  "/login": "#130104",
+  "/register": "#130104",
+  "/partners": "#0E1122",
+} as const satisfies Record<string, string>;
+
+/**
+ * Longest-prefix match, so `/shop/گوشی-…` is a product page and `/shop` is the listing — and `/admin`,
+ * `/api` and anything unlisted get `null`, because the operations surface is not a shopper page and the
+ * owner's decision was about shoppers.
+ */
+export function interiorGround(pathname: string): string | null {
+  if (pathname === "/") return null;
+  let best: { prefix: string; color: string } | null = null;
+  for (const [prefix, color] of Object.entries(INTERIOR_GROUNDS)) {
+    if (pathname !== prefix && !pathname.startsWith(`${prefix}/`)) continue;
+    if (!best || prefix.length > best.prefix.length) best = { prefix, color };
+  }
+  return best?.color ?? null;
+}
+
+/**
  * Where each stage begins, as a fraction of scrollable height.
  *
  * With no layout given, stages are placed at their anchor section's position in the document order —

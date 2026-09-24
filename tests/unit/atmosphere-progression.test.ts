@@ -7,7 +7,9 @@ import {
   LEGIBILITY_BAND,
   PROGRESSION,
   SCENE_TEXT_COLOURS,
+  INTERIOR_GROUNDS,
   contrastOn,
+  interiorGround,
   luminanceOf,
   reducedMotionTone,
   stageBoundaries,
@@ -212,5 +214,51 @@ describe("reduced motion and fallback — FR-020, FR-021, FR-024", () => {
     expect(l).toBeGreaterThanOrEqual(LEGIBILITY_BAND.min);
     expect(l).toBeLessThanOrEqual(LEGIBILITY_BAND.max);
     expect(PROGRESSION.map((s) => s.color.toLowerCase())).toContain(FALLBACK_TONE.toLowerCase());
+  });
+});
+
+describe("interior page grounds — owner decision 5", () => {
+  const tones = Object.entries(INTERIOR_GROUNDS);
+
+  it("has a tone for every shopper route family, and none of them is the homepage", () => {
+    expect(tones.length).toBeGreaterThanOrEqual(8);
+    expect(tones.map(([path]) => path)).not.toContain("/");
+  });
+
+  it("keeps every settled tone inside the legibility band", () => {
+    for (const [path, colour] of tones) {
+      const l = luminanceOf(colour);
+      expect(l, `${path} → ${colour} luminance ${l.toFixed(4)}`).toBeGreaterThanOrEqual(LEGIBILITY_BAND.min);
+      expect(l, `${path} → ${colour} luminance ${l.toFixed(4)}`).toBeLessThanOrEqual(LEGIBILITY_BAND.max);
+    }
+  });
+
+  /**
+   * The control run for this whole file: a tone that leaves the band, or a text colour that was never in
+   * `SCENE_TEXT_COLOURS`, is exactly how `#E4573F` on white ended up at 3.66:1 on a surface nobody had
+   * measured against. So assert against every declared text colour, not a representative sample.
+   */
+  it("holds every meaningful text colour at or above 5:1 on each settled tone", () => {
+    for (const [path, ground] of tones) {
+      for (const [name, colour] of Object.entries(SCENE_TEXT_COLOURS)) {
+        const ratio = contrastOn(colour, ground);
+        expect(ratio, `${name} on ${path} (${ground}) is ${ratio.toFixed(2)}:1`).toBeGreaterThanOrEqual(5);
+      }
+    }
+  });
+
+  it("resolves a route to its family by longest prefix", () => {
+    expect(interiorGround("/shop")).toBe(INTERIOR_GROUNDS["/shop"]);
+    expect(interiorGround("/shop/گوشی-موبایل-شیائومی")).toBe(INTERIOR_GROUNDS["/shop"]);
+    expect(interiorGround("/partners/thanks")).toBe(INTERIOR_GROUNDS["/partners"]);
+    expect(interiorGround("/orders/1234")).toBe(INTERIOR_GROUNDS["/orders"]);
+  });
+
+  it("gives the homepage, the operations surface and unknown routes no settled tone", () => {
+    // `/` is the tour's own case, and `/admin` is not a shopper page: owner decision 5 was about shoppers.
+    expect(interiorGround("/")).toBeNull();
+    expect(interiorGround("/admin")).toBeNull();
+    expect(interiorGround("/admin/orders")).toBeNull();
+    expect(interiorGround("/no-such-page")).toBeNull();
   });
 });

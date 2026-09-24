@@ -477,7 +477,15 @@ Depends on T003 for decisions 1, 2, 5.
   (`:106-108`) — so at 360/390 there is no readable identity. FR-015 and the Assumption that the official
   files are "used as supplied, not redrawn". Depends on T003 decision 1 only if the supplied files prove
   unusable, in which case amend FR-015 per research D9.
-- [ ] T083 [US5] **Depends on T073 — strip first, then extend (decision 5).** Unify the page-heading grammar: the homepage's pill + gradient word + swash versus
+- [x] T083 [US5] **Depends on T073 — strip first, then extend (decision 5).**
+  **Landed 2026-09-24 in two parts, with one carve-out still open on the second agent's side.** Part 1:
+  `components/layout/PageHeader.tsx` is the single heading grammar for all seven shopper routes, ordinals from
+  one `PAGE_INDEX`, `aria-hidden` on the numeral, and real headers on `/login` and `/register` for the first
+  time. Part 2: the gate is gone — `interiorGround()` gives each shopper route family one settled tone
+  borrowed from the homepage chapter it belongs to, verified in the browser (`/shop` #2A0713, `/partners`
+  #0E1122, `/admin` renders no layer, and ten scrolls on `/shop` change nothing because the hook is not
+  mounted there at all). **Carve-out:** `/shop` still shows ۰۰۱ twice, from `ShopBanner.tsx:39-40`, which is
+  the second agent's file; requested on the board at 03:12. Unify the page-heading grammar: the homepage's pill + gradient word + swash versus
   `.section-label` numerals on every interior page (`app/(main)/shop/page.tsx:19-27`, `cart/page.tsx:13-21`,
   `orders/page.tsx:14-21`, `partners/page.tsx:15-23`), and give `/login` and `/register` real page headers
   (both are currently a bare centred card, `login/page.tsx:11-18`). Fix the decorative numeral sequence
