@@ -503,7 +503,9 @@ Depends on T003 for decisions 1, 2, 5.
   "without requiring the shopper to scroll" is actually true: `audits/05` places the trust row at y≈845 (below the fold at 800, partly behind
   the dock at 900) and the store proof as a stacking second child. Re-measure against T002's baseline, not
   the computed estimate.
-- [ ] T086 [P] [US1] Fix the header collapse at 360px: `components/layout/Header.tsx:142-148` keeps
+- [x] T086 [P] [US1] **Ticked 2026-09-24 by the driver: the code landed in `23d4e89` and the
+  board recorded DONE at 18:07, but the box was never checked — a record error, not missing work.**
+  Original: Fix the header collapse at 360px: `components/layout/Header.tsx:142-148` keeps
   «شروع همکاری» visible on phone (`h-12 px-8`, ~174 of 336px), squeezing the search field to a ~58px empty
   pill, and duplicating the hero's CTA in the same screen.
 - [x] T087 [P] [US1] Fix the rotating headline word — illegible for ~460ms of every 2.8s, with the existing
