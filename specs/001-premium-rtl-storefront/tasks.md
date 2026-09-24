@@ -509,12 +509,21 @@ Depends on T003 for decisions 1, 2, 5.
 - [x] T087 [P] [US1] Fix the rotating headline word — illegible for ~460ms of every 2.8s, with the existing
   baseline capture showing two to three words superimposed (`components/ui/flip-words.tsx`, used at
   `app/(main)/page.tsx:86-90`). Reduced-motion already settles it; the default state must read.
-- [ ] T088 [P] [US5] Reconcile the undeclared design-system pin with FR-051 and Constitution IV:
+- [x] T088 [P] [US5] Reconcile the undeclared design-system pin with FR-051 and Constitution IV:
   `tailwind.config.ts:62-121` hard-codes `#640211`/`#E5D3B3`, six radii and five named shadows of which four
   are `glow-*`, and `:124-136` carries a comment saying "Arbitrary durations outside this scale are not
   allowed". Also `aqua`, `champagne` and `brass` are all `#E5D3B3` (`:68-82`) while `app/layout.tsx:46-48`
   describes "muted antique aqua … not the previous champagne-yellow" — intent and token disagree, and half
   the accent decisions were made against a colour that does not exist.
+  **Landed 2026-09-24, with the parts left undone named rather than hidden.** Done: the champagne scale is
+  declared once as `champagneScale` with `aqua` and `brass` as explicit aliases, so three names no longer
+  stand for three decisions and 228 call sites did not have to move; `app/layout.tsx`'s DIRECTION CONTRACT
+  was rewritten — it still described the pre-band-3 world (glow field, frosted glass, gradient shimmer, a
+  ticker, a `#C9A227` accent that was never shipped) under a *wholesale-portal* thesis for a retail
+  storefront, and `CLAUDE.md` sends every new agent to it first; and T117's light-surface error red shipped.
+  Not done, deliberately: the four `glow-*` shadows stay (7 call sites between them, some in the second
+  agent's files, and removing them is a visual change the owner should see rather than inherit), and the six
+  radii were left alone.
 - [ ] T089 [US1] Rebuild or remove the eight authored-filler homepage sections per FR-018 and FR-008
   (`audits/05` section table): `B2bSection` (whose step 03 promises a panel
   `components/home/B2bSection.tsx:51-55` says does not exist), `AccessoryUniverse` (a CSS gradient plus three
@@ -666,7 +675,7 @@ light theme — the ask is *travel within the dark palette*, not white.
   `contracts/shop-url.md`), or delete the tablist and stop asking the shopper to choose between two views of
   the same six products. Neither agent is touching the seam until the owner picks.
 
-- [ ] T117 [US1] **`--signal` / `text-destructive` fails on every light surface, and the pair just built
+- [x] T117 [US1] **`--signal` / `text-destructive` fails on every light surface, and the pair just built
   light surfaces.** `#E4573F` measures **3.66:1 on `#ffffff`** and **3.25:1 on the T116 paper `#f4f1ea`** —
   under AA's 4.5:1 for body text — and the `bg-destructive/10` wash behind it measures **1.13:1** against the
   same ground, so the "error" chip is nearly invisible on white while being loud on the dark canvas where it

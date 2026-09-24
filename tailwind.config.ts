@@ -7,6 +7,24 @@ import type { Config } from "tailwindcss";
  * glow, muted antique aqua, fully rounded glass surfaces. See the direction
  * contract at the top of app/layout.tsx before touching this file.
  */
+/**
+ * The one champagne/gold scale the whole site paints with.
+ *
+ * It used to be declared three times — `champagne`, `aqua` and `brass`, each with the same three hex
+ * values — which is how "muted antique aqua" and "champagne-yellow" came to be the same pixel and how
+ * half the accent decisions on this page were made against a name that meant nothing. The literals live
+ * here once now; the aliases below still resolve to it, so nothing visual moves.
+ *
+ * `aqua` is a leftover from the reference template this design was forked from, where the accent really
+ * was a blue-green. Nothing in the brand DNA (burgundy RAL 3004 + champagne, `CLAUDE.md`) has ever been
+ * aqua. The name is kept for the call sites, not for the colour.
+ */
+const champagneScale = {
+  DEFAULT: "#E5D3B3",
+  lite: "#F4EADB",
+  deep: "#C5A880",
+} as const;
+
 const config: Config = {
   darkMode: ["class"],
   content: [
@@ -65,21 +83,13 @@ const config: Config = {
           mid: "#75040F",
           deep: "#3D020B",
         },
-        champagne: {
-          DEFAULT: "#E5D3B3",
-          lite: "#F4EADB",
-          deep: "#C5A880",
-        },
-        aqua: {
-          DEFAULT: "#E5D3B3", // resolves to Champagne Gold for luxury consistency
-          lite: "#F4EADB",
-          deep: "#C5A880",
-        },
-        brass: {
-          DEFAULT: "#E5D3B3",
-          lite: "#F4EADB",
-          deep: "#C5A880",
-        },
+        champagne: champagneScale,
+        // Two aliases of the same scale, kept because 228 `text-aqua` and 3 `accent-brass` call sites
+        // exist and renaming them is churn, not design. They are no longer three *decisions*: the
+        // literals live once, above. New code should say `champagne` — `aqua` is the name of a colour
+        // this brand does not have (see the note on `champagneScale`).
+        aqua: champagneScale,
+        brass: champagneScale,
         ink: {
           DEFAULT: "#0B0204", // Obsidian Canvas
           2: "#14060A",       // Smoked Obsidian Card

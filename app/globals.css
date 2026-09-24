@@ -246,6 +246,15 @@
      card works anywhere: home grid, shop grid, any future surface. */
   .product-card {
     --background: 255 255 255;
+    /* T117 — the error red has to be re-chosen for a light ground, not inherited.
+       `--destructive` is #E4573F, which measures 3.66:1 on white and 1.13:1 for its own
+       `/10` wash against the same ground: a legible error on the dark canvas becomes
+       near-invisible inside a white card. #8E1B10 is the same hue darkened — 9.07:1 on
+       white, 8.04:1 on the paper chapters — and it is the value the second agent had
+       already chosen by hand for the add-to-cart chip, so the site gets one red rather
+       than two. */
+    --destructive: 142 27 16;
+    --destructive-foreground: 255 245 245;
     --foreground: 30 12 16;
     --muted: 240 237 236;
     --muted-foreground: 106 62 70;
@@ -841,6 +850,17 @@
    is exhaustive — do not read "the page's only darkened stretches" off this
    comment again; count them in the DOM.
    =========================================================================== */
+/* T117 — the same re-choosing for the paper chapters. Their own token overrides live in
+   `app/(main)/home.css` under `.band-paper` (the second agent's file); this block adds only the
+   error red, because that is a palette decision rather than a chapter decision, and it belongs
+   next to the other light-surface ground in this file. Any new light ground gets `data-ground="paper"`
+   and inherits this. */
+.band-paper,
+[data-ground="paper"] {
+  --destructive: 142 27 16;
+  --destructive-foreground: 255 245 245;
+}
+
 .band-soft {
   background: linear-gradient(
     180deg,
