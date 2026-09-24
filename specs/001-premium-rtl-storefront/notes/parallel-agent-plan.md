@@ -200,6 +200,21 @@ confident claim, and the owner reads these.
 - **Type check**: `npx tsc --noEmit`. Unit suite: `npx vitest run tests/unit` (currently 221 tests / 22
   files passing — do not land a change that reduces that).
 
+### 5.1 The control-run rule — learned from five tasks, not from a manual
+
+Four of the defects named in §6–§9 of this brief **did not exist as described**, and three separate probes
+"passed" while measuring nothing: a regex that silently dropped its alpha channel, a `focus()` call that never
+set `:focus-visible`, a Tab walk that started from an element nobody had focused. Every one of those was caught
+by a **control run**, never by the assertion itself. So, for every check you add here:
+
+- **Ask what it would print if the fix were absent.** Then remove the fix (or point the probe at the un-fixed
+  sibling) and confirm it prints that. A check that passes both ways is decoration, and this repo now has a
+  guard test (`tests/unit/jsx-child-comment.test.ts`) for exactly the class of bug that hid behind one.
+- **Take the screenshot and describe it in words.** The tree is not the page: an `sr-only` alert with an icon
+  swap satisfies "visible in the accessibility tree" while a sighted shopper gets a glyph and no message.
+- **A cold dev route answers 404 on the first hit** while Next compiles it. Curl twice before believing a
+  route is missing.
+
 ## 6. TASK T-P1 — light chapters: real contrast against the dark ground
 
 **This is the owner's live complaint and it is the highest-value work in the repo right now.**
