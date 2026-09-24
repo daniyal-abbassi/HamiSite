@@ -690,3 +690,48 @@
   outline-color: #640211;
 }
 
+
+/* ===========================================================================
+   T-P5 — focus and pressed states the homepage controls were missing.
+   ---------------------------------------------------------------------------
+   §9 of notes/parallel-agent-plan.md asked for `summary` to be added to the
+   global `:where(a, button, input, select, textarea):focus-visible` list, and
+   granted it as the one exception to the globals.css restriction. It is not
+   needed: `grep -rn "<summary" components/ app/` returns exactly one element in
+   the whole codebase — the FAQ in #online-services, on this page, in a file this
+   task owns. So the rule lives here and `app/globals.css` keeps one owner.
+   (Driver: if a `<summary>` ever appears off the homepage, this belongs in the
+   `:where()` list instead — a REQUEST, not a silent duplicate.)
+   =========================================================================== */
+
+/* The FAQ disclosure is a real control and it had no ring: `summary` is not in
+   the global selector list, so keyboard users reached it and saw nothing. The
+   specificity has to beat `.faq summary`'s own rules, hence the element pair. */
+.faq summary:focus-visible {
+  outline: 2px solid var(--aqua);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* Pressed feedback for the hand-rolled pills on this page. `Button` carries
+   `active:translate-y-px` from its own primitive, but these are raw <button> and
+   <a> elements styled inline, and a press on them was indistinguishable from a
+   hover. One shared treatment rather than per-component edits. The selectors are
+   the markup as it is: NewArrivals' rail arrows are `rounded-full` buttons, the
+   carousel's are `.cat-carousel__nav button`, and the featured tabs are the only
+   `[role="tab"]` on the page. */
+#new-arrivals button[class*="rounded-full"]:active,
+#categories .cat-carousel__nav button:active,
+#accessories a[class*="rounded-full"]:active,
+#online-services a[class*="rounded-full"]:active,
+#featured [role="tab"]:active {
+  transform: scale(0.97);
+}
+
+/* On a paper chapter the ring must invert with everything else. `--aqua` is
+   already re-pointed at oxblood by `.band-paper`, so these inherit it — stated
+   here because a champagne ring on ivory is 1.30:1 and would otherwise be the
+   one control affordance the light chapters silently lost. */
+.band-paper .faq summary:focus-visible {
+  outline-color: var(--paper-brand);
+}

@@ -531,13 +531,30 @@ Depends on T003 for decisions 1, 2, 5.
   (`components/home/StoreExperience.tsx:140`), and the expand chevrons on brand rows with no story
   (`components/home/BrandRows.tsx:84-102`, revealing a fixed-height empty band). FR-043: an element "MUST NOT
   be operable in a state where it cannot respond".
-- [ ] T092 [P] [US5] Complete the state treatment set on the primitives: `ui/button.tsx:7-24` declares no
+- [x] T092 [P] [US5] Complete the state treatment set on the primitives: `ui/button.tsx:7-24` declares no
   `focus-visible` of its own and relies on the zero-specificity `:where()` global at
   `app/globals.css:165-168`; `summary` is missing from that selector list while present in the tap-highlight
   list at `:1050`, so the three homepage FAQ controls lose the brand ring; add `active:`/pressed to the
   hand-rolled pills (`FeaturedProducts.tsx:118`, `NewArrivals.tsx:67`, `AccessoryUniverse.tsx:72`); and give
   a disabled control a reason (`ui/button.tsx:7` `disabled:pointer-events-none` silences it entirely).
   FR-043, FR-044.
+  **Done 2026-09-24 (T-P5).** `Button` now declares its own `focus-visible` ring, so it is the default rather
+  than the leftover of a zero-specificity `:where()`. The `summary` rule did **not** need the globals.css
+  exception: `grep -rn "<summary" components/ app/` is one element in the whole codebase, on the homepage, in a
+  file this task owns — so it went into `app/(main)/home.css` and `globals.css` keeps one owner. Verified by
+  walking the real Tab order (260 presses; `element.focus()` does not set `:focus-visible`, being a modality
+  state): the FAQ ring is `solid 2px rgb(100,2,17)` at **11.94:1** on paper, because `.band-paper` re-points
+  `--aqua` at oxblood — champagne there would have been 1.30:1, the one affordance T116 could have silently
+  destroyed. Pressed states added for the three named hand-rolled pills, measured at `matrix(0.97,…)` during a
+  real pointer-down. **Found by the walk, not on this task's list, and fixed:** `ProductRail`'s deliberate
+  `tabIndex={0}` was receiving the UA default `outline: auto 1px rgb(16,16,16)` — a dark line on `#0B0204`, so
+  the component built specifically for keyboard scroll access had an invisible focus stop.
+  **`disabled:pointer-events-none` deliberately kept**, contrary to this task's suggestion: removing it makes a
+  `title` reachable but lets `:hover` match an unpressable control, and all seven variants carry a hover lift —
+  a sold-out pill that lights up on approach is a worse claim than silence. The reason is already on the card
+  as visible «ناموجود» plus `aria-label`, which reaches sighted and screen-reader users where a tooltip that
+  cannot fire reaches neither. **Not done, out of lane:** 21 hover-only `rounded-full` controls app-wide,
+  enumerated in `notes/parallel-agent-findings.md` §T-P5.
 - [x] T093 [US5] Add the missing 44px floor above `md`: the patch at `app/globals.css:1127-1166` is
   mobile-only and matches class substrings, so `Header.tsx:133` search (`md:h-9`), `ShopResults.tsx:74` sort
   select, `ui/button.tsx:28` `sm:h-9`, `FeaturedProducts.tsx:146` tabs (~32px) and

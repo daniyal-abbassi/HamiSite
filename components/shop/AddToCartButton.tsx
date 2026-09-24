@@ -70,7 +70,7 @@ export function AddToCartButton({ productId, disabled = false, iconOnly = false,
         disabled
         aria-label="ناموجود"
         style={style}
-        className={cn("pointer-events-none", className)}
+        className={className}
       >
         {iconOnly ? <Ban className="size-5" aria-hidden="true" /> : "ناموجود"}
       </Button>

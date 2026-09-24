@@ -107,3 +107,19 @@ way: if the tablist goes, it costs one commit to delete a pattern that was corre
 **Verified by:** `.scratch/tabs-walk.mjs` (focus, `aria-selected`, tabindex and panel labelling read off the DOM
 after each keypress) and `.scratch/tabs-content.mjs` (the six article headings from `#featured-panel` on each
 tab — `identical: true`). `npx tsc --noEmit` clean; `npx vitest run tests/unit` 221/221.
+
+## 2026-09-24 — T-P5: kept `disabled:pointer-events-none`, and put the `summary` rule in `home.css`
+
+**Chosen:** two departures from §9. (1) The focus ring for `summary` lives in `app/(main)/home.css`, not the
+global `:where()` list §9 granted as an exception. (2) `disabled:pointer-events-none` stays on the Button
+primitive, and the disabled control's reason is left where it already is — the card's visible «ناموجود».
+**Rejected:** (1) the globals.css edit — rejected on evidence, not caution: there is exactly one `<summary>` in
+the codebase, on the homepage, in a file this task owns, so the shared file never needed touching. The exception
+was granted for a problem that turned out to be page-local. (2) Removing `pointer-events-none` as §9 suggested —
+it makes a `title` reachable and simultaneously lets `:hover` match a control that cannot be pressed, and all
+seven variants carry a hover lift. A sold-out pill that lights up and rises as you approach it is a worse claim
+than silence, and `disabled:cursor-not-allowed` is equally dead on an element taking no pointer events.
+**Verified by:** `.scratch/states-check.mjs`, a 260-press Tab walk reading `getComputedStyle` and
+`:focus-visible` off the live page — FAQ ring `solid 2px rgb(100,2,17)` at 11.94:1 on paper; pressed pill
+`matrix(0.97, 0, 0, 0.97, 0, 0)` during pointer-down; and the walk's one genuine catch, `ProductRail`'s
+`outline: auto 1px rgb(16,16,16)` UA default on `#0B0204`. `tsc --noEmit` clean, 223 tests / 23 files.

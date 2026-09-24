@@ -315,3 +315,80 @@ RTL form. §9 lists them; owner decision 6 (recorded at T079) scopes SC-007 to *
 a value the shopper typed is not authored by the interface. Folding it properly means a text input plus digit
 normalisation on submit while the URL params stay Latin for the API — a real change, and a policy call, not a
 fold. Flagged rather than decided.
+
+---
+
+## T-P5 — the state treatments (T092) (2026-09-24)
+
+**Files touched:** `components/ui/button.tsx`, `components/shop/AddToCartButton.tsx`,
+`components/shop/ProductRail.tsx`, `app/(main)/home.css`. `app/globals.css` was **not** touched, and §9's
+granted exception for it turned out not to be needed.
+
+### The `summary` fix did not need the shared file
+
+§9 granted one exception: add `summary` to the global `:where(a, button, input, select, textarea):focus-visible`
+list. Before spending that, `grep -rn "<summary" components/ app/` returns **exactly one element in the whole
+codebase** — the FAQ disclosure in `#online-services`, on the homepage, in a file this task owns. So the rule
+went into `home.css` and `globals.css` keeps one owner. If a `<summary>` ever appears off the homepage the rule
+belongs in the `:where()` list instead, and that is a REQUEST rather than a silent second copy.
+
+Verified by walking the real Tab order — 260 presses, recording `getComputedStyle` wherever
+`:focus-visible` matched. `element.focus()` from script does **not** set `:focus-visible`; it is a modality
+state, so the first version of this probe would have reported every ring as missing.
+
+    FAQ summary      focusVisible ✓   outline: solid 2px rgb(100,2,17)  offset 3px
+    featured tab     focusVisible ✓   outline: solid 2px rgb(229,211,179) offset 3px
+    carousel nav     focusVisible ✓   outline: solid 2px rgb(100,2,17)  offset 3px
+
+The summary's ring is **oxblood, not champagne**, because `.band-paper` re-points `--aqua` at `--paper-brand`
+and the FAQ lives inside the light chapter: `#640211` on ivory is **11.94:1**. A champagne ring there would
+have been 1.30:1 — the one control affordance the T-P1 bands could have silently destroyed. (The probe's own
+line for the carousel nav reads 1.52 because it assumed the dark canvas as the ground; the nav is inside
+`#categories`, so the real number is 11.94. Recorded rather than quietly dropped.)
+
+### One genuine hole found by the walk: the product rail
+
+`ProductRail` carries `tabIndex={0}` on purpose — its own comment says a horizontally scrollable region that is
+not keyboard-reachable fails WCAG 2.1.1 — and it was getting the **UA default** ring: `outline: auto 1px
+rgb(16,16,16)`. On `#0B0204` that is a dark line on a darker page. A focus stop you cannot see is a focus stop
+you cannot use, so the component built specifically for keyboard access was the one control whose keyboard
+access was invisible. Fixed with the brand ring on the element, which covers every page that renders a rail
+rather than just the homepage.
+
+### One false positive, and it is the same lesson as T-P3
+
+The walk flagged an `input` with `outline: solid 2px rgba(0, 0, 0, 0)` — a transparent ring. It is not a defect:
+`components/ui/input.tsx` does `focus-visible:outline-none` and replaces the ring with
+`ring-2 ring-ring`, a box-shadow. The probe only read `outline`, so it could not see the affordance that was
+there. Same shape as the T-P3 miss: an assertion about one property is not an observation of the page.
+
+### `disabled:pointer-events-none` stays, and the reason is on the card
+
+§9 asked for the disabled control to have a reason instead of silence. Taking `pointer-events-none` off the
+Button base **does** make a `title` reachable — and it also lets `:hover` match a control that cannot be
+pressed, and all seven variants carry a hover treatment (`hover:-translate-y-0.5`, `hover:bg-aqua/10`,
+`hover:bg-accent`). A sold-out pill that lifts and lights up as you approach it is claiming to be pressable,
+which is a worse lie than silence. `disabled:cursor-not-allowed` is equally dead on an element taking no
+pointer events.
+
+The reason also turns out not to be missing. On the only disabled control in the shopper-facing path, the card's
+own stock row already renders «ناموجود» in words and the button carries `aria-label="ناموجود"` — visible to
+sighted and screen-reader users alike, where a tooltip that cannot fire is neither. So the requirement is met
+one element away from where §9 looked, and the `title` I had added was removed as decoration that never shows.
+
+### Pressed states
+
+`Button` already had `active:translate-y-px`; the gap was the **hand-rolled** pills, which are raw `<button>`
+and `<a>` elements with inline classes and no primitive. Measured during a real pointer-down:
+`transform: matrix(0.97, 0, 0, 0.97, 0, 0)` on the carousel's nav button, where before a press was
+indistinguishable from a hover. Applied as one shared rule for the homepage's pills rather than five
+per-component edits.
+
+**Not verified, and deliberately not attempted:** there are **21 hover-only `rounded-full` controls across the
+app** and most are outside this lane — `CartLine` (3), `CartDrawer`, `dialog`, `AdminSidebar`, `UserMenu`,
+`Header`, `ProductDetail` (2), `FilterSheet`, `CatalogListing`, `ShopResults`, `table`. The homepage's are done;
+the rest is one mechanical commit for whoever owns those files, and the list is here so nobody has to re-derive
+it.
+
+Gates: `tsc --noEmit` clean; `npx vitest run tests/unit` **223 passed / 23 files**; the T-P1 contrast audit
+re-run clean afterwards (31 and 17 text nodes, zero failures).

@@ -47,7 +47,7 @@ export function ProductRail({
       role="region"
       aria-label={label}
       tabIndex={0}
-      className="product-rail flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:pb-0 lg:grid-cols-3 2xl:grid-cols-4"
+      className="product-rail flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--aqua)] sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:pb-0 lg:grid-cols-3 2xl:grid-cols-4"
     >
       {products.map((product, i) => (
         // 45% shows two cards plus a sliver of the third. One card at 82% was
