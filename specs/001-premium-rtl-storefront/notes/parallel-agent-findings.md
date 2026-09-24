@@ -249,3 +249,69 @@ the curation question is settled.
 
 **Not verified.** The `Home`/`End`/wrap behaviour on a tablist of exactly two is weak evidence — every
 "advance" here is also "the other one". A three-tab list would test the arithmetic; `featuredTabs` has two.
+
+---
+
+## T-P4 — the numerals (T078), and four more leaked comments (2026-09-24)
+
+**Files touched:** `components/home/MobileQuickRoutes.tsx` (the one live numeral defect),
+`components/home/StoreExperience.tsx`, `components/shop/ProductDetail.tsx`,
+`components/shop/FilterSidebar.tsx` (rendered source comments), `tests/unit/jsx-child-comment.test.ts` (new).
+
+### The count in the brief was stale; the method was wrong anyway
+
+§9 says "20 authored Latin-digit sites". Static grep for `[0-9]` in a Tailwind codebase is noise — every
+`size-11`, `mt-2.5` and `rgba(229, 211, 179, 0.08)` matches. So the scan was done on the **rendered** text
+instead: walk every text node on `/`, `/shop`, `/partners`, `/cart`, `/login`, `/register` at 360, keep the ones
+containing an ASCII digit, and cross-check each against the strings in `data/hami-products.json` so a merchant's
+own product name can be told from something the site authored (owner decision 6 exempts the former, absolutely).
+
+What is actually left on screen, after the fixes below:
+
+| rendered | verdict |
+|---|---|
+| `OP18S`, `TCH Boom Trap L30`, `Compact 2045` | merchant-authored product names — exempt, must render exactly as written |
+| `همکاری عمده (B2B)`, `خریدار (B2C)` | Latin-script abbreviations, not numerals. «ب۲ب» would be wrong. Exempt by nature, recorded so nobody "fixes" it |
+
+Every site §9 named by line number is already folded or gone: `ProductCard`'s `−{off}٪` is fixed **and
+test-enforced** (`persian-typography.test.ts:147-151` asserts `toFaDigits(off)` is present and the raw form is
+not); `TrustBar.tsx` no longer exists; `lib/content/home.ts`'s ordinal fields are guarded by the
+`index|number|ordinal` rule at `persian-typography.test.ts:128-145`; `ShopBanner` reads `"SHOP / ۰۳"`;
+`PartnerForm` and `FilterSidebar`'s brand counts both go through `toFaDigits`.
+
+**One real defect remained**, and it was not on §9's list: `MobileQuickRoutes.tsx:16` rendered
+`String(index + 1).padStart(2, "0")` — «01 02 03 04» in Latin, on the same page that shows «۰۱» for the B2B
+steps and «۰۱» for the accessory categories. That is precisely the mixed-column case SC-007 is about. Now
+`toFaDigits(...)`, verified in the browser: `["۰۱","۰۲","۰۳","۰۴"]`.
+
+Note for the brief: §9 says to use `toFaDigits` from `lib/persian.ts`. There is no such export — it is
+`lib/utils.ts:24`, and that is what `CategoryCarousel` already imports. Followed the code.
+
+### Four source comments were being rendered to shoppers
+
+The one in `CategoryCarousel` that T-P1 turned up was not the only one. The same shape — `/*` in JSX **child**
+position instead of `{/*` — was found in three more files, all of them live on screen:
+
+- `StoreExperience.tsx:25` — the note explaining that the AI-lit store photograph was removed under FR-006,
+  printed under the heading it is about.
+- `ProductDetail.tsx:259` — on the **product page**, in the stock/warranty badge row, explaining that the
+  «ضمانت اصالت ۱۰۰٪» badge was removed for asserting an unmeasured percentage. The explanation of a retracted
+  claim was standing in the claim's place.
+- `FilterSidebar.tsx:131` — inside the brand chip container on `/shop`, as a flex item among the brands.
+
+All four are fixed. A new test holds the line: `tests/unit/jsx-child-comment.test.ts` scans every `.tsx` in
+`components/` and `app/` for a block comment whose previous non-blank line closes a tag — child position — and
+it carries a control case that runs the exact leaked text through the same detector, so the gate is known to be
+able to fail. `223 passed / 23 files`, up from 221/22.
+
+**Why this belongs in the suite and not in a review comment:** every one of these passed the accessibility
+check. The `CategoryCarousel` leak measured 17.82:1 — ink on paper, perfectly legible. Nothing in the toolchain
+objected to a page printing its own source code until something asked what the text *says*.
+
+### Deliberately not changed: the price range inputs
+
+`FilterSidebar`'s min/max fields are `type="number"`, so a typed price renders in Latin digits inside a Persian
+RTL form. §9 lists them; owner decision 6 (recorded at T079) scopes SC-007 to **interface-authored** strings, and
+a value the shopper typed is not authored by the interface. Folding it properly means a text input plus digit
+normalisation on submit while the URL params stay Latin for the API — a real change, and a policy call, not a
+fold. Flagged rather than decided.

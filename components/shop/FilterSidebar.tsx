@@ -128,11 +128,11 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
         <div className="space-y-2.5">
           <SidebarHeading>برند</SidebarHeading>
           <div className="flex flex-wrap gap-2">
-            /*
+            {/*
              * All of them, not the first twelve. `listBrands()` already excludes brands
              * with no products, so the slice only ever hid real doors — ترانیو and
              * COMTEL were reachable from nothing in the interface (FR-029, SC-014).
-             */
+             */}
             {brands.map((brand) => {
               const active = brand.slug === activeBrand;
               return (

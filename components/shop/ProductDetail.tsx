@@ -256,10 +256,10 @@ export function ProductDetail({ product }: Props) {
               <i className={cn("size-1.5 rounded-full", stockType === "out_of_stock" ? "bg-destructive" : "bg-emerald-400")} aria-hidden="true" />
               {stockLabels[stockType] ?? "—"}
             </span>
-            /* Owner-confirmed 2026-09-23, and a storefront-wide fact: the export
-               holds no guarantee field, so this must not look per-product. The
-               «ضمانت اصالت ۱۰۰٪» badge that sat here asserted a percentage nobody
-               measured and came out with it. */
+            {/* Owner-confirmed 2026-09-23, and a storefront-wide fact: the export
+                holds no guarantee field, so this must not look per-product. The
+                «ضمانت اصالت ۱۰۰٪» badge that sat here asserted a percentage nobody
+                measured and came out with it. */}
             <span className="rounded-full border border-champagne/20 bg-champagne/5 px-3 py-1 text-muted-foreground">
               {storeWarranty.label}
             </span>

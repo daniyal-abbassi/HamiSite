@@ -22,13 +22,13 @@ export function StoreExperience() {
         </div>
       </Reveal>
 
-      /*
+      {/*
        * A wide photograph of the store used to sit here, captioned «نور، ویترین،
        * قفسه‌ها و فضای واقعی مجموعه». It was an AI re-lit derivative, and FR-006
        * admits no store imagery as proof — owner's decision, 2026-09-23: removed
        * everywhere. The slot is left empty rather than filled with something
        * nearby; the facts below are what the business can stand behind.
-       */
+       */}
 
       <div className="mt-10 grid gap-5 sm:grid-cols-3" aria-label="اجزای تجربه خرید حضوری">
         {storeExperiencePoints.map((point, index) => {

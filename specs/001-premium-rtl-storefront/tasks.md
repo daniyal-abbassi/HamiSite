@@ -436,12 +436,23 @@ Depends on T003 for decisions 1, 2, 5.
   `components/admin/products/ProductsAdminClient.tsx:66,67,72`,
   `components/shop/FilterSidebar.tsx:71,72`. FR-058. Note the count *grew* from the 3 the checklist
   recorded, which is the argument for T084.
-- [ ] T078 [US5] Convert the 20 authored Latin-digit sites to Persian numerals, per FR-011/SC-007: worst is
+- [x] T078 [US5] Convert the 20 authored Latin-digit sites to Persian numerals, per FR-011/SC-007: worst is
   `−{off}٪` at `components/shop/ProductCard.tsx:186` (a raw number beside a Persian-digit price on the same
   card), then `components/home/TrustBar.tsx:42` ordinals beside `toFaDigits` output on the same page, the
   `lib/content/home.ts:180-265` ordinal fields, `components/shop/ShopBanner.tsx:24,29`,
   `components/partners/PartnerForm.tsx:94-96`, and `components/shop/FilterSidebar.tsx:157,170` number
   inputs. Use the existing `formatToman`/`toFaDigits`; research D7 rejects a new layer.
+  **Done 2026-09-24 (T-P4). The count was stale** — scanned on rendered text at 360 rather than by grep, and
+  cross-checked against `data/hami-products.json` so merchant-authored names stay exempt (decision 6). Six of
+  §9's named sites were already folded or deleted (`ProductCard`'s badge is test-enforced, `TrustBar.tsx` is
+  gone, the `lib/content` ordinals are guarded, `ShopBanner` reads «۰۳», `PartnerForm`/`FilterSidebar` counts
+  use `toFaDigits`). **One real defect remained and was not on the list:** `MobileQuickRoutes.tsx:16` rendered
+  Latin «01–04» beside Persian «۰۱» on the same page — now `toFaDigits`, verified as `["۰۱","۰۲","۰۳","۰۴"]`.
+  **Left alone deliberately:** the `type="number"` price fields, because a shopper-typed value is not an
+  interface-authored string (decision 6 / T079) and converting it is a policy call. Also fixed here: four
+  source comments were being **rendered to shoppers** as JSX children (`CategoryCarousel`, `StoreExperience`,
+  `ProductDetail`, `FilterSidebar`) — see `notes/parallel-agent-findings.md` §T-P4 and the new
+  `tests/unit/jsx-child-comment.test.ts`, which holds the line.
 - [x] T079 **Resolved by decision 6.** SC-007 is scoped to interface-authored strings: 186 of 189 product names and 148
   spec sets interleave Latin digits with Persian in `data/hami-products.json`, which is frozen. Either the
   merchant corrects the source, or SC-007 is scoped to interface-authored strings. Merchant product text renders **exactly as written** — including `512` inside a Persian name — because
