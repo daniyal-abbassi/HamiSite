@@ -67,12 +67,17 @@ pane_worker() {
 pane_state() {
   local s="$1" tail
   tmux has-session -t "$s" 2>/dev/null || { echo "NO_SESSION"; return; }
-  tail="$(tmux capture-pane -p -t "$s" 2>/dev/null | grep -v '^[[:space:]]*$' | tail -3)"
+  local all; all="$(tmux capture-pane -p -t "$s" 2>/dev/null)"
+  tail="$(printf '%s' "$all" | grep -v '^[[:space:]]*$' | tail -3)"
+  case "$all" in
+    *"msg=interrupt"*|*"/steer"*|*"esc to cancel"*|*"esc interrupt"*|*"Generating"*|*"Compacting"*) echo "BUSY"; return ;;
+  esac
   case "$tail" in
-    *esc*interrupt*) echo "WAITING_INPUT" ;;
+    *"msg=interrupt"*|*"/steer"*|*"⏱"*|*"esc to cancel"*|*"esc interrupt"*|*"Generating"*|*"Compacting"*) echo "BUSY" ;;
+    *"Do you want"*|*"Allow "*|*"proceed?"*) echo "WAITING_INPUT" ;;
     *"? "*|*"y/n"*|*approval*|*permission*) echo "WAITING_INPUT" ;;
     *"✦"*|*"\$"*|*"λ"*|*"❯"*|*"> "*|*λ*) echo "IDLE" ;;
-    *esc*|*"Thinking"*|*Running*|*…*) echo "BUSY" ;;
+    *"Thinking"*|*"Running"*|*"running"*|*"thinking"*) echo "BUSY" ;;
     *) echo "UNKNOWN" ;;
   esac
 }
@@ -141,11 +146,12 @@ identity_guard() {
 cmd_send() {
   local w="${1:-}"; shift || true
   case "$w" in qoder|hermes|opencode) ;; *) die "send needs a worker: qoder|hermes|opencode" ;; esac
-  local TASK="" PF="" MODE="research" TIMEOUT=600 DRY=0; OWNED=(); VERIFY=()
+  local TASK="" PF="" MODE="research" TIMEOUT=600 DRY=0 ASSUME_IDLE=0; OWNED=(); VERIFY=()
   while [ $# -gt 0 ]; do case "$1" in
     --task) TASK="${2:-}"; shift 2 ;; --prompt-file) PF="${2:-}"; shift 2 ;; --mode) MODE="${2:-}"; shift 2 ;;
     --owned) IFS=',' read -r -a _o <<< "${2:-}"; OWNED+=("${_o[@]}"); shift 2 ;; --verify) VERIFY+=("${2:-}"); shift 2 ;;
-    --timeout) TIMEOUT="${2:-600}"; shift 2 ;; --dry-run) DRY=1; shift ;; *) die "unknown arg $1" ;;
+    --timeout) TIMEOUT="${2:-600}"; shift 2 ;; --dry-run) DRY=1; shift ;;
+    --assume-idle) ASSUME_IDLE=1; shift ;; *) die "unknown arg $1" ;;
   esac; done
   [ -n "$TASK" ] || die "--task required"
   [[ "$TASK" =~ ^[A-Za-z0-9._-]+$ ]] || die "--task must match ^[A-Za-z0-9._-]+$"
@@ -216,21 +222,41 @@ sys.exit(0 if mine & set(a.get('owned',[])) else 1)"; then
   fi
 
   case "$st" in
-    BUSY|WAITING_INPUT) echo "worker-ctl: $s is $st — not sending into a busy pane. Wait, or worker-ctl stop $s." >&2; rm -f "$BRIEF"; exit 5 ;;
+    BUSY|WAITING_INPUT)
+      if [ "$ASSUME_IDLE" = "1" ]; then
+        echo "worker-ctl: state read $st but --assume-idle was passed, so the Boss has looked at the pane personally. Sending." >&2
+      else
+        echo "worker-ctl: $s is $st — not sending into a busy pane. Wait, or worker-ctl stop $s, or pass --assume-idle after reading the pane yourself." >&2; rm -f "$BRIEF"; exit 5
+      fi ;;
   esac
 
   # the send itself: buffer, paste with bracketed paste, submit. Never shell-interpolated.
+  # RE-VERIFY identity immediately before pasting. Between the check at the top of send and this moment a
+  # worker can exit and leave its shell prompt behind — and a brief pasted into bash is a script the Boss
+  # just tried to execute. Cheaper to refuse twice than to explain once.
+  pw_now="$(pane_worker "$s")"
+  if [ "$pw_now" != "$w" ]; then
+    echo "worker-ctl: WORKER_IDENTITY_MISMATCH at send time — pane is now '$pw_now', expected '$w'. Nothing was pasted." >&2
+    exit 4
+  fi
   BUF="ht-$TASK"
   tmux load-buffer -b "$BUF" "$BRIEF" || die "load-buffer failed"
   tmux paste-buffer -p -b "$BUF" -t "$s" || die "paste-buffer failed"
-  tmux send-keys -t "$s" Enter
+  sleep 1; tmux send-keys -t "$s" Enter
+  # qodercli eats the newline right after a bracketed paste and leaves "[Pasted Text: N lines]" sitting in the
+  # input box, so the task is typed but never submitted. Re-check and nudge once, loudly rather than silently.
+  sleep 2
+  if tmux capture-pane -p -t "$s" | tail -20 | grep -q "Pasted Text"; then
+    echo "worker-ctl: note — the paste is still unsubmitted in $s; sending a second Enter." >&2
+    tmux send-keys -t "$s" Enter
+  fi
   tmux delete-buffer -b "$BUF"
   BEFORE_LINES="$(tmux capture-pane -p -S - -t "$s" | wc -l)"
   rm -f "$BRIEF"
 
   # poll for this task's contract JSON in the pane's scrollback
   local RESULT="$INBOX/$w/$TASK.json"; mkdir -p "$INBOX/$w"
-  START=$(date +%s); STATUS="COMPLETION_UNKNOWN"; PAYLOAD=""
+  START=$(date +%s); STATUS="COMPLETION_UNKNOWN"; PAYLOAD=""; IDLE_RUN=0; SAW_BUSY=0
   while [ $(( $(date +%s) - START )) -lt "$TIMEOUT" ]; do
     sleep 6
     SCROLL="$(tmux capture-pane -p -S -3000 -t "$s")"
@@ -251,17 +277,22 @@ for x in reversed(c):
 print('' if p is None else json.dumps(p,ensure_ascii=False))")" && [ -n "$PAYLOAD" ]; then
       STATUS="COMPLETED"; break
     fi
-    case "$(pane_state "$s")" in IDLE) [ $(( $(date +%s) - START )) -gt 30 ] && break ;; esac
+    pst="$(pane_state "$s")"
+    [ "$pst" = "BUSY" ] && SAW_BUSY=1
+    # Never give up before the worker was seen to start: qodercli's paste sat unsubmitted for 45s and the
+    # first persistent send declared failure on a task that had not begun. Idle-with-no-start is not done.
+    if [ "$pst" = "IDLE" ] && [ "$SAW_BUSY" = "1" ]; then IDLE_RUN=$((IDLE_RUN+1)); else IDLE_RUN=0; fi
+    [ "$IDLE_RUN" -ge 2 ] && break
   done
   DUR=$(( $(date +%s) - START ))
 
   BEFORE="$(git -C "$ROOT" status --porcelain=v1 | awk '{print $NF}' | sort)"
-  python3 - "$RESULT" "$TASK" "$w" "$STATUS" "$PAYLOAD" "$DUR" "$BEADS" "$ROOT" "$s" <<'PY'
+  python3 - "$RESULT" "$TASK" "$w" "$STATUS" "$PAYLOAD" "$DUR" "$BEADS" "$ROOT" "$s" "$BEFORE" <<'PY'
 import json,sys,re,subprocess
-res,task,w,status,payload,dur,beads,root,s = sys.argv[1:10]
+res,task,w,status,payload,dur,beads,root,s,before = sys.argv[1:12]
 def red(x): return re.sub(r'(?i)(sk-[A-Za-z0-9_\-]{6,}|Bearer\s+\S+|token["\s:=]+[A-Za-z0-9_\-]{8,})','[redacted]',str(x))[:1200]
 after=subprocess.run("git status --porcelain=v1 | awk '{print $NF}' | sort",shell=True,cwd=root,capture_output=True,text=True).stdout.split()
-changed=sorted(set(after)-set())
+changed=sorted(set(after)-set(x for x in before.split("\n") if x))
 if payload:
     d=json.loads(payload)
     d["task_id"],d["worker"]=task,w
