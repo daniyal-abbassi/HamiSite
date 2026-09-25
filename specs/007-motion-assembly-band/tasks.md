@@ -88,6 +88,18 @@ sections are deleted — FR-016 says there is no rollback, so git history is the
 
 ## Phase 2: Foundational (structure that blocks BOTH user stories)
 
+> **⛔ BLOCKED as of 2026-09-25 22:2x — read `notes/pin-geometry-review.md` before executing anything in this
+> phase.** A fresh-context review plus source checks I verified myself found that the pinned design is
+> unsatisfiable as specified: the immovable phone bar cannot outrank `MobileDock` from inside `.wrap`'s
+> z-index ceiling (FR-018/SC-006 fail by geometry), the composition's static footprint alone plausibly exceeds
+> `SC-001`'s 2,400px before any pin run is added, and transforms cannot compress ~2,600px of flow into the
+> ±176px the offset table provides (beat 0 does not exist). `T012` is the irreversible step and it is on hold
+> pending an owner ruling with three named options. `T027` — measure before deleting — runs first, and my
+> original ordering of it *after* `T012` was a defect in this file, not in the design docs.
+>
+> Tasks `T006`, `T014` are done (guard arithmetic re-anchored, red on one assertion by design). `T011`, `T012`,
+> `T013` are blocked. `T058`–`T062` below were added by the review.
+
 **Purpose**: The band mounted, the three sections deleted, the ground re-anchored, and the pin actually
 pinning at 360.
 
@@ -160,14 +172,28 @@ is why the wiring is foundational rather than a US2 task.
       `SUBTREE_ANCHORS` in both the set-size formula (`:47-59`) and the order assertion (`:58`), making
       T006 pass. Expected arithmetic: accounted = 9 + 1 − 1 = 9 against 9 rendered sections
       (`top, obtainable-now, featured, categories, brands, new-arrivals, b2b, online-services,
-      store-experience[band]`).
-- [ ] T016 **Control-run the guard — mandatory, and the reason this is its own task.** With T015 green,
-      delete one band-adjacent section id from `app/(main)/page.tsx` without touching the lists, run
+      store-experience[band]`). **This cannot go green before T056** — the guard reads
+      `baseline/manifest-after.json`, which is captured from the rendered page, so between T012 and T056 it
+      correctly fails with `expected 11 to be 9`. That red is the guard working, not a defect: it is
+      detecting that the declared anchors no longer match the page. Do not weaken the assertion to get
+      green early.
+- [ ] T056 Regenerate `specs/001-premium-rtl-storefront/baseline/manifest-after.json` with
+      `node specs/001-premium-rtl-storefront/verification/capture-baseline.mjs` immediately after T012,
+      before T015 can be ticked. Placed last in the numbering so the Beads phase ranges
+      (`8sv.2 = T006–T019`) that qoder-ide mirrored stay valid, but it **executes between T012 and T015** —
+      the ordering defect is this file's, not the guard's: the manifest refresh was written into Polish as
+      T049, where it arrives far too late to let the drift guard go green at the checkpoint. T049 still
+      stands as the final re-capture after the choreography changes the page again.
+
+- [ ] T016 **Control-run the guard — mandatory, and the reason this is its own task.** After T056 has
+      refreshed the manifest and T015 is green, delete one band-adjacent section id from
+      `app/(main)/page.tsx` without touching the lists, run
       `npx vitest run tests/unit/atmosphere-progression.test.ts`, and confirm it goes **red** on the
       set-size assertion; restore and confirm green. Paste both outputs into
       `specs/007-motion-assembly-band/notes/drift-guard-control-run.md`. A guard that passes because the
-      author made its input agree with it is decoration — that exact incident is recorded in
-      `lib/atmosphere/progression.ts:44-53`.
+      author made its input agree with it is decoration — the incident where that happened is recorded in
+      the `UNANCHORED_SECTIONS` doc comment of `lib/atmosphere/progression.ts`.
+
 - [ ] T017 [owner:partner-or-granted] Remove the orphaned `.final-conversion` block at
       `app/(main)/home.css:400-409` (that file is `partner`'s row in `.agent-pair/README.md`: make the
       edit under a board GRANT, or hand the four-line deletion to partner and tick this on their
@@ -180,8 +206,10 @@ is why the wiring is foundational rather than a US2 task.
       `#final-conversion` repo-wide and record the result: the only in-page `href="#…"` today is the
       `#store-experience` self-link at `components/home/TrustBlocks.tsx:38`, which retires with its
       file (blueprint §8 Q3).
-- [ ] T019 [P] Run `npx tsc --noEmit` and `npm run lint`; fix what this phase introduced. Report the
-      counts before and after rather than reporting "clean" from memory.
+- [ ] T019 [P] Run `npm run typecheck` (= `tsc --noEmit`) and fix what this phase introduced. **There is no
+      lint gate in this repo**: `package.json` has no `lint` script and no ESLint config at the root, so
+      `npm run lint` drops into an interactive "set up ESLint?" prompt — do not answer it, and do not add a
+      config as a side effect of this feature. Report the typecheck result from the actual output.
 
 **Checkpoint**: One band section on the page, three files deleted, the ground pinned to the new
 structure with a guard that has been shown to fail, and — the real gate — the shell actually pins at
@@ -301,7 +329,8 @@ mid-sequence reload, (e) reduced motion shows the same content static.
       (`assembly-band.css:50-64`, currently up to `7.5rem`): no part may fly off the shell or behind the
       immovable bar, and nothing may become unreadable mid-flight (SC-005's sampler is T048, and it must
       pass on the tuned values). Note the table's own comment calls these magnitudes a tuning seam, not
-      final (`blueprint.md:236` via the board report at 19:05).
+      final — qoder said as much on the board at 19:05 ("offset magnitudes in the `[data-band-part]` table
+      are a tuning seam, not final").
 - [ ] T032 [P] [US2] Prove FR-008: read every offset as a magnitude plus a direction named in reading
       terms, and confirm the rendered composition at 360 mirrors correctly by screenshotting the band
       from an RTL-flipped probe. The site is permanently `dir="rtl"` (`app/layout.tsx:95`) and the CSS
@@ -438,6 +467,53 @@ every time, Persian digits, text never changes.
 
 ---
 
+### Tasks added by `notes/pin-geometry-review.md` (2026-09-25) — these BLOCK T012
+
+- [ ] T056 Regenerate `specs/001-premium-rtl-storefront/baseline/manifest-after.json` with
+      `node specs/001-premium-rtl-storefront/verification/capture-baseline.mjs` immediately after T012 and
+      before T015 can be ticked (the drift guard reads a DOM capture, so it cannot go green against a page that
+      has already changed). Placed here rather than in numeric order so the Beads phase ranges qoder-ide
+      mirrored stay valid; it executes between T012 and T015.
+- [ ] T058 Give the immovable layer a layer it can actually win. `app/globals.css:174-177` caps every descendant
+      of `.wrap` at `z-index: 2`, while `components/layout/MobileDock.tsx:90` is `fixed … bottom-3 z-40` and
+      `components/layout/Header.tsx:80` is `fixed inset-x-0 top-0 z-50`. As structured, **no `z-index` on the bar
+      can outrank the dock**, so `T040`'s `elementFromPoint` sweep returns the dock and FR-018/SC-006 cannot be
+      met at 360 — the requirement with veto power fails by stacking geometry, not by coding. Fix requires either
+      lifting the bar out of `.wrap` or raising the ceiling, and this file had no task for it. Verify with the
+      measured boxes from T027, in px, before choosing.
+- [ ] T059 Fix the three fallback defects that exist today, independent of the pin decision, in
+      `components/home/assembly-band.css`: (a) `:120-133` reset `min-height` and never `height`, so an
+      `height: 100svh` shell from T011 would paint ~900px of centred content above the section and ~900px over the
+      footer in reduced-motion and print; (b) both blocks set the shell `position: static`, which stops it being a
+      containing block, so `.assembly-band__immovable` resolves against the initial containing block and floats
+      over unrelated content while `padding-block-end: 4.5rem` leaves a 72px hole; (c) `@media print` neutralises
+      only `transition` on `.heading-arrival__word` and never clears the `.heading-arrival--armed` hidden state at
+      `:106-110`, so a heading armed at print time loses its text (FR-013).
+- [ ] T060 Replace `animation-range: entry 100% exit 0%` (`assembly-band.css:92`) with the `-crossing` form, or
+      prove it works. `entry`/`exit` are containment-bounded and the track is ~3× the scrollport, so the range's
+      endpoints are unreachable; and a `view()` timeline's progress is a function of (subject, scrollport) while
+      the pin window is (track − shell) — they coincide today only because `--band-track` happens to be
+      `shell + 1600px`. Rewrite T028 to that effect and re-sample the beats at 5 scroll positions after the change.
+- [ ] T061 Resolve the FR-001 vs FR-012/US2-AC1 collision in `specs/007-motion-assembly-band/spec.md` — the
+      arrival needs words at `opacity: 0` with `blur(6px)`, and the band promises every point of the sequence is
+      present and legible. Because beat 0 stacks all three headings inside the pinned shell, the arrivals fire
+      *during* the choreography. This is a requirements contradiction, not an arming bug: amend the spec to scope
+      one of them (which text is exempt, across which t range) before T048's contrast sweep is allowed to "pass".
+- [ ] T062 Choose and record what `band-settled` is an anchor *for*, against `blueprint.md:168`'s promise that the
+      ground reaches `close` by t≈0.85. `useAtmosphereGround.ts:54-68` measures anchors on mount/resize/load and
+      never on scroll, so an anchor inside the pinned region freezes at a stale offset, and an anchor at the
+      track's end cannot be reached at 85% of a linear scroll interpolation. Either move the anchor or amend the
+      sentence; T036/SC-009 are currently written to fail on geometry. Also record that
+      `--band-track: calc(100svh + 1600px)` makes SC-001 viewport-relative (~3,040px in a 1,440px window), which
+      `spec.md:158-159`'s edge cases have no task for.
+- [ ] T063 Re-derive the budget from the measured static height before T012 is executed, not after: if the band's
+      static composition at 360 exceeds ~1,600px, then `SC-001`'s ≤2,400px is unreachable for any pinned variant
+      (`footprint = track + in-flow siblings`, and a pin run is *added* to the composition rather than
+      re-arranging it), and the irreversible deletion in T012 must not happen on the current content. The owner's
+      ruling in `notes/pin-geometry-review.md` §"The ruling the owner has to make" decides the shape.
+
+---
+
 ## Dependencies & Execution Order
 
 ### Phase Dependencies
@@ -446,8 +522,9 @@ every time, Persian digits, text never changes.
   control images and the "before" string set can only be reconstructed from git, and a checkout at the
   old commit changes the page's height and therefore the heading's subpixel position, which silently
   breaks the SC-002 pixel comparison.
-- **Phase 2 (Foundational)**: BLOCKS BOTH user stories. T011 → T012 (same commit) → T013, and
-  T006 → T014 ↔ T015 → T016.
+- **Phase 2 (Foundational)**: BLOCKS BOTH user stories. T011 → T012 (one commit, with T014) → T056 →
+  T013, and T006 → T014 ↔ T015 → T016. T056 sits inside that chain because the guard's input is a captured
+  file, not the source: the re-anchor cannot be observed green until the page and the manifest agree.
 - **Phase 3 (US1, P1)**: depends on Phase 2 (the headings it animates exist only inside the band).
   Owner: qoder, after the T001/T002 lock handoff.
 - **Phase 4 (US2, P2)**: depends on Phase 2's structure and on T013's pin actually working. Owner: driver.
@@ -519,7 +596,8 @@ it must be described as such and not as a paused feature.
 - **Two states, one sticky box.** The blueprint's pinned beats and its flowing locked composition are
   not the same geometry (T011).
 - **A guard that agrees with its own author.** T016 exists because this exact failure already happened
-  once in this checkout (`lib/atmosphere/progression.ts:44-53`).
+  once in this checkout — the story is in the `UNANCHORED_SECTIONS` doc comment of
+  `lib/atmosphere/progression.ts`, next to the line that records it.
 
 ---
 

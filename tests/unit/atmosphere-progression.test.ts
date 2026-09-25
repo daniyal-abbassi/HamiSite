@@ -8,6 +8,7 @@ import {
   PROGRESSION,
   SCENE_TEXT_COLOURS,
   INTERIOR_GROUNDS,
+  SUBTREE_ANCHORS,
   contrastOn,
   interiorGround,
   luminanceOf,
@@ -43,19 +44,42 @@ describe("homepage section anchors", () => {
    * changing the page could make the guard pass by editing the record. That is not hypothetical: it is what
    * happened on 2026-09-24 when the accessories chapter was removed. A guard whose input you can rewrite to
    * match your change is decoration (see `notes/parallel-agent-plan.md` §5.1).
+   *
+   * **Why `SUBTREE_ANCHORS` is subtracted from both sides.** The manifest is built from
+   * `document.querySelectorAll("section")`, so an anchor that lives on a `div` inside a section — which is
+   * what feature 007's `band-settled` is, because the assembly band is one section carrying three
+   * statements and cannot also be a second landmark — can never appear in the captured list. Counting it as
+   * an accounted section makes the size assertion red by one; comparing the order against the full anchor
+   * list makes the order assertion red by the same one (8 rendered against 9 declared). Both sides have to
+   * drop it, and the set it drops is declared in the source rather than inferred from the manifest, so
+   * adding an in-section anchor is still a deliberate edit to `progression.ts`.
    */
   it("covers every section the browser actually rendered, each one anchored or explicitly exempt", () => {
     const manifest = JSON.parse(
       readFileSync(join(process.cwd(), "specs/001-premium-rtl-storefront/baseline/manifest-after.json"), "utf8"),
     ) as { surfaces: { home: { "360px": { sections: string[] } } } };
     const rendered = manifest.surfaces.home["360px"].sections;
-    const accountedFor = new Set<string>([...HOMEPAGE_SECTIONS, ...UNANCHORED_SECTIONS]);
+    const outsideSubtree = (id: string) => !(SUBTREE_ANCHORS as readonly string[]).includes(id);
+    const accountedFor = new Set<string>(
+      [...HOMEPAGE_SECTIONS, ...UNANCHORED_SECTIONS].filter(outsideSubtree),
+    );
 
     expect(rendered.length).toBe(accountedFor.size);
     for (const id of rendered) expect(accountedFor.has(id), `${id} renders but is neither anchored nor exempt`).toBe(true);
     // Anchors must appear in the same relative order as the DOM, or the ground moves backwards.
     const order = rendered.filter((id) => (HOMEPAGE_SECTIONS as readonly string[]).includes(id));
-    expect(order).toEqual([...HOMEPAGE_SECTIONS]);
+    expect(order).toEqual([...HOMEPAGE_SECTIONS].filter(outsideSubtree));
+  });
+
+  it("declares subtree anchors as anchors, and never as rendered sections", () => {
+    for (const id of SUBTREE_ANCHORS) {
+      expect(HOMEPAGE_SECTIONS, `${id} must be an anchor to be exempt from the section count`).toContain(id);
+      expect(UNANCHORED_SECTIONS).not.toContain(id);
+    }
+    const manifest = JSON.parse(
+      readFileSync(join(process.cwd(), "specs/001-premium-rtl-storefront/baseline/manifest-after.json"), "utf8"),
+    ) as { surfaces: { home: { "360px": { sections: string[] } } } };
+    for (const id of manifest.surfaces.home["360px"].sections) expect(SUBTREE_ANCHORS).not.toContain(id);
   });
 
   it("has more than one stage — FR-001 makes a single stage invalid by definition", () => {
