@@ -1,0 +1,319 @@
+#!/usr/bin/env bash
+# worker-ctl — persistent worker control over the three tmux sessions. Same Boss, same safety, new transport.
+#
+# This is TRANSPORT, not orchestration. It never plans work, never chooses a task, and never creates a
+# terminal window or tab: the human's one GNOME Terminal window with its three tabs stays exactly as it is,
+# and after the one-time migration each tab is simply a client of a tmux session that outlives it.
+#
+#   worker-ctl status                         # who is there, what state, identity verified
+#   worker-ctl send hermes --task T027 --prompt-file f.md [--mode research|implement] [--owned a,b]
+#   worker-ctl output hermes [--lines 400]
+#   worker-ctl stop   hermes                  # Ctrl-C the pane; the CLI stays up, the turn aborts
+#   worker-ctl continue hermes <session-id>   # native resume, inside the same pane
+#   worker-ctl migrate                        # prints the ONE-TIME per-tab procedure, runs nothing
+#
+# Safety inherited from dispatch-worker, deliberately duplicated rather than weakened:
+#   * identity check on the pane's process tree — a session named hh-qoder that is not running qodercli
+#     produces WORKER_IDENTITY_MISMATCH and the task is refused. Names are not evidence.
+#   * lock check with the .agent-pair convention (slash -> double underscore) before any writable send.
+#   * beads probe; if bd is unreachable the send records skipped-unavailable and changes nothing.
+#   * exit code / last line is never treated as success: completion requires the task's contract JSON in
+#     the pane, and every --verify command re-run by the Boss afterwards. Otherwise COMPLETION_UNKNOWN.
+#   * no destructive git. No secrets in results, logs or the board.
+set -u
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || { echo "worker-ctl: not in a git repo" >&2; exit 2; }
+MANIFEST="$ROOT/tools/dispatch/workers.json"
+INBOX="$ROOT/.agent-pair/inbox"; ACTIVE="$ROOT/.agent-pair/dispatch/active"; LOCKS="$ROOT/.agent-pair/locks"
+BOARD="$ROOT/.agent-pair/BOARD.md"; HB="$ROOT/.agent-pair"
+command -v tmux >/dev/null 2>&1 || { echo "worker-ctl: tmux is not installed — persistent mode cannot run" >&2; exit 2; }
+[ -f "$MANIFEST" ] || { echo "worker-ctl: missing $MANIFEST" >&2; exit 2; }
+
+SESSION_PREFIX="hh-"
+declare -A EXPECTED_CMD=( [qoder]="qodercli" [hermes]="hermes" [opencode]="opencode" )
+declare -A WORKER_PATH=( [qoder]="/home/lain/.local/bin/qodercli" [hermes]="/home/lain/.local/bin/hermes" [opencode]="/home/lain/.opencode/bin/opencode" )
+
+die() { echo "worker-ctl: $*" >&2; exit 2; }
+sess() { echo "${SESSION_PREFIX}$1"; }
+
+# every pane pid the tmux server currently owns
+pane_pids() { tmux list-panes -a -F '#{pane_pid}' 2>/dev/null; }
+
+descendants() { local p="$1" c; for c in $(pgrep -P "$p" 2>/dev/null); do echo "$c"; descendants "$c"; done; }
+
+# what worker, if any, is running inside a session. Two independent signals, because tmux may run the CLI
+# AS the pane process (tmux new-session -s hh-qoder qodercli) or as the child of the pane's shell
+# (the migration's interactive case): tmux's own pane_current_command, then the whole descendant tree
+# including the pane pid itself. An earlier version walked only children of the pane, so it reported a real
+# worker as NO_WORKER and refused a valid task.
+pane_worker() {
+  local s="$1" pane_pid pcc w c
+  pane_pid="$(tmux list-panes -t "$s" -F '#{pane_pid}' 2>/dev/null | head -1)"
+  [ -n "$pane_pid" ] || { echo "NO_SESSION"; return; }
+  pcc="$(tmux list-panes -t "$s" -F '#{pane_current_command}' 2>/dev/null | head -1)"
+  for w in qoder hermes opencode; do
+    case "$pcc" in *"${EXPECTED_CMD[$w]}"*) echo "$w"; return ;; esac
+  done
+  for c in "$pane_pid" $(descendants "$pane_pid"); do
+    local cl; cl="$(tr '\0' ' ' < "/proc/$c/cmdline" 2>/dev/null)"
+    for w in qoder hermes opencode; do
+      case "$cl" in *"${EXPECTED_CMD[$w]}"*) echo "$w"; return ;; esac
+    done
+  done
+  echo "NO_WORKER"
+}
+
+# IDLE | BUSY | WAITING_INPUT | NO_SESSION | NO_WORKER | UNKNOWN — a heuristic, and labelled as one
+pane_state() {
+  local s="$1" tail
+  tmux has-session -t "$s" 2>/dev/null || { echo "NO_SESSION"; return; }
+  tail="$(tmux capture-pane -p -t "$s" 2>/dev/null | grep -v '^[[:space:]]*$' | tail -3)"
+  case "$tail" in
+    *esc*interrupt*) echo "WAITING_INPUT" ;;
+    *"? "*|*"y/n"*|*approval*|*permission*) echo "WAITING_INPUT" ;;
+    *"✦"*|*"\$"*|*"λ"*|*"❯"*|*"> "*|*λ*) echo "IDLE" ;;
+    *esc*|*"Thinking"*|*Running*|*…*) echo "BUSY" ;;
+    *) echo "UNKNOWN" ;;
+  esac
+}
+
+cmd_status() {
+  printf '%-10s %-14s %-16s %-10s %s\n' WORKER SESSION STATE IDENTITY PANE_PID
+  for w in qoder hermes opencode; do
+    local s; s="$(sess $w)"
+    if ! tmux has-session -t "$s" 2>/dev/null; then
+      printf '%-10s %-14s %-16s %-10s %s\n' "$w" "$s" "NO_SESSION" "-" "-"; continue
+    fi
+    local pw st pid; pw="$(pane_worker "$s")"; st="$(pane_state "$s")"
+    pid="$(tmux list-panes -t "$s" -F '#{pane_pid}' 2>/dev/null | head -1)"
+    local id="OK"; [ "$pw" = "NO_WORKER" ] && id="EMPTY-PANE"; [ "$pw" != "$w" ] && [ "$pw" != "NO_WORKER" ] && id="MISMATCH($pw)"
+    printf '%-10s %-14s %-16s %-10s %s\n' "$w" "$s" "$st" "$id" "$pid"
+  done
+}
+
+cmd_migrate() {
+  cat <<EOF
+ONE-TIME migration — run in your EXISTING tabs. No new window, no new tab, nothing killed by this tool.
+
+Each tab is already a terminal with a shell. 'tmux new-session -A' makes that same terminal a client of a
+named tmux session (attaching if it exists, creating it if not), so the human-visible layout never changes
+and the worker inside it survives the tab being closed.
+
+  TAB 1 (Qoder,    pts/$(ps -o tty= -p 4138 2>/dev/null | tr -d ' pts/'))  →  inside the running qodercli: /exit   (or Ctrl-C twice)
+      tmux new-session -A -s hh-qoder
+      qodercli --resume <session-id>        # or plain 'qodercli' to start fresh; -c continues the last
+
+  TAB 2 (Hermes,   pts/$(ps -o tty= -p 16836 2>/dev/null | tr -d ' pts/'))  →  inside the running hermes: /exit or Ctrl-C
+      tmux new-session -A -s hh-hermes
+      /home/lain/.local/bin/hermes --continue          # or --resume <id|title>
+
+  TAB 3 (OpenCode, pts/$(ps -o tty= -p 19438 2>/dev/null | tr -d ' pts/'))  →  inside the running opencode: Ctrl-C / :quit
+      tmux new-session -A -s hh-opencode
+      /home/lain/.opencode/bin/opencode --continue
+
+Why a restart and not an adopt: those three processes are attached to GNOME Terminal's own PTYs
+(pts/0, pts/1, pts/3) with the tmux server owning no panes at all. Moving a live full-screen TUI into tmux
+without restarting it needs reptyr (ptrace), which is not installed and ptrace_scope=1 restricts — and even
+when it works, hijacking a running TUI's terminal is unreliable. So adoption is refused rather than faked:
+the migration restarts each CLI once, and the native resume flags above are what preserve the conversation.
+
+Before you quit anything, capture the ids to resume (this tool does NOT kill workers to get them):
+  qoder    ls -t ~/.qoder/projects/*HamiSite-basic-structure*/*.jsonl | head -5     # newest = the tab's session
+  hermes   hermes sessions list          # interactive-only if it refuses: see ~/.hermes for the store
+  opencode sqlite3 ~/.local/share/opencode/opencode.db 'select id,title from session order by rowid desc limit 5;'
+EOF
+}
+
+identity_guard() {
+  local w="$1" pw; pw="$(pane_worker "$(sess $w)")"
+  if [ "$pw" = "NO_SESSION" ]; then
+    echo "worker-ctl: $(sess $w) does not exist yet — run the one-time migration (worker-ctl migrate) in tab ${w}." >&2
+    echo "worker-ctl: refusing to start a worker myself: that would be a duplicate of your live PTY session and a new process per task, both forbidden." >&2
+    exit 3
+  fi
+  if [ "$pw" != "$w" ]; then
+    echo "worker-ctl: WORKER_IDENTITY_MISMATCH — session $(sess $w) is running '$pw', not '$w'." >&2
+    echo "worker-ctl: task refused. Session names are not evidence; the pane's process tree is." >&2
+    exit 4
+  fi
+}
+
+cmd_send() {
+  local w="${1:-}"; shift || true
+  case "$w" in qoder|hermes|opencode) ;; *) die "send needs a worker: qoder|hermes|opencode" ;; esac
+  local TASK="" PF="" MODE="research" TIMEOUT=600 DRY=0; OWNED=(); VERIFY=()
+  while [ $# -gt 0 ]; do case "$1" in
+    --task) TASK="${2:-}"; shift 2 ;; --prompt-file) PF="${2:-}"; shift 2 ;; --mode) MODE="${2:-}"; shift 2 ;;
+    --owned) IFS=',' read -r -a _o <<< "${2:-}"; OWNED+=("${_o[@]}"); shift 2 ;; --verify) VERIFY+=("${2:-}"); shift 2 ;;
+    --timeout) TIMEOUT="${2:-600}"; shift 2 ;; --dry-run) DRY=1; shift ;; *) die "unknown arg $1" ;;
+  esac; done
+  [ -n "$TASK" ] || die "--task required"
+  [[ "$TASK" =~ ^[A-Za-z0-9._-]+$ ]] || die "--task must match ^[A-Za-z0-9._-]+$"
+  [ -s "$PF" ] || die "--prompt-file must exist and be non-empty"
+  [ "$MODE" = "implement" ] || [ "$MODE" = "research" ] || die "--mode is research|implement"
+  [ "$MODE" = "research" ] || [ ${#OWNED[@]} -gt 0 ] || die "implement send requires --owned"
+
+  identity_guard "$w"
+  local s; s="$(sess $w)"
+  local st; st="$(pane_state "$s")"
+
+  # ownership: same convention as dispatch-worker
+  lockfile_for() { echo "$LOCKS/$(echo "$1" | sed 's|/|__|g').lock"; }
+  for p in "${OWNED[@]:-}"; do
+    [ -z "$p" ] && continue
+    local lf; lf="$(lockfile_for "$p")"
+    if [ -f "$lf" ]; then
+      local holder; holder="$(grep -m1 '^who=' "$lf" | cut -d= -f2)"
+      case "$holder" in "$w"|boss) ;; *)
+        echo "worker-ctl: REFUSED — $p is locked by '$holder'. Post a REQUEST on the board; terminal presence is not permission." >&2; exit 3 ;;
+      esac
+    fi
+  done
+  # concurrency: refuse overlapping live scope (same rule as headless)
+  mkdir -p "$ACTIVE"
+  for a in "$ACTIVE"/*.json; do
+    [ -e "$a" ] || continue
+    local apid; apid="$(python3 -c "import json;print(json.load(open('$a')).get('pid',0))" 2>/dev/null || echo 0)"
+    [ "$apid" != "0" ] && kill -0 "$apid" 2>/dev/null || { rm -f "$a"; continue; }
+    if python3 -c "
+import json,sys
+a=json.load(open('$a')); mine=set([p for p in '$(IFS=:; echo "${OWNED[*]:-}")'.split(':') if p])
+sys.exit(0 if mine & set(a.get('owned',[])) else 1)"; then
+      echo "worker-ctl: REFUSED — scope overlaps live dispatch $(basename "$a" .json); serialize or use a worktree." >&2; exit 3
+    fi
+  done
+
+  local BD="$(command -v bd 2>/dev/null || true)" BEADS="skipped-unavailable"
+  [ -n "$BD" ] && "$BD" ready >/dev/null 2>&1 && BEADS="ready-checked"
+
+  local BRIEF; BRIEF="$(mktemp)"; local SCRIPT="$ROOT/tools/dispatch/persistent-brief.txt"
+  {
+    echo "PERSISTENT TASK $TASK · worker $w · mode $MODE"
+    echo "You are the $w worker inside tmux session $s, dispatched by the Boss (Qoder/GLM)."
+    echo "Owned files: $(IFS=', '; echo "${OWNED[*]:-none — read-only}") · verify: $(IFS=' ; '; echo "${VERIFY[*]:-none}") · timeout ${TIMEOUT}s"
+    echo "Write only inside the owned list. Never run git restore/checkout --/stash/reset/add -A, never commit or push unless the brief says so."
+    echo "Nothing under .agent-pair/ except your own heartbeat. No secrets in output. Never bare 'npm test' (it truncates 19 tables)."
+    echo "No fps or smoothness judgements; this machine is not an instrument."
+    echo; echo "BRIEF"; cat "$PF"
+    echo; echo "When done, output EXACTLY one fenced json block:"
+    echo '```json'
+    echo "{\"task_id\":\"$TASK\",\"worker\":\"$w\",\"status\":\"completed|blocked|failed\",\"summary\":\"\u2264400 chars\",\"changed_files\":[],\"verification\":[],\"blockers\":[],\"next_action\":\"\"}"
+    echo '```'
+  } > "$BRIEF"
+
+  if [ "$DRY" = "1" ]; then
+    echo "=== DRY RUN — nothing was sent to $s ==="
+    echo "target:        tmux session $s, pane $(tmux list-panes -t "$s" -F '#{pane_pid}|#{pane_current_path}' | head -1)"
+    echo "identity:      verified ($w found in the pane's process tree)"
+    echo "state:         $st"
+    echo "task:          $TASK   mode: $MODE   timeout: ${TIMEOUT}s"
+    echo "owned scope:   $(IFS=', '; echo "${OWNED[*]:-none}")"
+    echo "verify:        $(IFS=' ; '; echo "${VERIFY[*]:-none}")"
+    echo "transport:     tmux load-buffer -> paste-buffer -p -> send-keys Enter"
+    echo "beads:         $BEADS"
+    echo "prompt bytes:  $(wc -c < "$BRIEF")"
+    rm -f "$BRIEF"; exit 0
+  fi
+
+  case "$st" in
+    BUSY|WAITING_INPUT) echo "worker-ctl: $s is $st — not sending into a busy pane. Wait, or worker-ctl stop $s." >&2; rm -f "$BRIEF"; exit 5 ;;
+  esac
+
+  # the send itself: buffer, paste with bracketed paste, submit. Never shell-interpolated.
+  BUF="ht-$TASK"
+  tmux load-buffer -b "$BUF" "$BRIEF" || die "load-buffer failed"
+  tmux paste-buffer -p -b "$BUF" -t "$s" || die "paste-buffer failed"
+  tmux send-keys -t "$s" Enter
+  tmux delete-buffer -b "$BUF"
+  BEFORE_LINES="$(tmux capture-pane -p -S - -t "$s" | wc -l)"
+  rm -f "$BRIEF"
+
+  # poll for this task's contract JSON in the pane's scrollback
+  local RESULT="$INBOX/$w/$TASK.json"; mkdir -p "$INBOX/$w"
+  START=$(date +%s); STATUS="COMPLETION_UNKNOWN"; PAYLOAD=""
+  while [ $(( $(date +%s) - START )) -lt "$TIMEOUT" ]; do
+    sleep 6
+    SCROLL="$(tmux capture-pane -p -S -3000 -t "$s")"
+    printf '%s' "$SCROLL" > "$INBOX/$w/$TASK.pane"
+    if PAYLOAD="$(printf '%s' "$SCROLL" | python3 -c "
+import sys,re,json
+t=sys.stdin.read()
+c=[]
+for r in re.findall(r'\`\`\`(?:json)?\s*(.*?)\`\`\`', t, re.S):
+    c.append(r.strip()); m=re.search(r'\{.*\}', r, re.S)
+    if m: c.append(m.group(0))
+p=None
+for x in reversed(c):
+    try:
+        d=json.loads(x)
+        if isinstance(d,dict) and d.get('task_id')=='$TASK': p=d; break
+    except Exception: pass
+print('' if p is None else json.dumps(p,ensure_ascii=False))")" && [ -n "$PAYLOAD" ]; then
+      STATUS="COMPLETED"; break
+    fi
+    case "$(pane_state "$s")" in IDLE) [ $(( $(date +%s) - START )) -gt 30 ] && break ;; esac
+  done
+  DUR=$(( $(date +%s) - START ))
+
+  BEFORE="$(git -C "$ROOT" status --porcelain=v1 | awk '{print $NF}' | sort)"
+  python3 - "$RESULT" "$TASK" "$w" "$STATUS" "$PAYLOAD" "$DUR" "$BEADS" "$ROOT" "$s" <<'PY'
+import json,sys,re,subprocess
+res,task,w,status,payload,dur,beads,root,s = sys.argv[1:10]
+def red(x): return re.sub(r'(?i)(sk-[A-Za-z0-9_\-]{6,}|Bearer\s+\S+|token["\s:=]+[A-Za-z0-9_\-]{8,})','[redacted]',str(x))[:1200]
+after=subprocess.run("git status --porcelain=v1 | awk '{print $NF}' | sort",shell=True,cwd=root,capture_output=True,text=True).stdout.split()
+changed=sorted(set(after)-set())
+if payload:
+    d=json.loads(payload)
+    d["task_id"],d["worker"]=task,w
+else:
+    d={"task_id":task,"worker":w,"status":"unknown","summary":red("no contract JSON in the pane within the window; state was read from tmux capture-pane only"),"changed_files":[],"verification":[],"blockers":["completion signal absent"],"next_action":"worker-ctl output "+w+" to read the pane, or stop the pane and re-send"}
+d["changed_files"]=changed
+d.update({"transport":"tmux-persistent","tmux_session":s,"pane_state_at_capture":None,"duration_s":int(dur),"beads_status":beads,"process_exit":None,"completion_status":status,"pane_dump":f".agent-pair/inbox/{w}/{task}.pane"})
+d["summary"]=red(d.get("summary",""))
+json.dump(d,open(res,"w"),ensure_ascii=False,indent=2)
+print(json.dumps({"status":d["status"],"completion":status,"changed":changed,"summary":d["summary"][:200]},ensure_ascii=False))
+PY
+  RC=$?
+
+  TS="$(date '+%Y-%m-%d %H:%M %Z')"
+  printf '\n### %s — driver → %s — PERSISTENT DISPATCH %s (%s)\n\nSent into tmux session %s via load-buffer/paste-buffer; completion signal: %s in %ss. Result: `.agent-pair/inbox/%s/%s.json`, pane dump next to it.\n' \
+    "$TS" "$w" "$TASK" "$MODE" "$(sess $w)" "$STATUS" "$DUR" "$w" "$TASK" >> "$BOARD"
+  NOW="$(date -Iseconds)"
+  printf 'since=%s\ndoing=persistent task %s received over tmux\nnext=Boss reads .agent-pair/inbox/%s/%s.json\n' "$NOW" "$TASK" "$w" "$TASK" > "$HB/HEARTBEAT-$w.md"
+  [ $RC -eq 0 ] || echo "worker-ctl: result parse failed; pane dump kept at $INBOX/$w/$TASK.pane" >&2
+  echo "worker-ctl: $TASK → $w → $STATUS (${DUR}s) · $RESULT"
+  [ "${#VERIFY[@]}" -gt 0 ] && echo "worker-ctl: re-run the verification commands yourself (${VERIFY[*]}) — tmux cannot see an exit code."
+}
+
+cmd_output() { local w="${1:-}"; [ -n "$w" ] || die "output needs a worker"; shift
+  local lines="-200"
+  while [ $# -gt 0 ]; do case "$1" in --lines) lines="-$2"; shift 2 ;; *) die "unknown arg $1" ;; esac; done
+  local s; s="$(sess $w)"
+  tmux has-session -t "$s" 2>/dev/null || { echo "worker-ctl: no session $s"; exit 3; }
+  tmux capture-pane -p -S "$lines" -t "$s"; }
+
+cmd_stop() { local w="${1:-}"; case "$w" in qoder|hermes|opencode) ;; *) die "stop needs a worker" ;; esac
+  local s; s="$(sess $w)"; tmux has-session -t "$s" 2>/dev/null || die "no session $s"
+  identity_guard "$w"
+  echo "worker-ctl: sending Ctrl-C to $s (the turn aborts; the CLI stays running — no relaunch, no kill-session)."
+  tmux send-keys -t "$s" C-c; }
+
+cmd_continue() { local w="${1:-}" sid="${2:-}"; case "$w" in qoder|hermes|opencode) ;; *) die "continue needs a worker and a session id" ;; esac
+  [ -n "$sid" ] || die "continue needs <session-id>"; local s; s="$(sess $w)"; tmux has-session -t "$s" 2>/dev/null || die "no session $s"
+  local bin="${WORKER_PATH[$w]}"
+  case "$w" in
+    qoder) tmux send-keys -t "$s" C-d; tmux send-keys -t "$s" "$bin --resume $sid" Enter ;;
+    hermes) tmux send-keys -t "$s" C-d; tmux send-keys -t "$s" "$bin --resume $sid" Enter ;;
+    opencode) tmux send-keys -t "$s" C-d; tmux send-keys -t "$s" "$bin run --session $sid" Enter ;;
+  esac
+  echo "worker-ctl: asked $s to resume $sid with its own CLI resume flag (verified in --help). Read it with worker-ctl output $w."; }
+
+case "${1:-status}" in
+  status) shift; cmd_status ;;
+  send) shift; cmd_send "$@" ;;
+  output) shift; cmd_output "$@" ;;
+  stop) shift; cmd_stop "$@" ;;
+  continue) shift; cmd_continue "$@" ;;
+  migrate) shift; cmd_migrate ;;
+  *) die "unknown subcommand: ${1:-}" ;;
+esac
