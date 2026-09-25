@@ -1,0 +1,133 @@
+/* Feature 007 — the motion assembly band. Contract:
+   specs/007-motion-assembly-band/blueprint.md §3-4, §7. The base layout below
+   IS the locked composition (beat 3), so engines without scroll-driven
+   animation render the static final band with no opt-in (§8 Q1). */
+
+.assembly-band__track {
+  /* Pin-run budget (SC-001): ≤1,600px of pinned travel + a shell that is
+     exactly one viewport = ≤2,400px of total travel at 360. */
+  --band-track: calc(100svh + 1600px);
+}
+
+.assembly-band__shell {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1rem;
+  padding-inline: 1rem;
+  /* Reserve the strip the absolutely-placed immovable bar occupies, so it
+     overlaps nothing in flow or while pinned. */
+  padding-block-end: 4.5rem;
+}
+
+.assembly-band__immovable {
+  position: absolute;
+  inset-inline: 1rem;
+  inset-block-end: 1rem;
+  z-index: 3;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  /* Parts fly over this bar mid-sequence; the phone number keeps veto power
+     (FR-007), so its two actions must take every tap at every frame. */
+  pointer-events: auto;
+}
+
+/* Offsets are magnitudes in reading-direction terms (FR-008); a positive
+   translate-x below means "toward reading start", which renders physically to
+   the right because the page is permanently dir="rtl" (app/layout.tsx:95).
+   This line is the only place that mapping is stated. */
+.assembly-band__part {
+  --p-x0: 0rem; --p-y0: 0rem; --p-r0: 0deg;
+  --p-x1: 0rem; --p-y1: 0rem; --p-r1: 0deg;
+}
+
+/* beat 0 = compressed fan around the shell's centre (y0 pulls toward middle);
+   beat 1 = max spread with ±small inline offsets and ≤2° rotations (y1/x1). */
+[data-band-part="stack-store"]        { --p-y0: 5rem;    --p-y1: -6rem;  --p-x1: 1rem;   --p-r1: -2deg; }
+[data-band-part="point-1"]            { --p-y0: 3.2rem;  --p-y1: -3.5rem; --p-x1: 2rem;  --p-r1: 1.5deg; }
+[data-band-part="point-2"]            { --p-y0: 2.6rem;  --p-y1: -2rem;                             --p-r1: -1deg; }
+[data-band-part="point-3"]            { --p-y0: 2rem;    --p-y1: -3rem;   --p-x1: -2rem;             --p-r1: 1deg; }
+[data-band-part="showcase-card"]      { --p-y0: 1.2rem;  --p-y1: -1.5rem; --p-x1: 1.5rem;             --p-r1: 1deg; }
+[data-band-part="hands-on-card"]      { --p-y0: 0.8rem;  --p-y1: -1rem;   --p-x1: -1.5rem;            --p-r1: -1deg; }
+[data-band-part="statement-band"]     {                                      --p-x1: 1rem;            --p-r1: 0.5deg; }
+[data-band-part="stack-trust"]        { --p-y0: -0.8rem; --p-y1: 1.5rem;   --p-x1: -1rem;             --p-r1: 1deg; }
+[data-band-part="capability-store"]   { --p-y0: -1.5rem; --p-y1: 3rem;     --p-x1: 1.5rem;            --p-r1: -1deg; }
+[data-band-part="capability-wholesale"]    { --p-y0: -2rem;  --p-y1: 2rem;   --p-x1: 0.5rem;           --p-r1: 1deg; }
+[data-band-part="capability-assortment"]   { --p-y0: -2.4rem; --p-y1: 2.5rem; --p-x1: -0.5rem;         --p-r1: -1deg; }
+[data-band-part="capability-assurance"]    { --p-y0: -2.8rem; --p-y1: 3.5rem; --p-x1: -1.5rem;         --p-r1: 1deg; }
+[data-band-part="warranty-row"]       { --p-y0: -3.5rem; --p-y1: 5rem;     --p-x1: 1rem;              --p-r1: 1deg; }
+[data-band-part="stack-close"]        { --p-y0: -4.5rem; --p-y1: 6.5rem;   --p-x1: -1rem;             --p-r1: -1.5deg; }
+[data-band-part="partners-link"]      { --p-y0: -5.5rem; --p-y1: 7.5rem;   --p-x1: 0.5rem;            --p-r1: 2deg; }
+
+/* The one timeline, the same four beats for every part (§3 stage table):
+   hold stacked 0→0.15, explode →0.55, gather to the locked identity →0.85,
+   hold locked →1. Transforms only — DOM order never changes (FR-011). */
+@keyframes band-fly {
+  0%, 15%     { translate: var(--p-x0) var(--p-y0); rotate: var(--p-r0); }
+  55%         { translate: var(--p-x1) var(--p-y1); rotate: var(--p-r1); }
+  85%, 100%   { translate: none; rotate: none; }
+}
+
+@supports (animation-timeline: view()) {
+  .assembly-band__track {
+    height: var(--band-track);
+    view-timeline: --band block;
+  }
+  .assembly-band__shell {
+    /* svh not dvh: the mobile toolbar show/hide resizes dvh exactly during the
+       pin, and a shell sized by it would jump; svh is the stable floor (§3). */
+    position: sticky;
+    top: 0;
+    min-height: 100svh;
+  }
+  .assembly-band__part {
+    animation: band-fly linear both;
+    animation-timeline: --band;
+    /* The track's t 0→1 is exactly the pinned window: from the moment the
+       shell pins (entry done) to the moment it releases (exit starts). */
+    animation-range: entry 100% exit 0%;
+  }
+}
+
+/* Heading arrival (HeadingArrival.tsx): word units only (FR-002), opacity +
+   translateY + blur to zero, once. Spaces stay between the inline-block words,
+   so line-break opportunities and the settled rendering are unchanged (SC-002). */
+.heading-arrival__word {
+  display: inline-block;
+  transition:
+    opacity 550ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    translate 550ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    filter 550ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.heading-arrival--armed .heading-arrival__word {
+  opacity: 0;
+  translate: 0 0.5em;
+  filter: blur(6px);
+}
+.heading-arrival--settled .heading-arrival__word {
+  opacity: 1;
+  translate: 0 0;
+  filter: blur(0);
+}
+
+/* The site-wide floor at app/globals.css:434 neutralises via
+   animation-duration — scroll-driven timelines do not progress by duration,
+   so the band must disable itself explicitly (blueprint §7). */
+@media (prefers-reduced-motion: reduce) {
+  .assembly-band__track { height: auto; view-timeline: none; }
+  .assembly-band__shell { position: static; min-height: 0; }
+  .assembly-band__part { animation: none; translate: none; rotate: none; }
+  .heading-arrival__word { transition: none; }
+}
+
+/* No motion on paper: the same flattening, content flows once in DOM order. */
+@media print {
+  .assembly-band__track { height: auto; view-timeline: none; }
+  .assembly-band__shell { position: static; min-height: 0; }
+  .assembly-band__part { animation: none; translate: none; rotate: none; }
+  .heading-arrival__word { transition: none; }
+}
