@@ -30,14 +30,12 @@ import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { featuredOfferRail, featuredSpecialRail, newArrivalsRail } from "@/lib/home-rails";
 import { NewArrivals } from "@/components/home/NewArrivals";
 import { ObtainableNow } from "@/components/home/ObtainableNow";
+import { AssemblyBand } from "@/components/home/AssemblyBand";
 import { BrandShowcase } from "@/components/home/BrandShowcase";
 import { MobileQuickRoutes } from "@/components/home/MobileQuickRoutes";
-import { TrustBento } from "@/components/home/TrustBento";
 import { CategoryHub } from "@/components/home/CategoryHub";
 import { B2bSection } from "@/components/home/B2bSection";
 import { OnlineServices } from "@/components/home/OnlineServices";
-import { StoreExperience } from "@/components/home/StoreExperience";
-import { FinalConversion } from "@/components/home/TrustBlocks";
 import type { TrustFeatureKey } from "@/lib/content/home";
 import "./home.css";
 
@@ -217,9 +215,12 @@ export default async function HomePage() {
       <NewArrivals products={arrivals} />
       <B2bSection />
       <OnlineServices />
-      <StoreExperience />
-      <TrustBento />
-      <FinalConversion />
+      {/* Feature 007: the store-experience, trust and closing sections are one composed band. The pin
+          that was specified for it was measured and removed (notes/band-geometry-measured.md): the
+          sticky shell left 54.6px of travel against a 1,600px animation range, so the scrub never advanced
+          and the phone number sat at document y≈2229 — off screen, not immovable. Static is 2,184px at 360
+          against the 2,961px it replaces, so the shortening criterion is met without the mechanism. */}
+      <AssemblyBand />
     </>
   );
 }

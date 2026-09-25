@@ -2,7 +2,6 @@ import "./assembly-band.css";
 
 import Link from "next/link";
 import { ArrowLeft, BadgeCheck, Headphones, ShieldCheck, Smartphone } from "lucide-react";
-import { cn } from "@/lib/utils";
 import { HeadingArrival } from "@/components/home/HeadingArrival";
 import { TrustGlyph } from "@/components/home/primitives";
 import { buttonVariants } from "@/components/ui/button";
@@ -15,184 +14,140 @@ import {
   trustFeatures,
 } from "@/lib/content/home";
 
-/** The choreographed vocabulary (blueprint §2): every node below carries one of
- *  these ids and is addressed by `[data-band-part]` in assembly-band.css. */
-export type BandPartId =
-  | "stack-store"
-  | "point-1"
-  | "point-2"
-  | "point-3"
-  | "showcase-card"
-  | "hands-on-card"
-  | "statement-band"
-  | "stack-trust"
-  | "capability-store"
-  | "capability-wholesale"
-  | "capability-assortment"
-  | "capability-assurance"
-  | "warranty-row"
-  | "stack-close"
-  | "partners-link";
-
 const pointIcons = [Smartphone, Headphones, ShieldCheck];
 
-// Inline copy of the three replaced sections (§1a/§1b); `lib/content/*` strings
-// are imported below instead of restated.
-const sectionLead = "از انتخاب محصول تا دریافت مشاوره، حامی همراه در کنار شماست.";
-const trustLead = "چهار چیزی که درباره حامی همراه دقیق است؛ بقیه را در فروشگاه بپرسید.";
-const showcaseTitle = "فروشگاه حضوری در مشهد";
-const showcaseFooter = "مشهد • فروشگاه حضوری حامی همراه";
-const handsOnBadge = "مشاوره حضوری";
-const handsOnTitle = "مشاوره تخصصی و تجربه مستقیم";
-const handsOnCopy =
-  "امکان دیدن و بررسی هدفون، ساعت هوشمند و اکسسوری قبل از خرید، با راهنمایی کارشناس فروشگاه.";
-const statementMono = "HAMI / ONLINE + OFFLINE";
-const statementCopy = "برای اطلاعات حضور فروشگاهی یا گفت‌وگو با ما، از مسیرهای زیر استفاده کنید.";
-
-function part(id: BandPartId, className?: string) {
-  return { "data-band-part": id, className: cn("assembly-band__part", className) };
-}
-
+/**
+ * The closing band: the store-experience, trust and final-conversion sections as one composition.
+ *
+ * It is a composed static layout, not a scroll mechanism — the pin was measured and removed; see
+ * `specs/007-motion-assembly-band/notes/band-geometry-measured.md`. What survives of the original idea is
+ * the arrival: each of the three statements lifts into place in word units, once per page load.
+ *
+ * Three things this file is deliberately not doing:
+ *  - **No new claims.** Every string comes from `lib/content/*` or is a section heading the page already
+ *    carried. The English mono labels the old sections used («AUTHENTIC SHOWCASE», «HANDS-ON EXPERIENCE»,
+ *    «HAMI / ONLINE + OFFLINE», «CUSTOMER JOURNEY») are gone — they were decoration arguing trust in a
+ *    font, and removing content is allowed while inventing it is not (Principle III, FR-004).
+ *  - **No 360px column of four identical cards.** The capabilities are a 2×2 grid at phone width because
+ *    four full-width rows was the flattest arrangement available, and «squeeze the sections into one»
+ *    has to show up in the layout, not only in the motion.
+ *  - **No position tricks for the phone number.** It is in flow. Inside `.wrap` (z-index: 2) it could never
+ *    outrank `MobileDock` (z-40), so instead of fighting the stacking context the band reserves the dock's
+ *    measured 62px + inset and lets the number sit where a thumb already is.
+ */
 export function AssemblyBand() {
   return (
     <section id="store-experience" className="wrap assembly-band" aria-labelledby="store-experience-title">
-      <div className="assembly-band__track">
-        <div className="assembly-band__shell">
-          <div {...part("stack-store")} className="assembly-band__part text-center">
-            <span className="eyebrow">
-              <i /> تجربه حضوری
-            </span>
-            <HeadingArrival id="store-experience-title" level={2} className="mt-4 text-3xl font-black tracking-normal md:text-4xl">
-              خرید را <span className="emphasis">لمس کنید.</span>
-            </HeadingArrival>
-            <p className="mt-3 text-sm text-foreground/60">{sectionLead}</p>
-          </div>
+      <div className="container px-4 py-16 md:py-24">
+        {/* Statement 1 — the physical shop. */}
+        <div className="text-center">
+          <span className="eyebrow">
+            <i /> تجربه حضوری
+          </span>
+          <HeadingArrival id="store-experience-title" level={2} className="mt-4 text-3xl font-black tracking-normal md:text-5xl">
+            خرید را <span className="emphasis">لمس کنید.</span>
+          </HeadingArrival>
+          <p className="mx-auto mt-4 max-w-md text-sm leading-8 text-foreground/60">
+            از انتخاب محصول تا دریافت مشاوره، حامی همراه در کنار شماست.
+          </p>
+        </div>
 
-          <div className="grid gap-5 sm:grid-cols-3" aria-label="اجزای تجربه خرید حضوری">
-            {storeExperiencePoints.map((point, index) => {
-              const Icon = pointIcons[index] ?? ShieldCheck;
-              return (
-                <article key={point.index} {...part(`point-${index + 1}` as BandPartId, "glass h-full rounded-2xl p-6")}>
-                  <span className="font-mono text-xs text-primary">{point.index}</span>
-                  <Icon className="mt-3 size-5 text-primary" strokeWidth={1.45} aria-hidden="true" />
-                  <h3 className="mt-2 text-sm font-extrabold">{point.title}</h3>
-                  <p className="mt-1 text-xs leading-6 text-foreground/55">{point.description}</p>
-                </article>
-              );
-            })}
-          </div>
+        <ul className="mt-10 grid list-none gap-px overflow-hidden rounded-2xl border border-line p-0 sm:grid-cols-3" role="list">
+          {storeExperiencePoints.map((point) => (
+            <li key={point.index} className="flex items-start gap-3.5 bg-surface/40 p-5">
+              <span className="mt-0.5 shrink-0 text-champagne">
+                {(() => {
+                  const Icon = pointIcons[Number(point.index) - 1] ?? ShieldCheck;
+                  return <Icon className="size-5" strokeWidth={1.45} aria-hidden="true" />;
+                })()}
+              </span>
+              <div>
+                <h3 className="m-0 text-sm font-extrabold">{point.title}</h3>
+                <p className="mt-1 text-xs leading-6 text-foreground/60">{point.description}</p>
+              </div>
+            </li>
+          ))}
+        </ul>
 
-          <div className="grid gap-5 sm:grid-cols-2" aria-label="ویژگی‌های خرید حضوری">
-            <div {...part("showcase-card", "glass-smoked relative flex flex-col justify-between overflow-hidden rounded-2xl p-6")}>
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs tracking-wider text-champagne">AUTHENTIC SHOWCASE</span>
-                <span className="rounded-full border border-champagne/20 bg-champagne/10 px-2.5 py-0.5 font-sans text-xs text-champagne">
-                  {storeWarranty.label}
-                </span>
-              </div>
-              <div className="my-6">
-                <h4 className="text-base font-extrabold text-foreground">{showcaseTitle}</h4>
-                <p className="mt-2 text-xs leading-6 text-foreground/70">
-                  برای دیدن محصولات و دریافت {storeWarranty.label}، به فروشگاه حضوری مراجعه کنید.
-                </p>
-              </div>
-              <div className="flex items-center gap-2 border-t border-champagne/10 pt-3 text-xs font-bold text-champagne">
-                <span>{showcaseFooter}</span>
-              </div>
-            </div>
-            <div {...part("hands-on-card", "glass-smoked relative flex flex-col justify-between overflow-hidden rounded-2xl p-6")}>
-              <div className="flex items-center justify-between">
-                <span className="font-mono text-xs tracking-wider text-champagne">HANDS-ON EXPERIENCE</span>
-                <span className="rounded-full border border-champagne/20 bg-champagne/10 px-2.5 py-0.5 font-sans text-xs text-champagne">
-                  {handsOnBadge}
-                </span>
-              </div>
-              <div className="my-6">
-                <h4 className="text-base font-extrabold text-foreground">{handsOnTitle}</h4>
-                <p className="mt-2 text-xs leading-6 text-foreground/70">{handsOnCopy}</p>
-              </div>
-              <div className="flex items-center gap-2 border-t border-champagne/10 pt-3 text-xs font-bold text-champagne">
-                <span>{storeContact.hours}</span>
-              </div>
-            </div>
-          </div>
-
-          <div {...part("statement-band", "glass flex flex-col items-center gap-6 rounded-2xl p-8 text-center")}>
-            <span className="font-mono text-xs tracking-[0.12em] text-primary">{statementMono}</span>
-            <h3 className="text-xl font-black">{storeExperienceStatement}</h3>
-            <p className="text-sm text-foreground/60">{statementCopy}</p>
-          </div>
-
-          <div {...part("stack-trust")} className="assembly-band__part text-center">
-            <span className="eyebrow">
-              <i /> چرا حامی همراه
-            </span>
-            <HeadingArrival id="trust-title" level={2} className="mt-4 text-3xl font-black tracking-normal md:text-5xl">
-              اعتماد، با <span className="emphasis">واقعیت</span> ساخته می‌شود.
-            </HeadingArrival>
-            <p className="mt-4 text-sm leading-8 text-foreground/60">{trustLead}</p>
-          </div>
-
-          <ul className="grid list-none gap-x-6 gap-y-7 p-0 sm:grid-cols-2 lg:grid-cols-4" role="list">
-            {trustFeatures.map((feature) => (
-              <li key={feature.key} {...part(`capability-${feature.key}` as BandPartId, "flex items-start gap-3.5")}>
-                <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-champagne/35 bg-champagne/5 text-champagne">
-                  <TrustGlyph name={feature.key} />
-                </span>
-                <div>
-                  <h3 className="m-0 text-base font-black">{feature.title}</h3>
-                  <p className="mt-1 text-[13px] leading-7 text-foreground/65">{feature.description}</p>
-                </div>
-              </li>
-            ))}
-          </ul>
-
-          <div {...part("warranty-row", "flex flex-col items-start gap-4 border-t border-line pt-7 sm:flex-row sm:items-center")}>
-            <p className="m-0 flex items-center gap-2 text-sm text-foreground/75">
-              <BadgeCheck className="size-4 shrink-0 text-champagne" aria-hidden="true" />
+        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          <article className="glass-smoked rounded-2xl p-6">
+            <h3 className="m-0 text-base font-black">فروشگاه حضوری در مشهد</h3>
+            <p className="mt-2 text-xs leading-6 text-foreground/65">
+              برای دیدن محصولات و دریافت {storeWarranty.label}، به فروشگاه حضوری مراجعه کنید.
+            </p>
+            <p className="mt-4 flex items-center gap-2 border-t border-line pt-3 text-xs font-bold text-champagne">
+              <BadgeCheck className="size-4 shrink-0" aria-hidden="true" />
               {storeWarranty.label}
             </p>
-          </div>
+          </article>
+          <article className="glass-smoked rounded-2xl p-6">
+            <h3 className="m-0 text-base font-black">مشاوره تخصصی و تجربه مستقیم</h3>
+            <p className="mt-2 text-xs leading-6 text-foreground/65">
+              امکان دیدن و بررسی هدفون، ساعت هوشمند و اکسسوری قبل از خرید، با راهنمایی کارشناس فروشگاه.
+            </p>
+            <p className="mt-4 flex items-center gap-2 border-t border-line pt-3 text-xs font-bold text-champagne">
+              {storeContact.hours}
+            </p>
+          </article>
+        </div>
 
-          <div {...part("stack-close")} className="assembly-band__part text-center">
-            <span className="font-mono text-xs tracking-normal text-aqua/80">{finalConversionCopy.eyebrow}</span>
-            <HeadingArrival
-              id="final-conversion-title"
-              level={2}
-              className="mt-4 text-3xl font-black leading-[1.4] tracking-normal md:text-5xl md:leading-[1.35]"
-            >
-              {finalConversionCopy.titleLead}،
-              <em className="block font-black not-italic text-aqua">{finalConversionCopy.titleTail}</em>
-            </HeadingArrival>
-            <p className="mx-auto mt-5 max-w-lg text-sm leading-8 text-foreground/65">{finalConversionCopy.subtitle}</p>
-          </div>
+        <p className="mx-auto mt-10 max-w-xl text-center text-lg font-black leading-8 md:text-xl">
+          {storeExperienceStatement}
+        </p>
 
-          <div className="flex justify-center">
-            <Link
-              href="/partners"
-              {...part("partners-link", "inline-flex items-center gap-1 text-xs font-bold text-foreground/70 hover:text-aqua")}
-            >
-              همکاری با ما <ArrowLeft className="size-3.5" />
-            </Link>
-          </div>
+        {/* Statement 2 — the four things that are actually true about the shop. */}
+        <div className="mt-16 text-center">
+          <span className="eyebrow">
+            <i /> چرا حامی همراه
+          </span>
+          <HeadingArrival id="trust-title" level={2} className="mt-4 text-3xl font-black tracking-normal md:text-5xl">
+            اعتماد، با <span className="emphasis">واقعیت</span> ساخته می‌شود.
+          </HeadingArrival>
+          <p className="mx-auto mt-4 max-w-md text-sm leading-8 text-foreground/60">
+            چهار چیزی که درباره حامی همراه دقیق است؛ بقیه را در فروشگاه بپرسید.
+          </p>
+        </div>
 
-          {/* The immovable layer (FR-007/FR-018): no data-band-part, matched by no
-              keyframe, fixed at the shell's bottom while pinned. The two old
-              «مشاهده محصولات» links merged into the one shop action here (blueprint
-              §8 Q4), and the «فروشگاه حضوری» → #store-experience self-link is retired
-              on the T091 precedent (§8 Q3) rather than rendered here. */}
-          <div className="assembly-band__immovable">
-            <a href={storeContact.phoneHref} className={buttonVariants({ variant: "oxblood" })} dir="ltr">
-              {storeContact.phoneDisplay}
-            </a>
-            <Link href="/shop" className={buttonVariants({ variant: "default" })}>
-              مشاهده محصولات <ArrowLeft className="size-4" />
-            </Link>
-          </div>
+        <ul className="m-0 mt-8 grid list-none gap-x-6 gap-y-6 p-0 grid-cols-2 sm:grid-cols-4" role="list">
+          {trustFeatures.map((feature) => (
+            <li key={feature.key} className="flex flex-col items-start gap-2.5">
+              <span className="grid size-9 shrink-0 place-items-center rounded-xl border border-champagne/35 bg-champagne/5 text-champagne">
+                <TrustGlyph name={feature.key} />
+              </span>
+              <h3 className="m-0 text-sm font-black leading-6">{feature.title}</h3>
+              <p className="m-0 text-[11px] leading-5 text-foreground/60">{feature.description}</p>
+            </li>
+          ))}
+        </ul>
+
+        {/* Statement 3 — the close. */}
+        <div className="mt-16 text-center">
+          <HeadingArrival
+            id="final-conversion-title"
+            level={2}
+            className="text-3xl font-black leading-[1.4] tracking-normal md:text-5xl md:leading-[1.35]"
+          >
+            {finalConversionCopy.titleLead}،
+            <em className="block font-black not-italic text-aqua">{finalConversionCopy.titleTail}</em>
+          </HeadingArrival>
+          <p className="mx-auto mt-5 max-w-lg text-sm leading-8 text-foreground/65">{finalConversionCopy.subtitle}</p>
+        </div>
+
+        <div className="assembly-band__actions mt-10">
+          <a href={storeContact.phoneHref} className={buttonVariants({ variant: "oxblood", size: "lg" })} dir="ltr">
+            {storeContact.phoneDisplay}
+          </a>
+          <Link href="/shop" className={buttonVariants({ variant: "default", size: "lg" })}>
+            مشاهده محصولات <ArrowLeft className="size-4" />
+          </Link>
+          <Link href="/partners" className={buttonVariants({ variant: "ghost", className: "text-xs font-bold" })}>
+            همکاری با ما <ArrowLeft className="size-3.5" />
+          </Link>
         </div>
       </div>
-      {/* Ground anchor for the `close` stage after the band replaces final-conversion
-          (blueprint §5); re-anchored by driver together with the page swap. */}
+
+      {/* Ground anchor for the `close` stage (blueprint §5): a div, never a second landmark, and outside any
+          pinned box because useAtmosphereGround measures anchors on mount and never on scroll. */}
       <div id="band-settled" />
     </section>
   );

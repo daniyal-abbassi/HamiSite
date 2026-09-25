@@ -37,8 +37,11 @@ const sweep = Array.from({ length: STEPS + 1 }, (_, i) => i / STEPS);
 
 describe("homepage section anchors", () => {
   /**
-   * The rendered section list comes from `manifest-after.json` — captured from the live DOM by
-   * `verification/capture-baseline.mjs` — and NOT from `baseline/ground-record.json`.
+   * The rendered section list comes from `manifest.json` — the untagged, always-latest capture produced by
+   * `verification/capture-baseline.mjs` — and not from `ground-record.json`, nor from the tagged snapshots.
+   * It used to read `manifest-after.json`, which is a hand-named comparison file: the guard then passed
+   * against whatever day someone last ran `--tag after`, and feature 007's page swap was green against a
+   * capture taken two days before the swap existed. The current DOM has one source: the current file.
    *
    * The old version compared `HOMEPAGE_SECTIONS` to that frozen T001 record, which meant the person
    * changing the page could make the guard pass by editing the record. That is not hypothetical: it is what
@@ -56,7 +59,7 @@ describe("homepage section anchors", () => {
    */
   it("covers every section the browser actually rendered, each one anchored or explicitly exempt", () => {
     const manifest = JSON.parse(
-      readFileSync(join(process.cwd(), "specs/001-premium-rtl-storefront/baseline/manifest-after.json"), "utf8"),
+      readFileSync(join(process.cwd(), "specs/001-premium-rtl-storefront/baseline/manifest.json"), "utf8"),
     ) as { surfaces: { home: { "360px": { sections: string[] } } } };
     const rendered = manifest.surfaces.home["360px"].sections;
     const outsideSubtree = (id: string) => !(SUBTREE_ANCHORS as readonly string[]).includes(id);
@@ -77,7 +80,7 @@ describe("homepage section anchors", () => {
       expect(UNANCHORED_SECTIONS).not.toContain(id);
     }
     const manifest = JSON.parse(
-      readFileSync(join(process.cwd(), "specs/001-premium-rtl-storefront/baseline/manifest-after.json"), "utf8"),
+      readFileSync(join(process.cwd(), "specs/001-premium-rtl-storefront/baseline/manifest.json"), "utf8"),
     ) as { surfaces: { home: { "360px": { sections: string[] } } } };
     for (const id of manifest.surfaces.home["360px"].sections) expect(SUBTREE_ANCHORS).not.toContain(id);
   });
