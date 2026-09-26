@@ -58,23 +58,43 @@ export function HeadingArrival({
       return;
     }
     const rect = node.getBoundingClientRect();
-    const inView = rect.top < window.innerHeight * 0.92 && rect.bottom > 0;
-    if (inView) {
+    // Anything already at or above the fold on mount is settled without playing: a heading the shopper has
+    // scrolled past must never be waiting to appear behind them.
+    if (rect.bottom > 0 && rect.top < window.innerHeight * 0.92) {
       setPhase("settled");
       return;
     }
     setPhase("armed");
+    let done = false;
+    const settle = () => {
+      if (done) return;
+      done = true;
+      setPhase("settled");
+      observer.disconnect();
+      removeEventListener("scroll", onScroll, { passive: true } as EventListenerOptions);
+    };
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setPhase("settled");
-          observer.disconnect(); // once per page load — never replays on scroll back
-        }
+        if (entry.isIntersecting) settle(); // once per page load — never replays on scroll back
       },
       { rootMargin: "0px 0px -8% 0px", threshold: 0.08 },
     );
     observer.observe(node);
-    return () => observer.disconnect();
+    // Second path to the same outcome. `Reveal` has relied on the observer alone since it shipped, and the
+    // failure mode is not subtle: an armed heading whose words sit at `opacity: 0` reads as a missing
+    // headline, and on a phone loading a dev bundle over Wi-Fi the shopper cannot tell "not yet animated"
+    // from "broken page". A position check on scroll costs one rect read per heading until it settles, and
+    // covers the cases the observer can miss — a restored scroll position, a layout shift from a late font,
+    // or an intersection that happened while the tab was backgrounded.
+    const onScroll = () => {
+      const r = node.getBoundingClientRect();
+      if (r.bottom > 0 && r.top < window.innerHeight * 0.92) settle();
+    };
+    addEventListener("scroll", onScroll, { passive: true });
+    return () => {
+      observer.disconnect();
+      if (!done) removeEventListener("scroll", onScroll, { passive: true } as EventListenerOptions);
+    };
   }, []);
 
   // The three levels are the same element type to React's ref; narrow to h2's props.
