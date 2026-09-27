@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>009 — A hero mosaic vs B equal tiles</title>
+<style>
+  :root{
+    --paper:#f4f1ea; --ink:#110408; --muted:#4a3e3c; --oxblood:#640211;
+    --champagne:#E5D3B3; --scrim:rgba(5,1,1,.88);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;background:#0b0204;font-family:Tahoma,Verdana,"Segoe UI",sans-serif;color:var(--ink)}
+  .frame{background:var(--paper);padding:40px 24px 48px}
+  .head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:22px}
+  .kicker{display:block;font-size:12px;letter-spacing:0;color:var(--oxblood);margin-bottom:6px}
+  .head h2{margin:0;font-size:26px;line-height:1.3;font-weight:700}
+  .head h2 span{color:var(--oxblood)}
+  .all{font-size:13px;color:var(--muted);white-space:nowrap;border-bottom:1px solid var(--oxblood);padding-bottom:2px}
+  ul{list-style:none;margin:0;padding:0;display:grid;gap:12px}
+  li{position:relative}
+  a{display:block;position:relative;overflow:hidden;border-radius:10px;text-decoration:none;color:inherit}
+  img{display:block;width:100%;height:100%;object-fit:cover}
+  .tile-face{position:relative;width:100%;height:100%}
+  .label{position:absolute;inset-inline:0;bottom:0;margin:0;padding:14px 14px 15px;font-size:15px;font-weight:700;
+         line-height:1.35;color:#F0ECE9;background:linear-gradient(to top,var(--scrim),rgba(5,1,1,.55) 62%,transparent)}
+  .count{display:block;font-size:11px;font-weight:400;color:var(--champagne);margin-top:3px}
+
+  /* ---------- A: hero mosaic ---------- */
+  @media (max-width:767px){
+    #a .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    #a .r-phone{grid-column:span 2}
+    #a .r-phone .tile-face{aspect-ratio:4/3}
+    #a li:not(.r-phone) .tile-face{aspect-ratio:1/1}
+  }
+  @media (min-width:768px){
+    #a .grid{grid-template-columns:repeat(4,minmax(0,1fr));gap:16px}
+    #a .r-phone{grid-column:span 2;grid-row:span 2}
+    #a .r-audio,#a .r-charger{grid-column:span 2}
+    #a .r-car,#a .r-service{grid-column:span 2}
+    #a .tile-face{aspect-ratio:16/10}
+    #a .r-phone .tile-face{aspect-ratio:auto;height:100%}
+  }
+
+  /* ---------- B: equal tiles ---------- */
+  @media (max-width:767px){
+    #b .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    #b .r-service{grid-column:span 2}
+    #b .tile-face{aspect-ratio:1/1}
+    #b .r-service .tile-face{aspect-ratio:2/1}
+  }
+  @media (min-width:768px){
+    #b .grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+    #b .tile-face{aspect-ratio:4/3}
+  }
+  /* hierarchy in B is typographic only */
+  #b .label{font-size:14px}
+  #b .r-phone .label{font-size:17px}
+
+  .caption{background:#0b0204;color:#b9b3b0;font-size:12px;padding:10px 24px;margin:0}
+  .caption b{color:var(--champagne)}
+</style>
+</head>
+<body>
+
+<section id="a" class="variant">
+  <div class="frame">
+    <div class="head">
+      <div><span class="kicker">دسته‌بندی محصولات</span><h2>برای هر سبک، <span>یک انتخاب.</span></h2></div>
+      <span class="all">مشاهده همه محصولات</span>
+    </div>
+    <ul class="grid">
+      <li class="r-phone"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/phone.png" alt=""><span class="label">گوشی موبایل</span></span></a></li>
+      <li class="r-audio"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/audio.png" alt=""><span class="label">هدفون و ایرپاد<span class="count">۱۹ محصول</span></span></span></a></li>
+      <li class="r-charger"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/charger.jpg" alt=""><span class="label">شارژر و کابل</span></span></a></li>
+      <li class="r-smartwatch"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/smartwatch.jpg" alt=""><span class="label">ساعت هوشمند<span class="count">۷ محصول</span></span></a></li>
+      <li class="r-powerbank"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/powerbank.jpg" alt=""><span class="label">پاوربانک</span></span></a></li>
+      <li class="r-computer"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/computer-accessory.jpg" alt=""><span class="label">لوازم کامپیوتر<span class="count">۵ محصول</span></span></a></li>
+      <li class="r-sim"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/sim-card.jpg" alt=""><span class="label">سیم‌کارت<span class="count">۳ محصول</span></span></a></li>
+      <li class="r-car"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/car-charger.jpg" alt=""><span class="label">شارژر فندکی<span class="count">۳ محصول</span></span></a></li>
+      <li class="r-service"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/service.jpg" alt=""><span class="label">خدمات آنلاین<span class="count">۱ محصول</span></span></a></li>
+    </ul>
+  </div>
+  <p class="caption"><b>A — هیرو</b> · گوشی موبایل بزرگ، هدفون و شارژر متوسط، شش تا کوچک</p>
+</section>
+
+<section id="b" class="variant">
+  <div class="frame">
+    <div class="head">
+      <div><span class="kicker">دسته‌بندی محصولات</span><h2>برای هر سبک، <span>یک انتخاب.</span></h2></div>
+      <span class="all">مشاهده همه محصولات</span>
+    </div>
+    <ul class="grid">
+      <li class="r-phone"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/phone.png" alt=""><span class="label">گوشی موبایل</span></span></a></li>
+      <li class="r-audio"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/audio.png" alt=""><span class="label">هدفون و ایرپاد<span class="count">۱۹ محصول</span></span></a></li>
+      <li class="r-charger"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/charger.jpg" alt=""><span class="label">شارژر و کابل</span></span></a></li>
+      <li class="r-smartwatch"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/smartwatch.jpg" alt=""><span class="label">ساعت هوشمند<span class="count">۷ محصول</span></span></a></li>
+      <li class="r-powerbank"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/powerbank.jpg" alt=""><span class="label">پاوربانک</span></span></a></li>
+      <li class="r-computer"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/computer-accessory.jpg" alt=""><span class="label">لوازم کامپیوتر<span class="count">۵ محصول</span></span></a></li>
+      <li class="r-sim"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/sim-card.jpg" alt=""><span class="label">سیم‌کارت<span class="count">۳ محصول</span></span></a></li>
+      <li class="r-car"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/car-charger.jpg" alt=""><span class="label">شارژر فندکی<span class="count">۳ محصول</span></span></a></li>
+      <li class="r-service"><a href="#"><span class="tile-face"><img src="../../../public/images/categories/v3/service.jpg" alt=""><span class="label">خدمات آنلاین<span class="count">۱ محصول</span></span></a></li>
+    </ul>
+  </div>
+  <p class="caption"><b>B — هم‌اندازه</b> · هر نه کاشی یک اندازه؛ تفاوت فقط در تیپوگرافی</p>
+</section>
+
+</body>
+</html>

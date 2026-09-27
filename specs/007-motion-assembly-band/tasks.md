@@ -45,6 +45,19 @@ two edits the page contains a duplicate id and `getElementById` in
 
 ---
 
+> **Bookkeeping note, 2026-09-27 — read before trusting any checkbox below.**
+>
+> This file was **never written back to** while the feature was built, so for four days it read
+> "0 of 63 done" against a band that had shipped, been committed and been accepted on the owner's
+> phone. Cause: `/speckit-implement` step 8 is the only component in the chain that writes `[X]`,
+> and 007 was executed through the worker-dispatch lane, which never runs implement.
+>
+> The 7 boxes marked done below were verified against the code just now, each with its evidence in
+> the commit note. **The remaining open boxes are of unknown truth** — some are done and unmarked,
+> some genuinely were not done (T004/T005's before-captures are absent from `verification/`). Do not
+> read them as outstanding work without checking. Run `/speckit-converge` on this feature to get a
+> real answer; it assesses code against artifacts, though it only appends and will not re-mark these.
+
 ## Phase 1: Setup (baseline capture and lock handoff)
 
 **Purpose**: Nothing in this feature can be proven later without measurements taken *before* the
@@ -61,7 +74,7 @@ sections are deleted — FR-016 says there is no rollback, so git history is the
       `.agent-pair/locks/components__home__AssemblyBand.tsx.lock` and
       `.agent-pair/locks/components__home__assembly-band.css.lock` (write `who`/`why`/`since` inside
       each). Do not edit either file before this exists.
-- [ ] T003 [P] Create `specs/007-motion-assembly-band/verification/README.md`: this feature's harness
+- [x] T003 [P] Create `specs/007-motion-assembly-band/verification/README.md`: this feature's harness
       contract, in the words of `specs/001-premium-rtl-storefront/verification/README.md` — Playwright
       from `/home/lain/tools/pixel-bridge-mcp/node_modules/playwright/index.mjs`, chromium at
       `/home/lain/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome` passed explicitly as
@@ -116,14 +129,14 @@ is why the wiring is foundational rather than a US2 task.
       `blueprint.md:165` records why: `band-settled` is a `div`, never enters the DOM-captured manifest,
       and the current `expect(order).toEqual([...HOMEPAGE_SECTIONS])` at `:58` goes 8 ≠ 9 red under the
       new contract.
-- [ ] T007 [P] Write the failing string-parity harness
+- [x] T007 [P] Write the failing string-parity harness
       `specs/007-motion-assembly-band/verification/content-parity.mjs`: load the served HTML for `/`
       with scripting disabled, load the settled DOM with scripting enabled, load
       `baseline/content-before.json`, and assert (a) HTML-words == DOM-words == the band's word set, so
       SC-004's 100% holds by counting rather than by trusting the RSC, and (b)
       `bandStrings − contentBefore.json = ∅`, which is SC-008. Run it: it must fail with "no
       `AssemblyBand` on the page", not with a crash.
-- [ ] T008 [P] Write the failing length harness
+- [x] T008 [P] Write the failing length harness
       `specs/007-motion-assembly-band/verification/band-length.mjs`: at 360px, report the band section's
       rendered height, the sticky shell's height, `window.innerHeight`, `100svh` resolved, and whether
       the shell pins (does its `getBoundingClientRect().top` hold at `0` across the pin window?).
@@ -149,7 +162,7 @@ is why the wiring is foundational rather than a US2 task.
       cut in the same edit, and the arithmetic recorded in the file's comment (pin run + settled block
       ≤ 2,400). If both cannot fit, the shell's `min-height: 100svh` is what the composition must shrink
       to fit under, not the other way round (SC-001 is binding under FR-016).
-- [ ] T012 [owner:driver] Replace `app/(main)/page.tsx:220-222` (`<StoreExperience />`,
+- [x] T012 [owner:driver] Replace `app/(main)/page.tsx:220-222` (`<StoreExperience />`,
       `<TrustBento />`, `<FinalConversion />`) with a single `<AssemblyBand />`, update the imports at
       `:35`, `:39`, `:40`, and delete `components/home/StoreExperience.tsx`,
       `components/home/TrustBento.tsx`, `components/home/TrustBlocks.tsx` — **same commit as T011**
@@ -163,12 +176,12 @@ is why the wiring is foundational rather than a US2 task.
       sequence. Resolve it by fitting the beat-3 composition into the shell (typography scale, gap
       reduction, or the two-state split from T011), then make T008 pass. **Do not "fix" it by removing
       the pin** — FR-016's reading is "one *pinned* closing movement" (`spec.md:240`).
-- [ ] T014 Re-anchor the ground in `lib/atmosphere/progression.ts`, together with T015 in one change
+- [x] T014 Re-anchor the ground in `lib/atmosphere/progression.ts`, together with T015 in one change
       (FR-010): `HOMEPAGE_SECTIONS` drops `"trust"` and its last entry becomes `"band-settled"` (9
       entries); `PROGRESSION`'s `close` stage re-anchors from `final-conversion` to `band-settled`
       (`#160406` unchanged); export `SUBTREE_ANCHORS = ["band-settled"] as const`. Update the file's
       own header comments so they stop describing three sections.
-- [ ] T015 Update the drift guard in `tests/unit/atmosphere-progression.test.ts` to account for
+- [x] T015 Update the drift guard in `tests/unit/atmosphere-progression.test.ts` to account for
       `SUBTREE_ANCHORS` in both the set-size formula (`:47-59`) and the order assertion (`:58`), making
       T006 pass. Expected arithmetic: accounted = 9 + 1 − 1 = 9 against 9 rendered sections
       (`top, obtainable-now, featured, categories, brands, new-arrivals, b2b, online-services,
@@ -199,7 +212,7 @@ is why the wiring is foundational rather than a US2 task.
       edit under a board GRANT, or hand the four-line deletion to partner and tick this on their
       confirmation). Grep `app/(main)/home.css` for any other selector reachable only from the deleted
       components and report the list — do not widen the cut without reporting it first.
-- [ ] T018 Confirm `#store-experience` appears **exactly once** in the served HTML for `/` (the band's
+- [x] T018 Confirm `#store-experience` appears **exactly once** in the served HTML for `/` (the band's
       `<section>` at `components/home/AssemblyBand.tsx:58`), and that both inbound destinations still
       resolve: `components/layout/Footer.tsx:32` («درباره ما») and `mobileQuickRoutes`
       (`lib/content/home.ts:36`, rendered by `MobileQuickRoutes`). Grep for `#trust` and
