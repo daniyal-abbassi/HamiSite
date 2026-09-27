@@ -8,6 +8,22 @@
  * put a framework dependency inside a Next.js app's tree for the benefit of the agents using it.
  */
 
+import dns from 'node:dns';
+import net from 'node:net';
+
+/**
+ * This box routes both address families through an Xray tunnel, and its IPv6 path is dead:
+ * `router.bynara.id` publishes a AAAA record, Node resolves it first, the TCP connect succeeds and TLS
+ * never completes — so `fetch` hangs until the abort fires and this module reports `Jev unreachable`.
+ * curl -6 to the same host returns 000 while curl -4 returns 200. Happy Eyeballs does not rescue it.
+ *
+ * Pinning IPv4 is therefore a correctness fix for the transport, not a preference: without it, a
+ * perfectly healthy Jev looks exactly like an outage. It is a process-wide side effect, which is
+ * acceptable in a CLI/tool module and is not acceptable to copy into the Next.js app.
+ */
+dns.setDefaultResultOrder('ipv4first');
+net.setDefaultAutoSelectFamily(false);
+
 const TYPES = new Set(['choice', 'score', 'noul']);
 
 export class JevError extends Error {
@@ -124,7 +140,13 @@ export async function jev({ state, questions, timeoutMs = 20_000 }) {
 
   const text = await response.text();
   if (!response.ok) {
-    throw new JevError('http', `Jev returned ${response.status}: ${redact(text).slice(0, 400)}`, response.status);
+    // A 5xx is the provider's problem and must not read like ours. Before the IPv4 pin below existed, a
+    // dead-IPv6 transport failure and an upstream outage both surfaced as "Jev unreachable", which is how a
+    // NaraRouter outage got logged as a bug in this repo. `kind` distinguishes them; the message now does too.
+    const prefix = response.status >= 500
+      ? `Upstream outage at the provider (HTTP ${response.status}) — not a defect in this client`
+      : `Jev returned ${response.status}`;
+    throw new JevError('http', `${prefix}: ${redact(text).slice(0, 400)}`, response.status);
   }
 
   let payload;

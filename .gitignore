@@ -71,3 +71,11 @@ specs/001-premium-rtl-storefront/baseline/*.png
 .beads-credential-key
 .beads/proxieddb/
 *.gate.lock*
+
+# Agent working space: task briefs, probe scripts, worker reports. Deliberately not part of the
+# repo history — anything from here that matters has already been written into specs/.
+.scratch/
+
+# Qoder IDE per-machine state and vendored skill trees (installed locally, not source)
+.qoder/settings.local.json
+.qoder/skills/

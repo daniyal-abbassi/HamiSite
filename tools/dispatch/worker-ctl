@@ -169,7 +169,11 @@ cmd_send() {
     [ -z "$p" ] && continue
     local lf; lf="$(lockfile_for "$p")"
     if [ -f "$lf" ]; then
-      local holder; holder="$(grep -m1 '^who=' "$lf" | cut -d= -f2)"
+      # AGENTS.md specifies the lock body as `who`, `why`, `since` without fixing a delimiter, and in practice
+      # both dialects are in use: `who=driver` and `who: qoder (worker, ...)`. Reading only `who=` made a real
+      # holder look like an empty one, which refused a valid send AND would have waved through a file whose lock
+      # had no holder at all.
+      local holder; holder="$(grep -m1 -E '^who[:=]' "$lf" | sed -E 's/^who[:=][[:space:]]*//' | awk '{print $1}')"
       case "$holder" in "$w"|boss) ;; *)
         echo "worker-ctl: REFUSED — $p is locked by '$holder'. Post a REQUEST on the board; terminal presence is not permission." >&2; exit 3 ;;
       esac
@@ -198,6 +202,15 @@ sys.exit(0 if mine & set(a.get('owned',[])) else 1)"; then
     echo "You are the $w worker inside tmux session $s, dispatched by the Boss (Qoder/GLM)."
     echo "Owned files: $(IFS=', '; echo "${OWNED[*]:-none — read-only}") · verify: $(IFS=' ; '; echo "${VERIFY[*]:-none}") · timeout ${TIMEOUT}s"
     echo "Write only inside the owned list. Never run git restore/checkout --/stash/reset/add -A, never commit or push unless the brief says so."
+    # /speckit-implement step 8 is the ONLY thing in the whole spec-kit chain that ever writes
+    # `[X]` — analyze does not read the codebase and converge is append-only by design. So work
+    # executed here instead of by implement has no writer at all, and shipped tasks stay `[ ]`
+    # forever. That is how 007 ended up reading 0-of-63 done after it shipped. The owning worker
+    # closes its own boxes; tasks.md is the one file outside the owned list it may edit, and only
+    # to flip checkboxes it earned.
+    if [ "$MODE" = "implement" ]; then
+      echo "TASK WRITE-BACK (mandatory): if your brief names a specs/*/tasks.md, edit it and flip each task you actually completed from '- [ ]' to '- [x]', citing the task ID. Do not flip one you did not do, and do not flip any a different worker did. This is the only mechanism in the entire toolchain that records completion — if you skip it the box stays open forever."
+    fi
     echo "Nothing under .agent-pair/ except your own heartbeat. No secrets in output. Never bare 'npm test' (it truncates 19 tables)."
     echo "No fps or smoothness judgements; this machine is not an instrument."
     echo; echo "BRIEF"; cat "$PF"

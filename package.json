@@ -19,6 +19,8 @@
     "db:fresh": "prisma db push --force-reset --accept-data-loss && npm run db:generate && npm run db:seed",
     "test": "dotenv -e .env.test -- vitest run",
     "test:watch": "dotenv -e .env.test -- vitest",
+    "test:unit": "vitest run --config vitest.frontend.config.ts",
+    "test:unit:watch": "vitest --config vitest.frontend.config.ts",
     "db:test:reset": "dotenv -e .env.test -- prisma db push --force-reset --accept-data-loss"
   },
   "prisma": {
