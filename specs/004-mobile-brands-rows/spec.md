@@ -1,5 +1,12 @@
 # Feature Specification: Mobile Brands Row Presentation
 
+> **SUPERSEDED (presentation only), 2026-09-26**: the expandable-row presentation below is replaced by
+> **feature 008 — the brands stacking deck** (`specs/008-brands-stacking-cards/`). 008's build log
+> (`specs/008-brands-stacking-cards/notes/deck-build-log.md`) records which of this spec's rules carried
+> forward: the honest-count rule (FR-008 here → 008's C5) and the no-empty-band rule (C5 here → 008's C4)
+> live on as 008 contracts; the row/emphasis interaction does not — in the deck, the card itself is the
+> destination. Recorded here because a rule that lives only in a closed spec does not survive a rebuild.
+
 **Feature Branch**: `004-mobile-brands-rows` (no dedicated branch created — no `before_specify` hook is configured; work continues on `Hami-v3`)
 
 **Created**: 2026-09-20
