@@ -116,9 +116,9 @@ describe("resolveProductImage", () => {
 
 describe("categoryImageFor", () => {
   it("maps known category slugs to their tile images", () => {
-    expect(categoryImageFor("mobile", "موبایل")).toBe("/images/categories/phone.png");
-    expect(categoryImageFor("audio", "صوتی")).toBe("/images/categories/headphone.png");
-    expect(categoryImageFor("laptop", "لپ تاپ")).toBe("/images/categories/computer.png");
+    expect(categoryImageFor("mobile", "موبایل")).toBe("/images/categories/v3/phone.png");
+    expect(categoryImageFor("audio", "صوتی")).toBe("/images/categories/v3/audio.png");
+    expect(categoryImageFor("laptop", "لپ تاپ")).toBe("/images/categories/v3/computer-accessory.jpg");
   });
 
   /**
@@ -130,14 +130,14 @@ describe("categoryImageFor", () => {
    * test does not assert their absence.
    */
   it("has no home or tv tile, and falls through for those keywords", () => {
-    expect(categoryImageFor("home", "خانگی")).toBe("/images/categories/phone.png");
-    expect(categoryImageFor("tv", "تلویزیون")).toBe("/images/categories/phone.png");
+    expect(categoryImageFor("home", "خانگی")).toBe("/images/categories/v3/phone.png");
+    expect(categoryImageFor("tv", "تلویزیون")).toBe("/images/categories/v3/phone.png");
   });
 
   it("still has no catalogue category matching the deleted tiles", () => {
     const orphaned = listCategories().filter((category) => {
       const image = categoryImageFor(category.slug, category.name);
-      return image === "/images/categories/phone.png" && /home|tv|خانگی|تلویزیون|household/i.test(`${category.slug} ${category.name}`);
+      return image === "/images/categories/v3/phone.png" && /home|tv|خانگی|تلویزیون|household/i.test(`${category.slug} ${category.name}`);
     });
     expect(orphaned).toEqual([]);
   });
@@ -152,10 +152,10 @@ describe("categoryImageFor", () => {
   });
 
   it("falls back to the phone tile for unknown categories", () => {
-    expect(categoryImageFor("mystery", "ناشناخته")).toBe("/images/categories/phone.png");
+    expect(categoryImageFor("mystery", "ناشناخته")).toBe("/images/categories/v3/phone.png");
   });
 
   it("handles nullish input", () => {
-    expect(categoryImageFor(null, null)).toBe("/images/categories/phone.png");
+    expect(categoryImageFor(null, null)).toBe("/images/categories/v3/phone.png");
   });
 });

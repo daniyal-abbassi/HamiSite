@@ -27,6 +27,7 @@
  */
 
 import { categorySubtreeCounts, countProductsByKind, listCategories } from "@/lib/catalog";
+import { RHYTHM, type Tier, type TierBreakpoint } from "@/lib/category-masonry";
 
 export type DepartmentKind =
   | "phone"
@@ -53,10 +54,21 @@ export type DepartmentKind =
  * re-derives both from the export, so a panel cannot promise 134 phones and deliver 8 —
  * it just no longer needs anyone to remember to update a number.
  */
+/*
+ * `image` is authored here for the same reason `slug` is: a hand-typed filename has the same failure mode that
+ * made hand-written Latin slugs silently 404 in feature 004, so `tests/unit/category-departments.test.ts` asserts
+ * every path resolves on disk rather than trusting this table. All nine panels are 3:4 and live in
+ * `public/images/categories/v3/`.
+ *
+ * `rhythm` is deliberately NOT restated in this table. `RHYTHM` in `lib/category-masonry.ts` is already keyed by
+ * `kind`, and a second copy here would be a second source for one pattern — the drift FR-013 exists to prevent.
+ * It is attached by kind below, so the department carries it without the seed duplicating it.
+ */
 const DEPARTMENT_SEED: ReadonlyArray<{ kind: DepartmentKind;
   label: string;
   slug: string;
   badge: string | null;
+  image: string;
 }> = [
   {
     kind: "phone",
@@ -65,15 +77,16 @@ const DEPARTMENT_SEED: ReadonlyArray<{ kind: DepartmentKind;
     // export actually files phones under, not the `موبایل` leaf beside it that holds 8.
     slug: "موبایل-و-تبلت",
     badge: "/brand/categories/mobile.svg",
+    image: "/images/categories/v3/phone.png",
   },
-  { kind: "audio", label: "هدفون و ایرپاد", slug: "هدفون-ایرپاد-و-هندزفری", badge: "/brand/categories/audio.svg" },
-  { kind: "charger", label: "شارژر و کابل", slug: "آداپتور-کابل-و-شارژر", badge: "/brand/categories/charger.svg" },
-  { kind: "smartwatch", label: "ساعت هوشمند", slug: "ساعت-و-مچ-بند-هوشمند", badge: "/brand/categories/smartwatch.svg" },
-  { kind: "powerbank", label: "پاوربانک", slug: "پاور-بانک", badge: "/brand/categories/power-bank.svg" },
-  { kind: "computer_accessory", label: "لوازم کامپیوتر", slug: "تجهیزات-کامپیوتر-و-لبتاب", badge: "/brand/categories/computer-accessory.svg" },
-  { kind: "sim_card", label: "سیم‌کارت", slug: "سیمکارت", badge: "/brand/categories/sim-card.svg" },
-  { kind: "car_charger", label: "شارژر فندکی", slug: "شارژر-فندکی", badge: "/brand/categories/car-charger.svg" },
-  { kind: "service", label: "خدمات آنلاین", slug: "خدمات-آنلاین", badge: "/brand/categories/online-services.svg" },
+  { kind: "audio", label: "هدفون و ایرپاد", slug: "هدفون-ایرپاد-و-هندزفری", badge: "/brand/categories/audio.svg", image: "/images/categories/v3/audio.png" },
+  { kind: "charger", label: "شارژر و کابل", slug: "آداپتور-کابل-و-شارژر", badge: "/brand/categories/charger.svg", image: "/images/categories/v3/charger.jpg" },
+  { kind: "smartwatch", label: "ساعت هوشمند", slug: "ساعت-و-مچ-بند-هوشمند", badge: "/brand/categories/smartwatch.svg", image: "/images/categories/v3/smartwatch.jpg" },
+  { kind: "powerbank", label: "پاوربانک", slug: "پاور-بانک", badge: "/brand/categories/power-bank.svg", image: "/images/categories/v3/powerbank.jpg" },
+  { kind: "computer_accessory", label: "لوازم کامپیوتر", slug: "تجهیزات-کامپیوتر-و-لبتاب", badge: "/brand/categories/computer-accessory.svg", image: "/images/categories/v3/computer-accessory.jpg" },
+  { kind: "sim_card", label: "سیم‌کارت", slug: "سیمکارت", badge: "/brand/categories/sim-card.svg", image: "/images/categories/v3/sim-card.jpg" },
+  { kind: "car_charger", label: "شارژر فندکی", slug: "شارژر-فندکی", badge: "/brand/categories/car-charger.svg", image: "/images/categories/v3/car-charger.jpg" },
+  { kind: "service", label: "خدمات آنلاین", slug: "خدمات-آنلاین", badge: "/brand/categories/online-services.svg", image: "/images/categories/v3/service.jpg" },
 ];
 
 export type Department = {
@@ -84,6 +97,21 @@ export type Department = {
   categoryId: number;
   href: string;
   badge: string | null;
+  /**
+   * The department's own picture, authored and guarded — `tests/unit/category-departments.test.ts` asserts the
+   * path exists on disk. Feature 010's tiles render this, not `badge`: a tile has room for a picture and a name,
+   * and the line icon is a third element a 148 px tile cannot carry.
+   */
+  image: string;
+  /**
+   * The masonry rhythm — the tier at each breakpoint, attached from `RHYTHM` by `kind`.
+   *
+   * It is *not* a statement of importance (FR-013): no department is tall because it sells more, and because the
+   * table is a Latin square every department is the tall tile at exactly one width and the short tile at another
+   * (FR-013a). Keyed by kind rather than derived from position, so a panel skipped below cannot re-shuffle the
+   * composition of the ones that remain.
+   */
+  rhythm: Record<TierBreakpoint, Tier>;
   /**
    * What the destination actually holds. This is the only number the panel may display, and it displays it
    * only when it is the whole department — see `showsCount`.
@@ -167,6 +195,8 @@ export function categoryDepartments(): Department[] {
       categoryId: category.id,
       href: `/categories/${encodeURIComponent(seed.slug)}`,
       badge: seed.badge,
+      image: seed.image,
+      rhythm: RHYTHM[seed.kind],
       reachableCount: total,
       kindTotal,
       // False wherever the route is a subset of the kind: a panel must neither

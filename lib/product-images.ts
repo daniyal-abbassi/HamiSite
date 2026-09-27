@@ -22,7 +22,14 @@
  * file's.
  */
 
-const CATEGORY_DIR = "/images/categories";
+/**
+ * The 3:4 panels feature 006 generated and 010 shipped. The five tiles that used to live one level up
+ * (`phone.png`, `headphone.png`, `computer.png`, `home.png`, `tv.png`) were deleted by the merchant, and this
+ * directory is now the only one with files in it — so the shop's category tiles and the homepage's departments
+ * name the same artwork. `tests/unit/category-departments.test.ts` asserts the homepage set exists on disk and
+ * the test here asserts this mapping does; neither can drift into a dead path silently.
+ */
+const CATEGORY_DIR = "/images/categories/v3";
 
 /** Built by `scripts/make-product-placeholder.py` from the merchant's real mark. */
 const PRODUCT_PLACEHOLDER = "/brand/placeholder-product.webp";
@@ -30,16 +37,14 @@ const PRODUCT_PLACEHOLDER = "/brand/placeholder-product.webp";
 const CATEGORY_TILE_IMAGES: Array<[string, string[]]> = [
   [`${CATEGORY_DIR}/phone.png`, ["mobile", "phone", "گوشی", "موبایل", "تلفن"]],
   [
-    `${CATEGORY_DIR}/headphone.png`,
+    `${CATEGORY_DIR}/audio.png`,
     ["audio", "headphone", "speaker", "airpod", "هندزفری", "هدفون", "اسپیکر", "ایرپاد"],
   ],
-  [`${CATEGORY_DIR}/computer.png`, ["laptop", "computer", "notebook", "لپ", "کامپیوتر", "تبلت"]],
+  [`${CATEGORY_DIR}/computer-accessory.jpg`, ["laptop", "computer", "notebook", "لپ", "کامپیوتر", "تبلت"]],
   // No home or tv entry, deliberately. Checked against the real catalogue: of its 32
   // categories, ZERO matched either keyword set — the shop sells phones and accessories,
   // not televisions or home appliances (tests/unit/product-images.test.ts re-runs that
-  // check so it gets revisited if the stock ever changes). `public/images/categories/
-  // home.png` and `tv.png` are therefore unreferenced by any code path but still on disk;
-  // deleting them is the owner's call, not this file's.
+  // check so it gets revisited if the stock ever changes).
 ];
 
 /** Lowercase + ZWNJ→space, so «لپ‌تاپ» and «لپ تاپ» both match. */

@@ -196,4 +196,39 @@ describe("categoryDepartments", () => {
       ).toBe(true);
     }
   });
+
+  /*
+   * Feature 010's two authored fields. Both are guarded the same way the slugs are — a hand-typed string in
+   * this table can be wrong silently, and a silent wrongness on the homepage is the defect class feature 004
+   * already paid for once.
+   */
+
+  it("names a panel file that exists on disk for every department", () => {
+    for (const d of departments) {
+      expect(
+        existsSync(join(process.cwd(), "public", d.image.replace(/^\//, ""))),
+        `missing panel ${d.image} for ${d.kind}`,
+      ).toBe(true);
+    }
+  });
+
+  it("names nine distinct panels, all from the one 3:4 set", () => {
+    // Two departments sharing a picture would advertise a breadth neither has (Principle I), and a panel from
+    // outside v3/ is a stale reference to the pre-006 artwork the owner deleted.
+    for (const d of departments) {
+      expect(d.image, d.kind).toMatch(/^\/images\/categories\/v3\/[\w-]+\.(png|jpe?g|webp)$/);
+    }
+    expect(new Set(departments.map((d) => d.image)).size).toBe(departments.length);
+  });
+
+  it("carries a rhythm for all three breakpoints, holding each tier exactly once", () => {
+    // The property that survives a skipped panel. "Three tiles of each tier per breakpoint" belongs to
+    // RHYTHM itself and is asserted in category-masonry.test.ts; asserting it here would make the suite fail
+    // for a department that legitimately emptied, which is the snapshot coupling FR-053 forbids.
+    for (const d of departments) {
+      expect(Object.keys(d.rhythm).sort(), d.kind).toEqual(["base", "md", "xl"]);
+      const held = ["base", "md", "xl"].map((bp) => d.rhythm[bp as keyof typeof d.rhythm]).sort().join("");
+      expect(held, `${d.kind}: size cannot mean rank (FR-013a)`).toBe("LMS");
+    }
+  });
 });
