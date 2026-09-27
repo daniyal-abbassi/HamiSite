@@ -1,12 +1,10 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { House, ShoppingBag, Store, UserRound, Handshake, Phone } from "lucide-react";
+import { House, Store, UserRound, Handshake, Phone } from "lucide-react";
+import { LiquidSelection } from "@/components/liquid/LiquidSelection";
 import { useAuth } from "@/components/providers/AuthProvider";
-import { useCart } from "@/components/providers/CartProvider";
 import { storeContact } from "@/lib/content/contact";
-import { cn } from "@/lib/utils";
 
 /**
  * The bottom navigation dock — the primary navigation on mobile.
@@ -38,16 +36,14 @@ import { cn } from "@/lib/utils";
  * ## Interface
  *
  * There is none: mount it once in the layout. Everything it needs — the current
- * route, the cart count, whether anyone is signed in — it reads itself. Callers
- * cannot get it wrong and there is nothing to keep in sync at the call site.
+ * route and whether anyone is signed in — it reads itself. Callers cannot get it
+ * wrong and there is nothing to keep in sync at the call site.
  */
 
 type DockItem = {
   href: string;
   label: string;
   Icon: typeof House;
-  /** Live count rendered as a badge, e.g. the cart. */
-  badge?: number;
   /** Matches nested routes too — /shop is active on /shop/some-phone. */
   prefix?: boolean;
   /**
@@ -61,13 +57,11 @@ type DockItem = {
 
 export function MobileDock() {
   const pathname = usePathname();
-  const { itemCount } = useCart();
   const { status } = useAuth();
 
   const items: DockItem[] = [
     { href: "/", label: "خانه", Icon: House },
     { href: "/shop", label: "فروشگاه", Icon: Store, prefix: true },
-    { href: "/cart", label: "سبد", Icon: ShoppingBag, badge: itemCount },
     { href: "/partners", label: "همکاری", Icon: Handshake, prefix: true },
     { href: storeContact.phoneHref, label: "تماس", Icon: Phone, dial: true },
     // Signed-out users get the login screen; signed-in users get their orders.
@@ -85,43 +79,38 @@ export function MobileDock() {
   const isActive = (item: DockItem) =>
     item.href === "/" ? pathname === "/" : item.prefix ? pathname.startsWith(item.href) : pathname === item.href;
 
+  /* The one destination the marker rests under. `null` when nothing matches —
+     /cart and /checkout are reachable pages with no tab of their own, and a
+     marker that defaulted to «خانه» there would be the exact bug this component
+     was moved into the layout to fix. */
+  const current = items.find((item) => !item.dial && isActive(item))?.label ?? null;
+
   return (
     <nav
-      className="fixed inset-x-3 bottom-3 z-40 mx-auto flex max-w-md items-center justify-between rounded-full border border-champagne/25 bg-ink-2 px-2 py-1.5 shadow-monolith md:hidden"
+      className="fixed inset-x-3 bottom-3 z-40 mx-auto flex max-w-md items-center rounded-full border border-champagne/25 bg-ink-2 py-1.5 shadow-monolith md:hidden"
       aria-label="ناوبری سریع فروشگاه"
     >
-      {items.map((item) => {
-        const active = isActive(item);
-        const { Icon, badge, dial } = item;
-        // A dial request is not a route, so it must not go through the router.
-        const Item = dial ? "a" : Link;
-        return (
-          <Item
-            key={item.label}
-            href={item.href}
-            aria-current={active ? "page" : undefined}
-            className={cn(
-              "relative flex flex-1 flex-col items-center gap-0.5 rounded-full py-1.5 text-xs font-bold transition-all duration-200",
-              active
-                ? "bg-champagne/15 text-champagne shadow-glow-gold"
-                : "text-foreground/60 hover:text-foreground/85 active:scale-95",
-            )}
-          >
-            <span className="relative">
-              <Icon className="size-[18px]" aria-hidden="true" />
-              {badge != null && badge > 0 && (
-                <span
-                  aria-hidden="true"
-                  className="absolute -end-2.5 -top-1 grid h-[15px] min-w-[15px] place-items-center rounded-full bg-champagne px-1 font-mono text-xs font-black leading-none text-primary-foreground shadow-sm"
-                >
-                  {badge.toLocaleString("fa-IR")}
-                </span>
-              )}
-            </span>
-            <span>{item.label}</span>
-          </Item>
-        );
-      })}
+      <LiquidSelection
+        className="w-full"
+        itemClassName="flex-1 flex-col items-center gap-0.5 rounded-full py-1.5 text-xs font-bold active:scale-95"
+        equalWidth
+        markerInset={6}
+        value={current}
+        items={items.map((item) => ({
+          id: item.label,
+          label: (
+            <>
+              <span className="relative">
+                <item.Icon className="size-[18px]" aria-hidden="true" />
+              </span>
+              <span>{item.label}</span>
+            </>
+          ),
+          // A dial request is not a route, so it bypasses the router — and it is
+          // never marked, because no page became current when you tap it.
+          ...(item.dial ? { href: item.href, marked: false } : { to: item.href }),
+        }))}
+      />
     </nav>
   );
 }

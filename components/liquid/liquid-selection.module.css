@@ -1,0 +1,204 @@
+/* The travelling marker, wearing this storefront's palette.
+ *
+ * Vendored shape from liquid-taffy's PillTabs.module.css (MIT) — see UPSTREAM.md
+ * — with all eight of its custom properties re-pointed at the tokens this
+ * project actually defines (app/globals.css :root, tailwind.config.ts):
+ *
+ *   --liquid-surface        → rgb(var(--primary))            champagne #E5D3B3
+ *   --liquid-rim            → rgb(var(--primary-foreground) / .28)
+ *   --liquid-shadow         → the site's shadow-glow-gold, champagne-derived
+ *   --font-family           → var(--font-vazirmatn)          Estedad Variable
+ *   --ease-out-strong       → cubic-bezier(0.2, 0.7, 0.3, 1) the project default curve
+ *   --color-text-primary    → rgb(var(--foreground))         warm platinum
+ *   --color-text-secondary  → rgb(var(--muted-foreground))   silvery muted
+ *   --font-size-md / --line-height-md → inherited from the surface, not fixed here
+ *
+ * FR-016 and FR-063 together are the reason the marker and its label have no
+ * colour of their own to argue about: the body is `--primary`, the current label
+ * is `--primary-foreground`, and those two are one decision in globals.css.
+ * Re-point the accent and both move in the same edit. A surface cannot opt into
+ * one and not the other, because there is no prop for either.
+ */
+
+.group {
+  /* The marker measures itself against this box, so it is the containing block. */
+  position: relative;
+  display: flex;
+  /* Wrappable, because three of the seven surfaces wrap today: the image views
+     (components/shop/ProductGallery.tsx:84 renders flex flex-wrap), the variant
+     chips, and any filter row that overflows at 360px. Without this the group
+     silently squeezes or overflows instead of making a second line, and the
+     corner trip in selection-geometry.ts becomes unreachable — which is FR-045
+     unmet, measured: ten Persian chips stayed on one row. */
+  flex-wrap: wrap;
+  align-items: stretch;
+  gap: 4px;
+  font-family: var(--font-vazirmatn);
+  --ls-ease: cubic-bezier(0.2, 0.7, 0.3, 1);
+  --ls-quiet: rgb(var(--muted-foreground));
+  --ls-ink: rgb(var(--foreground));
+}
+
+/* Equal-width slots (FR-064) — the bottom bar's five destinations divide the row
+ * evenly. Two things that mode gives up, and both are load-bearing:
+ *
+ * 1. `gap: 0; padding: 0` — parkStyle() in selection-geometry.ts writes the
+ *    server's first-frame position as a percentage of THIS box. A gap or inline
+ *    padding would put every slot a fraction of a pixel off what the server
+ *    claimed, and the marker would visibly jump when the measurement lands.
+ *    A row that wants an inset puts it on its own wrapper (as the bar's nav
+ *    already does with px-2).
+ * 2. Nothing else — the marker still measures real pixels for the trip; the
+ *    percentages only have to hold for one frame.
+ *
+ * `padding-inline` only, deliberately: the vertical axis is how a tall bar meets
+ * FR-018's measured height budget, and this module has no business claiming it. */
+.equal {
+  gap: 0;
+  padding-inline: 0;
+}
+
+/* The equal half of FR-064, here rather than left to the surface: a zero flex
+   basis is what makes the slots divide the row evenly, and it is also what stops
+   an equal-width row from ever taking the `flex-wrap: wrap` above. That matters —
+   parkStyle()'s percentages are only true while the slots are 100/count, and a
+   wrapped equal row would break the server's first frame without anyone
+   remembering why. */
+.equal .item {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+/* One shared body UNDER the labels; GSAP carries it. The items only change ink. */
+.marker {
+  position: absolute;
+  /* Physical, both of them, and staying physical (FR-061): the marker is placed
+     from the row's physical left and moved with a physical `x`, which is one
+     coordinate system. `inset-inline-start` here would make two — and under RTL
+     they disagree by the whole width of the row. */
+  top: 0;
+  left: 0;
+  z-index: 0;
+  /* Zero until it is parked, so an un-hydrated marker paints nothing rather than
+     a champagne bar across the start of the row. On a server-rendered equal-width
+     row the inline style from parkStyle() overrides both of these before the
+     first frame (FR-067). */
+  width: 0;
+  height: 100%;
+  border-radius: 999px;
+  /* Liquid GLASS, not a solid slab. The owner's word for this was «شیشه ای مایع
+     … مثل ژله», and a filled champagne pill is neither. Every value below still
+     derives from --primary, so FR-016's one-colour-source rule survives the
+     change of surface. The two inset whites are the glass highlight taken from
+     the second reference (freefrontend css-liquid-glass); the motion is not —
+     that reference has no moving indicator at all, and liquid-taffy has no
+     backdrop-filter anywhere in src/, so the two sources split cleanly. */
+  /* Soft glass, after the owner's verdict that the first pass was far too
+     strong. The two inset whites are what screamed: 35% and 15% white on a dark
+     bar is a lit rim, not a frost. They are now barely-there, the blur is half,
+     the saturation lift is a nudge rather than a punch, and the champagne glow
+     under the body is tighter and dimmer. Everything still derives from
+     --primary, so FR-016's one-colour-source rule survives. */
+  background: rgb(var(--primary) / 0.07);
+  -webkit-backdrop-filter: blur(7px) saturate(1.12);
+  backdrop-filter: blur(7px) saturate(1.12);
+  /* Rim as a spread shadow, not a border: a border is part of this element's
+     layout box and its width is rewritten every frame of the trip. */
+  box-shadow:
+    inset 0 0 1px 1px rgb(255 255 255 / 0.09),
+    inset 0 0 6px 2px rgb(255 255 255 / 0.04),
+    0 0 0 1px rgb(var(--primary) / 0.16),
+    0 4px 14px -6px rgb(var(--primary) / 0.12);
+  transition:
+    background-color 380ms var(--ls-ease),
+    box-shadow 380ms var(--ls-ease);
+  pointer-events: none;
+  /* NO will-change here (FR-034). Upstream leaves `will-change: transform` on
+     the marker permanently, which is one primed compositor layer on a demo stage
+     and seven-plus on a shop page. The trip sets it on the element when it
+     starts and clears it when it lands — see LiquidSelection.tsx. */
+}
+
+/* A backdrop-filter that is re-rasterised every frame of the trip is the one
+ * real cost this surface carries. No claim is made here about how that performs
+ * — this machine cannot measure it (FR-032). What is guaranteed is the way out:
+ * a shopper who has asked for reduced transparency gets the solid fill and no
+ * filter at all, which is the same honest-degradation shape as FR-021's motion
+ * rule rather than a silent fallback. */
+@media (prefers-reduced-transparency: reduce) {
+  .marker {
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+    background: rgb(var(--primary) / 0.22);
+  }
+}
+
+.item {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 0;
+  border-radius: 999px;
+  /* Deliberately silent on padding, border and type. Preflight already resets all
+     three for form elements (node_modules/tailwindcss/src/css/preflight.css:167),
+     an anchor has none of its own, and FR-065's whole problem is that a dock tab
+     and a variant chip are different sizes: the surface sets py-1.5 / text-xs /
+     border-champagne and this module must not be in the way. A CSS-module class
+     and a Tailwind utility have the same specificity, so anything declared here
+     would be decided by stylesheet order — which is not a thing to build a pinned
+     62px bar height on. */
+  background: none;
+  color: var(--ls-quiet);
+  text-align: inherit;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  /* Colour only, and only colour: a weight change here would re-measure the
+     label while the marker is tweening to that width. */
+  transition: color 380ms var(--ls-ease);
+}
+
+.item:disabled {
+  cursor: not-allowed;
+  opacity: 0.45;
+}
+
+/* An unchosen item inks up under the pointer or the caret — quiet to the full
+ * foreground, so "this one is reachable" is answered before the click. */
+.item:hover:not(.itemActive),
+.item:focus-visible:not(.itemActive) {
+  color: var(--ls-ink);
+}
+
+/* The current item's ink is the FULL accent. It used to be
+ * `rgb(var(--primary-foreground))`, which was right when the body was a solid
+ * champagne pill — dark ink on a light slab — and near-invisible now that the
+ * body is a 10% glass wash over a dark bar. Still one token, so FR-016's rule
+ * that the body and its label cannot be made to disagree is intact. */
+.itemActive {
+  color: rgb(var(--primary));
+}
+
+/* Failing honestly (FR-020, FR-022, SC-003).
+ *
+ * `data-ls-placed` is written once by the layout effect and is in no one's JSX,
+ * so React never restores or removes it. Before that attribute exists, nothing
+ * has run: this is the frame a shopper with a blocked script bundle gets, and it
+ * must already say which item is current. The body may not be painted yet (a
+ * content-width row cannot know its slot widths server-side), so the current item
+ * borrows the accent as a ground instead — same token, so when the marker does
+ * arrive, the two agree and the tint simply disappears under it. */
+.group:not([data-ls-placed]) .itemActive {
+  background: rgb(var(--primary) / 0.16);
+}
+
+/* FR-021: with reduced motion the marker is placed, not carried — and the colour
+ * rides have to stop too, or "no transition" is only true of the part in GSAP. */
+@media (prefers-reduced-motion: reduce) {
+  .marker,
+  .item {
+    transition: none;
+  }
+}
