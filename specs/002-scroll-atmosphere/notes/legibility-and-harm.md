@@ -106,3 +106,41 @@ rationalised.
   produced 2. The fix is a surface that stacks imagery vertically, not a denser walk of this one.
 - `page.accessibility.snapshot()` is gone from this Playwright build; A3 is read off
   `Accessibility.getFullAXTree` over CDP instead, which is the stronger instrument, not a downgrade.
+
+---
+
+## 2026-09-29 — re-run after the background redesign: the ground no longer travels
+
+Everything above this line was measured on the **continuous scroll-driven ground**. That mechanism is gone:
+`codex-live-review` moved the colour from one fixed layer onto each section's own background, on the owner's
+request for "more visible luxury scroll background transitions" and "separate section backgrounds instead of
+continuous scroll tint". The change is committed (`e1dc0fe`'s successor work, tree clean).
+
+Measured twice, because the first instrument disagreed with itself:
+
+- `tools/ground-sweep.mjs` — **declared direction: 0 of 20 steps rise; max seam 0.00000**. The layer's own
+  colour was sampled at 13 scroll positions and returned **one value**: `rgb(48, 8, 15)`. It is a static
+  rectangle now.
+- A direct probe of what is actually painted behind the content at 13 positions — **9 distinct section/colour
+  pairs**: `top` 48,8,15 · `featured` 9,9,11 · `categories` 244,241,234 · `brands` 20,22,28 · `new-arrivals`
+  244,241,234 · `b2b` 48,8,15 · `online-services` 244,241,234 · `store-experience` 17,17,20.
+
+So the page is **not** monotone — the colour changes more sharply than the old progression ever did. What it
+changed from is *continuous* to *discontinuous*: a hard boundary at every section edge, which is precisely what
+FR-004 of this feature was written to forbid ("no visible seam, band or step").
+
+**What this does to the evidence above:**
+
+1. **FR-001 and FR-003 are no longer implemented.** There is no scroll-driven progression to measure. This is
+   the same category of gap feature 007 just recorded for its pin: a decision made in the tree that the spec
+   never caught up with.
+2. **Every contrast number above is void.** L1, L2 and L3 were measured against a dark ground. Three sections
+   are now near-white paper (`244,241,234`), so text colours chosen for cream-on-wine are sitting on the
+   opposite end of the range. The instruments still run — they just no longer measure the promise.
+3. **G1 and A3 survived**, and that is not luck: content identity and the accessibility tree do not care where
+   the colour comes from. Re-run 2026-09-29: content hash `bf7368911d7294d2` unchanged across baseline, reduced
+   motion, forced colours and a deleted layer; accessibility tree 1700 nodes / 1078 named either way.
+
+**Not judged here:** whether hard section boundaries look better than a travelling tint. That is the owner's
+call and they made it. What is recorded is that the feature's first four requirements describe a mechanism the
+code no longer contains, and that its legibility evidence needs re-deriving against light bands.

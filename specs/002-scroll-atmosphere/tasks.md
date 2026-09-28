@@ -639,3 +639,27 @@ confirm nothing about the scroll changed.
   "ScrollSmoother". **Two hits, both already labelled** — `notes/scroll-easing.md` and
   `notes/scroll-cost.md` — and no other 002 artifact reasons from the two-position model. Nothing else to
   correct before US2.
+
+---
+
+## Phase 8: Convergence — the ground stopped travelling
+
+**Appended 2026-09-29.** Measured, not inferred: `tools/ground-sweep.mjs` reports 0 of 20 steps rising and a
+single layer colour across 13 scroll positions, and a direct probe finds 9 distinct section/colour pairs. The
+mechanism this feature was built around is gone; the colour now changes in hard steps at section edges. Full
+numbers in `notes/legibility-and-harm.md`.
+
+- [ ] T044 Put the sectioned-background change to the spec: FR-001, FR-003 and FR-004 require a ground that
+  changes **continuously** with scroll and forbid a visible seam or step, and the shipped page does neither.
+  Either the spec is amended to describe per-section tones — which is what the owner asked for — or the travelling
+  layer is restored. Do not resolve this by editing the requirements from an agent seat; 007's pin question is the
+  precedent for how that ends. (contradicts) per FR-001, FR-003, FR-004 (**CRITICAL**)
+- [ ] T045 Re-derive the legibility evidence against the new page. Three sections are now near-white paper
+  (244,241,234) where every measurement this week assumed a dark ground, so L1, L2 and L3 are not stale by age
+  but void by premise. Re-run `tools/contrast-sweep.mjs`, `tools/surface-separation.mjs` and
+  `tools/content-identity.mjs` and expect the text-colour checks to move. (partial) per FR-015, SC-004, L1-L3
+  (**HIGH**)
+- [ ] T046 Decide what the fixed layer is for now. `.hami-page-ground` paints one constant colour that every
+  section background covers. Either it is the ground under the gaps between sections, or it is dead weight that
+  should go — and "it is harmless" is not the same as "it is load-bearing", which is the clause it was written
+  against. (unrequested) per FR-002, contract G1 (**MEDIUM**)
