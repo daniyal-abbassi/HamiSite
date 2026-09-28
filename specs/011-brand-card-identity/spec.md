@@ -42,6 +42,20 @@ association, which is a false statement on a commercial page, not a design choic
 The feature is only successful if all three hold at once. Two out of three is the failure state, and each pair
 fails in a different obvious way.
 
+## Clarifications
+
+### Session 2026-09-29
+
+- Q: When the artwork carries no writing and the description line is withdrawn, what tells a shopper which maker
+  a card is? → A: **The artwork alone.** The owner's ruling, in their words: "the brand's card is self
+  explanatory and does not need a text." Amended FR-006, FR-004, FR-013, FR-015, FR-019, SC-002, SC-003 and
+  User Story 2; FR-007 and FR-008 kept as conditional clauses so a line that ever returns is still disciplined.
+- Consequence the owner did not ask for and which is therefore recorded rather than assumed away: a picture with
+  no name on it announces nothing to a screen reader and identifies nothing in print. FR-004 now requires the
+  maker's name as an **accessible name that is never rendered as visible text**, which keeps the ruling exactly —
+  no text on the card — without making the deck unreadable to someone who cannot see it. Withdraw this only on an
+  explicit instruction.
+
 ## User Scenarios & Testing *(mandatory)*
 
 ### User Story 1 — Telling the brand from the card alone (Priority: P1)
@@ -66,23 +80,33 @@ hidden, and ask them to name the brand. Count correct answers out of six.
 
 ---
 
-### User Story 2 — Every brand says something (Priority: P2)
+### User Story 2 — Each card is understood without a word (Priority: P2)
 
-All six cards carry one short line describing that maker. Today three do and three are blank, and the three that
-exist were written without looking anything up.
+*(Rewritten 2026-09-29. This story used to be "Every brand says something" — that a shopper could read one
+researched line about each maker. The owner withdrew the line: the six cards are art-led, and the ruling is that
+each card is self-explanatory. What remains of the story is the claim that survives the withdrawal, which is the
+harder one — that a picture can be trusted to identify its maker on its own.)*
 
-**Why this priority**: The owner asked for the line on every brand and asked for it to be researched. A card that
-carries no line reads as unfinished, and a line that was invented reads as marketing filler — both defeat the point.
+A shopper scrolling the deck knows which maker each card belongs to from the card itself, with no caption, no
+tagline and no product count. The three-way tension this feature was built to hold is unchanged; only one of its
+two tools has been removed, so the recognition burden now sits entirely on the artwork and on the hue and
+material treatment the earlier requirements govern.
 
-**Independent Test**: Count cards with a description line (must be six of six). Then check each line against a
-recorded public source.
+**Why this priority**: It is still second, not first, because recognisability from the treatment alone is what
+the feature is judged on — and with the line gone, it is the only thing it is judged on.
+
+**Independent Test**: Show the six cards, with no text anywhere on them, to someone who has not seen the site.
+Count how many makers they name correctly. Then ask the same of a shopper who cannot rely on colour: the answer
+must come from the depicted device or wordmark, not from the hue.
 
 **Acceptance Scenarios**:
 
-1. **Given** the deck, **When** any card is the topmost one, **Then** it shows one description line for that brand.
-2. **Given** the six lines, **When** each is traced back, **Then** a public source is on record for what it claims.
-3. **Given** a line about a maker, **When** a shopper reads it, **Then** it describes the maker and does not sound
-   like the maker speaking about itself, unless it genuinely is their own published line and is presented as such.
+1. **Given** the deck, **When** any card is the topmost one, **Then** it shows the maker's artwork and no text.
+2. **Given** a card, **When** its hue is ignored or unavailable, **Then** the shopper can still tell which maker
+   it is from what the artwork depicts.
+3. **Given** a screen-reader user reaching the deck, **When** any card is focused, **Then** they hear that
+   maker's name, though nothing on screen shows it.
+4. **Given** the page printed, **When** a reader looks at the six cards, **Then** each is still attributable.
 
 ---
 
@@ -103,8 +127,9 @@ limit on the other two, not a separate deliverable.
 1. **Given** the finished deck, **When** a cold viewer is asked who the page belongs to, **Then** they say Hami
    Hamrah.
 2. **Given** the six cards, **When** a cold viewer is asked whether they belong together, **Then** they say yes.
-3. **Given** any card, **When** the shopper reads its name and line, **Then** the text is comfortably legible
-   against whatever the card's new background is.
+3. **Given** any card, **When** a shopper looks at it, **Then** nothing on it is illegible against the card's
+   own background — which since 2026-09-29 means the artwork's subject and any focus or hover treatment, because
+   the card renders no text.
 
 ---
 
@@ -148,20 +173,36 @@ limit on the other two, not a separate deliverable.
   for which the research found no association at all — the treatment MUST NOT assign one. Its distinctiveness MUST
   come from a property that maker actually uses, and the two MUST still be distinguishable from each other, since
   both are the absence of a hue.
-- **FR-004**: Distinguishability MUST NOT depend on colour alone. Each card keeps its maker name and mark visible,
-  and a shopper with normal colour vision deficiency, and a shopper reading the page in print, get the same
-  identification.
+- **FR-004** *(amended 2026-09-29 with FR-006; original below)*: Distinguishability MUST NOT depend on colour
+  alone. With no name printed on the card, the non-colour cue is the **artwork itself** — the depicted device and
+  the maker's own wordmark inside it — so two cards whose hues are close must still be told apart by what is
+  drawn on them. Because a picture cannot do this for a shopper who cannot see it, each card MUST also carry the
+  maker's name as an **accessible name that is not rendered as visible text** (image alternative plus link name).
+  That label is the card's identity for screen-reader, print and colour-blind paths, and it is not a caption: the
+  owner's ruling that the card carries no text stands.
+  > Original: "Each card keeps its maker name and mark visible, and a shopper with normal colour vision
+  > deficiency, and a shopper reading the page in print, get the same identification." The visible half is
+  > withdrawn by FR-006; the equal-identification half is not, and is now carried by the accessible name.
 - **FR-005**: Where two makers' documented hues are close enough to be confused, the treatment MUST separate them
   by a documented property of each, not by an arbitrary adjustment.
-- **FR-006**: All six cards MUST carry one description line each. A card with no line is a defect, not a variant.
-- **FR-007**: Each description line MUST state something about the maker that is supportable from public sources,
-  and the source MUST be recorded with it. An unsourced line does not ship.
-- **FR-008**: A description line MUST NOT be phrased or positioned so that it reads as the maker speaking about
-  itself, unless it is that maker's actual published line and is presented as theirs. Our description of a brand and
-  a brand's own slogan are different objects and must not be confused on the page. Research established exactly two
-  citable lines — realme's "Make it real", seen in the maker's own live page markup, and TCL's "The Creative Life",
-  adopted by the company in 2014 — and **failed** to establish the two most commonly assumed ones: Apple's "Think
-  different" and Nokia's "Connecting People" are **not** to be printed.
+- **FR-006** *(amended 2026-09-29 on the owner's ruling; original below)*: A brand card carries **no description
+  line**. The artwork is the whole of the card's visible content, and the owner's ruling is that it is
+  self-explanatory. No card shows a caption, a tagline, a sentence or a product count.
+  > Original: "All six cards MUST carry one description line each. A card with no line is a defect, not a
+  > variant." That was written when the cards were typographic. The owner supplied art-led cards, confirmed all
+  > six, and removed the line deliberately — so a card **with** a line is now the defect.
+- **FR-007** *(conditional since 2026-09-29)*: **Where a card carries any description line at all** — including a
+  line added later, or one reintroduced by a future change — that line MUST state something about the maker that
+  is supportable from public sources, and the source MUST be recorded with it. An unsourced line does not ship.
+  This clause is dormant while FR-006 holds, and it is kept rather than deleted so that removing the line does
+  not also remove the rule that disciplines any line that returns.
+- **FR-008** *(conditional since 2026-09-29)*: **Where a description line exists**, it MUST NOT be phrased or
+  positioned so that it reads as the maker speaking about itself, unless it is that maker's actual published
+  line and is presented as theirs. Our description of a brand and a brand's own slogan are different objects and
+  must not be confused on the page. Research established exactly two citable lines — realme's "Make it real",
+  seen in the maker's own live page markup, and TCL's "The Creative Life", adopted by the company in 2014 — and
+  **failed** to establish the two most commonly assumed ones: Apple's "Think different" and Nokia's "Connecting
+  People" are **not** to be printed, in artwork or in text.
 - **FR-009**: No line or treatment may assert partnership, official representation, endorsement, certification,
   pricing, availability, or stock that the shop cannot back. This is Principle I and has no exception path.
 - **FR-020**: No card may state or imply a fact about a maker that the research has shown to be false. Two are
@@ -179,12 +220,18 @@ limit on the other two, not a separate deliverable.
   recognisability.
 - **FR-012**: The six treatments MUST form one family — the same card shape, the same composition, the same
   typographic voice — so that difference between cards is identity, not inconsistency.
-- **FR-013**: Text on every card MUST remain comfortably legible against whatever the treatment does to that card's
-  background, at every width. Six backgrounds means six checks, not one.
+- **FR-013** *(conditional since 2026-09-29)*: **Any text a card renders** — a name reintroduced, a focus ring
+  label, a caption added by a later change — MUST remain comfortably legible against whatever the treatment does
+  to that card's background, at every width. Six backgrounds means six checks, not one. While FR-006 holds, no
+  card renders text and this clause has nothing to bind; it is kept live because the six-check discipline is the
+  point, not the text.
 - **FR-014**: The deck's existing behaviour MUST be unchanged: sticky cards in normal flow, no pin, no
   scroll-linked script, and its acceptance measurement must pass afterwards exactly as it passed before.
-- **FR-015**: The right-to-left and Persian typographic rules already in force continue: the description is live
-  text, not artwork; no letter-spacing; Persian numerals wherever numbers appear.
+- **FR-015**: The right-to-left and Persian typographic rules already in force continue on every surface of the
+  deck: no letter-spacing, no uppercase transform, Persian numerals wherever a number appears to a shopper. The
+  clause that once required the description to be live text rather than artwork is **dormant while FR-006 holds**
+  — there is no description — but it is the rule again for any text a later change puts on a card, and it binds
+  the accessible names required by FR-004, which are Persian strings and must be written as such.
 - **FR-016** *(amended 2026-09-27 on the owner's order; original text below)*: Each card carries exactly one
   approved brand artwork from `public/images/brands/`, and those six artworks are the whole of the maker imagery
   on the page. The artwork may reproduce a product and a wordmark — the original clause forbade both — and the
@@ -200,9 +247,11 @@ limit on the other two, not a separate deliverable.
 - **FR-017**: The identity system MUST extend to a seventh maker without redesigning the existing six.
 - **FR-018**: Where research cannot establish something honestly for a maker, the page MUST show less rather than
   guess, and the gap MUST be recorded rather than papered over.
-- **FR-019**: The description line MUST NOT be allowed to push the maker's name out of view at any width.
-  *(Amended with FR-016: the artwork carries the mark now, so the protected element is the name alone — the
-  artwork band may not grow, nor the line, nor the count, until the name is clipped or scrolled off.)*
+- **FR-019** *(amended 2026-09-29)*: Nothing on a card may be clipped by the card's own geometry at any width.
+  With no name and no line left to protect, the element under protection is now the **artwork's own subject** —
+  the depicted device and wordmark must not be cropped, squashed or scrolled off at 360px, in the stacked
+  position, or in print. The deck's fit gate keeps its job; what it guards has changed.
+  *(Earlier readings protected the live name, then the mark; both were withdrawn by FR-006 and FR-016.)*
 
 ### Key Entities
 
@@ -221,12 +270,24 @@ limit on the other two, not a separate deliverable.
 
 ### Measurable Outcomes
 
-- **SC-001**: A person shown the six card treatments with names and wordmarks hidden correctly identifies at least
-  **four of six** makers, and does not confuse the two makers that share a hue family (Samsung and Nokia) or the two
-  that have no hue (Apple and TCH). Four, not five: the research established a documented hue for exactly four
-  makers, and a fifth would require inventing an association for TCH.
-- **SC-002**: **Six of six** cards carry a description line; zero cards are blank.
-- **SC-003**: **Six of six** lines have a recorded public source; **zero** unsourced lines ship.
+- **SC-001** *(test condition amended 2026-09-29)*: A person shown the six cards **with the maker's name hidden**
+  correctly identifies at least **four of six** makers, and does not confuse the two makers that share a hue
+  family (Samsung and Nokia) or the two that have no hue (Apple and TCH). Four, not five: the research
+  established a documented hue for exactly four makers, and a fifth would require inventing an association for
+  TCH.
+  > The original condition hid "names **and wordmarks**". That test can no longer be run as written: since
+  > FR-016 the wordmark lives inside the approved artwork, so hiding it means hiding the card. The condition is
+  > narrowed to the name alone, which is the thing the page can still hide. This is a real narrowing of the
+  > measurement — a shopper recognising Apple from the drawn iPhone is weaker evidence than recognising Apple
+  > from a logo alone — and it is recorded rather than smoothed over.
+- **SC-002** *(inverted 2026-09-29 with FR-006)*: **Zero of six** cards render a visible text string — no line,
+  no name, no count — and **six of six** are still attributable to the right maker by a shopper who is not using
+  colour. The old form of this criterion ("six of six carry a line") now measures the defect.
+  > Original: "Six of six cards carry a description line; zero cards are blank." 
+- **SC-003** *(conditional 2026-09-29)*: **Zero** unsourced lines ship. While FR-006 holds this is satisfied by
+  there being no lines at all, and the criterion is kept live so that any line reintroduced later is measured
+  against a recorded public source rather than written fresh.
+  > Original: "Six of six lines have a recorded public source." 
 - **SC-004**: A cold viewer asked "whose page is this" answers **Hami Hamrah**, and asked "do these six belong
   together" answers **yes** — both, on the finished deck.
 - **SC-005**: The deck's existing acceptance measurement passes after the change with **no clause newly failing**.
@@ -259,9 +320,11 @@ limit on the other two, not a separate deliverable.
   record of what was read on 2026-09-26, not of what is true.
 - **No new tooling is needed.** The research is reading public sources and recording what they say; the existing web
   search and browser cover it.
-- **Description lines are ours, written from researched attributes** — not the makers' slogans. Using a real slogan
-  would put the maker's voice on the shop's page and imply a relationship that has not been established. Where a
-  slogan is genuinely the best wording, FR-008 decides how it may appear.
+- **No card carries a description line as of 2026-09-29** (FR-006). The assumption that governed them — that any
+  line is Hami's own wording from researched attributes, never a maker's slogan, because a real slogan on the
+  shop's page implies a relationship nobody established — is **kept, not deleted**. It is the rule the moment a
+  line returns, and it is why FR-007 and FR-008 were made conditional rather than removed. Where a slogan is
+  genuinely the best wording, FR-008 still decides how it may appear.
 - **Apple and TCH are the no-hue cases.** Apple's identity is documented as monochrome; TCH produced no association
   at all. Both are carried by other means, and must remain distinguishable from each other.
 - **The colour values on this page are Hami's, inside the makers' documented hue families.** That is a deliberate
