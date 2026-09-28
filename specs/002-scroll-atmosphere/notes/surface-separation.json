@@ -2,14 +2,14 @@
  {
   "width": 360,
   "height": 640,
-  "lenisActive": false,
+  "lenisActive": true,
   "doc": {
    "h": 12149,
    "vh": 640
   },
   "states": {
    "pill": 1,
-   "solid bar": 16
+   "solid bar": 30
   },
   "headerNodes": [
    {
@@ -83,8 +83,8 @@
     {
      "min": 17.45,
      "need": 4.5,
-     "atY": 705,
-     "ground": "54,11,18",
+     "atY": 370,
+     "ground": "56,11,18",
      "reachedGround": false,
      "id": "h0"
     }
@@ -94,8 +94,8 @@
     {
      "min": 17.45,
      "need": 4.5,
-     "atY": 705,
-     "ground": "54,11,18",
+     "atY": 370,
+     "ground": "56,11,18",
      "reachedGround": false,
      "id": "h8"
     }
@@ -105,8 +105,8 @@
     {
      "min": 17.45,
      "need": 4.5,
-     "atY": 705,
-     "ground": "54,11,18",
+     "atY": 370,
+     "ground": "56,11,18",
      "reachedGround": false,
      "id": "h9"
     }
@@ -116,22 +116,22 @@
     {
      "min": 17.45,
      "need": 4.5,
-     "atY": 705,
-     "ground": "54,11,18",
+     "atY": 370,
+     "ground": "56,11,18",
      "reachedGround": false,
      "id": "h10"
     }
    ]
   ],
   "headerFails": [],
-  "edgeSamples": 4,
+  "edgeSamples": 2,
   "edgeUnreadable": 0,
-  "edgeMin": 8.55,
+  "edgeMin": 8.57,
   "edgeFails": [],
   "worstEdge": [
    {
-    "step": 2,
-    "y": 1425,
+    "step": 4,
+    "y": 1521,
     "stage": 1,
     "frame": "bleed",
     "inside": {
@@ -141,51 +141,15 @@
     },
     "above": {
      "r": 50,
-     "g": 10,
-     "b": 18
+     "g": 9,
+     "b": 19
     },
-    "topEdge": 8.55,
-    "sideEdge": 17.91
+    "topEdge": 8.57,
+    "sideEdge": 17.89
    },
    {
-    "step": 3,
-    "y": 2144,
-    "stage": 0,
-    "frame": "bleed",
-    "inside": {
-     "r": 233,
-     "g": 228,
-     "b": 230
-    },
-    "above": {
-     "r": 45,
-     "g": 7,
-     "b": 18
-    },
-    "topEdge": 14.52,
-    "sideEdge": 14.57
-   },
-   {
-    "step": 3,
-    "y": 2144,
-    "stage": 1,
-    "frame": "bleed",
-    "inside": {
-     "r": 233,
-     "g": 228,
-     "b": 230
-    },
-    "above": {
-     "r": 45,
-     "g": 7,
-     "b": 18
-    },
-    "topEdge": 14.52,
-    "sideEdge": 14.57
-   },
-   {
-    "step": 2,
-    "y": 1425,
+    "step": 4,
+    "y": 1521,
     "stage": 0,
     "frame": "bleed",
     "inside": {
@@ -195,25 +159,25 @@
     },
     "above": {
      "r": 50,
-     "g": 10,
-     "b": 18
+     "g": 9,
+     "b": 19
     },
-    "topEdge": 17.68,
-    "sideEdge": 17.91
+    "topEdge": 17.73,
+    "sideEdge": 17.89
    }
   ]
  },
  {
   "width": 1280,
   "height": 800,
-  "lenisActive": false,
+  "lenisActive": true,
   "doc": {
    "h": 12752,
    "vh": 800
   },
   "states": {
    "pill": 1,
-   "solid bar": 16
+   "solid bar": 30
   },
   "headerNodes": [
    {
@@ -351,8 +315,8 @@
     {
      "min": 17.45,
      "need": 4.5,
-     "atY": 733,
-     "ground": "54,11,18",
+     "atY": 384,
+     "ground": "56,11,18",
      "reachedGround": false,
      "id": "h0"
     }
@@ -362,8 +326,8 @@
     {
      "min": 13.96,
      "need": 4.5,
-     "atY": 733,
-     "ground": "54,11,18",
+     "atY": 384,
+     "ground": "56,11,18",
      "reachedGround": false,
      "id": "h3"
     }
@@ -373,8 +337,8 @@
     {
      "min": 7.86,
      "need": 4.5,
-     "atY": 733,
-     "ground": "54,11,18",
+     "atY": 384,
+     "ground": "56,11,18",
      "reachedGround": false,
      "id": "h5"
     }
@@ -384,8 +348,8 @@
     {
      "min": 7.86,
      "need": 4.5,
-     "atY": 733,
-     "ground": "54,11,18",
+     "atY": 384,
+     "ground": "56,11,18",
      "reachedGround": false,
      "id": "h7"
     }
@@ -395,8 +359,8 @@
     {
      "min": 17.45,
      "need": 4.5,
-     "atY": 733,
-     "ground": "54,11,18",
+     "atY": 384,
+     "ground": "56,11,18",
      "reachedGround": false,
      "id": "h8"
     }
@@ -406,8 +370,8 @@
     {
      "min": 17.45,
      "need": 4.5,
-     "atY": 733,
-     "ground": "54,11,18",
+     "atY": 384,
+     "ground": "56,11,18",
      "reachedGround": false,
      "id": "h9"
     }
@@ -417,8 +381,8 @@
     {
      "min": 17.45,
      "need": 4.5,
-     "atY": 733,
-     "ground": "54,11,18",
+     "atY": 384,
+     "ground": "56,11,18",
      "reachedGround": false,
      "id": "h11"
     }
@@ -428,40 +392,76 @@
     {
      "min": 13.96,
      "need": 4.5,
-     "atY": 733,
-     "ground": "54,11,18",
+     "atY": 384,
+     "ground": "56,11,18",
      "reachedGround": false,
      "id": "h12"
     }
    ]
   ],
   "headerFails": [],
-  "edgeSamples": 8,
+  "edgeSamples": 25,
   "edgeUnreadable": 0,
-  "edgeMin": 16.45,
+  "edgeMin": 16.83,
   "edgeFails": [],
   "worstEdge": [
    {
-    "step": 1,
-    "y": 733,
+    "step": 3,
+    "y": 1181,
+    "stage": 1,
+    "frame": "bleed",
+    "inside": {
+     "r": 245,
+     "g": 248,
+     "b": 247
+    },
+    "above": {
+     "r": 48,
+     "g": 8,
+     "b": 16
+    },
+    "topEdge": 16.83,
+    "sideEdge": 17.74
+   },
+   {
+    "step": 3,
+    "y": 1181,
     "stage": 0,
     "frame": "bleed",
     "inside": {
-     "r": 255,
-     "g": 255,
-     "b": 255
+     "r": 248,
+     "g": 248,
+     "b": 248
     },
     "above": {
-     "r": 52,
-     "g": 10,
-     "b": 17
+     "r": 48,
+     "g": 8,
+     "b": 16
     },
-    "topEdge": 17.54,
-    "sideEdge": 16.45
+    "topEdge": 16.93,
+    "sideEdge": 17.52
    },
    {
-    "step": 1,
-    "y": 733,
+    "step": 3,
+    "y": 1181,
+    "stage": 2,
+    "frame": "bleed",
+    "inside": {
+     "r": 248,
+     "g": 248,
+     "b": 248
+    },
+    "above": {
+     "r": 48,
+     "g": 8,
+     "b": 16
+    },
+    "topEdge": 16.93,
+    "sideEdge": 17.76
+   },
+   {
+    "step": 2,
+    "y": 783,
     "stage": 1,
     "frame": "bleed",
     "inside": {
@@ -475,11 +475,11 @@
      "b": 17
     },
     "topEdge": 17.43,
-    "sideEdge": 16.63
+    "sideEdge": 17.91
    },
    {
     "step": 2,
-    "y": 1480,
+    "y": 783,
     "stage": 0,
     "frame": "bleed",
     "inside": {
@@ -488,48 +488,12 @@
      "b": 255
     },
     "above": {
-     "r": 28,
-     "g": 4,
-     "b": 9
+     "r": 52,
+     "g": 10,
+     "b": 17
     },
-    "topEdge": 19.61,
-    "sideEdge": 16.67
-   },
-   {
-    "step": 4,
-    "y": 2974,
-    "stage": 0,
-    "frame": "bleed",
-    "inside": {
-     "r": 255,
-     "g": 255,
-     "b": 255
-    },
-    "above": {
-     "r": 33,
-     "g": 4,
-     "b": 14
-    },
-    "topEdge": 19.29,
-    "sideEdge": 16.88
-   },
-   {
-    "step": 4,
-    "y": 2974,
-    "stage": 1,
-    "frame": "bleed",
-    "inside": {
-     "r": 255,
-     "g": 255,
-     "b": 255
-    },
-    "above": {
-     "r": 23,
-     "g": 3,
-     "b": 9
-    },
-    "topEdge": 19.94,
-    "sideEdge": 16.88
+    "topEdge": 17.54,
+    "sideEdge": 17.61
    }
   ]
  }

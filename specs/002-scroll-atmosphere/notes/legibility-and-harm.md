@@ -21,8 +21,8 @@ the image, and the only honest instrument is one that looks at rendered pixels.
 
 | Clause | Result | Number |
 |---|---|---|
-| L2 — header legible in each appearance state | **PASS** | 360: 8 state/probe pairs, worst 7.86:1 against a 4.5:1 floor. 1280: 16 pairs, worst 7.86:1. |
-| L3 — product imagery keeps separation | **PASS** | 360: 4 stage reads, worst **8.55:1**. 1280: 8 reads, worst 16.45:1. Floor 3.0:1 (WCAG 2.2 SC 1.4.11, the bar for an edge a shopper must see). |
+| L2 — header legible in each appearance state | **PASS** | 360: 8 state/probe pairs, worst 7.86:1 against a 4.5:1 floor. 1280: 16 pairs, worst 7.86:1. Measured with the eased scroller confirmed loaded. |
+| L3 — product imagery keeps separation | **PASS, thin at 360** | 360: only **2** stage reads, worst **8.57:1**. 1280: 25 reads, worst 16.83:1. Floor 3.0:1 (WCAG 2.2 SC 1.4.11, the bar for an edge a shopper must see). Two reads is a spot check, not a sweep — see the coverage limit at the bottom. |
 | A2 — reduced motion content-identical | **PASS** | content hash `bf7368911d7294d2` for baseline, reduced, forced colours *and* ground deleted. |
 | A3 — silent to assistive technology | **PASS** | accessibility tree 1700 nodes / 1078 named, **identical** with the layer hidden; no tree node for the ground; `aria-hidden="true"`, no text, not focusable, no role. |
 | L4 — forced colours | **PASS** | computed `display: none` on the layer under `forced-colors: active`, content hash unchanged, document height +4px. |
@@ -101,5 +101,8 @@ rationalised.
 - **T027** — a section shorter than the viewport resolving to a coherent tone. Not measured.
 - **T032** — the low-capability fallback and the `FallbackGround` choice, under CPU throttling.
 - **T034** — the fifteen-minute soak.
+- **More product edges sampled at phone width.** At 360 the homepage's cards live in a horizontal rail where
+  only ~two are painted at once, so raising the step count cannot raise the read count — 31 steps still
+  produced 2. The fix is a surface that stacks imagery vertically, not a denser walk of this one.
 - `page.accessibility.snapshot()` is gone from this Playwright build; A3 is read off
   `Accessibility.getFullAXTree` over CDP instead, which is the stronger instrument, not a downgrade.

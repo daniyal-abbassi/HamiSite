@@ -18,17 +18,31 @@ The backlog-execution plan (`docs/superpowers/plans/2026-09-28-project-backlog-e
 
 ## Remaining work, ordered
 
-### R0 — The gates ran in a browser that is not yours (NEW, and it touches everything below)
+### R0 — Retracted: the "wrong browser" finding was wrong, and what it really found
 
-The owner's Chrome loads `lenis` — the eased scroller (`components/atmosphere/ScrollSmooth.tsx`). The
-headless Chromium every gate in this repo uses **never requests it**: zero lenis network entries, even though
-`(pointer: fine)` matches, `(any-pointer: coarse)` does not, and `prefers-reduced-motion` is off. So the
-scrolling the owner feels is switched off in the environment that produced today's numbers.
+**Published at 06:34, retracted at 06:55.** The claim was that the owner's Chrome loads the eased scroller
+(`lenis`) and the headless Chromium every gate uses never does. It is false. Headless loads it too — at
+**~5.4s after navigation**, because in dev the dynamic import is compiled on first request. Every probe that
+disproved it waited 2.5–3s and then reported the absence of something that had simply not arrived yet.
 
-Two of the three things that depend on it: `measure-deck.mjs` and `surface-separation.mjs` both settle by
-polling the real scroll position rather than trusting a fixed wait, so their readings survive an eased
-scroller — but that is an argument, not a measurement. **Re-run both with lenis actually loaded, or with the
-gate's own detection proven, before quoting their numbers as evidence about the owner's machine.**
+What survives is smaller and still worth having:
+
+1. **A dev-mode startup race inside the gates themselves.** A browser gate that starts walking before the
+   scroller lands measures a page that is not the page a shopper gets, and nothing in its output says so.
+   `surface-separation.mjs` now waits for `html.lenis` (up to 15s) and **fails the run** if it never appears,
+   rather than quietly reporting "native".
+2. **The detector was broken, not the environment.** It tested `/(^|\s)lenis(\s|-)/` against
+   `documentElement.className`. Lenis sets the bare class `lenis`, which that regex cannot match — so it
+   printed "native" on pages that had been eased the whole time. Fixed to `/(^|\s)lenis\b/`.
+3. **One real measurement changed once the scroller was actually on.** With Lenis live, the phone-width
+   product-edge leg came back **1.01:1** — a card mid-reveal through `Reveal` is transparent but still
+   hit-tests, so `elementFromPoint` said "the card is on top" while the pixels were bare ground. The guard now
+   requires the whole ancestor chain to be opaque. Re-run clean: **8.57:1 at 360, 16.83:1 at 1280**, floor 3:1.
+
+**Honest coverage limit found on the way:** at 360 the homepage shows product imagery in a horizontal rail
+where only about two cards are painted at once, so the phone-width verdict rests on **2 edge reads** (against
+25 at desktop). Raising the step count does not help — it is the page's shape, not the sampling. **Left open:**
+sample more product edges at phone width, on a surface that stacks them vertically.
 
 ### R1 — Finish and verify feature 012 (in flight)
 

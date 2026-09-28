@@ -47,7 +47,16 @@ const run = async (width, height) => {
   // offset for several hundred ms, and a reading taken at a fixed wait measures a tone the shopper
   // is not looking at. Settle by polling the real scrollY instead, and say out loud which scroller
   // was in play so the number can be re-interpreted later.
-  const lenisActive = await page.evaluate(() => /(^|\s)lenis(\s|-)/.test(document.documentElement.className));
+  // Lenis adds the bare class "lenis" to <html>. The first version of this line required a trailing
+  // space or hyphen, so it reported "native" on a page that was eased the whole time it was measured.
+  const hasLenis = () => page.evaluate(() => /(^|\s)lenis\b/.test(document.documentElement.className));
+  // In dev the scroller arrives late: the dynamic import has to be compiled on first request, measured
+  // here at ~5.4s after navigation. Walking before it lands measures a page that is not the page.
+  let lenisActive = await hasLenis();
+  for (let i = 0; !lenisActive && i < 30; i += 1) {
+    await page.waitForTimeout(500);
+    lenisActive = await hasLenis();
+  }
   const settle = async (target) => {
     await page.evaluate((yy) => window.scrollTo({ top: yy, behavior: "instant" }), target);
     let last = -1;
@@ -183,7 +192,10 @@ const run = async (width, height) => {
           // L3 is about the edge that meets the ground, and on the homepage the stage is taller
           // than it is wide in some frames, so demanding the whole box be on screen found nothing
           // at 1280x800. Require only a settled top edge with header clearance.
-          if (r.top < 80 || r.top > innerHeight - 110 || r.width < 40) return null;
+          // Only the top edge and a point 20px down the leading side are sampled, so the box does not
+          // have to fit entirely on screen. Requiring 110px of clearance below left just two valid
+          // steps across 12,000px of document at 360 — a two-sample "pass" on the primary viewport.
+          if (r.top < 80 || r.top > innerHeight - 40 || r.width < 40) return null;
           const card = el.closest(".lux-card");
           const img = el.querySelector("img");
           return {
@@ -191,6 +203,16 @@ const run = async (width, height) => {
             cardBg: card ? parse(getComputedStyle(card).backgroundColor) : null,
             frame: card ? (card.className.match(/frame-(\w+)/) || [, "?"])[1] : "?",
             imgComplete: !!img && img.complete && img.naturalWidth > 0,
+            // elementFromPoint hit-tests an element at opacity 0, so a card still fading in through
+            // Reveal passes the topmost test while its pixels are not on screen yet — which is how a
+            // "card edge" sampled the ground on both sides and reported 1.01:1. Require the whole
+            // ancestor chain to be painted, not merely present.
+            opaqueChain: (() => {
+              for (let n = el; n && n !== document.body; n = n.parentElement) {
+                if (Number(getComputedStyle(n).opacity) < 0.98) return false;
+              }
+              return true;
+            })(),
             painted: (() => {
               // The featured rail is a horizontal scroller with overflow hidden. Cards that have
               // been scrolled sideways out of it still report a rect inside the viewport, and their
@@ -202,7 +224,7 @@ const run = async (width, height) => {
             })(),
           };
         })
-        .filter((st) => st && st.painted);
+        .filter((st) => st && st.painted && st.opaqueChain);
 
       return { state, probes, stages, ground, groundPresent: !!ground };
     });
@@ -263,7 +285,7 @@ const run = async (width, height) => {
           };
           return stages.map((st) => {
             const midX = st.box.x + st.box.w / 2;
-            const sideY = Math.min(st.box.y + st.box.h / 2, innerHeight - 24);
+            const sideY = Math.min(st.box.y + 20, innerHeight - 24);
             return {
               frame: st.frame,
               inside: px(midX, st.box.y + 3),
@@ -340,7 +362,8 @@ for (const [w, h] of [[360, 640], [1280, 800]]) {
   console.log(`\n=== ${w}x${h}, ${STEPS + 1} steps ===`);
   const r = await run(w, h);
   results.push(r);
-  console.log(`scroller: ${r.lenisActive ? "Lenis eased (pointer: fine) — steps settled by polling scrollY" : "native"}`);
+  console.log(`scroller: ${r.lenisActive ? "Lenis eased — steps settled by polling scrollY" : "NOT LOADED after 15s — the walk ran native, which is not the page a shopper gets"}`);
+  if (!r.lenisActive) ok = false;
   console.log(`header states seen across the walk: ${JSON.stringify(r.states)}`);
   console.log(`header probes tagged: ${r.headerNodes.length}`);
   for (const [k, v] of r.headerWorst) {
