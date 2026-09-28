@@ -117,6 +117,16 @@ describe("tone at position — FR-007, contract P5", () => {
     expect(toneAt(1).toLowerCase()).toBe(PROGRESSION.at(-1)!.color.toLowerCase());
   });
 
+  it("lands on each chapter tone with uneven real section spacing", () => {
+    const offsets = [0, 0.12, 0.31, 0.44, 0.62, 0.73, 0.79, 0.87, 0.98];
+    const bounds = stageBoundaries(offsets);
+    for (const stage of PROGRESSION) {
+      const position = offsets[HOMEPAGE_SECTIONS.indexOf(stage.anchor)]!;
+      expect(toneAt(position, bounds).toLowerCase()).toBe(stage.color.toLowerCase());
+      expect(reducedMotionTone(position, bounds)).toBe(stage.color);
+    }
+  });
+
   it("clamps rather than throwing when asked for a position outside the document", () => {
     expect(toneAt(-0.4).toLowerCase()).toBe(PROGRESSION[0]!.color.toLowerCase());
     expect(toneAt(1.7).toLowerCase()).toBe(PROGRESSION.at(-1)!.color.toLowerCase());

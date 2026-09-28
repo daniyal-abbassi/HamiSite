@@ -1,53 +1,69 @@
-/*
- * The scroll-driven page ground (components/atmosphere/PageGround.tsx).
- *
- * A single fixed tint over the existing ground. It carries no layout, no interaction and no meaning;
- * if this file were deleted the page would be complete and honest, which is contract G1 and the clause
- * that outranks the rest of feature 002.
- *
- * Deliberately absent:
- *  - **No transition.** The hook rewrites `--hami-ground` every animation frame. A transition on top of
- *    that would make the ground trail the content, which contract S4 and FR-010 forbid — "the ground
- *    MUST NOT lag behind the content, overshoot it, or snap into place after movement stops."
- *  - **No `background-image`.** This layer contributes colour and nothing else. The per-section lighting
- *    it used to sit under was deleted by band 3's T073, so at full opacity it is the ground on the
- *    homepage rather than a tint over one — which is the point of feature 002.
- */
+/* Static base. Homepage color belongs to sections, never scroll progress. */
 .hami-page-ground {
   position: fixed;
   inset: 0;
   z-index: 0;
   pointer-events: none;
-  /*
-   * Full strength. The 0.5 this replaces was a draft that T017 judged and kept anyway (see
-   * specs/002-scroll-atmosphere/notes/busyness.md), and it was the second of two reasons the shipped
-   * progression was invisible: the layer's colour was being blended half-and-half with a body canvas that
-   * only varies `#100306 → #0A0205`, so every leg of the tour was cut in half before it reached a pixel.
-   *
-   * What the alpha was protecting no longer exists. It was set while the five body glows and the
-   * per-section lighting still painted, and the reasoning was that a uniform tint at full strength would
-   * flatten them — which was already false (they are `main > section::before/::after` at `z-10`, *above*
-   * this layer, so nothing done here could damp them; measured, α 0.2 → 0.85 left the rendered asymmetry
-   * flat at ~7). Band 3's T073 then deleted those layers outright, which removed the only thing the
-   * blend was negotiating with.
-   *
-   * The consequence to know about: at α 1 this layer *is* the page ground on the homepage, and it covers
-   * the body's depth ramp completely. That ramp still carries every interior page until T083 gives them
-   * an arc of their own.
-   */
-  opacity: 1;
 }
 
-/* FR-023 / contract L4: under forced colours the environment simply steps aside. */
+/* Scope to the home route. Full-width bands retain the reading width through
+   padding. Section edges move with the page; no overlay or color tween. */
+.hami-page-ground--home ~ main > section {
+  margin-block: 0;
+  border-radius: 0;
+}
+
+.hami-page-ground--home ~ main > :is(#obtainable-now, #categories, #new-arrivals) {
+  width: 100%;
+  max-width: none;
+  padding-inline: max(24px, calc((100% - 1232px) / 2));
+}
+
+.hami-page-ground--home ~ main > #top { background-color: #30080f; }
+.hami-page-ground--home ~ main > #obtainable-now { background-color: #211b20; }
+.hami-page-ground--home ~ main > #featured { background-color: #09090b; }
+
+.hami-page-ground--home ~ main > #categories {
+  background-color: #f4f1ea;
+  padding-block: clamp(48px, 6vw, 88px);
+  box-shadow: none;
+}
+
+.hami-page-ground--home ~ main > #brands {
+  background-color: #14161c;
+  padding-top: clamp(48px, 6vw, 88px);
+}
+
+.hami-page-ground--home ~ main > #new-arrivals {
+  background-color: #f4f1ea;
+  box-shadow: none;
+}
+
+.hami-page-ground--home ~ main > #b2b { background-color: #30080f; }
+
+.hami-page-ground--home ~ main > #online-services {
+  background-color: #f4f1ea;
+  box-shadow: none;
+}
+
+.hami-page-ground--home ~ main > #store-experience { background-color: #111114; }
+
+/* Keep the opening actions inside the canvas on the narrowest phones. */
+@media (max-width: 359px) {
+  .hami-page-ground--home ~ main #top [aria-label="مسیرهای اصلی"] {
+    flex-direction: column;
+  }
+
+  .hami-page-ground--home ~ main #top [aria-label="مسیرهای اصلی"] > a {
+    justify-content: center;
+  }
+}
+
 @media (forced-colors: active) {
-  .hami-page-ground {
-    display: none;
-  }
+  .hami-page-ground { display: none; }
+  .hami-page-ground--home ~ main > section { background: Canvas; }
 }
 
-/* Scroll-linked state does not exist on paper (spec Edge Cases). */
 @media print {
-  .hami-page-ground {
-    display: none;
-  }
+  .hami-page-ground { display: none; }
 }

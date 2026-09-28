@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, type RefObject } from "react";
-import { HOMEPAGE_SECTIONS, PROGRESSION, reducedMotionTone, toneAt } from "@/lib/atmosphere/progression";
+import { HOMEPAGE_SECTIONS, PROGRESSION, reducedMotionTone, stageBoundaries, toneAt } from "@/lib/atmosphere/progression";
 
 /** The one custom property this feature owns. Everything else is derived from it in CSS. */
 export const GROUND_PROPERTY = "--hami-ground";
@@ -51,8 +51,9 @@ export function useAtmosphereGround(
     // The property lands on the consumer, not on the root — see the header comment and T047.
     const surface = target?.current ?? root;
 
+    let scrollable = 0;
     const measure = () => {
-      const scrollable = root.scrollHeight - window.innerHeight;
+      scrollable = root.scrollHeight - window.innerHeight;
       if (scrollable <= 0) {
         boundaries.current = [];
         return;
@@ -60,11 +61,13 @@ export function useAtmosphereGround(
       // Document-space offsets, which for a normal in-flow section is the same on every read. The
       // up-to-26px displacement a mid-reveal `Reveal` wrapper carries is noise at this scale and is
       // re-read on resize, which is the only time boundaries genuinely move.
-      boundaries.current = HOMEPAGE_SECTIONS.map((id) => {
+      const sectionOffsets = HOMEPAGE_SECTIONS.map((id) => {
         const el = document.getElementById(id);
         if (!el) return 0;
-        return Math.min(1, Math.max(0, el.getBoundingClientRect().top + window.scrollY) / scrollable);
+        return Math.min(1, Math.max(0, el.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.45) / scrollable);
       });
+      // toneAt accepts stage positions, not the full list of section positions.
+      boundaries.current = stageBoundaries(sectionOffsets);
     };
 
     const reduced = window.matchMedia("(prefers-reduced-motion: reduce)");
@@ -72,7 +75,6 @@ export function useAtmosphereGround(
     let frame = 0;
     const write = () => {
       frame = 0;
-      const scrollable = root.scrollHeight - window.innerHeight;
       const progress = scrollable > 0 ? Math.min(1, Math.max(0, window.scrollY / scrollable)) : 0;
       const pick = reduced.matches ? reducedMotionTone : toneAt;
       surface.style.setProperty(GROUND_PROPERTY, pick(progress, boundaries.current));
@@ -81,6 +83,11 @@ export function useAtmosphereGround(
     const schedule = () => {
       // Coalesce to one write per frame however many scroll events arrive.
       if (!frame) frame = requestAnimationFrame(write);
+    };
+
+    const onResize = () => {
+      measure();
+      schedule();
     };
 
     const onVisibility = () => {
@@ -93,23 +100,30 @@ export function useAtmosphereGround(
     write();
 
     addEventListener("scroll", schedule, { passive: true });
-    addEventListener("resize", schedule, { passive: true });
-    addEventListener("orientationchange", schedule, { passive: true });
+    addEventListener("resize", onResize, { passive: true });
+    addEventListener("orientationchange", onResize, { passive: true });
     document.addEventListener("visibilitychange", onVisibility);
     reduced.addEventListener("change", schedule);
     // Late content — images settling, fonts swapping — moves section tops.
-    const settle = setTimeout(measure, 1500);
-    addEventListener("load", measure, { once: true });
+    const settle = setTimeout(onResize, 1500);
+    addEventListener("load", onResize, { once: true });
+    // Responsive grids, font loading and pinned tracks can change document height
+    // after mount. Observe layout changes without measuring during every scroll frame.
+    const observer = new ResizeObserver(onResize);
+    observer.observe(document.body);
+    const main = document.querySelector("main");
+    if (main) observer.observe(main);
 
     return () => {
       if (frame) cancelAnimationFrame(frame);
       clearTimeout(settle);
+      observer.disconnect();
       removeEventListener("scroll", schedule);
-      removeEventListener("resize", schedule);
-      removeEventListener("orientationchange", schedule);
+      removeEventListener("resize", onResize);
+      removeEventListener("orientationchange", onResize);
       document.removeEventListener("visibilitychange", onVisibility);
       reduced.removeEventListener("change", schedule);
-      removeEventListener("load", measure);
+      removeEventListener("load", onResize);
     };
   }, [enabled]);
 }

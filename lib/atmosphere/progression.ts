@@ -91,47 +91,20 @@ export type AtmosphereStage = {
 };
 
 /**
- * Six stages, and they travel — this is the second attempt at this array, and the first one's failure is
- * the reason it is shaped this way.
+ * A visible sequence of dark materials: oxblood, aubergine, midnight ink, petrol,
+ * bronze and closing oxblood. The wider hue separation preserves the champagne
+ * identity without asking text contrast to carry the effect.
  *
- * The original four (`#2A0409 → #1C0206 → #130104 → #0D0205`) satisfied every assertion the feature
- * shipped with and produced a ground the owner described as "the same colour all along". They were right,
- * and the measurement agrees: sampled at the gutter pixel down the live page the sequence runs
- * `#1D0308 → #150105 → #110104 → #0E0103 → #0C0002 → #0B0003 → #0B0104`, so the back half of a 16,384px
- * document moves by three units in one channel. In CIE terms the four legs are ΔE 9.8 / 4.6 / 2.6 — the
- * last two are below the ~10 at which a change is noticeable at all, and all four sit in the same hue
- * (`14° → 358°`) while chroma collapses 19.6 → 3.4. It was not a progression through rooms; it was one
- * colour switching itself off.
- *
- * So depth alone is not what FR-003's "clear overall direction" can be satisfied by, and the direction
- * this array carries is a **tour that closes**: warmth → wine → ink at the trade chapter → back to an
- * ember at the physical store → the deepest tone on the page at the closing call. The luminance range is
- * deliberately narrow (`Y` 0.0027–0.0121, inside `LEGIBILITY_BAND` at every interpolated point) because
- * the travel is carried by **hue and chroma**, which cost contrast nothing. That is the whole trick of
- * moving a dark ground: lightness is the one axis that cannot be used freely.
- *
- * Since feature 007 the last leg — ember to closing dark — runs **inside the assembly band**, from the
- * stack beat to the lock beat. The ground is a function of scroll and never of time, so the tone keeps
- * travelling while the band's shell is pinned and its content is not; that is the authored behaviour, not
- * the lag feature 002 forbids.
- *
- * Six stages, not the "three or four closely-related stages" 002's coherence assumption asked for: that
- * sentence was written about a descent, and a descent of six steps is exactly the alternation it warns
- * against. Amended 2026-09-23 (002 Amendment Record #4) — the guard is no longer "few stages, one axis",
- * it is "every leg perceptible, no leg retraced", which is asserted in the unit sweep.
- *
- * Two stops are not invented: `#3A0C12` opens at the tone the hero gutter already measures
- * (`#3d0912 → #3f0912` in the baseline), and `#160406` keeps the closing chapter the darkest on the page.
- * The deepest tone stays above the sRGB linear-branch knee on at least one channel — `0.04045`, which is
- * byte 10 — for the same reason the first array learned about: below it, luminance collapses to under the
- * band floor and the ground reads as an unstyled page rather than a deep one.
+ * The goods tone arrives at the featured rail, so the first change happens while
+ * shopping begins rather than after both long product grids. These are homepage
+ * tones only; interior routes retain their own settled grounds.
  */
 export const PROGRESSION = [
-  { key: "arrival", anchor: "top", color: "#3A0C12" },
-  { key: "goods", anchor: "categories", color: "#2A0713" },
-  { key: "shelves", anchor: "brands", color: "#1A0A16" },
-  { key: "trade", anchor: "b2b", color: "#0E1122" },
-  { key: "counter", anchor: "store-experience", color: "#320B0A" },
+  { key: "arrival", anchor: "top", color: "#46101C" },
+  { key: "goods", anchor: "featured", color: "#32132E" },
+  { key: "shelves", anchor: "brands", color: "#151F35" },
+  { key: "trade", anchor: "b2b", color: "#102927" },
+  { key: "counter", anchor: "store-experience", color: "#322014" },
   { key: "close", anchor: "band-settled", color: "#160406" },
 ] as const satisfies readonly AtmosphereStage[];
 
@@ -278,14 +251,10 @@ export function toneAt(progress: number, boundaries: readonly number[] = stageBo
   const local = span <= 0 ? 0 : clamp01((p - (bounds[segment] ?? 0)) / span);
   const [r1, g1, b1] = toRgb(from.color);
   const [r2, g2, b2] = toRgb(to.color);
-  // Interpolated byte-by-byte in sRGB, not in HSL, and no colour library. That is a real compromise now
-  // that the stages differ in hue: on the two long legs (wine → ink, ink → ember) the midpoint passes
-  // through a low-chroma plum-brown the eye reads as "between rooms" rather than as a colour of its own.
-  // Measured across the 500-step sweep the worst intermediate stays inside `LEGIBILITY_BAND` and holds
-  // 5.59:1 against the dimmest text on the page, so the blend is neither illegible nor band-breaking —
-  // it is just not a hue a designer would choose. It is never *held* long enough to be one: the legs span
-  // three sections each, and the shopper is moving.
-  return toHex(r1 + (r2 - r1) * local, g1 + (g2 - g1) * local, b1 + (b2 - b1) * local);
+  // Smoothstep gives each chapter a soft arrival and departure. It is spatial
+  // easing, not a time-based chase: reversing or stopping scroll stays exact.
+  const blend = local * local * (3 - 2 * local);
+  return toHex(r1 + (r2 - r1) * blend, g1 + (g2 - g1) * blend, b1 + (b2 - b1) * blend);
 }
 
 /**

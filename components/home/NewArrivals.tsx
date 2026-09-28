@@ -39,7 +39,7 @@ export function NewArrivals({ products: initialProducts }: { products: NewArriva
   }, [emblaApi, onSelect]);
 
   return (
-    <section id="new-arrivals" className="wrap container py-16 md:py-20" aria-labelledby="new-arrivals-title">
+    <section id="new-arrivals" className="band-paper wrap container py-16 md:py-20" aria-labelledby="new-arrivals-title">
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>

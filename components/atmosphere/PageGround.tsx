@@ -1,79 +1,26 @@
 "use client";
 
-import { useRef } from "react";
 import { usePathname } from "next/navigation";
-import { FALLBACK_TONE, interiorGround } from "@/lib/atmosphere/progression";
-import { useAtmosphereGround, GROUND_PROPERTY } from "./useAtmosphereGround";
+import { interiorGround } from "@/lib/atmosphere/progression";
 import "./page-ground.css";
 
 /**
- * The scroll-driven page ground.
- *
- * One fixed, inert, aria-hidden layer whose only job is to carry the colour the hook resolved for the
- * shopper's current position. It is mounted in `app/(main)/layout.tsx` as the first child of
- * `.site-shell`, ahead of `<main>`, and that placement is load-bearing:
- *
- * **A transformed ancestor becomes the containing block for `position: fixed` descendants.** Every
- * homepage section is wrapped in `Reveal`, which animates `transform: translateY(26px)`, so a layer
- * placed inside `<main>` would stop being viewport-anchored the moment anything was mid-reveal. The
- * page has already been bitten by exactly this — `app/globals.css:290-294` records `background-attachment:
- * fixed` failing inside a `Reveal` wrapper. Layout level is the only place it is safe (research.md D3).
- *
- * It is a **tint, not a new light source** — no glow, no image, one flat colour per frame. What it tints
- * has changed since it shipped: Resolved Q2 = C kept the five-glow field in place, and band 3's T073 then
- * deleted it, so this layer now carries the ground on its own at full opacity. The claim originally
- * recorded here — that a uniform alpha would "flatten the left-right-left alternation of the per-section
- * glows, achieving reconciliation by subtraction" — was measured and is false: the glows lived on
- * `main > section::before/::after` at `z-10`, above this layer at `z-0`, so nothing this layer does could
- * ever have damped them (`notes/busyness.md`). The owner kept Q2 = C anyway and waived the clause that
- * required it.
- *
- * There is no transition on the colour, on purpose — see the hook. The value changes every frame, so a
- * transition would make the ground lag the content, which contract S4 forbids.
- *
- * The custom property is written **on this element**, not on `documentElement`. It has exactly one
- * consumer, and a root-level custom property invalidates style for the whole document on every frame.
- * See T047 in `notes/scroll-easing.md` for the measurement that found this.
- *
- * Contract A3 and G1: nothing here is in the accessibility tree, nothing here carries meaning, and
- * deleting the component entirely leaves the page complete.
- *
- * **Which pages, and what each one gets.** Owner decision 5 extended the atmosphere past the homepage, and
- * the two halves of that are different mechanisms:
- *
- *  - `/` — the six-stop scroll tour, driven by `useAtmosphereGround`.
- *  - a shopper route in `INTERIOR_GROUNDS` — **one settled tone**, borrowed from the homepage chapter that
- *    route belongs to. No hook, no listener, no measurement; the colour is in the inline style and never
- *    changes.
- *  - everything else — `/admin`, anything unlisted — renders nothing at all. The operations surface is not a
- *    shopper page and it keeps the flat canvas it has always had.
- *
- * The layer is mounted in the layout because that is the only place it escapes the `Reveal` transforms, so
- * it gates itself on the pathname instead. The hook stays registered either way (hooks cannot be
- * conditional); on an interior route it is handed `enabled = false` and exits before adding any listener.
+ * A static base behind the shopper pages. Homepage sections paint their own
+ * backgrounds in document flow, so both canvases stay visible at a boundary.
+ * Interior routes retain their settled tone. No scroll color listener is mounted.
  */
 export function PageGround() {
   const pathname = usePathname();
-  const interior = interiorGround(pathname);
   const isHome = pathname === "/";
-  const enabled = isHome || interior !== null;
-  const surface = useRef<HTMLDivElement>(null);
-  // Only the homepage arc is scroll-driven; an interior page's tone is constant, so the hook is not
-  // mounted for it at all and no listener, measurement or frame loop exists on those routes.
-  useAtmosphereGround(isHome, surface);
+  const interior = interiorGround(pathname);
 
-  if (!enabled) return null;
+  if (!isHome && interior === null) return null;
 
   return (
     <div
-      ref={surface}
-      className="hami-page-ground"
+      className={`hami-page-ground${isHome ? " hami-page-ground--home" : ""}`}
       aria-hidden="true"
-      style={{
-        backgroundColor: isHome
-          ? `var(${GROUND_PROPERTY}, ${FALLBACK_TONE})`
-          : (interior ?? FALLBACK_TONE),
-      }}
+      style={{ backgroundColor: isHome ? "#30080f" : interior! }}
     />
   );
 }
