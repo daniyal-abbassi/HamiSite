@@ -10,7 +10,7 @@ import { useAuth } from "@/components/providers/AuthProvider";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { ApiClientError, apiGet, apiPost } from "@/lib/api-client";
 import { formatFaDate, formatFaDateTime, orderStatusLabels, orderStatusTone, paymentStatusLabels, paymentStatusTones } from "@/lib/content/order";
-import { formatToman } from "@/lib/utils";
+import { formatToman, toFaDigits } from "@/lib/utils";
 import type { OrderDetail, PaymentInitiation } from "@/types/store";
 
 const TERMINAL_STATUSES = ["CANCELED", "FAILED", "REVERSED"];
@@ -113,7 +113,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
             <p className="font-mono text-xs tracking-[0.12em] text-muted-foreground/70">ORDER</p>
-            <h2 className="mt-1 font-mono text-lg font-black text-aqua">{order.orderNumber}</h2>
+            <h2 className="mt-1 font-mono text-lg font-black text-aqua">{toFaDigits(order.orderNumber)}</h2>
             <p className="mt-1 text-xs text-muted-foreground">ثبت‌شده در {formatFaDateTime(order.createdAt)}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">

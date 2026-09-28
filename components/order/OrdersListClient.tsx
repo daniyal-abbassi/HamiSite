@@ -99,7 +99,7 @@ export function OrdersListClient() {
             className="glass flex flex-wrap items-center justify-between gap-3 rounded-2xl p-5 transition-transform duration-slow hover:-translate-y-0.5"
           >
             <span className="min-w-0">
-              <span className="block font-mono text-sm font-black text-aqua">{order.orderNumber}</span>
+              <span className="block font-mono text-sm font-black text-aqua">{toFaDigits(order.orderNumber)}</span>
               <span className="mt-1 block text-xs text-muted-foreground">{formatFaDate(order.createdAt)}</span>
             </span>
             <span className="flex flex-wrap items-center gap-2 text-xs">

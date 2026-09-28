@@ -122,10 +122,6 @@ export function Header() {
           logo=""
           items={navItems}
           baseColor="transparent"
-          circleColor="rgb(var(--primary))"
-          pillColor="rgb(var(--foreground) / 0.05)"
-          pillTextColor="rgb(var(--foreground) / 0.85)"
-          hoveredPillTextColor="rgb(var(--primary-foreground))"
         />
 
         {/* On mobile this group takes the remaining width so the search field

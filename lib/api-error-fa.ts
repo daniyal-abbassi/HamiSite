@@ -23,7 +23,7 @@ export function apiErrorToFa(error: unknown, fallback = "خطایی رخ داد.
     case "VALIDATION_FAILED": {
       const fieldErrors = (error.details as { formErrors?: string[]; fieldErrors?: Record<string, string[]> } | undefined);
       const first = fieldErrors?.formErrors?.[0] ?? Object.values(fieldErrors?.fieldErrors ?? {})[0]?.[0];
-      return first ? "اطلاعات ارسالی معتبر نیست." : "اطلاعات ارسالی معتبر نیست.";
+      return first ?? "اطلاعات ارسالی معتبر نیست.";
     }
     case "CONFLICT":
     case "NOT_FOUND":
