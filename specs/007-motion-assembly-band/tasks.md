@@ -623,3 +623,38 @@ it must be described as such and not as a paused feature.
 - No frame-rate claim from this machine, ever. The owner's hardware is not an instrument, and this
   feature's mechanism is exactly the kind that invites an fps argument.
 - Commit per phase; push only when the owner says so.
+
+---
+
+## Phase 7: Convergence
+
+**Appended 2026-09-28 by `/speckit-converge`.** The band shipped and the owner accepted it on a phone, but
+this feature was built by dispatched workers, and only `/speckit-implement` writes checkboxes — so 56 of 63
+boxes above still read open while most of their work is in the tree. Everything below was established by
+reading the shipped code, not by trusting this file. Existing tasks are untouched.
+
+**The single most important thing this pass found:** the feature that shipped is not the feature that was
+specified. FR-016 resolved **A** — "the back half becomes one **pinned** closing movement" — and the shipped
+band has no pin. `components/home/assembly-band.css:1-10` says so in its own header and cites the measurement
+that killed it: the sticky shell left 54.6px of real travel where `animation-range` believed it had 1,600px,
+the scrub never advanced across 111 sampled positions, and the phone number sat off screen the entire time.
+That is a *good* reason. It is still a reversal of an owner decision, and
+`notes/pin-geometry-review.md:150-168` names the three options and says the choice "is a product ruling the
+owner has to make" — option 3, the one that was taken, "amends a decision the owner made, not a technical
+choice." **No ruling is recorded.** T064 exists because an agent should not close that gap by itself, and
+neither should it pretend the spec still stands.
+
+- [ ] T064 Put the pin question to the owner with the measurements attached, and record the answer in `spec.md`'s Decisions section — either FR-016's word "pinned" is amended to describe the static composition that shipped, or the pin is rebuilt under `notes/pin-geometry-review.md` option 1 or 2 (contradicts) per FR-016, blueprint §3, blueprint §4 (**CRITICAL**)
+- [ ] T065 Resolve FR-018's positional fixity honestly: the phone renders in flow at `components/home/AssemblyBand.tsx:137` and the band's own comment at `:34` explains that a fixed position inside `.wrap` (`app/globals.css:174-177`, z-index 2) can never clear the dock's z-40, so the only always-on-screen phone action on a phone is `components/layout/MobileDock.tsx`'s «تماس» dial. Either name the dock as FR-018's provider in the spec, or lift the band's action out of `.wrap` (partial) per FR-018 resolved A, FR-007 (**CRITICAL**)
+- [ ] T066 Execute FR-010's mandatory control run and save the output under `verification/`: delete one band-adjacent section id from `app/(main)/page.tsx` without touching `HOMEPAGE_SECTIONS`/`SUBTREE_ANCHORS`, show `npm run test:unit tests/unit/atmosphere-progression.test.ts` go red on the set-size assertion, restore, re-run green. `notes/pin-geometry-review.md:178` records only an accidental mid-work red, which is not a control run (missing) per FR-010, blueprint §5 (**HIGH**)
+- [ ] T067 Capture the pre-band content baseline into `specs/007-motion-assembly-band/baseline/content-before.json` from the commit before the page swap, then run `verification/content-parity.mjs` and record the result. The directory is **empty today**, so SC-004 (no-JS holds 100% of the words) and SC-008 (no new claim) have never been checked — this is the band's honesty contract and it is unverified (missing) per SC-004, SC-008, FR-003, FR-014 (**HIGH**)
+- [ ] T068 Run the SC-002 word-not-letter gate: screenshot each of the three band headings in its settled state and compare against the same heading rendered without `HeadingArrival`, keeping both images under `verification/`. Any glyph-shape difference fails. This also settles blueprint §6's "settled state must be pixel-identical to today's heading", which has no artefact either (missing) per SC-002, FR-002, blueprint §6 (**HIGH**)
+- [ ] T069 Measure contrast across the arrival's soft phase: sample the heading text at 20 points while `.heading-arrival--armed`'s `filter: blur(6px)` (`components/home/assembly-band.css:47`) resolves to sharp, against the site's floor. FR-012 states a blurred heading is not exempt, and no sampling exists (missing) per SC-005, FR-012 (**HIGH**)
+- [ ] T070 Run the phone-activation test: 10 of 10 successful activations from scroll positions spread across the band at 360px, output under `verification/` (missing) per SC-006, FR-007 (**MEDIUM**)
+- [ ] T071 Run the reload-at-five-positions test for SC-007, or amend the criterion to say the mechanism no longer makes it measurable. With no scroll-driven state the band cannot be in the wrong frame, which is an argument and not a pass — if the argument is accepted, write that down instead of a number (missing) per SC-007, FR-006 (**MEDIUM**)
+- [ ] T072 Check the ground's tone at ten positions inside the band against the authored `counter`→`close` sequence. The drift guard passes and blueprint §5 predicts the ember→dark leg now completes inside the band; nobody has looked. Note blueprint §5's own warning that the ground keeps travelling while the content is stationary is authored behaviour, not drift (missing) per SC-009, FR-010 (**MEDIUM**)
+- [ ] T073 Do one emulated forced-colours pass over the band. Print is handled (`assembly-band.css:64` shares the block with reduced motion); blueprint §7 argues no rule is needed because the parts are ordinary bordered cards, and FR-013 makes that a MUST to verify rather than a claim to accept (partial) per FR-013 (**MEDIUM**)
+- [ ] T074 Delete the `.final-conversion` CSS block at `app/(main)/home.css:607-612` — its section is gone and blueprint §5 says the block goes with it. Confirm nothing references the class first (unrequested) per blueprint §5 (**MEDIUM**)
+- [ ] T075 Delete the dead `storeExperienceSlots` export at `lib/content/home.ts:213` after confirming no renderer uses it; blueprint §1a marked this optional cleanup (unrequested) per blueprint §1a (**LOW**)
+- [ ] T076 Go through the 56 open boxes in Phases 1–6 with the code open, and for each either write the evidence line and close it, or state plainly what is still missing. Several are demonstrably shipped — the ground re-anchor, the three section deletions, the word-unit arrival, the dock clearance reservation, the retired self-link, the merged `/shop` action. Do not close a box without naming the file or artefact that proves it (partial) per the toolchain gap recorded in `tools/dispatch/worker-ctl` (**MEDIUM**)
+- [ ] T077 SC-010 stays open and must not be closed by an agent. Whether the band reads as premium or as decoration needs a human panel this project does not have; the spec says an agent scoring it is fabricating. Leave the box, leave the missing instrument named (partial) per SC-010, Constitution IV (**LOW**)
