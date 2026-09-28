@@ -280,10 +280,14 @@ limit on the other two, not a separate deliverable.
   > narrowed to the name alone, which is the thing the page can still hide. This is a real narrowing of the
   > measurement — a shopper recognising Apple from the drawn iPhone is weaker evidence than recognising Apple
   > from a logo alone — and it is recorded rather than smoothed over.
-- **SC-002** *(inverted 2026-09-29 with FR-006)*: **Zero of six** cards render a visible text string — no line,
-  no name, no count — and **six of six** are still attributable to the right maker by a shopper who is not using
-  colour. The old form of this criterion ("six of six carry a line") now measures the defect.
-  > Original: "Six of six cards carry a description line; zero cards are blank." 
+- **SC-002** *(inverted 2026-09-29 with FR-006; wording tightened the same day, because as first written it
+  failed the owner's own approved artwork)*: **Zero of six** cards render a text string **that the page itself
+  puts there** — no caption, no name element, no product count — and **six of six** are still attributable to the
+  right maker by a shopper who is not using colour. A wordmark **inside** the artwork is not a violation and never
+  was: FR-016 permits the artwork to reproduce a product and the maker's wordmark, and five of the six approved
+  cards do exactly that. The check is therefore made against the card's rendered markup, not against the pixels of
+  the image.
+  > Original: "Six of six cards carry a description line; zero cards are blank."
 - **SC-003** *(conditional 2026-09-29)*: **Zero** unsourced lines ship. While FR-006 holds this is satisfied by
   there being no lines at all, and the criterion is kept live so that any line reintroduced later is measured
   against a recorded public source rather than written fresh.
