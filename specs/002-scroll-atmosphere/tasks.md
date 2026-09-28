@@ -649,7 +649,13 @@ single layer colour across 13 scroll positions, and a direct probe finds 9 disti
 mechanism this feature was built around is gone; the colour now changes in hard steps at section edges. Full
 numbers in `notes/legibility-and-harm.md`.
 
-- [ ] T044 Put the sectioned-background change to the spec: FR-001, FR-003 and FR-004 require a ground that
+- [x] T044 **ANSWERED BY THE OWNER 2026-09-29: keep the per-section backgrounds — "the scroll colours are
+  fine, there is no problem."** The code stands and the spec moves. FR-001, FR-003 and FR-004 of this feature
+  describe a ground that changes **continuously** with scroll and forbid a visible seam or step; that mechanism
+  is withdrawn by owner decision, and the requirement now describes discrete per-section tones. Restoring the
+  travelling layer is off the table. What survives of the seam clause is the thing it was ever protecting: the
+  boundary between two section tones must not read as a rendering defect.
+  > Original task text: "Put the sectioned-background change to the spec: FR-001, FR-003 and FR-004 require a ground that
   changes **continuously** with scroll and forbid a visible seam or step, and the shipped page does neither.
   Either the spec is amended to describe per-section tones — which is what the owner asked for — or the travelling
   layer is restored. Do not resolve this by editing the requirements from an agent seat; 007's pin question is the

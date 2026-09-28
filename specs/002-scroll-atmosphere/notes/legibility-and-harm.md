@@ -144,3 +144,8 @@ FR-004 of this feature was written to forbid ("no visible seam, band or step").
 **Not judged here:** whether hard section boundaries look better than a travelling tint. That is the owner's
 call and they made it. What is recorded is that the feature's first four requirements describe a mechanism the
 code no longer contains, and that its legibility evidence needs re-deriving against light bands.
+
+**Owner ruling, 2026-09-29, on the question above:** the sectioned colours are kept — "the scroll colours are
+fine, there is no problem." The code stands and the requirements are amended (T044). The travelling layer is not
+being restored, so the contrast re-derivation in T045 must be run against light paper bands, not against the
+dark ground the old numbers assumed.

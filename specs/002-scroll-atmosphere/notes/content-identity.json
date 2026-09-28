@@ -3,7 +3,7 @@
   "label": "baseline",
   "snap": {
    "url": "/",
-   "docHeight": 12148,
+   "docHeight": 12172,
    "rotatorWordSets": [
     "خرید عمده|ساعت هوشمند|لوازم جانبی|موبایل"
    ],
@@ -413,7 +413,7 @@
   "label": "baseline repeat",
   "snap": {
    "url": "/",
-   "docHeight": 12148,
+   "docHeight": 12172,
    "rotatorWordSets": [
     "خرید عمده|ساعت هوشمند|لوازم جانبی|موبایل"
    ],
@@ -823,7 +823,7 @@
   "label": "reduced motion",
   "snap": {
    "url": "/",
-   "docHeight": 11908,
+   "docHeight": 11932,
    "rotatorWordSets": [
     "خرید عمده|ساعت هوشمند|لوازم جانبی|موبایل"
    ],
@@ -1220,9 +1220,9 @@
    "firstMainChild": "relative pb-12 pt-6 md:pb-24 md:pt-14"
   },
   "ax": {
-   "total": 1667,
+   "total": 1700,
    "ignored": 409,
-   "named": 1063,
+   "named": 1078,
    "groundNodePresent": false,
    "groundIgnored": [],
    "groundNamed": []
@@ -1233,7 +1233,7 @@
   "label": "forced colours",
   "snap": {
    "url": "/",
-   "docHeight": 12152,
+   "docHeight": 12177,
    "rotatorWordSets": [
     "خرید عمده|ساعت هوشمند|لوازم جانبی|موبایل"
    ],
@@ -1643,7 +1643,7 @@
   "label": "ground hidden",
   "snap": {
    "url": "/",
-   "docHeight": 12148,
+   "docHeight": 12172,
    "rotatorWordSets": [
     "خرید عمده|ساعت هوشمند|لوازم جانبی|موبایل"
    ],
