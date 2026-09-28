@@ -4,7 +4,8 @@ import { useMemo, useState } from "react";
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
 import { PLACEHOLDER_ALT, PLACEHOLDER_LABEL, isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
-import { cn, toFaDigits } from "@/lib/utils";
+import { LiquidSelection } from "@/components/liquid/LiquidSelection";
+import { toFaDigits } from "@/lib/utils";
 import type { CatalogProduct } from "@/lib/catalog";
 
 /**
@@ -81,22 +82,35 @@ export function ProductGallery({ product }: { product: CatalogProduct }) {
         * breaks the same way at every width on a desktop column half that wide.
        */}
       {shownViews.length > 1 && (
-        <div className="mt-3 flex flex-wrap items-center gap-2" role="group" aria-label="نمای دیگر این محصول">
-          {shownViews.map((url, index) => (
-            <button
-              key={url}
-              type="button"
-              onClick={() => setViewIndex(index)}
-              aria-pressed={index === current}
-              aria-label={`نمای ${toFaDigits(index + 1)} از ${toFaDigits(shownViews.length)}`}
-              className={cn(
-                "relative size-16 shrink-0 overflow-hidden rounded-xl border transition-colors",
-                index === current ? "border-champagne" : "border-line hover:border-champagne/50",
-              )}
-            >
-              <Image src={url} alt="" fill sizes="64px" className="object-contain p-1" unoptimized={url !== productImage} />
-            </button>
-          ))}
+        <div className="mt-3 flex flex-wrap items-center gap-2">
+          <LiquidSelection
+            className="!gap-2"
+            itemClassName="relative size-16 shrink-0 overflow-hidden !rounded-xl border border-line hover:border-champagne/50"
+            value={shownViews[current]}
+            announce="pressed"
+            groupRole="group"
+            label="نمای دیگر این محصول"
+            markerInset={4}
+            onChange={(url) => setViewIndex(shownViews.indexOf(url))}
+            items={shownViews.map((url, index) => ({
+              id: url,
+              label: (
+                <Image src={url} alt="" fill sizes="64px" className="object-contain p-1" unoptimized={url !== productImage} />
+              ),
+              // The accessible name is passed as `name` because the label is an image:
+              // the component only sets `aria-label` for a non-string label, and the
+              // name must stay byte-identical to the pre-marker markup (SC-010).
+              name: `نمای ${toFaDigits(index + 1)} از ${toFaDigits(shownViews.length)}`,
+            }))}
+          />
+          {/*
+            The counter cannot live inside the marker's row: the shared component
+            renders exactly its items and has no children slot, and the marker
+            measures itself against that row. It keeps its own line after the grid
+            instead of sitting after the last thumbnail — the one layout change on
+            this surface, measured in verification/surf-b-interaction.json (the
+            gallery's rows are identical to before; only the counter moved).
+          */}
           <span className="ms-1 font-mono text-xs text-muted-foreground">
             {toFaDigits(current + 1)} / {toFaDigits(shownViews.length)}
           </span>

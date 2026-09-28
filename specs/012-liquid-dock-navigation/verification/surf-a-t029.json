@@ -1,0 +1,132 @@
+{
+  "checks": [
+    {
+      "name": "1280 · one marker in the pill group",
+      "pass": true,
+      "detail": "1"
+    },
+    {
+      "name": "1280 · rising circle deleted",
+      "pass": true,
+      "detail": "hover-circle=0 pill-label=0 pill-label-hover=0"
+    },
+    {
+      "name": "1280 · group children are the marker plus the links themselves",
+      "pass": true,
+      "detail": "[\"span[-]\",\"a[menuitem]\",\"a[menuitem]\",\"a[menuitem]\"]"
+    },
+    {
+      "name": "1280 · no per-item background survives as a 2nd indicator",
+      "pass": true,
+      "detail": "[]"
+    },
+    {
+      "name": "1280 · resting marker is inset inside its slot",
+      "pass": true,
+      "detail": "{\"start\":3.55,\"end\":4.83,\"top\":4,\"bottom\":4}"
+    },
+    {
+      "name": "1280 · resting marker does not overflow the group",
+      "pass": true,
+      "detail": "marker 1027.17+57 vs group 806.17+282.83"
+    },
+    {
+      "name": "1280 · resting marker holds no compositor hint (FR-034)",
+      "pass": true,
+      "detail": "\"auto\""
+    },
+    {
+      "name": "1280 · marker was found by the in-page sampler",
+      "pass": true,
+      "detail": "true"
+    },
+    {
+      "name": "1280 · TRUSTED click moved the selection",
+      "pass": true,
+      "detail": "clicked «فروشگاه» at (975,57)"
+    },
+    {
+      "name": "1280 · marker travelled (distinct x samples > 3)",
+      "pass": true,
+      "detail": "31 distinct x positions over 55 frames"
+    },
+    {
+      "name": "1280 · marker deformed in flight (peak scaleX >= 1.2, i.e. a trip not a press)",
+      "pass": true,
+      "detail": "peak scaleX 1.25 (DEFORM 1.25 / PRESS 1.06)"
+    },
+    {
+      "name": "1280 · the clicked pill is the current one after navigation",
+      "pass": true,
+      "detail": "/shop → current=[\"فروشگاه\"]"
+    },
+    {
+      "name": "360 · pill row is desktop-only (nothing painted)",
+      "pass": true,
+      "detail": "{\"groupDisplay\":\"flex\",\"wrapperDisplay\":\"none\",\"wrapperOffsetParentNull\":true}"
+    },
+    {
+      "name": "no-JS · current item carries a visible mark from the server",
+      "pass": true,
+      "detail": "{\"text\":\"خانه\",\"background\":\"rgba(229, 211, 179, 0.16)\",\"color\":\"rgb(229, 211, 179)\",\"markerPainted\":false,\"markerStyle\":null}"
+    }
+  ],
+  "shots": [
+    "surf-a-pills-1280-rest.png",
+    "surf-a-pills-1280-after-click.png",
+    "surf-a-pills-360.png",
+    "surf-a-pills-1280-nojs.png"
+  ],
+  "rest": {
+    "marker": {
+      "x": 1027.17,
+      "y": 43,
+      "w": 57,
+      "h": 28
+    },
+    "slot": {
+      "x": 1023.63,
+      "y": 39,
+      "w": 65.38,
+      "h": 36
+    },
+    "groupBox": {
+      "x": 806.17,
+      "w": 282.83,
+      "h": 48
+    },
+    "insideSlot": true,
+    "insideGroup": true,
+    "willChange": "auto",
+    "insetPx": {
+      "start": 3.55,
+      "end": 4.83,
+      "top": 4,
+      "bottom": 4
+    }
+  },
+  "travel": {
+    "frames": 55,
+    "distinctX": 31,
+    "peakScale": 1.25,
+    "after": {
+      "url": "/shop",
+      "current": [
+        "فروشگاه"
+      ],
+      "marker": {
+        "x": 934.17,
+        "w": 82
+      }
+    }
+  },
+  "pageerrors@1280": [],
+  "pageerrors@360": [],
+  "noJs": {
+    "text": "خانه",
+    "background": "rgba(229, 211, 179, 0.16)",
+    "color": "rgb(229, 211, 179)",
+    "markerPainted": false,
+    "markerStyle": null
+  }
+}

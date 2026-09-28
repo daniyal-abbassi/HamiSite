@@ -1,0 +1,382 @@
+{
+  "width360": {
+    "declared": {
+      "featuredTabs": {
+        "items": 2,
+        "stopsDeclared": 1,
+        "tabindexes": [
+          "0",
+          "-1"
+        ],
+        "ids": [
+          "featured-tab-newest",
+          "featured-tab-special"
+        ],
+        "ariaControls": [
+          "featured-panel",
+          "featured-panel"
+        ]
+      },
+      "portGroups": [
+        {
+          "role": "menubar",
+          "itemTag": "a",
+          "items": 3,
+          "stopsDeclared": 3,
+          "tabindexes": [
+            null,
+            null,
+            null
+          ],
+          "ids": [
+            null,
+            null,
+            null
+          ],
+          "ariaControls": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "role": null,
+          "itemTag": "a",
+          "items": 5,
+          "stopsDeclared": 5,
+          "tabindexes": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "ids": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "ariaControls": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      ]
+    },
+    "tabWalk": [
+      {
+        "key": "a|حامی همراه — صفحه اصلی",
+        "tag": "a",
+        "role": null,
+        "text": "حامی همراه — صفحه اصلی",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "input|جست‌وجوی محصول",
+        "tag": "input",
+        "role": null,
+        "text": "جست‌وجوی محصول",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "button|سبد خرید",
+        "tag": "button",
+        "role": null,
+        "text": "سبد خرید",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|مشاهده محصولات",
+        "tag": "a",
+        "role": null,
+        "text": "مشاهده محصولات",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|شروع همکاری",
+        "tag": "a",
+        "role": null,
+        "text": "شروع همکاری",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|۰۱ فروشگاه",
+        "tag": "a",
+        "role": null,
+        "text": "۰۱ فروشگاه",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|۰۲ دسته‌بندی‌ها",
+        "tag": "a",
+        "role": null,
+        "text": "۰۲ دسته‌بندی‌ها",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|۰۳ همکاری",
+        "tag": "a",
+        "role": null,
+        "text": "۰۳ همکاری",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|۰۴ فروشگاه حضوری",
+        "tag": "a",
+        "role": null,
+        "text": "۰۴ فروشگاه حضوری",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|مشاهده همه",
+        "tag": "a",
+        "role": null,
+        "text": "مشاهده همه",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "div|COMTEL OP18S پاوربانک کامتل ",
+        "tag": "div",
+        "role": "region",
+        "text": "COMTEL OP18S پاوربانک کامتل ",
+        "tabindex": "0",
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|پاوربانک کامتل مدل OP18S ظرف",
+        "tag": "a",
+        "role": null,
+        "text": "پاوربانک کامتل مدل OP18S ظرف",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|پاوربانک کامتل",
+        "tag": "a",
+        "role": null,
+        "text": "پاوربانک کامتل",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "button|افزودن به سبد خرید",
+        "tag": "button",
+        "role": null,
+        "text": "افزودن به سبد خرید",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|گوشی موبایل نوکیا مدل 105 20",
+        "tag": "a",
+        "role": null,
+        "text": "گوشی موبایل نوکیا مدل 105 20",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|گوشی موبایل نوکیا",
+        "tag": "a",
+        "role": null,
+        "text": "گوشی موبایل نوکیا",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      }
+    ],
+    "tabWalkLength": 16
+  },
+  "width1280": {
+    "declared": {
+      "featuredTabs": {
+        "items": 2,
+        "stopsDeclared": 1,
+        "tabindexes": [
+          "0",
+          "-1"
+        ],
+        "ids": [
+          "featured-tab-newest",
+          "featured-tab-special"
+        ],
+        "ariaControls": [
+          "featured-panel",
+          "featured-panel"
+        ]
+      },
+      "portGroups": [
+        {
+          "role": "menubar",
+          "itemTag": "a",
+          "items": 3,
+          "stopsDeclared": 3,
+          "tabindexes": [
+            null,
+            null,
+            null
+          ],
+          "ids": [
+            null,
+            null,
+            null
+          ],
+          "ariaControls": [
+            null,
+            null,
+            null
+          ]
+        },
+        {
+          "role": null,
+          "itemTag": "a",
+          "items": 5,
+          "stopsDeclared": 5,
+          "tabindexes": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "ids": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ],
+          "ariaControls": [
+            null,
+            null,
+            null,
+            null,
+            null
+          ]
+        }
+      ]
+    },
+    "tabWalk": [
+      {
+        "key": "a|حامی همراه — صفحه اصلی",
+        "tag": "a",
+        "role": null,
+        "text": "حامی همراه — صفحه اصلی",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|خانه",
+        "tag": "a",
+        "role": "menuitem",
+        "text": "خانه",
+        "tabindex": null,
+        "inGroup": "menubar",
+        "groupLabel": "ناوبری اصلی"
+      },
+      {
+        "key": "a|فروشگاه",
+        "tag": "a",
+        "role": "menuitem",
+        "text": "فروشگاه",
+        "tabindex": null,
+        "inGroup": "menubar",
+        "groupLabel": "ناوبری اصلی"
+      },
+      {
+        "key": "a|همکاری عمده",
+        "tag": "a",
+        "role": "menuitem",
+        "text": "همکاری عمده",
+        "tabindex": null,
+        "inGroup": "menubar",
+        "groupLabel": "ناوبری اصلی"
+      },
+      {
+        "key": "input|جست‌وجوی محصول",
+        "tag": "input",
+        "role": null,
+        "text": "جست‌وجوی محصول",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|ورود به حساب",
+        "tag": "a",
+        "role": null,
+        "text": "ورود به حساب",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "button|سبد خرید",
+        "tag": "button",
+        "role": null,
+        "text": "سبد خرید",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|۰۹۳۳ ۱۲۱ ۴۰۰۰",
+        "tag": "a",
+        "role": null,
+        "text": "۰۹۳۳ ۱۲۱ ۴۰۰۰",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|شروع همکاری",
+        "tag": "a",
+        "role": null,
+        "text": "شروع همکاری",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      },
+      {
+        "key": "a|مشاهده محصولات",
+        "tag": "a",
+        "role": null,
+        "text": "مشاهده محصولات",
+        "tabindex": null,
+        "inGroup": null,
+        "groupLabel": ""
+      }
+    ],
+    "tabWalkLength": 10
+  }
+}

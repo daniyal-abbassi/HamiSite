@@ -1,0 +1,204 @@
+{
+  "1280px": {
+    "groups": [
+      {
+        "name": "header-pills",
+        "group": {
+          "x": 802.17,
+          "y": 33,
+          "w": 286.83,
+          "h": 48
+        },
+        "visible": "flex",
+        "childTags": [
+          "li[none]",
+          "li[none]",
+          "li[none]"
+        ],
+        "items": [
+          {
+            "text": "خانه خانه",
+            "current": "page",
+            "box": {
+              "x": 1043.63,
+              "y": 39,
+              "w": 65.38,
+              "h": 36
+            }
+          },
+          {
+            "text": "فروشگاه فروشگاه",
+            "current": null,
+            "box": {
+              "x": 947.73,
+              "y": 39,
+              "w": 89.89,
+              "h": 36
+            }
+          },
+          {
+            "text": "همکاری عمده همکاری عمده",
+            "current": null,
+            "box": {
+              "x": 822.17,
+              "y": 39,
+              "w": 119.56,
+              "h": 36
+            }
+          }
+        ],
+        "marker": null,
+        "wrapperPx": {
+          "x": 796.17,
+          "y": 33,
+          "w": 298.83,
+          "h": 48
+        }
+      },
+      {
+        "name": "featured-tabs",
+        "group": {
+          "x": 1004,
+          "y": 2872.11,
+          "w": 240.81,
+          "h": 46
+        },
+        "visible": "flex",
+        "items": [
+          {
+            "text": "جدیدترین‌ها",
+            "selected": "true",
+            "box": {
+              "x": 1128.23,
+              "y": 2877.11,
+              "w": 111.58,
+              "h": 36
+            }
+          },
+          {
+            "text": "پیشنهاد ویژه",
+            "selected": "false",
+            "box": {
+              "x": 1009,
+              "y": 2877.11,
+              "w": 113.23,
+              "h": 36
+            }
+          }
+        ],
+        "marker": null
+      }
+    ],
+    "scrollY": 0,
+    "docW": 1280,
+    "legacy": {
+      "hoverCircles": 3,
+      "pillLabelHover": 3,
+      "pillLabels": 3,
+      "featuredLayoutFill": 0,
+      "lsMarkers": 1,
+      "willChangeMarkers": 0
+    }
+  },
+  "360px": {
+    "groups": [
+      {
+        "name": "header-pills",
+        "group": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        },
+        "visible": "flex",
+        "childTags": [
+          "li[none]",
+          "li[none]",
+          "li[none]"
+        ],
+        "items": [
+          {
+            "text": "خانهخانه",
+            "current": "page",
+            "box": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "text": "فروشگاهفروشگاه",
+            "current": null,
+            "box": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "text": "همکاری عمدههمکاری عمده",
+            "current": null,
+            "box": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          }
+        ],
+        "marker": null,
+        "wrapperPx": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      {
+        "name": "featured-tabs",
+        "group": {
+          "x": 69.94,
+          "y": 2621.44,
+          "w": 220.13,
+          "h": 42
+        },
+        "visible": "flex",
+        "items": [
+          {
+            "text": "جدیدترین‌ها",
+            "selected": "true",
+            "box": {
+              "x": 183.7,
+              "y": 2626.44,
+              "w": 101.36,
+              "h": 32
+            }
+          },
+          {
+            "text": "پیشنهاد ویژه",
+            "selected": "false",
+            "box": {
+              "x": 74.94,
+              "y": 2626.44,
+              "w": 102.77,
+              "h": 32
+            }
+          }
+        ],
+        "marker": null
+      }
+    ],
+    "scrollY": 0,
+    "docW": 360,
+    "legacy": {
+      "hoverCircles": 3,
+      "pillLabelHover": 3,
+      "pillLabels": 3,
+      "featuredLayoutFill": 0,
+      "lsMarkers": 1,
+      "willChangeMarkers": 0
+    }
+  }
+}

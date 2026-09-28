@@ -6,19 +6,48 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 import { gsap } from "gsap";
 
+import { LiquidSelection, type LiquidSelectionItem } from "@/components/liquid/LiquidSelection";
+import { prefersReducedMotion } from "@/components/liquid/motion";
+
 /**
- * PillNav — pill navigation with a GSAP "rising circle" hover.
+ * PillNav — the desktop header's pill navigation.
  *
- * Ported from a react-router/Tailwind original. Each adaptation is noted at its
- * site below; the prop surface is unchanged apart from one addition
- * (`circleColor`) that defaults to the original single-colour behaviour.
+ * Ported from a react-router/Tailwind original. The original answered "which page
+ * am I on" with a GSAP **rising circle**: a circle scaled up from under each pill
+ * on hover, taking a duplicate of the label with it. Feature 012 replaced that
+ * with the site's one travelling marker, `components/liquid/LiquidSelection`, and
+ * the circle is gone rather than coexisting with it — two selection indicators on
+ * one surface is the failure mode FR-040 exists to prevent (T029).
+ *
+ * What that substitution removed, and why each piece had to go with it:
+ *
+ * - `hover-circle` spans, `circleRefs`, `tlRefs`, `activeTweenRefs`, the
+ *   per-pill radius arithmetic, the resize/font re-measure (the marker owns its
+ *   own ResizeObserver now), and `handleEnter`/`handleLeave`.
+ * - `.pill-label` and `.pill-label-hover`. The second copy existed only to be
+ *   scrolled into view as the circle rose; with no circle it is a duplicate of
+ *   every nav name in the accessibility tree.
+ * - `circleColor`, `pillColor`, `pillTextColor`, `hoveredPillTextColor`. The
+ *   marker's body and its current label are one token decision inside
+ *   `liquid-selection.module.css` — FR-016 makes them impossible to disagree, and
+ *   it does that by not exposing a prop for either. A surface that could tint one
+ *   and not the other would be re-opening that.
+ * - `ease`, which fed nothing but the deleted tweens.
+ * - Its own `prefersReducedMotion`, in favour of the port's single implementation
+ *   (FR-021).
+ *
+ * What stayed: the glass container, the logo circle and its rotate-on-hover, and
+ * the staggered entrance — none of which answers a one-of-N question.
  *
  * The original's built-in mobile dropdown is NOT ported, and this component is
  * `hidden md:block` in the header for the same reason: mobile navigation is the
  * bottom dock (components/layout/MobileDock.tsx), not a second menu up here.
- * The site previously ran both a slide-over drawer and the dock, which is two
- * navigations to keep in sync and two answers to the same question; the drawer
- * was removed. PillNav renders the desktop pills only.
+ * PillNav renders the desktop pills only.
+ *
+ * The logo is deliberately OUTSIDE the marker group. It is a route to the home
+ * page, but it is not a destination in the nav — marking it would make the brand
+ * mark compete with «خانه» for the same answer, and the marker would sit under
+ * the wrong thing whenever both point at `/`.
  */
 
 export type PillNavItem = {
@@ -34,15 +63,8 @@ export interface PillNavProps {
   items: PillNavItem[];
   activeHref?: string;
   className?: string;
-  ease?: string;
-  /** Container background (and, unless `circleColor` is set, the rising circle). */
+  /** The container the pills sit in, and the logo circle. Not the marker. */
   baseColor?: string;
-  /** Rising circle fill. Added so the container can be glass while the circle
-   *  stays brand aqua; omit it and the original single-colour behaviour holds. */
-  circleColor?: string;
-  pillColor?: string;
-  hoveredPillTextColor?: string;
-  pillTextColor?: string;
   initialLoadAnimation?: boolean;
   /** Hide the logo circle when the host already shows the brand mark, so the
    *  nav can sit inside a floating bar without nesting a pill in a pill. */
@@ -53,18 +75,11 @@ export interface PillNavProps {
    CSS variables as bare RGB triplets (`--primary: 201 162 39`) and consumes
    them as `rgb(var(--x) / <alpha>)`. Feeding those to hsl() yields an invalid
    colour, not a wrong one — it silently renders nothing. */
-const DEFAULTS = {
-  base: "rgb(var(--card))",
-  circle: "rgb(var(--primary))",
-  pill: "rgb(var(--foreground) / 0.06)",
-  pillText: "rgb(var(--foreground) / 0.85)",
-  hoverText: "rgb(var(--primary-foreground))",
-};
+const DEFAULT_BASE = "rgb(var(--card))";
 
-function prefersReducedMotion() {
-  if (typeof window === "undefined") return true;
-  return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-}
+/** `#anchor`, `tel:`, `mailto:` and real URLs must not go through the router. */
+const isExternal = (href: string) =>
+  /^(https?:)?\/\//.test(href) || href.startsWith("mailto:") || href.startsWith("tel:") || href.startsWith("#");
 
 export function PillNav({
   logo,
@@ -73,12 +88,7 @@ export function PillNav({
   items,
   activeHref,
   className = "",
-  ease = "power3.out",
-  baseColor = DEFAULTS.base,
-  circleColor,
-  pillColor = DEFAULTS.pill,
-  hoveredPillTextColor = DEFAULTS.hoverText,
-  pillTextColor = DEFAULTS.pillText,
+  baseColor = DEFAULT_BASE,
   initialLoadAnimation = true,
   showLogo = true,
 }: PillNavProps) {
@@ -86,106 +96,57 @@ export function PillNav({
      the caller does not have to thread the current path down. */
   const pathname = usePathname();
   const currentHref = activeHref ?? pathname;
-  const circleRefs = useRef<Array<HTMLSpanElement | null>>([]);
-  const tlRefs = useRef<Array<gsap.core.Timeline | null>>([]);
-  const activeTweenRefs = useRef<Array<gsap.core.Tween | null>>([]);
+
   const logoMarkRef = useRef<HTMLSpanElement | null>(null);
   const logoTweenRef = useRef<gsap.core.Tween | null>(null);
   const navItemsRef = useRef<HTMLDivElement | null>(null);
   const logoRef = useRef<HTMLAnchorElement | null>(null);
 
+  /* The marker rests under the item whose href is the live route, and under
+     nothing when no item is — on /cart or a product page there is no pill to
+     light up, and a marker defaulted to «خانه» there would claim the shopper is
+     somewhere they are not (FR-017). */
+  const current = items.some((item) => item.href === currentHref) ? currentHref : null;
+
+  const lsItems: LiquidSelectionItem<string>[] = items.map((item) => ({
+    id: item.href,
+    // A `label` that is not a plain string is what makes the port publish
+    // `aria-label` from `name` rather than reading it off the markup. Passed
+    // through so every pill's accessible name is the string it was before T029
+    // (SC-010) — including the `ariaLabel` override the original supported.
+    label: <span>{item.label}</span>,
+    name: item.ariaLabel ?? item.label,
+    ...(isExternal(item.href) ? { href: item.href } : { to: item.href }),
+  }));
+
   useEffect(() => {
-    /* (7) Honour the OS motion preference. The project's design system requires
-       it, and a nav whose links animate on every hover is exactly the kind of
-       motion the setting exists to suppress. Reduced motion keeps the colour
-       change (which carries the hover affordance) and drops the movement. */
-    const reduced = prefersReducedMotion();
-
-    const layout = () => {
-      circleRefs.current.forEach((circle, index) => {
-        const pill = circle?.parentElement as HTMLElement | undefined;
-        if (!circle || !pill) return;
-
-        const { width: w, height: h } = pill.getBoundingClientRect();
-        if (!w || !h) return;
-
-        // Radius of a circle that, rising from below, fully covers the pill.
-        const R = ((w * w) / 4 + h * h) / (2 * h);
-        const D = Math.ceil(2 * R) + 2;
-        const delta = Math.ceil(R - Math.sqrt(Math.max(0, R * R - (w * w) / 4))) + 1;
-        const originY = D - delta;
-
-        circle.style.width = `${D}px`;
-        circle.style.height = `${D}px`;
-        circle.style.bottom = `-${delta}px`;
-
-        gsap.set(circle, { xPercent: -50, scale: 0, transformOrigin: `50% ${originY}px` });
-
-        const label = pill.querySelector<HTMLElement>(".pill-label");
-        const hoverLabel = pill.querySelector<HTMLElement>(".pill-label-hover");
-
-        tlRefs.current[index]?.kill();
-
-        if (reduced) {
-          // No travel: the hover label simply cross-fades in place.
-          if (label) gsap.set(label, { y: 0 });
-          if (hoverLabel) gsap.set(hoverLabel, { y: 0, opacity: 0 });
-          const tl = gsap.timeline({ paused: true });
-          tl.to(circle, { scale: 1.2, duration: 0.001 }, 0);
-          if (hoverLabel) tl.to(hoverLabel, { opacity: 1, duration: 0.001 }, 0);
-          tlRefs.current[index] = tl;
-          return;
-        }
-
-        if (label) gsap.set(label, { y: 0 });
-        if (hoverLabel) gsap.set(hoverLabel, { y: Math.ceil(h + 20), opacity: 0 });
-
-        const tl = gsap.timeline({ paused: true });
-        tl.to(circle, { scale: 1.2, xPercent: -50, duration: 0.8, ease, overwrite: "auto" }, 0);
-        if (label) tl.to(label, { y: -(h + 8), duration: 0.6, ease, overwrite: "auto" }, 0);
-        if (hoverLabel) tl.to(hoverLabel, { y: 0, opacity: 1, duration: 0.6, ease, overwrite: "auto" }, 0);
-        tlRefs.current[index] = tl;
-      });
-    };
-
-    layout();
-    window.addEventListener("resize", layout);
-    // Persian glyph metrics shift once Vazirmatn swaps in; re-measure after.
-    document.fonts?.ready.then(layout).catch(() => {});
-
-    if (initialLoadAnimation && !reduced) {
-      if (logoRef.current) {
-        gsap.fromTo(logoRef.current, { scale: 0, opacity: 0 }, { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.7)" });
-      }
-      if (navItemsRef.current) {
-        /* (4) RTL: the original slid items in from x:-20, i.e. from the left.
-           This document is dir="rtl", so entrances come from the right. */
-        const rtl = document.documentElement.dir === "rtl";
-        const listItems = navItemsRef.current.querySelectorAll("li");
-        gsap.fromTo(
-          listItems,
-          { opacity: 0, x: rtl ? 20 : -20 },
-          { opacity: 1, x: 0, duration: 0.6, stagger: 0.05, ease: "power2.out", delay: 0.2 },
-        );
-      }
+    if (!initialLoadAnimation || prefersReducedMotion()) {
+      return;
     }
 
-    return () => window.removeEventListener("resize", layout);
-  }, [items, ease, initialLoadAnimation]);
+    if (logoRef.current) {
+      gsap.fromTo(
+        logoRef.current,
+        { scale: 0, opacity: 0 },
+        { scale: 1, opacity: 1, duration: 0.8, ease: "back.out(1.7)" },
+      );
+    }
 
-  const handleEnter = (i: number) => {
-    const tl = tlRefs.current[i];
-    if (!tl) return;
-    activeTweenRefs.current[i]?.kill();
-    activeTweenRefs.current[i] = tl.tweenTo(tl.duration(), { duration: 0.4, ease, overwrite: "auto" });
-  };
-
-  const handleLeave = (i: number) => {
-    const tl = tlRefs.current[i];
-    if (!tl) return;
-    activeTweenRefs.current[i]?.kill();
-    activeTweenRefs.current[i] = tl.tweenTo(0, { duration: 0.3, ease, overwrite: "auto" });
-  };
+    if (navItemsRef.current) {
+      /* (4) RTL: the original slid items in from x:-20, i.e. from the left.
+         This document is dir="rtl", so entrances come from the right.
+         Measured as `x` transforms on the items, which is what the port reads
+         `offsetLeft` for — layout, not composition — so the marker's own resting
+         box is never measured through a mid-flight translate. */
+      const rtl = document.documentElement.dir === "rtl";
+      const pills = navItemsRef.current.querySelectorAll("[data-ls-item]");
+      gsap.fromTo(
+        pills,
+        { opacity: 0, x: rtl ? 20 : -20 },
+        { opacity: 1, x: 0, duration: 0.6, stagger: 0.05, ease: "power2.out", delay: 0.2 },
+      );
+    }
+  }, [initialLoadAnimation]);
 
   const handleLogoEnter = () => {
     const mark = logoMarkRef.current;
@@ -200,18 +161,10 @@ export function PillNav({
     });
   };
 
-  const isExternal = (href: string) =>
-    /^(https?:)?\/\//.test(href) || href.startsWith("mailto:") || href.startsWith("tel:") || href.startsWith("#");
-
   const cssVars = {
     "--base": baseColor,
-    "--circle": circleColor ?? baseColor,
-    "--pill-bg": pillColor,
-    "--hover-text": hoveredPillTextColor,
-    "--pill-text": pillTextColor,
     "--nav-h": "48px",
     "--pill-pad-x": "20px",
-    "--pill-gap": "6px",
   } as CSSProperties;
 
   const renderLogo = () => (
@@ -226,11 +179,6 @@ export function PillNav({
       )}
     </span>
   );
-
-  const pillClasses =
-    /* (5) No `uppercase` / wide tracking: both are meaningless for Persian and
-       uppercase actively mangles mixed Latin-Persian strings. */
-    "relative overflow-hidden inline-flex items-center justify-center h-[calc(var(--nav-h)-12px)] self-center no-underline rounded-full box-border text-sm font-bold cursor-pointer";
 
   return (
     <div className={`relative ${className}`} style={cssVars}>
@@ -249,81 +197,34 @@ export function PillNav({
           </Link>
         )}
 
-        {/* Desktop pills */}
+        {/* Desktop pills. The wrapper owns the responsive hide so the marker
+            group never has to compete with a `display` utility of its own: the
+            port's own class sets `display: flex` at the same specificity as a
+            Tailwind utility, and which one wins would come down to stylesheet
+            order. Gating the parent instead keeps that off the table. */}
         <div
           ref={navItemsRef}
           className="hidden items-center rounded-full px-1.5 md:flex"
           style={{ height: "var(--nav-h)", background: "var(--base)" }}
         >
-          <ul role="menubar" className="m-0 flex h-full list-none items-stretch p-0" style={{ gap: "var(--pill-gap)" }}>
-            {items.map((item, i) => {
-              const isActive = currentHref === item.href;
-              const pillStyle: CSSProperties = {
-                background: isActive ? "var(--circle)" : "var(--pill-bg)",
-                color: isActive ? "var(--hover-text)" : "var(--pill-text)",
-                paddingInline: "var(--pill-pad-x)",
-              };
-
-              const inner = (
-                <>
-                  <span
-                    ref={(el) => { circleRefs.current[i] = el; }}
-                    aria-hidden
-                    className="hover-circle pointer-events-none absolute bottom-0 left-1/2 z-[1] block rounded-full"
-                    style={{ background: "var(--circle)", willChange: "transform" }}
-                  />
-                  <span className="relative z-[2] inline-block overflow-hidden py-1 leading-none">
-                    <span className="pill-label relative z-[2] inline-block" style={{ willChange: "transform" }}>
-                      {item.label}
-                    </span>
-                    <span
-                      aria-hidden
-                      className="pill-label-hover absolute start-0 top-1 z-[3] inline-block w-full text-center"
-                      style={{ color: "var(--hover-text)", willChange: "transform, opacity" }}
-                    >
-                      {item.label}
-                    </span>
-                  </span>
-                </>
-              );
-
-              return (
-                <li key={item.href} role="none" className="flex items-center">
-                  {/* (1) next/link, not react-router's Link. */}
-                  {isExternal(item.href) ? (
-                    <a
-                      role="menuitem"
-                      href={item.href}
-                      className={pillClasses}
-                      style={pillStyle}
-                      aria-label={item.ariaLabel || item.label}
-                      aria-current={isActive ? "page" : undefined}
-                      onMouseEnter={() => handleEnter(i)}
-                      onMouseLeave={() => handleLeave(i)}
-                    >
-                      {inner}
-                    </a>
-                  ) : (
-                    <Link
-                      role="menuitem"
-                      href={item.href}
-                      className={pillClasses}
-                      style={pillStyle}
-                      aria-label={item.ariaLabel || item.label}
-                      aria-current={isActive ? "page" : undefined}
-                      onMouseEnter={() => handleEnter(i)}
-                      onMouseLeave={() => handleLeave(i)}
-                    >
-                      {inner}
-                    </Link>
-                  )}
-                </li>
-              );
-            })}
-          </ul>
+          <LiquidSelection
+            /* The group is content-width, not equalWidth: these three labels are
+               different lengths, unlike the dock's five. */
+            className="h-full"
+            itemClassName="h-[calc(var(--nav-h)-12px)] self-center no-underline px-[var(--pill-pad-x)] text-sm font-bold"
+            items={lsItems}
+            value={current}
+            announce="page"
+            groupRole="menubar"
+            itemRole="menuitem"
+            /* Resting inset, so the body reads as a thing inside the pill rather
+               than a block the size of it (FR-065). No `label`: the `nav` above
+               already names this region, and giving the menubar its own
+               accessible name here would be a control gaining one (SC-010). */
+            markerInset={4}
+          />
         </div>
       </nav>
-
     </div>
   );
 }

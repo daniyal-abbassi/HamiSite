@@ -1,0 +1,397 @@
+{
+  "checks": [
+    {
+      "name": "1280px · one marker in the tablist",
+      "pass": true,
+      "detail": "1"
+    },
+    {
+      "name": "1280px · tablist children are marker + 2 tabs",
+      "pass": true,
+      "detail": "[\"span[-]\",\"button[tab]\",\"button[tab]\"]"
+    },
+    {
+      "name": "1280px · the layoutId fill it replaced is deleted",
+      "pass": true,
+      "detail": "gradientFills=0 layoutIds=0"
+    },
+    {
+      "name": "1280px · roving tabindex preserved (one stop, 0/-1)",
+      "pass": true,
+      "detail": "tabindexes=[\"0\",\"-1\"] stops=1"
+    },
+    {
+      "name": "1280px · per-tab id preserved",
+      "pass": true,
+      "detail": "[\"featured-tab-newest\",\"featured-tab-special\"]"
+    },
+    {
+      "name": "1280px · aria-controls preserved on both tabs",
+      "pass": true,
+      "detail": "[\"featured-panel\",\"featured-panel\"]"
+    },
+    {
+      "name": "1280px · aria-selected on both tabs, exactly one true",
+      "pass": true,
+      "detail": "[\"true\",\"false\"]"
+    },
+    {
+      "name": "1280px · tabpanel aria-labelledby resolves to the selected tab",
+      "pass": true,
+      "detail": "{\"exists\":true,\"labelledby\":\"featured-tab-newest\",\"resolves\":true,\"labelMatchesSelectedTab\":true}"
+    },
+    {
+      "name": "1280px · resting marker inset inside its slot",
+      "pass": true,
+      "detail": "{\"start\":1.77,\"end\":1.81,\"top\":2,\"bottom\":2}"
+    },
+    {
+      "name": "1280px · resting marker inside the group",
+      "pass": true,
+      "detail": "marker w=108 in slot w=111.58"
+    },
+    {
+      "name": "1280px · no compositor hint at rest (FR-034)",
+      "pass": true,
+      "detail": "\"auto\""
+    },
+    {
+      "name": "1280px · real Tab walk lands on exactly ONE tab of the set",
+      "pass": true,
+      "detail": "1 tablist stops: [\"جدیدترین‌ها\"]"
+    },
+    {
+      "name": "1280px · ArrowLeft moves the selection (RTL forward)",
+      "pass": true,
+      "detail": "جدیدترین‌ها → پیشنهاد ویژه"
+    },
+    {
+      "name": "1280px · focus follows onto the newly selected tab",
+      "pass": true,
+      "detail": "focus=\"پیشنهاد ویژه\""
+    },
+    {
+      "name": "1280px · panel aria-labelledby follows and still resolves",
+      "pass": true,
+      "detail": "labelledby=featured-tab-special resolves=true matches=true"
+    },
+    {
+      "name": "1280px · roving tabindex tracks the new selection",
+      "pass": true,
+      "detail": "[\"-1\",\"0\"]"
+    },
+    {
+      "name": "1280px · marker found by the in-page sampler",
+      "pass": true,
+      "detail": "true"
+    },
+    {
+      "name": "1280px · marker travelled (distinct x > 3)",
+      "pass": true,
+      "detail": "31 distinct x over 119 frames"
+    },
+    {
+      "name": "1280px · body leaned into the travel (|skewX| ≥ 7 = DEFORM, never a press)",
+      "pass": true,
+      "detail": "peak |skewX| 8.00° · peak scaleX 1.25 (DEFORM 8°/1.25, PRESS 0°/1.06)"
+    },
+    {
+      "name": "1280px · trusted click swapped the selected tab",
+      "pass": true,
+      "detail": "clicked «جدیدترین‌ها» → selected «جدیدترین‌ها», panel labelled by featured-tab-newest"
+    },
+    {
+      "name": "360px · one marker in the tablist",
+      "pass": true,
+      "detail": "1"
+    },
+    {
+      "name": "360px · tablist children are marker + 2 tabs",
+      "pass": true,
+      "detail": "[\"span[-]\",\"button[tab]\",\"button[tab]\"]"
+    },
+    {
+      "name": "360px · the layoutId fill it replaced is deleted",
+      "pass": true,
+      "detail": "gradientFills=0 layoutIds=0"
+    },
+    {
+      "name": "360px · roving tabindex preserved (one stop, 0/-1)",
+      "pass": true,
+      "detail": "tabindexes=[\"0\",\"-1\"] stops=1"
+    },
+    {
+      "name": "360px · per-tab id preserved",
+      "pass": true,
+      "detail": "[\"featured-tab-newest\",\"featured-tab-special\"]"
+    },
+    {
+      "name": "360px · aria-controls preserved on both tabs",
+      "pass": true,
+      "detail": "[\"featured-panel\",\"featured-panel\"]"
+    },
+    {
+      "name": "360px · aria-selected on both tabs, exactly one true",
+      "pass": true,
+      "detail": "[\"true\",\"false\"]"
+    },
+    {
+      "name": "360px · tabpanel aria-labelledby resolves to the selected tab",
+      "pass": true,
+      "detail": "{\"exists\":true,\"labelledby\":\"featured-tab-newest\",\"resolves\":true,\"labelMatchesSelectedTab\":true}"
+    },
+    {
+      "name": "360px · resting marker inset inside its slot",
+      "pass": true,
+      "detail": "{\"start\":2.23,\"end\":2.13,\"top\":2,\"bottom\":2}"
+    },
+    {
+      "name": "360px · resting marker inside the group",
+      "pass": true,
+      "detail": "marker w=97 in slot w=101.36"
+    },
+    {
+      "name": "360px · no compositor hint at rest (FR-034)",
+      "pass": true,
+      "detail": "\"auto\""
+    },
+    {
+      "name": "360px · real Tab walk lands on exactly ONE tab of the set",
+      "pass": true,
+      "detail": "1 tablist stops: [\"جدیدترین‌ها\"]"
+    },
+    {
+      "name": "360px · ArrowLeft moves the selection (RTL forward)",
+      "pass": true,
+      "detail": "جدیدترین‌ها → پیشنهاد ویژه"
+    },
+    {
+      "name": "360px · focus follows onto the newly selected tab",
+      "pass": true,
+      "detail": "focus=\"پیشنهاد ویژه\""
+    },
+    {
+      "name": "360px · panel aria-labelledby follows and still resolves",
+      "pass": true,
+      "detail": "labelledby=featured-tab-special resolves=true matches=true"
+    },
+    {
+      "name": "360px · roving tabindex tracks the new selection",
+      "pass": true,
+      "detail": "[\"-1\",\"0\"]"
+    },
+    {
+      "name": "360px · marker found by the in-page sampler",
+      "pass": true,
+      "detail": "true"
+    },
+    {
+      "name": "360px · marker travelled (distinct x > 3)",
+      "pass": true,
+      "detail": "30 distinct x over 119 frames"
+    },
+    {
+      "name": "360px · body leaned into the travel (|skewX| ≥ 7 = DEFORM, never a press)",
+      "pass": true,
+      "detail": "peak |skewX| 8.00° · peak scaleX 1.25 (DEFORM 8°/1.25, PRESS 0°/1.06)"
+    },
+    {
+      "name": "360px · trusted click swapped the selected tab",
+      "pass": true,
+      "detail": "clicked «جدیدترین‌ها» → selected «جدیدترین‌ها», panel labelled by featured-tab-newest"
+    },
+    {
+      "name": "no-JS · selected tab visibly marked from the server",
+      "pass": true,
+      "detail": "{\"text\":\"جدیدترین‌ها\",\"background\":\"rgba(229, 211, 179, 0.16)\",\"markerPainted\":false}"
+    }
+  ],
+  "shots": [
+    "specs/012-liquid-dock-navigation/verification/surf-a-tabs-1280.png",
+    "specs/012-liquid-dock-navigation/verification/surf-a-tabs-360.png",
+    "surf-a-tabs-1280-nojs.png"
+  ],
+  "state@1280px": {
+    "mech": {
+      "childTags": [
+        "span[-]",
+        "button[tab]",
+        "button[tab]"
+      ],
+      "markers": 1,
+      "tabs": 2,
+      "gradientFills": 0,
+      "layoutIds": 0,
+      "groupLabel": "فیلتر محصولات منتخب",
+      "ids": [
+        "featured-tab-newest",
+        "featured-tab-special"
+      ],
+      "tabindexes": [
+        "0",
+        "-1"
+      ],
+      "ariaSelected": [
+        "true",
+        "false"
+      ],
+      "ariaControls": [
+        "featured-panel",
+        "featured-panel"
+      ],
+      "stops": 1,
+      "panel": {
+        "exists": true,
+        "labelledby": "featured-tab-newest",
+        "resolves": true,
+        "labelMatchesSelectedTab": true
+      }
+    },
+    "rest": {
+      "inset": {
+        "start": 1.77,
+        "end": 1.81,
+        "top": 2,
+        "bottom": 2
+      },
+      "insideSlot": true,
+      "insideGroup": true,
+      "willChange": "auto",
+      "marker": {
+        "w": 108,
+        "h": 32
+      },
+      "slot": {
+        "w": 111.58,
+        "h": 36
+      }
+    },
+    "walk": [
+      {
+        "inTablist": true,
+        "text": "جدیدترین‌ها",
+        "tabindex": "0"
+      }
+    ],
+    "arrow": {
+      "before": "جدیدترین‌ها",
+      "focused": "جدیدترین‌ها"
+    },
+    "afterArrow": {
+      "after": "پیشنهاد ویژه",
+      "focusIsSelectedTab": true,
+      "focusText": "پیشنهاد ویژه",
+      "panelLabelledBy": "featured-tab-special",
+      "panelLabelResolves": true,
+      "panelNameMatches": true,
+      "tabindexes": [
+        "-1",
+        "0"
+      ]
+    },
+    "travel": {
+      "distinctX": 31,
+      "peak": 1.25,
+      "clicked": {
+        "selected": "جدیدترین‌ها",
+        "labelledby": "featured-tab-newest",
+        "railItems": 6
+      }
+    }
+  },
+  "pageerrors@1280px": [],
+  "state@360px": {
+    "mech": {
+      "childTags": [
+        "span[-]",
+        "button[tab]",
+        "button[tab]"
+      ],
+      "markers": 1,
+      "tabs": 2,
+      "gradientFills": 0,
+      "layoutIds": 0,
+      "groupLabel": "فیلتر محصولات منتخب",
+      "ids": [
+        "featured-tab-newest",
+        "featured-tab-special"
+      ],
+      "tabindexes": [
+        "0",
+        "-1"
+      ],
+      "ariaSelected": [
+        "true",
+        "false"
+      ],
+      "ariaControls": [
+        "featured-panel",
+        "featured-panel"
+      ],
+      "stops": 1,
+      "panel": {
+        "exists": true,
+        "labelledby": "featured-tab-newest",
+        "resolves": true,
+        "labelMatchesSelectedTab": true
+      }
+    },
+    "rest": {
+      "inset": {
+        "start": 2.23,
+        "end": 2.13,
+        "top": 2,
+        "bottom": 2
+      },
+      "insideSlot": true,
+      "insideGroup": true,
+      "willChange": "auto",
+      "marker": {
+        "w": 97,
+        "h": 28
+      },
+      "slot": {
+        "w": 101.36,
+        "h": 32
+      }
+    },
+    "walk": [
+      {
+        "inTablist": true,
+        "text": "جدیدترین‌ها",
+        "tabindex": "0"
+      }
+    ],
+    "arrow": {
+      "before": "جدیدترین‌ها",
+      "focused": "جدیدترین‌ها"
+    },
+    "afterArrow": {
+      "after": "پیشنهاد ویژه",
+      "focusIsSelectedTab": true,
+      "focusText": "پیشنهاد ویژه",
+      "panelLabelledBy": "featured-tab-special",
+      "panelLabelResolves": true,
+      "panelNameMatches": true,
+      "tabindexes": [
+        "-1",
+        "0"
+      ]
+    },
+    "travel": {
+      "distinctX": 30,
+      "peak": 1.25,
+      "clicked": {
+        "selected": "جدیدترین‌ها",
+        "labelledby": "featured-tab-newest",
+        "railItems": 6
+      }
+    }
+  },
+  "pageerrors@360px": [],
+  "noJs": {
+    "text": "جدیدترین‌ها",
+    "background": "rgba(229, 211, 179, 0.16)",
+    "markerPainted": false
+  }
+}

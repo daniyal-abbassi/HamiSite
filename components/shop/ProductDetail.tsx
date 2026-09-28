@@ -16,6 +16,7 @@ import { compareAtOf, isPurchasable, unitPriceOf } from "@/lib/product-identity"
 import { cn, formatToman, toFaDigits } from "@/lib/utils";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
 import { ProductGallery } from "@/components/shop/ProductGallery";
+import { LiquidSelection } from "@/components/liquid/LiquidSelection";
 /*
  * The record is typed by the seam itself — `ReturnType<typeof serializeProduct>`.
  * This component used to be typed `apiGet<ProductDetail>` against `types/store.ts`,
@@ -305,18 +306,30 @@ export function ProductDetail({ product }: Props) {
               {optionGroups.map(([label, values]) => (
                 <div key={label}>
                   <p className="mb-2 font-mono text-xs text-muted-foreground/70">{label}</p>
-                  <div className="flex flex-wrap gap-2">
-                    {values.map((value) => (
-                      <Chip
-                        key={`${label}-${value}`}
-                        label={`${label}: ${value}`}
-                        active={selectedVariant?.options?.some((option) => option.label === label && option.value === value) ?? false}
-                        onClick={() => pickOption(label, value)}
-                      >
-                        {value}
-                      </Chip>
-                    ))}
-                  </div>
+                  {/*
+                    One marker per option group, not one per product: a product like
+                    347 carries three independent groups (دامنه/سرور/نوع), and each
+                    group asks its own one-of-N question. The shared component allows
+                    `value` to be null, so a group the current variant does not answer
+                    simply has no marker until it does.
+                  */}
+                  <LiquidSelection
+                    className="!gap-2"
+                    itemClassName="rounded-full border border-line bg-foreground/5 px-4 py-2 text-xs font-bold hover:border-aqua/40"
+                    value={selectedVariant?.options?.find((option) => option.label === label)?.value ?? null}
+                    announce="pressed"
+                    markerInset={4}
+                    onChange={(value) => pickOption(label, value)}
+                    items={values.map((value) => ({
+                      id: value,
+                      label: <span>{value}</span>,
+                      // `name`, not the visible text: the accessible name must stay
+                      // «دامنه: جیمیل» — group label plus value — byte-identical to
+                      // what the chip announced before the marker (SC-010). A bare
+                      // value would silently drop the group half of the name.
+                      name: `${label}: ${value}`,
+                    }))}
+                  />
                 </div>
               ))}
             </div>

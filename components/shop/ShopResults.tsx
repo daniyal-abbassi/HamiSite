@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { ChevronLeft, ChevronRight, LayoutGrid, List, PackageSearch, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { LiquidSelection } from "@/components/liquid/LiquidSelection";
 import { cn, toFaDigits } from "@/lib/utils";
 import { sortOptions } from "@/lib/content/shop";
 import { ProductCard } from "./ProductCard";
@@ -234,22 +235,30 @@ export function ShopResults({
               >
                 <ChevronRight className="size-4" />
               </button>
-              {pageWindow(page, totalPages).map((target) => (
-                <button
-                  key={target}
-                  type="button"
-                  onClick={() => goToPage(target)}
-                  aria-current={target === page ? "page" : undefined}
-                  className={cn(
-                    "grid size-11 place-items-center rounded-xl border text-xs font-bold transition-colors",
-                    target === page
-                      ? "border-aqua bg-aqua/15 text-aqua"
-                      : "border-line text-foreground/70 hover:border-aqua/50",
-                  )}
-                >
-                  {toFaDigits(target)}
-                </button>
-              ))}
+              {/*
+                The page numbers are the marker's group; the two chevrons stay outside it,
+                because they are not answers to "which page am I on" — they are the control
+                that moves the page, and a marker resting on a stepper would claim a
+                destination that does not exist.
+
+                `announce="page"` is load-bearing: these are buttons, so the component's
+                default would be `aria-pressed`, and today's markup says `aria-current="page"`.
+                The active number's aqua fill is dropped for the same reason the dock's
+                per-tab background was: the marker is the one indication (FR-040), and a
+                tinted button would paint over the body that is supposed to be seen.
+              */}
+              <LiquidSelection
+                className="!gap-1.5 !flex-nowrap !min-w-0"
+                itemClassName="grid size-11 place-items-center !rounded-xl border border-line text-xs font-bold hover:border-aqua/50"
+                value={String(page)}
+                announce="page"
+                markerInset={6}
+                onChange={(id) => goToPage(Number(id))}
+                items={pageWindow(page, totalPages).map((target) => ({
+                  id: String(target),
+                  label: toFaDigits(target),
+                }))}
+              />
               <button
                 type="button"
                 disabled={page >= totalPages}

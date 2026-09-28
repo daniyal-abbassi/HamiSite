@@ -1,13 +1,12 @@
 "use client";
 
-import { useRef, useState, type KeyboardEvent } from "react";
-import { motion } from "motion/react";
+import { useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { featuredTabs, type FeaturedTabKey } from "@/lib/content/home";
 import type { RailProduct } from "@/lib/home-rails";
-import { cn } from "@/lib/utils";
 import { Reveal } from "@/components/home/Reveal";
+import { LiquidSelection } from "@/components/liquid/LiquidSelection";
 import { type ProductCardData } from "@/components/shop/ProductCard";
 import { ProductRail } from "@/components/shop/ProductRail";
 
@@ -32,8 +31,6 @@ export function FeaturedProducts({ tabs }: { tabs: FeaturedRailTab[] }) {
   const active = tabs.find((t) => t.key === tab) ?? tabs[0];
   const products = active?.products ?? [];
 
-  const tabRefs = useRef<Array<HTMLButtonElement | null>>([]);
-
   /**
    * Arrow keys move the selection, and selection follows focus.
    *
@@ -45,6 +42,11 @@ export function FeaturedProducts({ tabs }: { tabs: FeaturedRailTab[] }) {
    * Selection moves with focus rather than waiting for Enter. The rails are already resolved on the
    * server, so there is no fetch to defer and no reason to make a keyboard user press twice for what a
    * pointer user gets in one click.
+   *
+   * Focus is taken by `getElementById` rather than a ref array: the tab elements are rendered by
+   * `LiquidSelection`, which keeps its own refs and exposes none, but the surface does hand it the
+   * `id` through `attrs` — so the handle is the same stable `featured-tab-<key>` the panel is labelled
+   * by, and nothing reaches into another component's DOM to find it.
    */
   const onTabListKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     const count = featuredTabs.length;
@@ -57,7 +59,7 @@ export function FeaturedProducts({ tabs }: { tabs: FeaturedRailTab[] }) {
       setTab(target.key);
       // Focus has to land on the tab that is now selected, or the roving tabindex and what the shopper
       // is pressing disagree and the next arrow acts on a different tab than the one highlighted.
-      tabRefs.current[next]?.focus();
+      document.getElementById(`featured-tab-${target.key}`)?.focus();
     };
     switch (event.key) {
       case "ArrowLeft":
@@ -112,46 +114,47 @@ export function FeaturedProducts({ tabs }: { tabs: FeaturedRailTab[] }) {
         <div className="tray-field">
           <div className="flex justify-center sm:justify-start pb-6">
             <div
-              className="inline-flex items-center gap-1.5 p-1 rounded-full border border-champagne/25 bg-ink shadow-card"
-              role="tablist"
-              aria-label="فیلتر محصولات منتخب"
+              className="inline-flex items-center p-1 rounded-full border border-champagne/25 bg-ink shadow-card"
+              /* The tablist role and its name moved onto the port's own group below;
+                 this wrapper only catches the arrow keys, which bubble up from the
+                 tab buttons wherever they are rendered. */
               onKeyDown={onTabListKeyDown}
             >
-              {featuredTabs.map((t, index) => {
-                const active = tab === t.key;
-                return (
-                  <button
-                    key={t.key}
-                    ref={(node) => {
-                      tabRefs.current[index] = node;
-                    }}
-                    type="button"
-                    role="tab"
-                    id={`featured-tab-${t.key}`}
-                    aria-selected={active}
+              {/*
+               * T030: the marker replaces the `layoutId="featured-tab-fill"` span that used to
+               * slide between these two buttons. That block is deleted rather than left beside
+               * the marker — two travelling indicators on one surface is the failure FR-040
+               * exists to prevent, and it is the same substitution T029 made in the header.
+               *
+               * The three attributes the port cannot infer come through `attrs`: the `id` the
+               * panel below is labelled by, the roving `tabIndex`, and `aria-controls`. The port
+               * spreads `attrs` BEFORE its own aria block, so this cannot reach `role` or
+               * `aria-selected` — those stay the port's decisions (FR-047).
+               */}
+              <LiquidSelection
+                items={featuredTabs.map((t) => ({
+                  id: t.key,
+                  label: t.label,
+                  attrs: {
+                    id: `featured-tab-${t.key}`,
                     // Roving tabindex: the tablist is one stop on the page, and where it lands is the
                     // selected tab. Two stops that both answer to Tab would make the pair a set of
                     // buttons wearing a tablist's clothes, which is what T095 was about.
-                    tabIndex={active ? 0 : -1}
-                    aria-controls={PANEL_ID}
-                    onClick={() => setTab(t.key)}
-                    className={cn(
-                      "relative rounded-full px-5 py-2 text-xs md:text-sm font-bold transition-colors duration-normal",
-                      active ? "text-[#110408]" : "text-foreground/70 hover:text-foreground",
-                    )}
-                  >
-                    {active && (
-                      <motion.span
-                        layoutId="featured-tab-fill"
-                        aria-hidden="true"
-                        className="absolute inset-0 rounded-full bg-gradient-to-r from-[#FFFDF9] via-[#E5D3B3] to-[#C5A059] shadow-[0_2px_12px_rgba(229,211,179,0.35)]"
-                        transition={{ type: "spring", stiffness: 420, damping: 26, mass: 0.7 }}
-                      />
-                    )}
-                    <span className="relative z-10">{t.label}</span>
-                  </button>
-                );
-              })}
+                    tabIndex: tab === t.key ? 0 : -1,
+                    "aria-controls": PANEL_ID,
+                  },
+                }))}
+                value={tab}
+                onChange={setTab}
+                groupRole="tablist"
+                itemRole="tab"
+                announce="selected"
+                label="فیلتر محصولات منتخب"
+                /* Inset 2, not 0: the old fill was `absolute inset-0`, and a body that fills a
+                   36px slot edge to edge is a block rather than the same object the bar uses. */
+                markerInset={2}
+                itemClassName="rounded-full px-5 py-2 text-xs md:text-sm font-bold"
+              />
             </div>
           </div>
 
