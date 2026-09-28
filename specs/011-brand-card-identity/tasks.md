@@ -240,7 +240,11 @@ cover the deck. The boxes are wrong in the direction that makes finished work lo
 known toolchain failure — only `/speckit-implement` writes checkboxes and this feature was built by dispatched
 workers. T041 is the reconciliation; the findings above it are real new work created by the reversal.
 
-- [ ] T035 Remove the visible maker name and product count from the deck card — `components/home/BrandRows.tsx:84-87` renders `card.label` in `.brand-deck__label` and `card.countLabel` in `.brand-deck__count`, both of which FR-006 now forbids; a card that shows text is the defect as of 2026-09-29 (contradicts) per FR-006, US2/AC1 (**CRITICAL**)
+- [x] ~~T035 Remove the visible maker name and product count from the deck card.~~ **WITHDRAWN by the owner on
+  2026-09-29: "keep the names on the cards."** The task existed only because my first amendment to FR-004 over-read
+  the ruling as forbidding all text; FR-006 withdrew the *description line*, which the card already does not render.
+  Nothing was changed in the code, and the deck's fit gate is untouched — which matters, because removing the label
+  element would have left that gate measuring zero samples and reporting PASS.
 - [ ] T036 Prove the maker's name survives the removal of its visible form: FR-004 requires an accessible name that is never rendered as text. Today the name reaches assistive technology through the card's `aria-label` (`BrandRows.tsx:108`, "خرید محصولات {label}") and the image is deliberately `alt=""` — so confirm the link's name still identifies the maker once `.brand-deck__label` is gone, and that the print path names the card too. If the card ever stops being a link, this becomes a real gap rather than a confirmation (missing) per FR-004, US2/AC3, US2/AC4 (**HIGH**)
 - [x] ~~T037 Re-capture the six artworks without painted text and without the «دیدن محصولات» button.~~
   **WITHDRAWN — the premise was false and the task is mine, not the owner's.** I wrote it from the conversation
@@ -249,11 +253,11 @@ workers. T041 is the reconciliation; the findings above it are real new work cre
   mark on black; Samsung is a phone, a stylus and the Samsung wordmark. **No caption, no «دیدن محصولات» button,
   nothing to recapture.** What the artwork does carry is the maker's own wordmark, which FR-016 explicitly
   permits. The only remaining work in this area is T035, the live text the page itself renders.
-- [ ] T038 Add the assertion SC-002 now demands — zero of six cards render a text string **in the page's own
-  markup** — to the deck's existing verification, and let it fail on the current build so the check is proven live
-  rather than written after the fact. It must read the card's DOM, not its image: the approved artwork carries the
-  maker's wordmark by design (FR-016), and an instrument that counts pixels would report five false failures.
-  (partial) per SC-002 (**MEDIUM**)
+- [ ] T038 Add the assertion SC-002 now demands — **zero of six cards render a description line, six of six render
+  the maker's name** — to the deck's existing verification, reading the card's markup rather than the image's
+  pixels. Both halves are believed true on the current build, so this one should go green immediately; write it
+  anyway, because that is the clause the next change is most likely to break silently. (partial) per SC-002,
+  FR-004 (**MEDIUM**)
 - [ ] T039 Re-run the SC-001 recognition test under its amended condition, name hidden only rather than name and wordmark. The narrowing is recorded in the spec; the number has not been measured since (partial) per SC-001, US2 (**MEDIUM**)
 - [ ] T040 Retire what the reversal makes dead, once T035 lands: `countLabel` construction in `lib/brand-deck.ts` and its `brandPurchasableCounts` feed into the deck only, so check whether the deck is its last consumer before deleting anything. `BrandMarks.tsx` is **not** orphaned — `BrandTicker.tsx` still uses it — so leave it alone (unrequested) per FR-006, blueprint honesty (**MEDIUM**)
 - [ ] T041 Walk the 34 open boxes with the code open and close the ones that shipped — T001–T013 are in the tree with 32 passing tests — writing the artefact or file:line that proves each one. Do not close a box on the strength of this paragraph (partial) per the toolchain gap recorded in `tools/dispatch/worker-ctl` (**MEDIUM**)

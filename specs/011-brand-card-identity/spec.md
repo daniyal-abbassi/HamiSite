@@ -50,6 +50,10 @@ fails in a different obvious way.
   a card is? → A: **The artwork alone.** The owner's ruling, in their words: "the brand's card is self
   explanatory and does not need a text." Amended FR-006, FR-004, FR-013, FR-015, FR-019, SC-002, SC-003 and
   User Story 2; FR-007 and FR-008 kept as conditional clauses so a line that ever returns is still disciplined.
+- Q: The card renders the maker's name and the product count as text today. Does your ruling remove those too?
+  → A: **"keep the names on the cards."** So FR-004 keeps the visible name and SC-002 is narrowed to the
+  description line alone. This supersedes the broader reading I first encoded, which had forbidden all text on a
+  card; no code was changed under that reading, and T035 is withdrawn.
 - Consequence the owner did not ask for and which is therefore recorded rather than assumed away: a picture with
   no name on it announces nothing to a screen reader and identifies nothing in print. FR-004 now requires the
   maker's name as an **accessible name that is never rendered as visible text**, which keeps the ruling exactly —
@@ -173,16 +177,15 @@ limit on the other two, not a separate deliverable.
   for which the research found no association at all — the treatment MUST NOT assign one. Its distinctiveness MUST
   come from a property that maker actually uses, and the two MUST still be distinguishable from each other, since
   both are the absence of a hue.
-- **FR-004** *(amended 2026-09-29 with FR-006; original below)*: Distinguishability MUST NOT depend on colour
-  alone. With no name printed on the card, the non-colour cue is the **artwork itself** — the depicted device and
-  the maker's own wordmark inside it — so two cards whose hues are close must still be told apart by what is
-  drawn on them. Because a picture cannot do this for a shopper who cannot see it, each card MUST also carry the
-  maker's name as an **accessible name that is not rendered as visible text** (image alternative plus link name).
-  That label is the card's identity for screen-reader, print and colour-blind paths, and it is not a caption: the
-  owner's ruling that the card carries no text stands.
-  > Original: "Each card keeps its maker name and mark visible, and a shopper with normal colour vision
-  > deficiency, and a shopper reading the page in print, get the same identification." The visible half is
-  > withdrawn by FR-006; the equal-identification half is not, and is now carried by the accessible name.
+- **FR-004** *(amended 2026-09-29, then narrowed the same day on the owner's second ruling)*: Distinguishability
+  MUST NOT depend on colour alone. **Each card keeps the maker's name visible** — the owner's answer to "keep the
+  name on the card or take it off?" was "keep the names on the cards" — and the name, not the hue, is what carries
+  identification for a colour-blind shopper, for a screen reader, and in print. What FR-006 withdrew from the card
+  is the **description line**, which is a different object: a sentence about the maker, not its name. The artwork
+  additionally reproduces the maker's wordmark, which FR-016 permits.
+  > An earlier amendment to this clause had removed the visible name entirely. That was an over-reading of the
+  > owner's "the card does not need a text", which was about the description line. Corrected the same day, before
+  > any code was touched.
 - **FR-005**: Where two makers' documented hues are close enough to be confused, the treatment MUST separate them
   by a documented property of each, not by an arbitrary adjustment.
 - **FR-006** *(amended 2026-09-29 on the owner's ruling; original below)*: A brand card carries **no description
@@ -280,13 +283,8 @@ limit on the other two, not a separate deliverable.
   > narrowed to the name alone, which is the thing the page can still hide. This is a real narrowing of the
   > measurement — a shopper recognising Apple from the drawn iPhone is weaker evidence than recognising Apple
   > from a logo alone — and it is recorded rather than smoothed over.
-- **SC-002** *(inverted 2026-09-29 with FR-006; wording tightened the same day, because as first written it
-  failed the owner's own approved artwork)*: **Zero of six** cards render a text string **that the page itself
-  puts there** — no caption, no name element, no product count — and **six of six** are still attributable to the
-  right maker by a shopper who is not using colour. A wordmark **inside** the artwork is not a violation and never
-  was: FR-016 permits the artwork to reproduce a product and the maker's wordmark, and five of the six approved
-  cards do exactly that. The check is therefore made against the card's rendered markup, not against the pixels of
-  the image.
+- **SC-002** *(inverted 2026-09-29 with FR-006)*: **Zero of six** cards carry a description line, and **six of
+  six** show the maker's name. The name is required by FR-004 and stays; the line is withdrawn.
   > Original: "Six of six cards carry a description line; zero cards are blank."
 - **SC-003** *(conditional 2026-09-29)*: **Zero** unsourced lines ship. While FR-006 holds this is satisfied by
   there being no lines at all, and the criterion is kept live so that any line reintroduced later is measured
