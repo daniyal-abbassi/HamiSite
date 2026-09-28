@@ -1,0 +1,536 @@
+[
+ {
+  "width": 360,
+  "height": 640,
+  "lenisActive": false,
+  "doc": {
+   "h": 12149,
+   "vh": 640
+  },
+  "states": {
+   "pill": 1,
+   "solid bar": 16
+  },
+  "headerNodes": [
+   {
+    "id": "h0",
+    "tag": "A",
+    "label": "حامی همراه — صفحه اصلی"
+   },
+   {
+    "id": "h8",
+    "tag": "INPUT",
+    "label": "جست‌وجوی محصول"
+   },
+   {
+    "id": "h9",
+    "tag": "A",
+    "label": "ورود به حساب"
+   },
+   {
+    "id": "h10",
+    "tag": "BUTTON",
+    "label": "سبد خرید"
+   }
+  ],
+  "headerWorst": [
+   [
+    "pill|h0",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h0"
+    }
+   ],
+   [
+    "pill|h8",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h8"
+    }
+   ],
+   [
+    "pill|h9",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h9"
+    }
+   ],
+   [
+    "pill|h10",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h10"
+    }
+   ],
+   [
+    "solid bar|h0",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 705,
+     "ground": "54,11,18",
+     "reachedGround": false,
+     "id": "h0"
+    }
+   ],
+   [
+    "solid bar|h8",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 705,
+     "ground": "54,11,18",
+     "reachedGround": false,
+     "id": "h8"
+    }
+   ],
+   [
+    "solid bar|h9",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 705,
+     "ground": "54,11,18",
+     "reachedGround": false,
+     "id": "h9"
+    }
+   ],
+   [
+    "solid bar|h10",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 705,
+     "ground": "54,11,18",
+     "reachedGround": false,
+     "id": "h10"
+    }
+   ]
+  ],
+  "headerFails": [],
+  "edgeSamples": 4,
+  "edgeUnreadable": 0,
+  "edgeMin": 8.55,
+  "edgeFails": [],
+  "worstEdge": [
+   {
+    "step": 2,
+    "y": 1425,
+    "stage": 1,
+    "frame": "bleed",
+    "inside": {
+     "r": 240,
+     "g": 159,
+     "b": 157
+    },
+    "above": {
+     "r": 50,
+     "g": 10,
+     "b": 18
+    },
+    "topEdge": 8.55,
+    "sideEdge": 17.91
+   },
+   {
+    "step": 3,
+    "y": 2144,
+    "stage": 0,
+    "frame": "bleed",
+    "inside": {
+     "r": 233,
+     "g": 228,
+     "b": 230
+    },
+    "above": {
+     "r": 45,
+     "g": 7,
+     "b": 18
+    },
+    "topEdge": 14.52,
+    "sideEdge": 14.57
+   },
+   {
+    "step": 3,
+    "y": 2144,
+    "stage": 1,
+    "frame": "bleed",
+    "inside": {
+     "r": 233,
+     "g": 228,
+     "b": 230
+    },
+    "above": {
+     "r": 45,
+     "g": 7,
+     "b": 18
+    },
+    "topEdge": 14.52,
+    "sideEdge": 14.57
+   },
+   {
+    "step": 2,
+    "y": 1425,
+    "stage": 0,
+    "frame": "bleed",
+    "inside": {
+     "r": 255,
+     "g": 255,
+     "b": 255
+    },
+    "above": {
+     "r": 50,
+     "g": 10,
+     "b": 18
+    },
+    "topEdge": 17.68,
+    "sideEdge": 17.91
+   }
+  ]
+ },
+ {
+  "width": 1280,
+  "height": 800,
+  "lenisActive": false,
+  "doc": {
+   "h": 12752,
+   "vh": 800
+  },
+  "states": {
+   "pill": 1,
+   "solid bar": 16
+  },
+  "headerNodes": [
+   {
+    "id": "h0",
+    "tag": "A",
+    "label": "حامی همراه — صفحه اصلی"
+   },
+   {
+    "id": "h3",
+    "tag": "SPAN",
+    "label": "خانه"
+   },
+   {
+    "id": "h5",
+    "tag": "SPAN",
+    "label": "فروشگاه"
+   },
+   {
+    "id": "h7",
+    "tag": "SPAN",
+    "label": "همکاری عمده"
+   },
+   {
+    "id": "h8",
+    "tag": "INPUT",
+    "label": "جست‌وجوی محصول"
+   },
+   {
+    "id": "h9",
+    "tag": "BUTTON",
+    "label": "سبد خرید"
+   },
+   {
+    "id": "h11",
+    "tag": "B",
+    "label": "۰۹۳۳ ۱۲۱ ۴۰۰۰"
+   },
+   {
+    "id": "h12",
+    "tag": "A",
+    "label": "شروع همکاری"
+   }
+  ],
+  "headerWorst": [
+   [
+    "pill|h0",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h0"
+    }
+   ],
+   [
+    "pill|h3",
+    {
+     "min": 13.96,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h3"
+    }
+   ],
+   [
+    "pill|h5",
+    {
+     "min": 7.86,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h5"
+    }
+   ],
+   [
+    "pill|h7",
+    {
+     "min": 7.86,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h7"
+    }
+   ],
+   [
+    "pill|h8",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h8"
+    }
+   ],
+   [
+    "pill|h9",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h9"
+    }
+   ],
+   [
+    "pill|h11",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h11"
+    }
+   ],
+   [
+    "pill|h12",
+    {
+     "min": 13.96,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h12"
+    }
+   ],
+   [
+    "solid bar|h0",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 733,
+     "ground": "54,11,18",
+     "reachedGround": false,
+     "id": "h0"
+    }
+   ],
+   [
+    "solid bar|h3",
+    {
+     "min": 13.96,
+     "need": 4.5,
+     "atY": 733,
+     "ground": "54,11,18",
+     "reachedGround": false,
+     "id": "h3"
+    }
+   ],
+   [
+    "solid bar|h5",
+    {
+     "min": 7.86,
+     "need": 4.5,
+     "atY": 733,
+     "ground": "54,11,18",
+     "reachedGround": false,
+     "id": "h5"
+    }
+   ],
+   [
+    "solid bar|h7",
+    {
+     "min": 7.86,
+     "need": 4.5,
+     "atY": 733,
+     "ground": "54,11,18",
+     "reachedGround": false,
+     "id": "h7"
+    }
+   ],
+   [
+    "solid bar|h8",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 733,
+     "ground": "54,11,18",
+     "reachedGround": false,
+     "id": "h8"
+    }
+   ],
+   [
+    "solid bar|h9",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 733,
+     "ground": "54,11,18",
+     "reachedGround": false,
+     "id": "h9"
+    }
+   ],
+   [
+    "solid bar|h11",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 733,
+     "ground": "54,11,18",
+     "reachedGround": false,
+     "id": "h11"
+    }
+   ],
+   [
+    "solid bar|h12",
+    {
+     "min": 13.96,
+     "need": 4.5,
+     "atY": 733,
+     "ground": "54,11,18",
+     "reachedGround": false,
+     "id": "h12"
+    }
+   ]
+  ],
+  "headerFails": [],
+  "edgeSamples": 8,
+  "edgeUnreadable": 0,
+  "edgeMin": 16.45,
+  "edgeFails": [],
+  "worstEdge": [
+   {
+    "step": 1,
+    "y": 733,
+    "stage": 0,
+    "frame": "bleed",
+    "inside": {
+     "r": 255,
+     "g": 255,
+     "b": 255
+    },
+    "above": {
+     "r": 52,
+     "g": 10,
+     "b": 17
+    },
+    "topEdge": 17.54,
+    "sideEdge": 16.45
+   },
+   {
+    "step": 1,
+    "y": 733,
+    "stage": 1,
+    "frame": "bleed",
+    "inside": {
+     "r": 252,
+     "g": 255,
+     "b": 254
+    },
+    "above": {
+     "r": 52,
+     "g": 10,
+     "b": 17
+    },
+    "topEdge": 17.43,
+    "sideEdge": 16.63
+   },
+   {
+    "step": 2,
+    "y": 1480,
+    "stage": 0,
+    "frame": "bleed",
+    "inside": {
+     "r": 255,
+     "g": 255,
+     "b": 255
+    },
+    "above": {
+     "r": 28,
+     "g": 4,
+     "b": 9
+    },
+    "topEdge": 19.61,
+    "sideEdge": 16.67
+   },
+   {
+    "step": 4,
+    "y": 2974,
+    "stage": 0,
+    "frame": "bleed",
+    "inside": {
+     "r": 255,
+     "g": 255,
+     "b": 255
+    },
+    "above": {
+     "r": 33,
+     "g": 4,
+     "b": 14
+    },
+    "topEdge": 19.29,
+    "sideEdge": 16.88
+   },
+   {
+    "step": 4,
+    "y": 2974,
+    "stage": 1,
+    "frame": "bleed",
+    "inside": {
+     "r": 255,
+     "g": 255,
+     "b": 255
+    },
+    "above": {
+     "r": 23,
+     "g": 3,
+     "b": 9
+    },
+    "topEdge": 19.94,
+    "sideEdge": 16.88
+   }
+  ]
+ }
+]

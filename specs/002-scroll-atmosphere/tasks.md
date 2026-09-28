@@ -290,28 +290,62 @@ transition — not merely at each stage's settled endpoints.
 **Independent Test**: spec.md US3 — step the scroll position in small increments across the whole page
 and measure text-on-ground contrast at each step, including over the fixed header.
 
-- [ ] T022 [P] [US3] Build the contrast sweep as a scripted Playwright harness under
+- [x] T022 [P] [US3] Build the contrast sweep as a scripted Playwright harness under
   `specs/002-scroll-atmosphere/tools/contrast-sweep.mjs`. It steps the scroll position across the whole
   document and, at each step, resolves the rendered ground colour behind a fixed set of representative
   nodes — product name, price, availability label, section heading, body copy, and a header label — and
   computes the ratio. The existing reference numbers to protect, all measured on this page: cream-on-wine
   marks 10.08:1, brand-ticker band 12.19:1, and 004's smallest text on its emphasised row at 5.66:1
-- [ ] T023 [US3] Run `specs/002-scroll-atmosphere/tools/contrast-sweep.mjs` and write the result to
-  `specs/002-scroll-atmosphere/notes/contrast.md`. SC-004: "Measured at every small increment of scroll position across the
-  whole page, no meaningful text falls below its legibility threshold at any intermediate point — **zero
-  failing measurements, not an average**." FR-015 and contract L1. A single failing step is a fail, and
-  the fix is to narrow the band in T010, not to move the sampling
-- [ ] T024 [US3] [P] The fixed header over every tone, in **each of its own appearance states** —
+  → Built 2026-09-28. Ten probe categories (the six the task names plus eyebrow, bare heading, bare
+  paragraph and footer text, which the first run found were the only text actually riding the moving
+  ground), walked at 61 steps at both 360×640 and 1280×800. Two instrument bugs were found and fixed
+  before the numbers were believed: the opaque-ancestor flag returned false for all 496 samples, so the
+  first report overstated what was covered, and the plain visibility filter dropped every header probe at
+  360px. `--base` and `--steps` are exposed for re-runs.
+- [x] T023 [US3] Run `specs/002-scroll-atmosphere/tools/contrast-sweep.mjs` and write the result to
+  `specs/002-scroll-atmosphere/notes/contrast.md`. SC-004: "Measured at every small increment of scroll
+  position across the whole page, no meaningful text falls below its legibility threshold at any
+  intermediate point — **zero failing measurements, not an average**." FR-015 and contract L1. A single
+  failing step is a fail, and the fix is to narrow the band in T010, not to move the sampling
+  → Run 2026-09-28, both viewports. **0 failing measurements of 496 samples.** Ground genuinely moving
+  through 23/31 distinct tones; every probe that could be reached sits directly on it; tightest point is
+  point body copy at 6.49:1 against the 4.5:1 AA floor. Raw per-node minima in
+  `notes/contrast-sweep.json`, the reading and the correction of the overstated first run in
+  `notes/contrast.md`. SC-004 is about *text* and L1 passes; the two surfaces L1 also names — the fixed
+  header in each of its own states and the product imagery edge — are not CSS-computable and are T024
+  and T025.
+- [x] T024 [US3] [P] The fixed header over every tone, in **each of its own appearance states** —
   `components/layout/Header.tsx:79-88` switches between a transparent island and a solid bordered bar once
   scrolled. FR-016, contract L2. Include the seam where the header overlaps the ground's mid-transition
   value
-- [ ] T025 [US3] [P] Product imagery keeps clear separation throughout — FR-017, contract L3. The
+  → Measured 2026-09-28 in `tools/surface-separation.mjs`, both viewports, 17 steps. **PASS** — worst
+  header probe 7.86:1 against a 4.5:1 floor, in every state the header can be seen in. The finding is
+  that L2 holds by construction: the bar carries an opaque `bg-[#0B0204]` and the island an opaque
+  `bg-[#14060A]` on its `nav`, so the moving ground never reaches header text at all. Two bounds on
+  what L2 can mean: the island state exists only while `scrollY <= 20`, so it is reachable over exactly
+  one tone; and the header hides itself on downward motion, so the walk arrives then nudges up 14px or
+  it never tests the bar. Numbers, the nudge's history, and the reasoning in `notes/legibility-and-harm.md`.
+- [x] T025 [US3] [P] Product imagery keeps clear separation throughout — FR-017, contract L3. The
   off-white `.bg-product-stage` plinth (`app/globals.css:251-254`) was measured at 1.04:1 against the page
   before it was corrected; the comment there says "If this ever goes back toward the ground, measure it
   before believing it looks fine." Do the measuring
-- [ ] T026 [US3] [P] Add a forced-colors / high-contrast block to the atmosphere rules in
+  → Measured 2026-09-28 by reading **rendered pixels**, not CSS. `.bg-product-stage` — the plinth this
+  task names — no longer exists anywhere in the markup; the separation that is actually in question is
+  the card frame against the ground, and `frame-bleed` puts the *photograph's own white* at the card's
+  top corners, which compositing CSS cannot see. Worst edge: **8.55:1 at 360, 16.45:1 at 1280** against
+  a 3.0:1 floor (WCAG 2.2 SC 1.4.11, the bar for an edge a shopper must see). The instrument had to be
+  fixed twice before this was believable: clipped cards in the horizontal rail were reporting rects
+  over pixels they do not own (a fake 1.01:1 "dissolve"), and `deviceScaleFactor` is ignored for
+  screenshots in this Playwright build, so ×2 sampling read outside the canvas and returned black.
+- [x] T026 [US3] [P] Add a forced-colors / high-contrast block to the atmosphere rules in
   `app/globals.css`: legibility preserved or improved, never
   compromised — FR-023, contract L4. Under forced colours the layer should simply not paint
+  → **PASS 2026-09-28, and the file named here is stale** — the atmosphere rules live in
+  `components/atmosphere/page-ground.css`, which already carried
+  `@media (forced-colors: active) { .hami-page-ground { display: none } }`. Measured, not assumed:
+  under emulated `forced-colors: active` the computed display is `none`, and the content hash is
+  **identical** to baseline (1700 AX nodes / 1078 named, same in both). Document height moves +4px,
+  unexplained and immaterial to content identity. `notes/legibility-and-harm.md`.
 - [ ] T027 [US3] A section shorter than the viewport still resolves to a coherent tone rather than an
   unintended intermediate — US3 scenario 4. This is where D4's rejection of "fixed fractions of document
   height" is either vindicated or exposed
@@ -332,29 +366,65 @@ only, and on a deliberately throttled device; the page stays complete and calm i
   animated travel. FR-020, contract A1. Follow the pattern already in `app/globals.css:596-624` — the
   page-wide floor plus per-rule overrides — and note the recorded gotcha there that `:nth-child`-declared
   animations must be matched by the same selector or the override loses on specificity
-- [ ] T029 [US4] [BROWSER] Prove the reduced-motion page is content-identical, writing
+  → **Implemented; the browser leg of the task is what is missing.** `reducedMotionTone(progress,
+  boundaries)` is exported from `lib/atmosphere/progression.ts` and `useAtmosphereGround.ts` swaps it in
+  through `matchMedia("(prefers-reduced-motion: reduce)")`, so the same loop runs with a step function
+  rather than an interpolation. Unit-tested in the node harness. What has not been done is A1's second
+  half — "a page that is not faster or slower to reach" — and T029's content diff. Note also that the
+  `globals.css:596-624` pattern this task points at was band 3's decoration block; the ground layer is a
+  single element with no `:nth-child` animation, so the specificity gotcha does not bite here.
+- [x] T029 [US4] [BROWSER] Prove the reduced-motion page is content-identical, writing
   `specs/002-scroll-atmosphere/notes/reduced-motion.md`: DOM diff against the
   animated page — same sections, products, prices, links, reading order — SC-008, FR-021, contract A2.
   feature 004 did this by snapshotting all six rows' ordinals, labels, mark markup, hrefs and story text
   and comparing the two runs; reuse that method
-- [ ] T030 [US4] [BROWSER] Confirm the effect is silent to assistive technology in
+  → **PASS 2026-09-28.** Content hash `bf7368911d7294d2` is the same for baseline and reduced motion —
+  9 sections, 17 product cards, 65 links, 75 prose nodes, all headings and all interactive controls in
+  reading order. Two identical baseline runs hash identically, so the comparison has a measured noise
+  floor of zero and a difference would have been printed as the actual diff. One trap worth keeping:
+  the first run "failed" because `FlipWords` settles on a different word under reduced motion, which is
+  its documented behaviour, not lost content — the animated word is now normalised and the *candidate
+  set* is compared instead. `tools/content-identity.mjs`, `notes/legibility-and-harm.md`.
+- [x] T030 [US4] [BROWSER] Confirm the effect is silent to assistive technology in
   `components/atmosphere/PageGround.tsx`: no node for the ground
   in the accessibility tree, no announcements, no focus movement, no change to reading order or document
   structure — FR-022, contract A3
+  → **PASS 2026-09-28, proved off the tree rather than off the attribute.** `page.accessibility` is gone
+  from this Playwright build, so `content-identity.mjs` reads `Accessibility.getFullAXTree` over CDP:
+  1700 nodes / 1078 named with the layer present, **the same 1700 / 1078 with it deleted**, and no tree
+  node maps to the element at all. The element itself: `aria-hidden="true"`, no text, not focusable, no
+  role, and it is not the first child of `main`. No announcement, no focus movement, no reading-order
+  change is possible from a node that is not in the tree.
 - [ ] T031 [US4] [BROWSER] Hidden-document behaviour in `components/atmosphere/useScrollProgress.ts`:
   background the tab, confirm no work runs, return
   and confirm the tone is already correct with no catch-up animation — FR-025, contract A5, US4
   scenario 5
+  → **MECHANISM PROVEN, LEFT OPEN ON PURPOSE.** Two corrections to the task text: the file is
+  `useAtmosphereGround.ts` now, and headless Chromium here has no tab occlusion, so "background the
+  tab" cannot be scripted — `bringToFront()` on a second tab leaves the first at
+  `visibilityState: "visible"`, `Emulation.setVisibilityStateOverride` does not exist, and
+  `Page.setWebLifecycleState: frozen` is accepted then ignored. What `tools/hidden-document.mjs` does
+  prove: **0 colour writes in 6 idle seconds**, which is the property A5 actually depends on (an
+  effect polled on a timer would keep running hidden; this one is driven only by events a hidden
+  document stops receiving), plus injecting an impossible colour and dispatching the real
+  `visibilitychange` brings back `rgb(18,15,30)` — the same value the page shows when it scrolls
+  there — and the computed transition is `all 0s`, so "correct" is not "converging". The unobserved
+  half is the browser suspending rAF. **Not closed because one leg is assumed rather than seen**;
+  close it by hand with a real tab switch, or `--headed`.
 - [ ] T032 [US4] Implement and verify the low-capability fallback in `lib/atmosphere/progression.ts`:
   a device that cannot sustain the effect sheds it rather
   than losing responsiveness, and **falls back to a deliberately chosen tone, never an unstyled
   default** — FR-024, contract A4, US4 scenario 4. Verify under heavy CPU throttling, and record the
   `FallbackGround` value in the progression module so it is an intentional choice
-- [ ] T033 [US4] [BROWSER] **The clause that outranks the others.** Hide `components/atmosphere/PageGround.tsx`
+- [x] T033 [US4] [BROWSER] **The clause that outranks the others.** Hide `components/atmosphere/PageGround.tsx`
   entirely and walk the
   page: no information, state, price, availability or navigation may be lost. Contract G1 — "The ground
   is never load-bearing … If the effect were removed entirely, the page would remain complete and
   honest." This is the test that keeps Constitution I intact for a feature whose entire subject is colour
+  → **PASS 2026-09-28.** `.hami-page-ground` forced to `display: none` and the whole document walked:
+  content hash unchanged from baseline (`bf7368911d7294d2`) across sections, product names, prices,
+  availability text, hrefs, all links, all headings and every visible prose string in reading order.
+  The ground carries no information, which is the clause that outranks the rest of this feature.
 - [ ] T034 [US4] [BROWSER] Write `specs/002-scroll-atmosphere/tools/soak.mjs` — fifteen minutes of
   scripted continuous up-and-down scrolling — then
   re-run T015's sweep and diff it against the first pass. SC-010, contract A6. The data-model's claim is
