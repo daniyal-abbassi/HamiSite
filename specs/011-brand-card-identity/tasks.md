@@ -224,3 +224,27 @@ the owner did not ask.
   wanting to state something not in that file, the file wins.
 - Commit after each phase checkpoint, staging explicit paths, and re-read `git status --short` first — a dirty
   file you did not touch belongs to another agent.
+
+---
+
+## Phase 7: Convergence
+
+**Appended 2026-09-29 by `/speckit-converge`, immediately after the `/speckit-clarify` session that
+withdrew the description line.** The ruling is the owner's: *"the brand's card is self explanatory and does not
+need a text."* FR-006, FR-004, FR-013, FR-015, FR-019, SC-001, SC-002, SC-003 and User Story 2 were amended in
+`spec.md`; nothing below re-litigates that decision. What is below is the gap between the amended spec and the
+code that shipped under the old one.
+
+**The headline:** `tasks.md` read **0 of 34** when this pass started, yet T001–T013 landed and 32 unit tests
+cover the deck. The boxes are wrong in the direction that makes finished work look unfinished, which is the
+known toolchain failure — only `/speckit-implement` writes checkboxes and this feature was built by dispatched
+workers. T041 is the reconciliation; the findings above it are real new work created by the reversal.
+
+- [ ] T035 Remove the visible maker name and product count from the deck card — `components/home/BrandRows.tsx:84-87` renders `card.label` in `.brand-deck__label` and `card.countLabel` in `.brand-deck__count`, both of which FR-006 now forbids; a card that shows text is the defect as of 2026-09-29 (contradicts) per FR-006, US2/AC1 (**CRITICAL**)
+- [ ] T036 Prove the maker's name survives the removal of its visible form: FR-004 requires an accessible name that is never rendered as text. Today the name reaches assistive technology through the card's `aria-label` (`BrandRows.tsx:108`, "خرید محصولات {label}") and the image is deliberately `alt=""` — so confirm the link's name still identifies the maker once `.brand-deck__label` is gone, and that the print path names the card too. If the card ever stops being a link, this becomes a real gap rather than a confirmation (missing) per FR-004, US2/AC3, US2/AC4 (**HIGH**)
+- [ ] T037 Re-capture the six artworks without painted text and without the «دیدن محصولات» button, then replace `public/images/brands/{apple,samsung,xiaomi,nokia,Realme,tcl}C.webp`. The owner is producing these; until they land, every card carries text inside the image and fails FR-006 a second way that no code change can fix (missing) per FR-006, FR-016 (**HIGH**)
+- [ ] T038 Add the assertion SC-002 now demands — zero of six cards render a visible text string — to the deck's existing verification, and let it fail on the current build so the check is proven live rather than written after the fact (partial) per SC-002 (**MEDIUM**)
+- [ ] T039 Re-run the SC-001 recognition test under its amended condition, name hidden only rather than name and wordmark. The narrowing is recorded in the spec; the number has not been measured since (partial) per SC-001, US2 (**MEDIUM**)
+- [ ] T040 Retire what the reversal makes dead, once T035 lands: `countLabel` construction in `lib/brand-deck.ts` and its `brandPurchasableCounts` feed into the deck only, so check whether the deck is its last consumer before deleting anything. `BrandMarks.tsx` is **not** orphaned — `BrandTicker.tsx` still uses it — so leave it alone (unrequested) per FR-006, blueprint honesty (**MEDIUM**)
+- [ ] T041 Walk the 34 open boxes with the code open and close the ones that shipped — T001–T013 are in the tree with 32 passing tests — writing the artefact or file:line that proves each one. Do not close a box on the strength of this paragraph (partial) per the toolchain gap recorded in `tools/dispatch/worker-ctl` (**MEDIUM**)
+- [ ] T042 FR-011's seventh-maker claim has never been exercised: add a seventh entry to the identity data in a scratch run and show the deck absorbs it without a redesign, or narrow FR-011 to what has been demonstrated (missing) per FR-011 (**LOW**)
