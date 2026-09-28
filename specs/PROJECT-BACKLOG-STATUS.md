@@ -1,6 +1,8 @@
 # What is left — full audit
 
-**Audited**: 2026-09-28 04:50 +0330 · **HEAD**: `f2c15f0` · supersedes nothing; read with `PROJECT-BACKLOG.md`
+**Audited**: 2026-09-28 06:34 +0330 · **HEAD**: `9fd3224` · supersedes nothing; read with `PROJECT-BACKLOG.md`
+Re-audited the same evening as the first pass. R1 has moved, R3 is nearly closed, and one new item (R0) was
+found by driving the owner's real browser through the Qoder Chrome extension.
 
 The backlog-execution plan (`docs/superpowers/plans/2026-09-28-project-backlog-execution.md`) had six tasks.
 **Two landed, four never started.** All six are now accounted for below.
@@ -9,25 +11,37 @@ The backlog-execution plan (`docs/superpowers/plans/2026-09-28-project-backlog-e
 |---|---|---|
 | 1 — header props | **DONE, and was already done** | `Header.tsx` passes none of the four obsolete props; typecheck clean |
 | 2 — digits + error fix | **DONE, better than planned** | digits applied at the display layer, not in the frozen `app/api/` route as the plan said. Committed as `2b85ed1` |
-| 3 — verify feature 012 | **IN PROGRESS here** | 6 of 7 surfaces wired; verification not yet run |
+| 3 — verify feature 012 | **IN PROGRESS here** | all **7 of 7** surfaces now wired (featured tabs landed last); verification still not run — 16 of 46 boxes closed |
 | 4 — converge feature 007 | **NOT STARTED** | zero `Phase: Convergence` sections in `specs/007-motion-assembly-band/tasks.md` |
 | 5 — reconcile feature 011 | **NOT STARTED** | `FR-006` still reads "All six cards MUST carry one description line each. A card with no line is a defect, not a variant" — and the cards carry none |
 | 6 — feature 001 slices | **NOT STARTED** | `app/(main)/page.tsx` and `app/(main)/shop/page.tsx` are untouched; the only dirty file there is `ShopResults.tsx`, and that is 012's marker work, not entrance motion |
 
 ## Remaining work, ordered
 
+### R0 — The gates ran in a browser that is not yours (NEW, and it touches everything below)
+
+The owner's Chrome loads `lenis` — the eased scroller (`components/atmosphere/ScrollSmooth.tsx`). The
+headless Chromium every gate in this repo uses **never requests it**: zero lenis network entries, even though
+`(pointer: fine)` matches, `(any-pointer: coarse)` does not, and `prefers-reduced-motion` is off. So the
+scrolling the owner feels is switched off in the environment that produced today's numbers.
+
+Two of the three things that depend on it: `measure-deck.mjs` and `surface-separation.mjs` both settle by
+polling the real scroll position rather than trusting a fixed wait, so their readings survive an eased
+scroller — but that is an argument, not a measurement. **Re-run both with lenis actually loaded, or with the
+gate's own detection proven, before quoting their numbers as evidence about the owner's machine.**
+
 ### R1 — Finish and verify feature 012 (in flight)
 
-Wired: bottom bar, desktop menu, category tiles, pagination, image views, variant chips. **Not wired: the
-featured tabs** — the only true tab list on the site, and the one surface that needed a capability the shared
-component did not have. That gap is now fixed (`f2c15f0`), so it is unblocked.
+Wired: bottom bar, desktop menu, category tiles, pagination, image views, variant chips **and the featured
+tabs** — the last one was the only true tab list on the site and needed a per-item attribute passthrough the
+shared component did not have (`f2c15f0`).
 
 Still owed before 012 can be called done:
 
 | gate | why it is not free |
 |---|---|
 | verify all seven surfaces in a browser | trusted clicks + in-page rAF sampling only; a programmatic click is ignored by Next's Link |
-| re-run 008's deck fit gate | the dock's height feeds the stacking cards' budget as a constant |
+| ~~re-run 008's deck fit gate~~ | **DONE 05:52** — exit 0 at 360×640: C1 6/6 in order, C2 0 bad of 21, FR-008 2.36 screens, D2 116px vs 460px, C8 static, C9 all three arrivals. The dock did not move the deck. Two earlier runs failed on contention, not on the deck. |
 | no-JS, reduced-motion, keyboard at each surface | FR-020/021/023 |
 | **the wrapped group** | `flex-wrap` landed after the render gate ran and the probe page was retired — the `corner` trip has never been measured |
 | **pagination distance** | `MAX_TRAVEL_PX = 320` rests on bottom-bar arithmetic; nobody has counted the shop's real pages |
@@ -64,10 +78,28 @@ shielded. The atmosphere works in the margins, eyebrows and footer. That makes t
 surface far smaller than its wording implies — and it means the sweep must not be quoted as evidence about
 the product grid.
 
-**Left**: T024 header over every tone in both of its appearance states · T025 product-image separation
-against the plinth · T026 forced-colours block · T027 sections shorter than the viewport · T028 the
-discrete reduced-motion mapping · T029 prove reduced motion is content-identical · T030 prove the layer is
-silent to assistive technology · T031 hidden-document behaviour.
+**Done since (`9fd3224`)** — three new instruments, results in `notes/legibility-and-harm.md`:
+
+- **T024** header over every tone in both states: PASS, worst 7.86:1 against 4.5:1. It holds by construction —
+  both header states paint an opaque surface, so the ground never reaches header text. The island state only
+  exists above scrollY 20, so it is reachable over exactly one tone.
+- **T025** product imagery separation: PASS by **rendered pixels**, 8.55:1 at 360 and 16.45:1 at 1280 against
+  a 3:1 floor (SC 1.4.11). `.bg-product-stage`, the plinth the task names, is dead CSS with no users left.
+- **T026** forced colours: PASS — the block already existed in `page-ground.css`, and under emulation the layer
+  computes `display: none` with the content hash unchanged.
+- **T029** reduced motion content-identical: PASS — one hash across baseline, reduced, forced colours and a
+  deleted layer, with a measured noise floor of zero.
+- **T030** silent to assistive technology: PASS — read off `Accessibility.getFullAXTree` over CDP (1700 nodes
+  either way, no node for the layer), because `page.accessibility` is gone from this Playwright build.
+- **T033** the ground is never load-bearing: PASS — deleting it changes nothing.
+- **T028** the discrete reduced-motion mapping was already implemented (`reducedMotionTone`) and unit-tested;
+  its A1 half is measured below.
+
+**Still left**: **T031** hidden-document behaviour — mechanism proven (zero colour writes in six idle seconds,
+correct colour on the real `visibilitychange`, transition `all 0s`), but headless Chromium here has no tab
+occlusion at all, so the browser's own half is assumed rather than seen. Deliberately unchecked. · **T027**
+sections shorter than the viewport · **T032** the low-capability fallback and its chosen tone · **T034** the
+fifteen-minute soak · **T035–T041** polish, including the human panel T040.
 
 ### R4 — Feature 007: find out what is actually left
 
