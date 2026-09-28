@@ -67,6 +67,16 @@ export type LiquidSelectionItem<Id extends string = string> = {
    */
   marked?: boolean;
   disabled?: boolean;
+  /**
+   * Inert attributes a surface needs on the element it does not render — the featured
+   * tabs' `id`, their roving `tabIndex` and `aria-controls`. Spread BEFORE the port's
+   * own aria block, not after it: a surface may carry these, but it must not be able to
+   * reach `role` or `aria-selected`, which are the port's decisions and the reason
+   * FR-047's "nothing changes what a surface announces" holds. (The pending-patch note
+   * asked for a trailing spread; that would let a consumer overwrite the selected state
+   * and call it configuration.)
+   */
+  attrs?: Record<string, string | number | boolean>;
 };
 
 /** Which attribute carries "this is the current one", per surface (FR-047). */
@@ -515,6 +525,7 @@ export function LiquidSelection<Id extends string>({
               data-ls-item={item.id}
               data-ls-marked={markerEligible}
               ref={setItemRef(item.id)}
+              {...item.attrs}
               {...aria}
             >
               {item.label}
@@ -531,6 +542,7 @@ export function LiquidSelection<Id extends string>({
               data-ls-item={item.id}
               data-ls-marked={markerEligible}
               ref={setItemRef(item.id)}
+              {...item.attrs}
               {...aria}
             >
               {item.label}
@@ -548,6 +560,7 @@ export function LiquidSelection<Id extends string>({
             ref={setItemRef(item.id)}
             disabled={item.disabled}
             onClick={onChange ? () => onChange(item.id) : undefined}
+            {...item.attrs}
             {...aria}
           >
             {item.label}
