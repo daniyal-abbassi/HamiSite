@@ -1,98 +1,29 @@
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowDown, ArrowUpLeft, Phone, ShieldCheck } from "lucide-react";
 import { categoryLinks } from "@/lib/content/home";
 import { storeWarranty } from "@/lib/content/verified-facts";
-
-/** Decorative blob from the reference shapes, rendered via CSS (no <img>). */
-function BlobDecor() {
-  return (
-    <span
-      aria-hidden="true"
-      className="pointer-events-none absolute -start-16 -top-16 size-56 opacity-30"
-      style={{
-        backgroundImage: "url(/images/shapes/blob.svg)",
-        backgroundSize: "contain",
-        backgroundRepeat: "no-repeat",
-      }}
-    />
-  );
-}
-
-const sideBanners = [
-  {
-    src: "/images/banners/headphone.png",
-    eyebrow: "SHOP / ۰۳",
-    title: "صوت، با جزئیات دقیق",
-    href: categoryLinks.audio,
-  },
-] as const;
+import { storeContact } from "@/lib/content/contact";
 
 export function ShopBanner() {
   return (
-    <section className="container pt-10" aria-label="بنرهای فروشگاه">
-      <div className="grid gap-4 lg:grid-cols-[1.7fr_1fr]">
-        {/* Main banner */}
-        <div className="relative flex flex-col justify-between overflow-hidden rounded-xl glass p-5 shadow-card md:flex-row md:items-center md:gap-6 md:p-8">
-          <BlobDecor />
-          <div className="relative max-w-sm">
-            <div className="section-label">
-              <span>۰۰۱</span>
-              <i />
-              <p>گوشی‌های پرچمدار</p>
-            </div>
-            <h2 className="mt-4 text-xl font-black leading-9 md:text-2xl">
-              پرچمداران جدید،
-              <em className="block font-black not-italic text-aqua">با خیالِ راحت.</em>
-            </h2>
-            <p className="mt-3 text-xs leading-6 text-foreground/60">
-              {storeWarranty.label}، همراه با راهنمایی پیش از خرید.
-            </p>
-            <Link
-              href={categoryLinks.mobile}
-              className="mt-5 inline-flex items-center gap-2 rounded-xl bg-primary px-5 py-2.5 text-xs font-bold text-primary-foreground transition-opacity hover:opacity-90"
-            >
-              مشاهده موبایل‌ها <ArrowLeft className="size-4" />
-            </Link>
+    <section className="shop-editorial-hero" aria-labelledby="shop-title">
+      <div className="shop-wrap">
+        <nav className="shop-breadcrumb" aria-label="مسیر صفحه"><Link href="/">حامی همراه</Link><span aria-hidden="true">/</span><span aria-current="page">فروشگاه</span></nav>
+        <div className="shop-hero-grid">
+          <div className="shop-hero-copy">
+            <p className="shop-kicker"><span aria-hidden="true" />موبایل و زندگی دیجیتال</p>
+            <h1 id="shop-title">انتخاب شما،<br /><span>همراهِ هر روز.</span></h1>
+            <p className="shop-hero-intro">از گوشی بعدی‌تان تا جزئیاتی که روزتان را بهتر می‌کنند؛ محصولات را ببینید و با حامی همراه انتخاب کنید.</p>
+            <a href="#shop-catalog" className="shop-hero-link">کاوش در محصولات<ArrowDown size={18} aria-hidden="true" /></a>
           </div>
-          <div className="relative mt-4 h-32 md:mt-0 md:h-56 md:w-56 lg:w-64">
-            <Image
-              src="/images/banners/iphone.png"
-              alt=""
-              width={520}
-              height={520}
-              sizes="(max-width: 768px) 60vw, (max-width: 1024px) 224px, 256px"
-              className="size-full object-contain"
-            />
-          </div>
+          <Link href={categoryLinks.mobile} className="shop-hero-vitrine" aria-label="دیدن مجموعه گوشی‌های موبایل">
+            <div className="shop-vitrine-cap"><span>در ویترین حامی همراه</span><ArrowUpLeft size={23} aria-hidden="true" /></div>
+            <Image src="/images/banners/iphone.png" alt="" width={500} height={500} priority sizes="(max-width: 767px) 150px, 440px" className="shop-vitrine-image" />
+            <div className="shop-vitrine-caption"><span>یک انتخاب شخصی.</span><span>مجموعهٔ موبایل<ArrowUpLeft size={16} aria-hidden="true" /></span></div>
+          </Link>
         </div>
-
-        {/* Side banners — hidden below md.
-            This whole banner block measured 794px on a 390px screen, sitting
-            between the shopper and the first product on a page whose entire job
-            is browsing products. These two are secondary merchandising and the
-            main banner above already carries the same message; on a phone they
-            are the first thing to go. */}
-        <div className="hidden gap-4 md:grid">
-          {sideBanners.map((banner) => (
-            <Link
-              key={banner.href}
-              href={banner.href}
-              className="group relative flex items-center gap-4 overflow-hidden rounded-xl glass p-5 shadow-card transition-colors hover:border-aqua/50"
-            >
-              <div className="relative h-24 w-24 shrink-0">
-                <Image src={banner.src} alt="" width={240} height={240} sizes="96px" className="size-full object-contain" />
-              </div>
-              <div>
-                <span className="font-mono text-xs tracking-[0.1em] text-aqua/80">{banner.eyebrow}</span>
-                <h3 className="mt-1.5 text-sm font-extrabold leading-6">{banner.title}</h3>
-                <span className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-aqua">
-                  مشاهده <ArrowLeft className="size-3.5 transition-transform group-hover:-translate-x-0.5" />
-                </span>
-              </div>
-            </Link>
-          ))}
-        </div>
+        <div className="shop-trust-line"><span><ShieldCheck size={17} strokeWidth={1.4} aria-hidden="true" />{storeWarranty.label}</span><span className="shop-trust-store">فروش آنلاین و حضوری در مشهد</span><a href={storeContact.phoneHref}>برای انتخاب، گفتگو کنیم<Phone size={15} aria-hidden="true" /></a></div>
       </div>
     </section>
   );

@@ -5,7 +5,7 @@ import { ShopClient } from "@/components/shop/ShopClient";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
 import { buildShopView } from "@/lib/shop-query";
 import { shopCategoryTiles } from "@/lib/shop-category-tiles";
-import { PageHeader } from "@/components/layout/PageHeader";
+import "@/components/shop/shop-luxury.css";
 
 export const metadata: Metadata = {
 /* The template in app/layout.tsx appends the brand: «فروشگاه | حامی همراه». */
@@ -34,18 +34,18 @@ export default async function ShopPage({
   const view = buildShopView(await searchParams);
 
   return (
-    <>
+    <div className="shop-luxury">
       <ShopBanner />
-      <div className="container py-10">
-        <PageHeader page="shop" eyebrow="فروشگاه حامی همراه" title="همه محصولات،" accent="یک‌جا.">
-          <DataCurrencyNote className="mt-3 text-xs" />
-        </PageHeader>
-        {/* Kept for the client children that still read useSearchParams; the
-            results themselves no longer wait on it. */}
-        <Suspense fallback={null}>
-          <ShopClient view={view} tiles={shopCategoryTiles()} />
-        </Suspense>
-      </div>
-    </>
+      <section id="shop-catalog" className="shop-catalog" data-ground="paper" aria-label="محصولات فروشگاه">
+        <div className="shop-wrap">
+          {/* Kept for the client children that still read useSearchParams; the
+              results themselves no longer wait on it. */}
+          <DataCurrencyNote className="shop-currency-note" />
+          <Suspense fallback={null}>
+            <ShopClient view={view} tiles={shopCategoryTiles()} />
+          </Suspense>
+        </div>
+      </section>
+    </div>
   );
 }

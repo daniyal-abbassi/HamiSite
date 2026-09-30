@@ -21,14 +21,16 @@ export function ShopClient({ view, tiles }: { view: ShopView; tiles: ShopTile[] 
   const categorySlug = searchParams.get("category");
 
   return (
-    <div>
+    <div className="shop-client">
       <CategoryTiles activeSlug={categorySlug} tiles={tiles} />
 
       {/* FilterSheet renders the sidebar inline from lg and as a bottom sheet
           below it, so the results are the first thing a phone sees. */}
-      <div className="mt-8 flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
+      <div className="shop-catalog-heading"><div><p className="shop-kicker">ویترین حامی همراه</p><h2>برای انتخاب بعدی شما.</h2></div><p>جست‌وجو کنید، مقایسه کنید، انتخاب کنید.</p></div>
+      <div className="shop-browse-layout mt-8 flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
         <FilterSheet categoryFacets={view.categoryFacets} brands={view.brands} />
         <ShopResults
+          cardVariant="oxblood"
           products={view.products}
           meta={view.meta}
           activeSort={view.activeSort}

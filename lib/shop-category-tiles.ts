@@ -17,13 +17,14 @@ import { categoryDepartments } from "@/lib/category-departments";
  * something else — the rule feature 005 established for its panels, now shared with the
  * shop page rather than reinvented beside it.
  */
-export type ShopTile = { slug: string; label: string; href: string; countLabel: string | null };
+export type ShopTile = { slug: string; label: string; href: string; image?: string; countLabel: string | null };
 
 export function shopCategoryTiles(limit = 6): ShopTile[] {
   return categoryDepartments().slice(0, limit).map((department) => ({
     slug: department.slug,
     label: department.label,
     href: department.href,
+    image: department.image,
     countLabel: department.showsCount ? `${department.reachableCount.toLocaleString("fa-IR")} محصول` : null,
   }));
 }

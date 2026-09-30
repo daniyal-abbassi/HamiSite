@@ -81,14 +81,14 @@ export function FilterSheet({
   return (
     <>
       {/* Desktop: unchanged — the sidebar sits in the row as before. */}
-      <div className="hidden lg:block lg:w-72 lg:shrink-0">
+      <div className="shop-desktop-filters hidden lg:block lg:w-72 lg:shrink-0">
         <FilterSidebar categoryFacets={categoryFacets} brands={brands} />
       </div>
 
       {/* Mobile trigger. Sticky so it stays reachable however far the shopper
           has scrolled into the results — a filter control at the top of a long
           list is a filter control nobody uses. */}
-      <div className="sticky top-[5.5rem] z-30 -mx-1 mb-2 flex justify-start px-1 lg:hidden">
+      <div className="shop-mobile-filter-trigger sticky top-[5.5rem] z-30 -mx-1 mb-2 flex justify-start px-1 lg:hidden">
         <button
           ref={triggerRef}
           type="button"
@@ -126,7 +126,7 @@ export function FilterSheet({
                into the dialog, not a control anyone tabs to — painting the
                focus ring around a 743px panel is noise, not an affordance. The
                controls inside keep their rings, which is where the rule bites. */
-            className="absolute inset-x-0 bottom-0 flex max-h-[88vh] flex-col rounded-t-3xl border-t border-line bg-ink-2 shadow-deep outline-none"
+            className="shop-filter-panel absolute inset-x-0 bottom-0 flex max-h-[88vh] flex-col rounded-t-3xl border-t border-line bg-ink-2 shadow-deep outline-none"
           >
             <div className="flex shrink-0 items-center justify-between border-b border-line px-4 py-3">
               <b className="text-base font-black">فیلترها</b>

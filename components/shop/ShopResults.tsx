@@ -8,11 +8,12 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { LiquidSelection } from "@/components/liquid/LiquidSelection";
 import { cn, toFaDigits } from "@/lib/utils";
 import { sortOptions } from "@/lib/content/shop";
-import { ProductCard } from "./ProductCard";
+import { ProductCard, type CardVariant } from "./ProductCard";
 import { ProductListRow } from "./ProductListRow";
 import type { ShopMeta, ShopProduct } from "./types";
 
 type ShopResultsProps = {
+  cardVariant?: CardVariant;
   products: ShopProduct[] | null;
   meta: ShopMeta | null;
   /** No longer set by the listing: the products arrive rendered from the
@@ -47,6 +48,7 @@ function pageWindow(page: number, totalPages: number): number[] {
 
 export function ShopResults({
   products,
+  cardVariant = "obsidian",
   meta,
   activeSort,
   unknownFilter = null,
@@ -74,7 +76,7 @@ export function ShopResults({
     else params.delete("sort");
     params.delete("page");
     const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname);
+    router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
   }
 
   function removeFilter(key: string) {
@@ -82,15 +84,15 @@ export function ShopResults({
     params.delete(key);
     params.delete("page");
     const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname);
+    router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
   }
 
   function clearAllFilters() {
-    router.push(pathname);
+    router.push(pathname, { scroll: false });
   }
 
   return (
-    <div className="min-w-0 flex-1">
+    <div className="shop-results min-w-0 flex-1">
       {activeFilters.length > 0 && (
         <div className="mb-3 flex flex-wrap items-center gap-2" role="group" aria-label="فیلترهای فعال">
           {activeFilters.map((filter) => (
@@ -116,7 +118,7 @@ export function ShopResults({
       )}
 
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl glass px-4 py-3">
+      <div className="shop-results-toolbar flex flex-wrap items-center justify-between gap-3 rounded-xl glass px-4 py-3">
         <p className="text-xs text-foreground/60" aria-live="polite">
           {unknownFilter ? "—" : products === null ? "در حال بارگذاری…" : `${toFaDigits(meta?.total ?? products.length)} محصول`}
         </p>
@@ -178,7 +180,7 @@ export function ShopResults({
 
       {/* Error */}
       {!unknownFilter && products === null && (
-        <div className={cn("mt-6", listView ? "space-y-4" : "grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3")} aria-busy="true">
+        <div className={cn("mt-6", listView ? "space-y-4" : "grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-2 2xl:grid-cols-3")} aria-busy="true">
           {Array.from({ length: 6 }).map((_, index) => (
             <div key={index} className="space-y-3">
               <Skeleton className="aspect-square w-full" />
@@ -205,7 +207,7 @@ export function ShopResults({
       {!unknownFilter && products !== null && products.length > 0 && (
         <>
           {listView ? (
-            <div className="mt-6 space-y-4">
+            <div className="shop-product-list mt-6 space-y-4">
               {products.map((product) => (
                 <ProductListRow key={product.id} product={product} />
               ))}
@@ -217,15 +219,15 @@ export function ShopResults({
                is where it hurt most. The compact card rules in the mobile block
                of globals.css apply here unchanged, so the two surfaces cannot
                drift apart. */
-            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-3">
+            <div className="shop-product-grid mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-2 2xl:grid-cols-3">
               {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} variant={cardVariant} frame="plinth" />
               ))}
             </div>
           )}
 
           {totalPages > 1 && (
-            <nav className="mt-10 flex items-center justify-center gap-1.5" aria-label="صفحه‌بندی محصولات">
+            <nav className="shop-pagination mt-10 flex items-center justify-center gap-1.5" aria-label="صفحه‌بندی محصولات">
               <button
                 type="button"
                 disabled={page <= 1}

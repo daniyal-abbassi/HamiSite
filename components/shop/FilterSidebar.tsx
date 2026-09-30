@@ -43,7 +43,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
     mutate(params);
     params.delete("page");
     const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname);
+    router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
   }
 
   /*
@@ -61,9 +61,10 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
 
   return (
     <aside
-      className="w-full shrink-0 space-y-6 rounded-xl glass p-5 lg:sticky lg:top-24 lg:w-72"
+      className="shop-filter-sidebar w-full shrink-0 space-y-6 rounded-xl glass p-5 lg:sticky lg:top-24 lg:w-72"
       aria-label="فیلتر محصولات"
     >
+      <div className="shop-filter-heading"><h2>انتخاب را دقیق‌تر کنید</h2><span>فیلتر محصولات</span></div>
       {/* Search */}
       <form
         role="search"
@@ -91,7 +92,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
       {categoryFacets.length > 0 && (
         <div className="space-y-2.5">
           <SidebarHeading>دسته‌بندی</SidebarHeading>
-          <div className="flex flex-wrap gap-2">
+          <div className="shop-filter-options flex flex-wrap gap-2">
             {categoryFacets.map((category) => {
               const active = category.slug === activeCategory;
               return (
@@ -127,7 +128,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
       {brands.length > 0 && (
         <div className="space-y-2.5">
           <SidebarHeading>برند</SidebarHeading>
-          <div className="flex flex-wrap gap-2">
+          <div className="shop-brand-options flex flex-wrap gap-2">
             {/*
              * All of them, not the first twelve. `listBrands()` already excludes brands
              * with no products, so the slice only ever hid real doors — ترانیو and
