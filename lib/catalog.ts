@@ -1,6 +1,6 @@
-import catalogJson from "@/data/hami-products.json";
 import mirroredImages from "@/data/catalog-images.json";
 import { persianIncludes } from "@/lib/persian";
+import { readCatalogSync } from "@/lib/catalog-store";
 
 /**
  * The catalogue, read from a JSON export of the live shop instead of the
@@ -42,6 +42,7 @@ type RawVariant = {
   barcode?: string | null;
   sku?: string | null;
   image_url?: string | null;
+  guarantee?: string | null;
   options?: Record<string, string> | null;
 };
 type RawProduct = {
@@ -50,6 +51,11 @@ type RawProduct = {
   name: string;
   english_name?: string | null;
   kind?: string | null;
+  is_digital?: boolean;
+  show_price?: boolean;
+  guarantee?: string | null;
+  seo?: { title?: string | null; description?: string | null } | null;
+  shipping?: { batch_size?: number | null } | null;
   brand?: { id: number; name: string } | null;
   category?: { id: number; name: string } | null;
   other_categories?: Array<{ id: number; name: string }> | null;
@@ -58,7 +64,7 @@ type RawProduct = {
   compare_at_price?: number | null;
   special_offer?: boolean;
   special_offer_end?: string | null;
-  stock?: { state?: string; available?: boolean; purchasable?: boolean; quantity?: number | null } | null;
+  stock?: { state?: string; available?: boolean; purchasable?: boolean; quantity?: number | null; min_order_quantity?: number | null; max_order_quantity?: number | null } | null;
   primary_image?: string | null;
   images?: RawImage[] | null;
   has_variants?: boolean;
@@ -69,12 +75,15 @@ type RawProduct = {
   updated_at?: string | null;
 };
 type RawCatalog = {
-  categories: Array<{ id: number; name: string; slug: string; parent_id: number | null; level?: number }>;
-  brands: Array<{ id: number; name: string; product_count?: number }>;
+  meta?: { generated_at?: unknown };
+  categories: Array<{ id: number; name: string; slug: string; parent_id: number | null; level?: number; description?: string | null; image_url?: string | null; image_alt?: string | null; icon_url?: string | null }>;
+  brands: Array<{ id: number; name: string; slug?: string; product_count?: number; image_url?: string | null; image_alt?: string | null; icon_url?: string | null }>;
   products: RawProduct[];
 };
 
-const raw = catalogJson as unknown as RawCatalog;
+function currentCatalog(): RawCatalog {
+  return readCatalogSync() as unknown as RawCatalog;
+}
 
 /* -------------------------------------------------------------- utilities */
 
@@ -137,7 +146,7 @@ export type CatalogProduct = ReturnType<typeof serializeProduct>;
 const mirror = mirroredImages as Record<string, string>;
 
 function serializeProduct(p: RawProduct, includeVariants: boolean) {
-  const local = mirror[String(p.id)] ?? null;
+  const local = p.primary_image?.startsWith("/api/catalog-images/") ? p.primary_image : mirror[String(p.id)] ?? null;
 
   const images = (p.images ?? []).map((img, i) => ({
     id: img.id ?? i,
@@ -177,7 +186,7 @@ function serializeProduct(p: RawProduct, includeVariants: boolean) {
          */
         storage: v.options?.["حافظه"] ?? null,
         options: Object.entries(v.options ?? {}).map(([label, value]) => ({ label, value })),
-        guarantee: null,
+        guarantee: v.guarantee ?? p.guarantee ?? null,
         price: v.price ?? price,
         // Same rule as `compareAtOf` above, applied per variant: 40 of the 311
         // variants carry a compare-at equal to or below their own price, and a
@@ -209,9 +218,18 @@ function serializeProduct(p: RawProduct, includeVariants: boolean) {
     description: p.description_html ?? null,
     descriptionText: p.description_text ?? null,
     kind: p.kind ?? null,
+    isDigital: Boolean(p.is_digital),
+    showPrice: p.show_price,
+    guarantee: p.guarantee ?? null,
+    batchSize: p.shipping?.batch_size ?? 1,
+    minOrderQuantity: p.stock?.min_order_quantity ?? null,
+    maxOrderQuantity: p.stock?.max_order_quantity ?? null,
+    seoTitle: p.seo?.title ?? null,
+    seoDescription: p.seo?.description ?? null,
     specialOffer: Boolean(p.special_offer),
     specialOfferEnd: p.special_offer_end ?? null,
     available: p.stock?.purchasable ?? false,
+    stock: p.stock?.quantity ?? 0,
     stockType: stockTypeOf(p),
     brand: p.brand ? { id: p.brand.id, name: p.brand.name, slug: slugify(p.brand.name) } : null,
     mainCategory: p.category
@@ -266,6 +284,7 @@ export type CatalogQuery = {
 };
 
 export function queryProducts(input: CatalogQuery) {
+  const raw = currentCatalog();
   let items = raw.products;
 
   // Availability is deliberately NOT a default filter. 162 of the 189 products
@@ -383,12 +402,13 @@ export function queryProducts(input: CatalogQuery) {
  * date, so the date leaves the file only through here.
  */
 export function catalogGeneratedAt(): string | null {
-  const meta = (catalogJson as { meta?: { generated_at?: unknown } }).meta;
+  const meta = currentCatalog().meta as { generated_at?: unknown } | undefined;
   const value = meta?.generated_at;
   return typeof value === "string" ? value : null;
 }
 
 export function findProductBySlug(slug: string) {
+  const raw = currentCatalog();
   const decoded = decodeURIComponent(slug);
   const p =
     raw.products.find((x) => x.slug === decoded) ??
@@ -397,6 +417,11 @@ export function findProductBySlug(slug: string) {
     // characters percent-encoded differently; fall back to a loose match.
     raw.products.find((x) => slugify(x.slug) === slugify(decoded));
   return p ? serializeProduct(p, true) : null;
+}
+
+export function findProductSlugById(id: number) {
+  const raw = currentCatalog();
+  return raw.products.find((product) => product.id === id)?.slug ?? null;
 }
 
 /**
@@ -409,6 +434,7 @@ export function findProductBySlug(slug: string) {
  * that — it silently becomes wrong for the next export rather than loudly.
  */
 export function countProductsByKind(): Record<string, number> {
+  const raw = currentCatalog();
   const counts: Record<string, number> = {};
   for (const p of raw.products) {
     const kind = p.kind ?? "(none)";
@@ -431,6 +457,7 @@ export function countProductsByKind(): Record<string, number> {
  * more of the shop than the shop itself would.
  */
 export function relatedProducts(productId: number, limit = 8): Array<{ product: CatalogProduct; reason: "same-brand" | "same-category" }> {
+  const raw = currentCatalog();
   const source = raw.products.find((p) => p.id === productId);
   if (!source) return [];
 
@@ -462,13 +489,15 @@ export function relatedProducts(productId: number, limit = 8): Array<{ product: 
 }
 
 export function listBrands() {
+  const raw = currentCatalog();
   return raw.brands
-    .filter((b) => (b.product_count ?? 0) > 0)
-    .map((b) => ({ id: b.id, name: b.name, slug: slugify(b.name), productCount: b.product_count ?? 0 }));
+    .map((b) => ({ id: b.id, name: b.name, slug: b.slug ?? slugify(b.name), imageUrl: b.image_url ?? null, imageAlt: b.image_alt ?? null, iconUrl: b.icon_url ?? null, productCount: raw.products.filter((p) => p.brand?.id === b.id).length }))
+    .filter((b) => b.productCount > 0);
 }
 
 /** Every category id at or below `id`, following `parent_id` (not `level`, which the export mislabels). */
 export function descendantCategoryIds(id: number): Set<number> {
+  const raw = currentCatalog();
   const children = new Map<number, number[]>();
   for (const c of raw.categories) {
     if (c.parent_id == null) continue;
@@ -494,6 +523,7 @@ export function descendantCategoryIds(id: number): Set<number> {
  * must show, since a shopper pressing «موبایل و تبلت» expects what is under it.
  */
 export function categorySubtreeCounts(): Map<number, number> {
+  const raw = currentCatalog();
   const out = new Map<number, number>();
   for (const c of raw.categories) {
     const ids = descendantCategoryIds(c.id);
@@ -508,11 +538,16 @@ export function categorySubtreeCounts(): Map<number, number> {
 }
 
 export function listCategories() {
+  const raw = currentCatalog();
   return raw.categories.map((c) => ({
     id: c.id,
     name: c.name,
     slug: c.slug,
     parentId: c.parent_id,
     level: c.level ?? 0,
+    description: c.description ?? null,
+    imageUrl: c.image_url ?? null,
+    imageAlt: c.image_alt ?? null,
+    iconUrl: c.icon_url ?? null,
   }));
 }

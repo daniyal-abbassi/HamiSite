@@ -65,9 +65,27 @@ export type AdminProductDetail = {
   name: string;
   englishName: string | null;
   slug: string;
+  description: string | null;
+  analysis: string | null;
   isDigital: boolean;
+  price: number;
+  compareAtPrice: number | null;
+  costPerItem: number | null;
+  batchSize: number;
   stock: number;
-  // + all ProductDetail fields (see types/store.ts ProductDetail)
+  stockType: string;
+  minOrderQuantity: number | null;
+  maxOrderQuantity: number | null;
+  guarantee: string | null;
+  specialOffer: boolean;
+  specialOfferEnd: string | null;
+  available: boolean;
+  showPrice: boolean;
+  seoTitle: string | null;
+  seoDescription: string | null;
+  brand: { id: number; name: string; slug: string } | null;
+  mainCategory: { id: number; name: string; slug: string } | null;
+  variants: AdminVariantListItem[];
 };
 
 // ---------------------------------------------------------------------------

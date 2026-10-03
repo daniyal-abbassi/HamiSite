@@ -5,11 +5,11 @@ type Row = {
   id: number;
   name: string;
   slug: string;
-  description: null;
+  description: string | null;
   parentId: number | null;
-  imageUrl: null;
-  imageAlt: null;
-  iconUrl: null;
+  imageUrl: string | null;
+  imageAlt: string | null;
+  iconUrl: string | null;
   level: number;
   children?: Row[];
 };
@@ -40,11 +40,11 @@ export async function GET(request: Request) {
       id: c.id,
       name: c.name,
       slug: c.slug,
-      description: null,
+      description: c.description,
       parentId: c.parentId,
-      imageUrl: null,
-      imageAlt: null,
-      iconUrl: null,
+      imageUrl: c.imageUrl,
+      imageAlt: c.imageAlt,
+      iconUrl: c.iconUrl,
       level: c.level,
     }));
 

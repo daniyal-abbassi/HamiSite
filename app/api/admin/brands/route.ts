@@ -2,43 +2,8 @@ import { Role } from "@prisma/client";
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
-import { prisma } from "@/lib/prisma";
-
-const createBrandSchema = z.object({
-  name: z.string().min(1),
-  slug: z.string().min(1),
-  imageUrl: z.string().optional(),
-  imageAlt: z.string().optional(),
-  iconUrl: z.string().optional(),
-  seoTitle: z.string().optional(),
-  seoDescription: z.string().optional(),
-  isActive: z.boolean().optional(),
-  order: z.number().int().optional(),
-});
-
-export const POST = withAuth(
-  async (request) => {
-    return withErrorHandling(async () => {
-      const body = await request.json();
-      const parsed = createBrandSchema.safeParse(body);
-      if (!parsed.success) {
-        throw new ApiError(400, "Invalid request body", parsed.error.flatten());
-      }
-
-      const input = parsed.data;
-
-      const existing = await prisma.brand.findFirst({
-        where: { OR: [{ name: input.name }, { slug: input.slug }] },
-        select: { id: true },
-      });
-      if (existing) {
-        throw new ApiError(409, `A brand with this name or slug already exists`);
-      }
-
-      const brand = await prisma.brand.create({ data: input });
-
-      return ok(brand, { message: "Brand created" });
-    });
-  },
-  { roles: [Role.ADMIN] },
-);
+import { updateCatalog } from "@/lib/catalog-store";
+const schema=z.object({name:z.string().trim().min(1),slug:z.string().trim().min(1),imageUrl:z.string().optional(),imageAlt:z.string().optional(),iconUrl:z.string().optional(),seoTitle:z.string().optional(),seoDescription:z.string().optional(),isActive:z.boolean().optional(),order:z.number().int().optional()});
+const row=(b:Record<string,any>,products:Record<string,any>[])=>({id:b.id,name:b.name,slug:b.slug??b.name,imageUrl:b.image_url??null,imageAlt:b.image_alt??null,iconUrl:b.icon_url??null,seoTitle:b.seo_title??null,seoDescription:b.seo_description??null,isActive:b.is_active??true,order:b.order??0,productCount:products.filter(p=>p.brand?.id===b.id).length});
+export const GET=withAuth(async()=>withErrorHandling(async()=>{const {readCatalogSync}=await import("@/lib/catalog-store");const c=readCatalogSync();const brands=c.brands.map(b=>row(b,c.products)).sort((a,b)=>a.order-b.order||a.name.localeCompare(b.name,"fa"));return ok(brands,{total:brands.length});}),{roles:[Role.ADMIN]});
+export const POST=withAuth(async(req)=>withErrorHandling(async()=>{const parsed=schema.safeParse(await req.json());if(!parsed.success)throw new ApiError(400,"Invalid request body",parsed.error.flatten());const input=parsed.data;const brand=await updateCatalog(c=>{if(c.brands.some(b=>b.name===input.name||b.slug===input.slug))throw new ApiError(409,"A brand with this name or slug already exists");const created={id:Math.max(0,...c.brands.map(b=>b.id))+1,name:input.name,slug:input.slug,product_count:0,image_url:input.imageUrl??null,image_alt:input.imageAlt??null,icon_url:input.iconUrl??null,seo_title:input.seoTitle??null,seo_description:input.seoDescription??null,is_active:input.isActive??true,order:input.order??c.brands.length};c.brands.push(created);return row(created,c.products);});return ok(brand,{message:"Brand created"});}),{roles:[Role.ADMIN]});

@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { RotateCcw } from "lucide-react";
 import { ActiveBadge } from "@/components/admin/StatusBadge";
-import { Pagination } from "@/components/admin/Pagination";
+import { Pagination } from "@/components/admin/ui/Pagination";
 import { Select } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/components/providers/AuthProvider";

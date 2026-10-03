@@ -80,6 +80,14 @@ export type ProductDetail = {
   description: string | null;
   analysis: string | null;
   isDigital: boolean;
+  available: boolean;
+  guarantee?: string | null;
+  batchSize?: number;
+  minOrderQuantity?: number | null;
+  maxOrderQuantity?: number | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
+  showPrice?: boolean;
   specialOffer: boolean;
   specialOfferEnd: string | null;
   stockType: string;
