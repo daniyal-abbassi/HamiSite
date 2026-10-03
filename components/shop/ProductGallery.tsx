@@ -6,7 +6,7 @@ import { Sparkles } from "lucide-react";
 import { PLACEHOLDER_ALT, PLACEHOLDER_LABEL, isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
 import { LiquidSelection } from "@/components/liquid/LiquidSelection";
 import { toFaDigits } from "@/lib/utils";
-import type { CatalogProduct } from "@/lib/catalog";
+import type { CatalogProduct } from "@/lib/catalog-db";
 
 /**
  * FR-031: show a count and a position when a record genuinely holds more than one

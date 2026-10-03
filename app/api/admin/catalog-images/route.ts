@@ -1,10 +1,10 @@
 import { randomUUID } from "node:crypto";
 import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
-import { Role } from "@prisma/client";
+import { Prisma, Role } from "@prisma/client";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
-import { updateCatalog } from "@/lib/catalog-store";
+import { prisma } from "@/lib/prisma";
 import { z } from "zod";
 
 const MAX_BYTES = 8 * 1024 * 1024;
@@ -39,24 +39,26 @@ export const POST = withAuth(async (request) => withErrorHandling(async () => {
   await mkdir(MEDIA_DIR, { recursive: true });
   await writeFile(filePath, bytes, { flag: "wx" });
   try {
-    const result = await updateCatalog((catalog) => {
-      if (entity === "product") {
-        const product = catalog.products.find((item) => item.id === id);
-        if (!product) throw new ApiError(404, "محصول پیدا نشد.");
-        product.images ??= [];
-        const image = { id: Math.max(0, ...product.images.map((item: { id: number }) => item.id)) + 1, url, alt: product.name, is_default: role === "primary", order: product.images.length };
-        if (role === "primary") for (const item of product.images) item.is_default = false;
-        product.images.push(image);
-        if (role === "primary" || !product.primary_image) product.primary_image = url;
-        product.updated_at = new Date().toISOString();
-        return { url, images: product.images };
-      }
-      const rows = entity === "category" ? catalog.categories : catalog.brands;
-      const item = rows.find((row) => row.id === id);
-      if (!item) throw new ApiError(404, entity === "category" ? "دسته پیدا نشد." : "برند پیدا نشد.");
-      item.image_url = url;
-      return { url };
-    });
+    let result: { url: string; images?: Array<{ id: number; url: string; alt: string | null; is_default: boolean; order: number }> };
+    if (entity === "product") {
+      const product = await prisma.product.findUnique({ where: { id }, select: { id: true, name: true } });
+      if (!product) throw new ApiError(404, "محصول پیدا نشد.");
+      const images = await prisma.$transaction(async (tx) => {
+        const imageCount = await tx.productImage.count({ where: { productId: id } });
+        if (role === "primary") await tx.productImage.updateMany({ where: { productId: id }, data: { isDefault: false } });
+        await tx.productImage.create({ data: { productId: id, url, altText: product.name, isDefault: role === "primary" || imageCount === 0, order: imageCount } });
+        return tx.productImage.findMany({ where: { productId: id }, orderBy: [{ order: "asc" }, { id: "asc" }] });
+      });
+      result = { url, images: images.map((image) => ({ id: image.id, url: image.url, alt: image.altText, is_default: image.isDefault, order: image.order })) };
+    } else if (entity === "category") {
+      try { await prisma.category.update({ where: { id }, data: { imageUrl: url } }); }
+      catch (error) { if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") throw new ApiError(404, "دسته پیدا نشد."); throw error; }
+      result = { url };
+    } else {
+      try { await prisma.brand.update({ where: { id }, data: { imageUrl: url } }); }
+      catch (error) { if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") throw new ApiError(404, "برند پیدا نشد."); throw error; }
+      result = { url };
+    }
     return ok(result, { message: "تصویر بارگذاری شد." });
   } catch (error) {
     await rm(filePath, { force: true });
@@ -72,34 +74,34 @@ export const PATCH = withAuth(async (request) => withErrorHandling(async () => {
   const { entity, id, action, url } = parsed.data;
   const filename = url.startsWith("/api/catalog-images/") ? url.slice("/api/catalog-images/".length) : null;
   if (filename && !/^[0-9a-f-]+\.(jpg|png|webp|avif)$/i.test(filename)) throw new ApiError(400, "آدرس تصویر معتبر نیست.");
-  const result = await updateCatalog((catalog) => {
-    if (entity === "product") {
-      const product = catalog.products.find((item) => item.id === id);
-      if (!product) throw new ApiError(404, "محصول پیدا نشد.");
-      const image = (product.images ?? []).find((item: { url: string }) => item.url === url);
-      if (!image) throw new ApiError(404, "تصویر محصول پیدا نشد.");
-      if (action === "primary") {
-        for (const item of product.images ?? []) item.is_default = item.url === url;
-        product.primary_image = url;
-      } else {
-        product.images = (product.images ?? []).filter((item: { url: string }) => item.url !== url);
-        const fallback = product.images.find((item: { is_default?: boolean }) => item.is_default) ?? product.images[0];
-        if (fallback) fallback.is_default = true;
-        product.primary_image = fallback?.url ?? null;
-      }
-      product.updated_at = new Date().toISOString();
+  let inUse: boolean;
+  if (entity === "product") {
+    const image = await prisma.productImage.findFirst({ where: { productId: id, url }, orderBy: { id: "asc" } });
+    if (!image) throw new ApiError(404, "تصویر محصول پیدا نشد.");
+    if (action === "primary") {
+      await prisma.$transaction(async (tx) => {
+        await tx.productImage.updateMany({ where: { productId: id }, data: { isDefault: false } });
+        await tx.productImage.update({ where: { id: image.id }, data: { isDefault: true } });
+      });
     } else {
-      const rows = entity === "category" ? catalog.categories : catalog.brands;
-      const item = rows.find((row) => row.id === id);
-      if (!item) throw new ApiError(404, entity === "category" ? "دسته پیدا نشد." : "برند پیدا نشد.");
-      if (item.image_url !== url) throw new ApiError(404, "تصویر پیدا نشد.");
-      item.image_url = null;
-      item.image_alt = null;
+      await prisma.$transaction(async (tx) => {
+        const fallback = await tx.productImage.findFirst({ where: { productId: id, id: { not: image.id } }, orderBy: [{ order: "asc" }, { id: "asc" }] });
+        if (image.isDefault) {
+          await tx.productImage.updateMany({ where: { productId: id }, data: { isDefault: false } });
+          if (fallback) await tx.productImage.update({ where: { id: fallback.id }, data: { isDefault: true } });
+        }
+        await tx.productImage.delete({ where: { id: image.id } });
+      });
     }
-    const inUse = catalog.products.some((product) => (product.images ?? []).some((image: { url: string }) => image.url === url)) ||
-      catalog.categories.some((item) => item.image_url === url) || catalog.brands.some((item) => item.image_url === url);
-    return { inUse };
-  });
-  if (!result.inUse && filename) await rm(path.join(MEDIA_DIR, filename), { force: true });
-  return ok({ removed: !result.inUse }, { message: "تصویر به‌روزرسانی شد." });
+  } else if (entity === "category") {
+    const updated = await prisma.category.updateMany({ where: { id, imageUrl: url }, data: { imageUrl: null, imageAlt: null } });
+    if (!updated.count) throw new ApiError(404, "تصویر پیدا نشد.");
+  } else {
+    const updated = await prisma.brand.updateMany({ where: { id, imageUrl: url }, data: { imageUrl: null, imageAlt: null } });
+    if (!updated.count) throw new ApiError(404, "تصویر پیدا نشد.");
+  }
+  inUse = Boolean(await prisma.productImage.count({ where: { url } })) ||
+    Boolean(await prisma.category.count({ where: { imageUrl: url } })) || Boolean(await prisma.brand.count({ where: { imageUrl: url } }));
+  if (!inUse && filename) await rm(path.join(MEDIA_DIR, filename), { force: true });
+  return ok({ removed: !inUse }, { message: "تصویر به‌روزرسانی شد." });
 }), { roles: [Role.ADMIN] });

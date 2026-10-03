@@ -1,4 +1,4 @@
-import { listCategories } from "@/lib/catalog";
+import { listCategories } from "@/lib/catalog-db";
 import { ok, withErrorHandling } from "@/lib/http";
 
 type Row = {
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
   return withErrorHandling(async () => {
     const tree = new URL(request.url).searchParams.get("tree") === "true";
 
-    const rows: Row[] = listCategories().map((c) => ({
+    const rows: Row[] = (await listCategories()).map((c) => ({
       id: c.id,
       name: c.name,
       slug: c.slug,

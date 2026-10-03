@@ -1,2 +1,20 @@
-import{Role}from"@prisma/client";import{z}from"zod";import{withAuth}from"@/lib/auth";import{ApiError,ok,withErrorHandling}from"@/lib/http";import{updateCatalog}from"@/lib/catalog-store";
-const schema=z.object({stock:z.number().int().min(0),reason:z.string().trim().min(1)});export const PATCH=withAuth<{id:string}>(async(req,{params})=>withErrorHandling(async()=>{const id=Number(params.id);if(!Number.isInteger(id)||id<=0)throw new ApiError(400,"Invalid variant id");const parsed=schema.safeParse(await req.json());if(!parsed.success)throw new ApiError(400,"Invalid request body",parsed.error.flatten());const variant=await updateCatalog(c=>{for(const p of c.products){const v=p.variants?.find((x:any)=>x.id===id);if(v){v.stock=parsed.data.stock;p.stock={...p.stock,quantity:parsed.data.stock};p.updated_at=new Date().toISOString();return v;}}throw new ApiError(404,"Variant not found");});return ok(variant,{message:"Stock updated"});}),{roles:[Role.ADMIN]});
+import { Role } from "@prisma/client";
+import { z } from "zod";
+import { withAuth } from "@/lib/auth";
+import { ApiError, ok, withErrorHandling } from "@/lib/http";
+import { prisma } from "@/lib/prisma";
+
+const schema = z.object({ stock: z.number().int().min(0), reason: z.string().trim().min(1) });
+export const PATCH = withAuth<{ id: string }>(async (request, { params }) => withErrorHandling(async () => {
+  const id = Number(params.id);
+  if (!Number.isInteger(id) || id <= 0) throw new ApiError(400, "Invalid variant id");
+  const parsed = schema.safeParse(await request.json());
+  if (!parsed.success) throw new ApiError(400, "Invalid request body", parsed.error.flatten());
+  const current = await prisma.productVariant.findUnique({ where: { id }, select: { id: true, productId: true } });
+  if (!current) throw new ApiError(404, "Variant not found");
+  const [variant] = await prisma.$transaction([
+    prisma.productVariant.update({ where: { id }, data: { stock: parsed.data.stock } }),
+    prisma.product.update({ where: { id: current.productId }, data: { stock: parsed.data.stock } }),
+  ]);
+  return ok({ ...variant, price: variant.price.toNumber(), compareAtPrice: variant.compareAtPrice?.toNumber() ?? null }, { message: "Stock updated" });
+}), { roles: [Role.ADMIN] });

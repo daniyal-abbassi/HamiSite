@@ -3,7 +3,7 @@ import Link from "next/link";
 import type { CSSProperties } from "react";
 import { partnerMarks } from "@/components/brand/BrandMarks";
 import { buildBrandCards, cardFitBudget } from "@/lib/brand-deck";
-import { brandPurchasableCounts } from "@/lib/brand-counts";
+import { brandPurchasableCounts } from "@/lib/brand-counts-db";
 import { BRAND_IDENTITIES, cardAccentOkLCH, cardGroundOkLCH } from "@/lib/brand-identity";
 
 /**
@@ -39,11 +39,11 @@ import { BRAND_IDENTITIES, cardAccentOkLCH, cardGroundOkLCH } from "@/lib/brand-
  * gone with the rows — the card is the destination (C3), so there is nothing
  * left for a second control to do.
  */
-export function BrandRows({ counts: _catalogueCounts }: { counts: Record<string, number> }) {
+export async function BrandRows({ counts: _catalogueCounts }: { counts: Record<string, number> }) {
   // The caller's totals are deliberately unused: C5 admits only purchasable
   // counts. Dropping the prop is a one-line change in BrandShowcase.tsx, which
   // this task does not own — recorded in notes/deck-build-log.md.
-  const cards = buildBrandCards(partnerMarks, brandPurchasableCounts());
+  const cards = buildBrandCards(partnerMarks, await brandPurchasableCounts());
 
   // 011: the identity per card is looked up, not assumed — a maker with no record gets
   // the house treatment rather than a guessed hue. No colour literal lives in this

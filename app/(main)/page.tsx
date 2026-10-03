@@ -27,7 +27,7 @@ import { ShopWindow } from "@/components/home/ShopWindow";
 import { BrandTicker } from "@/components/home/BrandTicker";
 import { FlipWords } from "@/components/ui/flip-words";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
-import { featuredOfferRail, featuredSpecialRail, newArrivalsRail } from "@/lib/home-rails";
+import { featuredOfferRail, featuredSpecialRail, newArrivalsRail } from "@/lib/home-rails-db";
 import { NewArrivals } from "@/components/home/NewArrivals";
 import { ObtainableNow } from "@/components/home/ObtainableNow";
 import { AssemblyBand } from "@/components/home/AssemblyBand";
@@ -182,11 +182,11 @@ export default async function HomePage() {
    * products at all — Constitution III says browsing must not need a round-trip,
    * and `quickstart.md` §3 checks it with curl rather than by trust.
    */
+  const [newest, special, arrivals] = await Promise.all([featuredOfferRail(), featuredSpecialRail(), newArrivalsRail()]);
   const featuredTabs = [
-    { key: "newest" as const, label: "جدیدترین‌ها", products: featuredOfferRail() },
-    { key: "special" as const, label: "پیشنهاد ویژه", products: featuredSpecialRail() },
+    { key: "newest" as const, label: "جدیدترین‌ها", products: newest },
+    { key: "special" as const, label: "پیشنهاد ویژه", products: special },
   ];
-  const arrivals = newArrivalsRail();
 
   return (
     <>
@@ -224,4 +224,3 @@ export default async function HomePage() {
     </>
   );
 }
-

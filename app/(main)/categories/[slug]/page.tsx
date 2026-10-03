@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CatalogListing } from "@/components/shop/CatalogListing";
-import { categorySubtreeCounts, descendantCategoryIds, listCategories, queryProducts } from "@/lib/catalog";
+import { categorySubtreeCounts, descendantCategoryIds, listCategories, queryProducts } from "@/lib/catalog-db";
 import { resolveSortKey } from "@/lib/content/shop";
 import { destinationDescription } from "@/lib/listing-view";
 import { normalizeSlug } from "@/lib/shop-filters";
@@ -9,10 +9,10 @@ import { normalizeSlug } from "@/lib/shop-filters";
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-function findCategory(slug: string) {
+async function findCategory(slug: string) {
   const decoded = decodeURIComponent(slug);
   const wanted = normalizeSlug(decoded);
-  const categories = listCategories();
+  const categories = await listCategories();
   return (
     categories.find((c) => c.slug === decoded) ??
     categories.find((c) => normalizeSlug(c.slug) === wanted) ??
@@ -23,7 +23,7 @@ function findCategory(slug: string) {
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const category = findCategory(slug);
+  const category = await findCategory(slug);
   if (!category) return { title: "دسته یافت نشد | حامی همراه" };
   return {
     title: category.name,
@@ -49,20 +49,20 @@ export default async function CategoryPage({
   searchParams: SearchParams;
 }) {
   const { slug } = await params;
-  const category = findCategory(slug);
+  const category = await findCategory(slug);
   if (!category) notFound();
 
   const view = {
     sort: resolveSortKey((await searchParams).sort as string | undefined),
     obtainable: (await searchParams).obtainable === "1",
   };
-  const total = categorySubtreeCounts().get(category.id) ?? 0;
+  const total = (await categorySubtreeCounts()).get(category.id) ?? 0;
   // An empty category is not a destination; it is a dead door (FR-028, SC-014).
   // The number that decides this is the one the doorway promised, not the one a
   // control left behind — «nothing buyable in stock today» is an answer, not a 404.
   if (total === 0) notFound();
 
-  const { data, total: shownTotal } = queryProducts({
+  const { data, total: shownTotal } = await queryProducts({
     categorySubtreeId: category.id,
     purchasableOnly: view.obtainable,
     sort: view.sort || undefined,
@@ -70,14 +70,14 @@ export default async function CategoryPage({
     page: 1,
     pageSize: 60,
   });
-  const obtainableCount = queryProducts({
+  const obtainableCount = (await queryProducts({
     categorySubtreeId: category.id,
     purchasableOnly: true,
     page: 1,
     pageSize: 1,
-  }).total;
+  })).total;
 
-  const subCount = descendantCategoryIds(category.id).size - 1;
+  const subCount = (await descendantCategoryIds(category.id)).size - 1;
 
   return (
     <CatalogListing

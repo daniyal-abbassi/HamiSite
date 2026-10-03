@@ -290,8 +290,11 @@ model Product {
   id              Int       @id @default(autoincrement())
   name            String
   englishName     String?
+  kind            String?
   slug            String    @unique
   description     String?
+  descriptionText String?
+  specs           Json?
   analysis        String?
 
   mainCategoryId  Int?
@@ -384,6 +387,15 @@ model ProductTag {
   @@map("product_tags")
 }
 
+/// Import provenance for the catalog snapshot's freshness note.
+model CatalogImportMetadata {
+  id                 Int      @id @default(1)
+  sourceGeneratedAt  DateTime?
+  importedAt         DateTime @default(now())
+
+  @@map("catalog_import_metadata")
+}
+
 model ProductVariant {
   id                Int       @id @default(autoincrement())
   productId         Int
@@ -392,6 +404,7 @@ model ProductVariant {
   /// Mobile-distribution oriented variant axes.
   color             String?
   storage           String?
+  options           Json?
   guarantee         String?
 
   /// Base unit price (Toman) before any B2B PriceTier discount is applied.

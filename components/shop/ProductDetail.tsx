@@ -28,7 +28,7 @@ import { LiquidSelection } from "@/components/liquid/LiquidSelection";
  * `types/store.ts` is deliberately left as it is — the admin product form still
  * reads the old shape and the back office is out of scope.
  */
-import type { CatalogProduct } from "@/lib/catalog";
+import type { CatalogProduct } from "@/lib/catalog-db";
 
 type Props = { product: CatalogProduct };
 

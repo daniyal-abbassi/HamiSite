@@ -1,8 +1,8 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
-import type { ShopView } from "@/lib/shop-query";
-import type { ShopTile } from "@/lib/shop-category-tiles";
+import type { ShopView } from "@/lib/shop-query-db";
+import type { ShopTile } from "@/lib/shop-category-tiles-db";
 import { CategoryTiles } from "./CategoryTiles";
 import { FilterSheet } from "./FilterSheet";
 import { ShopResults } from "./ShopResults";

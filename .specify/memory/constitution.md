@@ -3,6 +3,36 @@
 Sync Impact Report
 ==================
 
+Version change: 1.2.0 → 1.3.0
+
+Primary change:
+- Principle III: by owner instruction on 2026-10-04, PostgreSQL/Prisma is the source of
+  truth for catalog, account/profile and admin surfaces. This approves database-backed
+  public catalog APIs and catalog administration. JSON exports may be import inputs only;
+  reconciliation must be additive and preserve carts, orders, history, pricing tiers and
+  unrelated records. The shopper purchase path remains deferred.
+- The prior Principle III scope was also updated on 2026-10-01: the admin back office was
+  reopened for its frontend. This revision further approves catalog and API/database
+  integration in `specs/016-commerce-integration`.
+- Nothing else was added, removed or reworded. MINOR because this materially expands
+  Principle III without removing an existing principle.
+
+---
+
+Version change: 1.1.0 → 1.2.0
+
+Primary change:
+- Principle III: the admin back office was **reopened for its frontend only**, by owner
+  instruction on 2026-10-01 (feature `specs/015-admin-dashboard`). Auth, cart, checkout and
+  payments stay out of scope; `app/api/**`, `data/**` and `prisma/**` stay frozen; the
+  shopper-facing rule that browsing must not require a database or an API round-trip is
+  unchanged and does not extend to `/admin`, which reads live data by design.
+- Nothing else was added, removed or reworded. MINOR rather than MAJOR because no principle
+  was removed and none was redefined incompatibly: the static-data seam still governs every
+  shopper-visible surface.
+
+---
+
 Version change: 1.0.0 → 1.1.0
 
 Primary change:
@@ -52,24 +82,28 @@ applied afterwards to an English original.
 * Copy MUST be Persian first. Latin lettering is acceptable as decorative or archival
   labelling, but MUST NOT be the only route to understanding a control.
 
-### III. Static Data Seam
+### III. Database-backed Storefront and Back Office
 
-Shopper-visible catalog data — products, brands, categories, prices, images — MUST come
-from `data/*.json` through `lib/catalog.ts`. Browsing MUST NOT require a database
-connection or an API round-trip.
+PostgreSQL through Prisma is the source of truth for shopper-visible catalog data,
+customer account/profile state and administrative records. Public catalog pages MUST use
+the database and preserve current API and DTO behavior where possible.
 
-* `lib/catalog.ts` MUST keep its response shape compatible with the existing
-  `/api/products` output, so a live source can replace the export without editing any
-  consumer component.
-* Auth, cart, checkout, payments, and the admin back office are out of scope for this
-  revision. They MUST keep working as they are and MUST NOT be modified to unblock a
-  frontend decision.
-* Where an out-of-scope flow cannot complete against static data, the UI MUST render an
-  honest unavailable state rather than imitate success.
+* Catalog JSON exports MAY supply a reviewed reconciliation/import, but MUST NOT be read
+  as runtime catalog authority. Reconciliation MUST be additive and MUST preserve orders,
+  carts, product history, price tiers and unrelated records.
+* Public Server Components SHOULD read the shared Prisma data layer directly. Existing
+  same-origin API paths and response envelopes MUST remain compatible for browser clients.
+* Account/profile and admin actions MUST use existing authorization and persisted records;
+  the interface MUST report only confirmed changes.
+* The shopper cart-to-payment and post-purchase journey is deferred to a separate feature.
+  This exclusion does not block existing admin order management.
+* The admin back office (v1.2.0) was reopened by owner instruction on 2026-10-01; this
+  revision further approves the catalog and API/database integration required by
+  `specs/016-commerce-integration`.
 
-Rationale: catalog ids in the export do not match database rows, so add-to-cart and
-checkout are unverified against this data source. Presenting them as working would hide
-a real defect inside a demo.
+Rationale: one persisted catalog identity and one current record must serve storefront and
+admin views. A bounded additive reconciliation avoids an empty storefront while protecting
+transaction history.
 
 ### IV. Design Is Open — Luxury Is the Quality Bar
 
@@ -203,4 +237,4 @@ build traps, database safety, tooling. It is subordinate to this document, and a
 visual authority it claims (including describing `docs/inspires/` as a brand-design
 source of truth) is superseded by Principle IV.
 
-**Version**: 1.1.0 | **Ratified**: 2026-09-20 | **Last Amended**: 2026-09-20
+**Version**: 1.3.0 | **Ratified**: 2026-09-20 | **Last Amended**: 2026-10-04

@@ -1,4 +1,4 @@
-import { relatedProducts } from "@/lib/catalog";
+import { relatedProducts } from "@/lib/catalog-db";
 import { ProductRail } from "@/components/shop/ProductRail";
 
 /**
@@ -10,8 +10,8 @@ import { ProductRail } from "@/components/shop/ProductRail";
  * as a shop that knows the catalogue; one with a filler row of six random phones
  * reads as a template, and FR-005 forbids the frame without the content.
  */
-export function RelatedProducts({ productId }: { productId: number }) {
-  const items = relatedProducts(productId);
+export async function RelatedProducts({ productId }: { productId: number }) {
+  const items = await relatedProducts(productId);
   if (items.length === 0) return null;
 
   return (

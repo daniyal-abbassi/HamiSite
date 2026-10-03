@@ -32,14 +32,14 @@ export function UserMenu() {
   return (
     <div className="flex items-center gap-0.5">
       <Link
-        href="/orders"
+        href="/account"
         title={`حساب کاربری: ${displayName}`}
         className="hidden max-w-36 truncate rounded-full border border-line bg-foreground/5 px-3 py-1.5 text-xs font-bold text-foreground/90 transition-colors hover:bg-foreground/10 sm:block"
       >
         {displayName}
       </Link>
       <Link
-        href="/orders"
+        href="/account"
         aria-label="حساب کاربری"
         className="grid size-11 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground sm:hidden"
       >

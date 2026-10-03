@@ -9,7 +9,7 @@ import { cn, toFaDigits } from "@/lib/utils";
 import { brandLabel } from "@/lib/product-identity";
 import { stockOptions } from "@/lib/content/shop";
 import type { ShopBrand } from "./types";
-import type { CategoryFacet } from "@/lib/shop-query";
+import type { CategoryFacet } from "@/lib/shop-query-db";
 
 const FILTER_KEYS = ["q", "category", "brand", "min", "max", "stock", "special"] as const;
 

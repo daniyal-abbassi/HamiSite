@@ -5,7 +5,7 @@ import { useSearchParams } from "next/navigation";
 import { SlidersHorizontal, X } from "lucide-react";
 import { FilterSidebar } from "@/components/shop/FilterSidebar";
 import type { ShopBrand } from "./types";
-import type { CategoryFacet } from "@/lib/shop-query";
+import type { CategoryFacet } from "@/lib/shop-query-db";
 
 /** The query keys FilterSidebar writes. Kept in step with FILTER_KEYS there. */
 const FILTER_KEYS = ["q", "category", "brand", "min", "max", "stock", "special"] as const;

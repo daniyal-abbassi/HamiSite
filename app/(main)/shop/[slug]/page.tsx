@@ -2,13 +2,13 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductDetail } from "@/components/shop/ProductDetail";
 import { RelatedProducts } from "@/components/shop/RelatedProducts";
-import { findProductBySlug } from "@/lib/catalog";
+import { findProductBySlug } from "@/lib/catalog-db";
 
 type Params = Promise<{ slug: string }>;
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const product = findProductBySlug(slug);
+  const product = await findProductBySlug(slug);
   if (!product) {
     return { title: "محصول یافت نشد | حامی همراه" };
   }
@@ -30,7 +30,7 @@ export default async function ProductPage({ params }: { params: Params }) {
    * require an API round-trip (Constitution III) — this route used to prerender an
    * empty shell and fetch `/api/products/[slug]` after hydration.
    */
-  const product = findProductBySlug(slug);
+  const product = await findProductBySlug(slug);
   if (!product) notFound();
   return (
     <div className="container py-10">

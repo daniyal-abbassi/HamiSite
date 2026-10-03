@@ -1,7 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowLeft } from "lucide-react";
-import { categoryDepartments } from "@/lib/category-departments";
+import { categoryDepartments } from "@/lib/category-departments-db";
 import { imageSizesAttribute } from "@/lib/category-masonry";
 import { CategoryArrival } from "@/components/home/CategoryArrival";
 import { toFaDigits } from "@/lib/utils";
@@ -23,8 +23,8 @@ import { toFaDigits } from "@/lib/utils";
  * tree cannot be shown as it stands (11 of 32 categories hold no products, and the brand axis is fused into the
  * type axis).
  */
-export function CategoryHub() {
-  const departments = categoryDepartments();
+export async function CategoryHub() {
+  const departments = await categoryDepartments();
   const sizes = imageSizesAttribute();
 
   return (

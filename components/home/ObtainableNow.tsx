@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
-import { obtainableNowRail } from "@/lib/home-rails";
+import { obtainableNowRail } from "@/lib/home-rails-db";
 import { ProductRail } from "@/components/shop/ProductRail";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
 import { type ProductCardData } from "@/components/shop/ProductCard";
@@ -15,8 +15,8 @@ import { toFaDigits } from "@/lib/utils";
  * Renders nothing when the answer is nothing. A heading over an empty frame would be
  * the loudest possible way of claiming stock that is not there (FR-005).
  */
-export function ObtainableNow() {
-  const { products, total } = obtainableNowRail();
+export async function ObtainableNow() {
+  const { products, total } = await obtainableNowRail();
   if (total === 0) return null;
 
   return (

@@ -4,7 +4,7 @@ import { useState, type KeyboardEvent } from "react";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { featuredTabs, type FeaturedTabKey } from "@/lib/content/home";
-import type { RailProduct } from "@/lib/home-rails";
+import type { RailProduct } from "@/lib/home-rails-db";
 import { Reveal } from "@/components/home/Reveal";
 import { LiquidSelection } from "@/components/liquid/LiquidSelection";
 import { type ProductCardData } from "@/components/shop/ProductCard";

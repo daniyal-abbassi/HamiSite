@@ -1,7 +1,7 @@
 import { BrandRows } from "@/components/home/BrandRows";
 import { Reveal } from "@/components/home/Reveal";
 import { SectionHead } from "@/components/home/SectionHead";
-import { brandProductCounts } from "@/lib/brand-counts";
+import { brandProductCounts } from "@/lib/brand-counts-db";
 
 /** Brands chapter.
  *
@@ -14,7 +14,8 @@ import { brandProductCounts } from "@/lib/brand-counts";
  * Server component on purpose: the per-brand counts come from `lib/catalog.ts`, which
  * reads a 2.2 MB JSON export. Resolved here and handed down as six numbers, so the
  * catalogue never enters the client bundle. */
-export function BrandShowcase() {
+export async function BrandShowcase() {
+  const counts = await brandProductCounts();
   return (
     <section id="brands" className="wrap relative overflow-hidden pt-0 pb-14" aria-labelledby="brands-title">
       {/* T070 deleted `ModernWhiteWave` — a stock page-builder divider with four
@@ -35,7 +36,7 @@ export function BrandShowcase() {
 
         <Reveal delay={80}>
           <div className="mt-10">
-            <BrandRows counts={brandProductCounts()} />
+            <BrandRows counts={counts} />
           </div>
         </Reveal>
 

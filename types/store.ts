@@ -67,6 +67,8 @@ export type ProductVariantDetail = {
   barcode: string | null;
   productIdentifier: string | null;
   isDefault: boolean;
+  options?: Array<{ label: string; value: string }>;
+  imageUrl?: string | null;
   /** Unit price for the requested quantity/paymentTerm — already tier-resolved. */
   unitPrice: number;
   matchedTier: PriceTierMatch | null;
@@ -78,9 +80,13 @@ export type ProductDetail = {
   englishName: string | null;
   slug: string;
   description: string | null;
+  descriptionText?: string | null;
   analysis: string | null;
   isDigital: boolean;
   available: boolean;
+  price?: number;
+  compareAtPrice?: number | null;
+  costPerItem?: number | null;
   guarantee?: string | null;
   batchSize?: number;
   minOrderQuantity?: number | null;
@@ -96,6 +102,7 @@ export type ProductDetail = {
   mainCategory: { id: number; name: string; slug: string } | null;
   otherCategories: { id: number; name: string; slug: string }[];
   tags: string[];
+  specs?: Array<{ name: string; value: string }>;
   images: { id: number; url: string; altText: string | null; isDefault: boolean; order: number }[];
   variants: ProductVariantDetail[];
   createdAt: string;

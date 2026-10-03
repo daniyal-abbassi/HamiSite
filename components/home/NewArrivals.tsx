@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import type { RailProduct } from "@/lib/home-rails";
+import type { RailProduct } from "@/lib/home-rails-db";
 import { ProductCard, type ProductCardData } from "@/components/shop/ProductCard";
 import { formatToman } from "@/lib/utils";
 import { Reveal } from "@/components/home/Reveal";

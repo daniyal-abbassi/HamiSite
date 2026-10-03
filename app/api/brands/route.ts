@@ -1,4 +1,4 @@
-import { listBrands } from "@/lib/catalog";
+import { listBrands } from "@/lib/catalog-db";
 import { ok, withErrorHandling } from "@/lib/http";
 
 /**
@@ -11,7 +11,7 @@ import { ok, withErrorHandling } from "@/lib/http";
  */
 export async function GET() {
   return withErrorHandling(async () => {
-    const brands = listBrands()
+    const brands = (await listBrands())
       .map((b) => ({
         id: b.id,
         name: b.name,

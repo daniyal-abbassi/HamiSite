@@ -4,7 +4,7 @@ import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
 import { sortOptions } from "@/lib/content/shop";
 import { isFilteredView, listingViewHref, type ListingView } from "@/lib/listing-view";
 import { cn, toFaDigits } from "@/lib/utils";
-import type { CatalogProduct } from "@/lib/catalog";
+import type { CatalogProduct } from "@/lib/catalog-db";
 
 /**
  * A dedicated destination for one brand or one category.

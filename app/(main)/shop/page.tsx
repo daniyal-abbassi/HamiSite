@@ -3,8 +3,8 @@ import { Suspense } from "react";
 import { ShopBanner } from "@/components/shop/ShopBanner";
 import { ShopClient } from "@/components/shop/ShopClient";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
-import { buildShopView } from "@/lib/shop-query";
-import { shopCategoryTiles } from "@/lib/shop-category-tiles";
+import { buildShopView } from "@/lib/shop-query-db";
+import { shopCategoryTiles } from "@/lib/shop-category-tiles-db";
 import "@/components/shop/shop-luxury.css";
 
 export const metadata: Metadata = {
@@ -31,7 +31,7 @@ export default async function ShopPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const view = buildShopView(await searchParams);
+  const [view, tiles] = await Promise.all([buildShopView(await searchParams), shopCategoryTiles()]);
 
   return (
     <div className="shop-luxury">
@@ -42,7 +42,7 @@ export default async function ShopPage({
               results themselves no longer wait on it. */}
           <DataCurrencyNote className="shop-currency-note" />
           <Suspense fallback={null}>
-            <ShopClient view={view} tiles={shopCategoryTiles()} />
+            <ShopClient view={view} tiles={tiles} />
           </Suspense>
         </div>
       </section>

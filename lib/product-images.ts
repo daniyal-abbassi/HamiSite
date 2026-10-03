@@ -1,11 +1,6 @@
 /**
- * Product and category imagery.
- *
- * A product renders the shop's own photograph. `lib/catalog.ts` mirrors each
- * product's primary image from the export into `/public/images/catalog/` and
- * promotes it to `images[0]`, because the origin host measured 5.8-7.5s per
- * image and had `next/image` returning 500 about as often as it succeeded.
- * 188 of 189 products have one; the mapping is `data/catalog-images.json`.
+ * Product and category imagery. Catalog image references are persisted in Prisma;
+ * the reviewed initial import maps the existing local mirrors onto each primary image.
  *
  * A product with no photograph renders `/brand/placeholder-product.webp` — one
  * identical, brand-owned tile, never a stand-in object. This replaced a

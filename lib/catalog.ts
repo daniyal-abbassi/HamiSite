@@ -3,31 +3,16 @@ import { persianIncludes } from "@/lib/persian";
 import { readCatalogSync } from "@/lib/catalog-store";
 
 /**
- * The catalogue, read from a JSON export of the live shop instead of the
- * database.
+ * Legacy fixture adapter retained for the synchronous unit fixtures in `tests/unit/`.
+ * Application routes and components must use `lib/catalog-db.ts`; this module is not a
+ * runtime data source.
+ */
+
+/**
+ * Compatibility fixture for legacy synchronous unit tests only.
  *
- * `data/hami-products.json` is a full dump of hamihamrah-shop.com — 189
- * products, 39 brands, 32 categories, 1570 image URLs, taken from the Mixin
- * platform API. It is the real inventory, with the shop's own photography.
- *
- * **Why this exists:** the dev database was emptied by a test run (`npm test`
- * resolves `.env.test`, which does not exist, so the suite ran against the dev
- * schema and left one row behind). Rather than restore it, the storefront now
- * reads the export. That also removes the site's dependency on a running
- * Postgres for anything the shopper can see.
- *
- * **The contract is deliberately unchanged.** Everything here maps the export
- * onto the exact response shape `/api/products` already returned from Prisma,
- * so every consumer — the home grids, the shop grid, the product page — keeps
- * working without edits. If a field looks redundant, it is there because the
- * old serializer emitted it.
- *
- * **What this does NOT cover:** carts, orders, auth and the whole admin still
- * read and write Prisma. Product ids here come from the export and are very
- * unlikely to match rows in the database, so add-to-cart and checkout should be
- * treated as unverified until someone signs in and tries them — the cart route
- * rejects on authentication before it ever reaches a product lookup, so this
- * has not actually been exercised. Browsing is what this makes work.
+ * The app uses `lib/catalog-db.ts`; do not add runtime imports of this module.
+ * The checked-in JSON remains an import source, not runtime authority.
  */
 
 /* ------------------------------------------------------------------ types */

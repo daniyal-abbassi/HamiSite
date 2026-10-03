@@ -2,16 +2,16 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CatalogListing } from "@/components/shop/CatalogListing";
 import { brandLabel } from "@/lib/product-identity";
-import { listBrands, queryProducts } from "@/lib/catalog";
+import { listBrands, queryProducts } from "@/lib/catalog-db";
 import { resolveSortKey } from "@/lib/content/shop";
 import { destinationDescription } from "@/lib/listing-view";
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
 
-function findBrand(slug: string) {
+async function findBrand(slug: string) {
   const wanted = decodeURIComponent(slug).toLowerCase().trim();
-  const brands = listBrands();
+  const brands = await listBrands();
   return (
     brands.find((b) => b.slug === wanted) ??
     brands.find((b) => b.slug.toLowerCase() === wanted) ??
@@ -22,7 +22,7 @@ function findBrand(slug: string) {
 
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const brand = findBrand(slug);
+  const brand = await findBrand(slug);
   if (!brand) return { title: "برند یافت نشد | حامی همراه" };
   const name = brandLabel(brand.name);
   return {
@@ -44,7 +44,7 @@ export default async function BrandPage({
   searchParams: SearchParams;
 }) {
   const { slug } = await params;
-  const brand = findBrand(slug);
+  const brand = await findBrand(slug);
   if (!brand) notFound();
 
   const view = {
@@ -52,7 +52,7 @@ export default async function BrandPage({
     obtainable: (await searchParams).obtainable === "1",
   };
   const total = brand.productCount;
-  const { data, total: shownTotal } = queryProducts({
+  const { data, total: shownTotal } = await queryProducts({
     brandId: brand.id,
     purchasableOnly: view.obtainable,
     sort: view.sort || undefined,
@@ -60,7 +60,7 @@ export default async function BrandPage({
     page: 1,
     pageSize: 60,
   });
-  const obtainableCount = queryProducts({ brandId: brand.id, purchasableOnly: true, page: 1, pageSize: 1 }).total;
+  const obtainableCount = (await queryProducts({ brandId: brand.id, purchasableOnly: true, page: 1, pageSize: 1 })).total;
 
   return (
     <CatalogListing

@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { LiquidSelection } from "@/components/liquid/LiquidSelection";
 import { categoryImageFor } from "@/lib/product-images";
-import type { ShopTile } from "@/lib/shop-category-tiles";
+import type { ShopTile } from "@/lib/shop-category-tiles-db";
 
 /**
  * The department row at the top of the shop page.

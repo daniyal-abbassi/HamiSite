@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { queryProducts } from "@/lib/catalog";
+import { queryProducts } from "@/lib/catalog-db";
 import { ApiError, ok, parsePagination, withErrorHandling } from "@/lib/http";
 
 /**
@@ -35,7 +35,7 @@ export async function GET(request: Request) {
     }
     const input = parsed.data;
 
-    const { data, total } = queryProducts({
+    const { data, total } = await queryProducts({
       q: input.q,
       brandId: input.brandId,
       categoryId: input.categoryId,
