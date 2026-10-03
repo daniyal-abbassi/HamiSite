@@ -29,17 +29,17 @@ untrustworthy it says so and why.
 **Why some lists lie**: `/speckit-implement` step 8 is the only component in the chain that writes
 `[X]`. `speckit-analyze` never reads the codebase; `speckit-converge` reads it but is append-only by
 design and must not re-mark a box. Work routed through the worker-dispatch lane therefore had **no
-writer at all**. Fixed at the source in `tools/dispatch/worker-ctl` — every `implement` dispatch now
-carries a mandatory task write-back rule. Read the headers inside `specs/007*/tasks.md`,
+writer at all**; the dispatcher was patched to carry a mandatory task write-back rule (that lane was
+retired on 2026-10-04, so the hazard now applies to anything built without `/speckit-implement`).
+Read the headers inside `specs/007*/tasks.md`,
 `specs/009*/tasks.md` and `specs/011*/tasks.md` before acting on any box in them.
 
 ---
 
 ## W1 — Finish feature 012 across the remaining six surfaces
 
-**In flight as of this writing** — two workers are on it. Check before starting:
-`git log --oneline -5`, `grep -c '^- \[ \]' specs/012-liquid-dock-navigation/tasks.md`, and
-`ls .agent-pair/locks/`.
+**In flight as of this writing** — two workers were on it, before the worker lane was retired. Check before
+starting: `git log --oneline -5` and `grep -c '^- \[ \]' specs/012-liquid-dock-navigation/tasks.md`.
 
 **What exists**: the cart is gone from the mobile bar (five destinations), and
 `components/liquid/LiquidSelection.tsx` is a working vendored marker — proven on a real `dir="rtl"`
@@ -196,9 +196,10 @@ Start with:
    `ip -br addr` fresh — **not** `ip route get 1.1.1.1`, because the tunnel interface owns the default
    route and lies about the source. Fixing phone access needs root; this box's `sudo` and `pkexec` were
    both unavailable from the agent session on 2026-09-27.
-5. **Shared worktree, several agents.** Read `.agent-pair/README.md` and the bottom of `BOARD.md`
-   before your first edit. Claim a lock per file. **Release means move to `.agent-pair/released/`, never
-   delete.** Never `git restore`, `git checkout --`, `git stash`, or `git add -A`.
+5. **The owner keeps uncommitted work in this tree.** One agent works here as of 2026-10-04 — the
+   `.agent-pair/` coordination layer, its locks and its board are retired — but that does not make the tree
+   yours alone. Never `git restore`, `git checkout --`, `git stash`, or `git add -A`; stage by explicit path
+   and re-read `git status --short` before you commit.
 6. **An untrusted click is not a click.** `el.click()` inside `page.evaluate()` is ignored by Next's
    `<Link>`; use `page.mouse.click()` at the element centre. This has already produced one false
    "the effect does not work".

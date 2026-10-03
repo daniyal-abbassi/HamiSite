@@ -5,12 +5,13 @@ Working directory: `/home/lain/lain_projects/hami-site-2/HamiSite-basic-structur
 ## Prerequisites
 
 ```bash
-tmux has-session -t hh-dev || ./tools/dispatch/team-up      # the tmux layer dies on every reboot
+npm run dev -- -H 0.0.0.0                     # -H 0.0.0.0 so the LAN phone can reach it
 curl -s -o /dev/null -w "%{http_code}\n" http://localhost:3000/   # expect 200
 ```
 
-The dev server is shared. **Never start a second one on port 3000**, and never restart it without saying so
-on `.agent-pair/BOARD.md` — it silently invalidates another agent's in-flight measurements.
+One agent works in this checkout (the multi-agent layer was retired 2026-10-04), so there is no partner to
+announce a restart to — but a browser probe already in flight dies when the server recompiles, so keep the
+server up for the whole measurement pass and never start a second one on `:3000`.
 
 ## Sign in as an admin
 
@@ -51,10 +52,10 @@ npm run lint
 
 ## Browser automation
 
-One browser at a time, through the mutex — two agents browsing the shared server produce false failures:
+One browser at a time — a dev server compiling on demand produces false failures if two probes overlap:
 
 ```bash
-tools/dispatch/browser-gate <who> -- node .scratch/<your-probe>.mjs
+node .scratch/<your-probe>.mjs
 ```
 
 Measurement traps already paid for (see `specs/002-scroll-atmosphere/tools/surface-separation.mjs`):

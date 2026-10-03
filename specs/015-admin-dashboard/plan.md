@@ -30,8 +30,8 @@ users and coupons keep their behaviour and data and inherit the new frame.
 only in the routes.
 
 **Testing**: Vitest, **node environment only — there is no DOM harness** (`npm run test:unit`; never bare
-`npm test`, which truncates nineteen live tables). Browser truth is scripted Playwright through
-`tools/dispatch/browser-gate`, and the measurement style already proven in
+`npm test`, which truncates nineteen live tables). Browser truth is scripted Playwright run directly, one
+browser at a time on `:3000`, and the measurement style already proven in
 `specs/002-scroll-atmosphere/tools/surface-separation.mjs`.
 
 **Target Platform**: Modern browsers, RTL Persian (`<html lang="fa" dir="rtl">` at `app/layout.tsx:95`),

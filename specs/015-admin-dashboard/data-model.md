@@ -87,8 +87,8 @@ seven slots is unusable); **no destination may exist on one breakpoint and not t
 
 The kit's `data-table.tsx` needs `checkbox`, `tooltip`, `alert`; its `list-pagination.tsx` needs a
 `pagination` primitive; several need `dropdown-menu`/`popover`/`sheet`. This repo has 11 hand-written
-primitives in `components/ui/` and **no Radix**, and `components/ui/*` is another agent's territory by
-`.agent-pair/README.md`.
+primitives in `components/ui/` and **no Radix**, and `components/ui/*` belongs to the storefront, not to
+this feature.
 
 Decision (recorded as R7 in `research.md`): anything the admin needs that we do not have is written in
 **`components/admin/ui/`**, hand-built in our own style, never in `components/ui/` and never via Radix. The

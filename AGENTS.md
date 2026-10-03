@@ -1,46 +1,20 @@
-# AGENTS.md — rules for every AI agent in this checkout
+# AGENTS.md — rules for the agent in this checkout
 
-You may be Qoder (IDE or CLI), Freebuff, or something else — and **you may not be the only agent
-working here**. The complete project instructions live in [`CLAUDE.md`](CLAUDE.md): database
-rules (`db:push`, never reseed blindly), the dev-server stale-build trap, graphify, and the
-reference-only directories. Read it too. This file adds the one requirement that must not be
-missed.
+**One agent works here: Qoder.** The tmux worker pool, the `.agent-pair/` coordination board, the
+lock-and-heartbeat convention and all of `tools/dispatch/` were removed on 2026-10-03 by owner
+decision, so that a single agent owns the project instead of several negotiating over it. The whole
+layer is archived outside the repo at `../agent-layer-archive-2026-10-03/`. Do not rebuild it, and
+do not look for a board or a lock directory — there is no one else to coordinate with.
 
-## Required before your first edit: read `.agent-pair/`
+The complete project instructions live in [`CLAUDE.md`](CLAUDE.md): database rules (`db:push`,
+never reseed blindly), the dev-server stale-build trap, graphify, and the reference-only
+directories. Read it too.
 
-Several agents share this directory live, and their coordination channel — `.agent-pair/` — is
-git-ignored, so `git status` will never reveal it. You must check for it yourself, **before your
-first edit**:
+One rule survives the teardown, because it protects the owner rather than another agent:
 
-```bash
-test -f .agent-pair/README.md && cat .agent-pair/README.md .agent-pair/BOARD.md
-```
-
-Order: read `.agent-pair/README.md`, then the bottom of `BOARD.md`, then find your row in the
-"Who is who" table. If you don't have one, post a `HELLO` on the board and wait before editing
-anything.
-
-Four rules — each exists to stop you destroying another agent's work:
-
-1. **Claim before you edit.** Create `.agent-pair/locks/<path>.lock` (filename convention in
-   README rule 1) containing `who`, `why`, `since` (ISO 8601). One lock per file; `rm` it right
-   after you commit.
-2. **Never edit a file someone else has locked.** Post a `REQUEST` on `BOARD.md` instead and keep
-   working on something else. No answer after ~10 minutes escalates to the human — not into an
-   overwrite.
-3. **Heartbeat every ~5 minutes.** Overwrite `.agent-pair/HEARTBEAT-<you>.md` with `since`,
-   `doing`, `next`.
-4. **Never `git restore`, `git checkout --`, `git stash`, or `git add -A`.** A dirty file you did
-   not touch belongs to another agent — stage by explicit path and re-read `git status --short`
-   before you commit.
-
-Board messages: append with `>>`, newest at the bottom, format
-`### <YYYY-MM-DD HH:MM> — <from> → <to|all> — <KIND>`. Never edit or delete another agent's
-message; correct yourself with a new message that quotes the old one.
-
-`CLAUDE.md` ends with this same block — seeing it twice is expected, not a mistake.
-
-If `.agent-pair/` does not exist, you are the only agent here and this section does not apply.
+- **Never `git restore`, `git checkout --`, `git stash`, or `git add -A`.** The working tree can
+  hold the owner's own uncommitted edits — stage by explicit path, and re-read `git status --short`
+  before you commit.
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:46cd31e7 -->
 ## Beads Issue Tracker

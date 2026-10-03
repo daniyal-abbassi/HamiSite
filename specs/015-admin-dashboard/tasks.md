@@ -121,11 +121,16 @@ behaviour is untouched, no per-page edit was needed (FR-008).
 - [X] T036 Run `npm run typecheck` and `npm run test:unit`; both must pass (SC-007)
   - **evidence**: `npm run typecheck` exit 0 and 377 unit tests pass (measured 2026-10-01).
 - [ ] T037 [P] Smoke all eight admin routes for HTTP 200 and zero console errors after the shell swap, including one real `/admin/orders/<id>` (SC-004)
-- [ ] T038 Re-issue the browser verification to a worker that actually has Playwright (claude — `enabledMcpjsonServers` lists it), through the mutex: `tools/dispatch/browser-gate <who> -- node <script>`. **hermes could not run it**: `HTTP 404: No active credentials for provider` on `fable-5.1`. Do not mark this done until a measurement exists
+- [ ] T038 Run the browser verification yourself, directly — as of 2026-10-04 there is no worker to re-issue
+  it to (the dispatch layer is retired) and Playwright is available in this session. History: `hermes` could not
+  run it — `HTTP 404: No active credentials for provider` on `fable-5.1`. Do not mark this done until a
+  measurement exists
 - [ ] T039 Put the side-by-side to the owner: storefront screenshot and dashboard screenshot at 360px, for the SC-008 "does it look like Hami, not a template" judgement — that call is theirs, not mine (Constitution IV)
 - [ ] T040 Sweep the admin surface for dead code the audit already flagged: `components/admin/coupons/CouponsAdminClient.tsx` is imported nowhere (`specs/CODEBASE-AUDIT-2026-09-28.md:29`) — move it aside or wire it, do not leave it rotting silently
 - [ ] T041 Record the deferred server-side gate as a standing risk with its one-step fix (a `middleware.ts` on the `/admin` prefix; there is none anywhere today, `AdminGate.tsx:15-33` redirects client-side after the HTML is served) — owner chose "handle later" on 2026-10-01, so it is written down, not forgotten (`research.md` R5)
-- [ ] T042 Release every lock this feature took by **moving** it to `.agent-pair/released/`, never deleting, and post the completion note on `BOARD.md`
+- [x] ~~T042 Release every lock this feature took~~ — **moot, closed 2026-10-04**: the owner retired the
+  multi-agent layer. `.agent-pair/` (board, locks, heartbeats, inboxes) and `tools/dispatch/` are deleted;
+  every lock this feature held went with the directory. Nothing to release, nowhere to post it.
 
 - [ ] T043 **Wire the five new primitives in, or take them back out** — as of 2026-10-01
   `components/admin/ui/{Pagination,Tooltip,Alert,Checkbox,spinner}` are imported by **nothing**, while
@@ -155,17 +160,20 @@ Phase 5 (US3): T009 + T013–T016 ──► T028 ──► T029, T030, T031
 Phase 6:       everything above ──► T032–T038 ──► T039 ──► T040, T041, T042
 ```
 
-**Single-writer rule**: one agent may hold `specs/015-admin-dashboard/tasks.md` at a time — this file. Agents
-tick their own boxes and never rewrite a line they do not own.
+**Writer**: one agent works in this checkout (Qoder, since the multi-agent layer was retired on 2026-10-04),
+so this file has a single writer by default. Tick only the boxes whose evidence you personally verified.
 
 ## Parallel opportunities
 
+Ordering still matters even with one agent — these are the groups that have no dependency between them, so
+they can be done in any order:
+
 - T003 with T002; T006 with T007 (different files, same lane)
-- T013/T014/T015/T016 are four independent sections — one per agent if wanted
+- T013/T014/T015/T016 are four independent sections
 - T021 with T022; T024/T025/T026/T027 are one browser pass, not four
 - T032/T033/T034/T035 are independent checks
 
-## Parallel example — User Story 1
+## Example run — User Story 1
 
 ```bash
 tasks: T013 (ActionNeeded.tsx), T014 (Takings.tsx), T015 (OrderVolume.tsx), T016 (NewestOrders.tsx)
@@ -183,13 +191,15 @@ is already usable; Phase 6 is the gate that calls it done.
 - Never `npm test`, never bare `npx vitest` — `tests/setup.ts` is in `setupFiles` and `resetDb()` truncates
   nineteen live tables. `npm run test:unit` only.
 - `tailwind.config.ts` and `app/globals.css` are shared with the storefront: **append token definitions
-  only**, never reorder, never restyle an existing rule, never remove anything. Two agents editing them
-  corrupt each other.
+  only**, never reorder, never restyle an existing rule, never remove anything. The storefront's atmosphere
+  depends on rules this feature does not own.
 - Frozen: `app/api/**`, `data/**`, `prisma/**`, `docs/inspires/**`, and all of
   `app/(main)`/`components/home|shop|atmosphere`. No new dependency, ever, without the owner.
 - Persian first: `toFaDigits`, `formatToman` (`lib/utils.ts`), `formatFaDate`/`orderStatusLabels`
   (`lib/content/order.ts`); no letter-spacing, no uppercase.
-- Shared worktree: claim a lock per file, never `git add -A`, never `restore`/`checkout --`/`stash`/`reset`,
-  never delete another agent's lock — release means move to `.agent-pair/released/`.
-- One browser at a time on `:3000`, always through `tools/dispatch/browser-gate`.
+- Git: never `git add -A`, never `restore`/`checkout --`/`stash`/`reset`. The owner keeps their own
+  uncommitted edits in this tree — stage by explicit path.
+- One browser workload at a time on `:3000`. The `tools/dispatch/browser-gate` mutex is gone with the agent
+  layer (2026-10-04); with a single agent there is nothing to contend with, but a dev server compiling on
+  demand still mis-measures a second concurrent probe, so run browser gates serially.
 - No performance or smoothness claim may be made from this machine; timing is measured on the LAN phone.

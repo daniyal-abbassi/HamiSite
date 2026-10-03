@@ -91,20 +91,16 @@ curl -s -o /dev/null -w "%{http_code}\n" "http://localhost:3000$CHUNK"
 Recovery: kill every Next process by pid, `rm -rf .next`, then `npm run dev`.
 Never `rm -rf .next` while a server is serving from it.
 
-## If `.agent-pair/` exists, you are not the only agent here
+## One agent works in this checkout: Qoder
 
-More than one agent may be working in this checkout at the same time. The folder is git-ignored, so
-`git status` will never show it — check for it directly before your first edit:
+The multi-agent layer — `.agent-pair/` (board, locks, heartbeats, inboxes), the tmux worker pool and
+`tools/dispatch/` — was removed on 2026-10-03 by owner decision. Nothing to coordinate with, nothing to
+claim, no board to read. The old layer is archived outside the repo at
+`../agent-layer-archive-2026-10-03/` if the owner ever wants the record back; do not rebuild it in-tree.
 
-```bash
-test -f .agent-pair/README.md && cat .agent-pair/README.md .agent-pair/BOARD.md
-```
-
-Four rules, all of them about not destroying someone else's work: **claim before you edit**
-(`.agent-pair/locks/<path>.lock`), **never edit a file someone else has locked** (post a `REQUEST`
-instead), **heartbeat every ~5 minutes**, and **never `git restore` / `git checkout --` / `git stash` /
-`git add -A`** — a dirty file you did not touch belongs to another agent, so stage by explicit path.
-Append to the board with `>>`; never rewrite an existing message in place, even to fix it.
+What survives is the git hygiene, because the owner keeps their own uncommitted edits in this tree:
+**never `git restore` / `git checkout --` / `git stash` / `git add -A`** — stage by explicit path and
+re-read `git status --short` before you commit.
 
 
 <!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:1105d646 -->

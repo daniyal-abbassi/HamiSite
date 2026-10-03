@@ -1,5 +1,11 @@
 # Parallel-agent brief — Hami Hamrah, band 3 (design contrast + interaction states)
 
+> **RETIRED 2026-10-04 — read this before anything below.** The owner dissolved the agent team; one agent
+> (Qoder) works in this checkout. `.agent-pair/` and `tools/dispatch/` are deleted, so the coordination rules
+> in §4 are void and the task split has nobody to assign it to. This file survives as the record of how band 3
+> was organised in late September, not as instructions. The layer itself is archived outside the repo at
+> `../agent-layer-archive-2026-10-03/`.
+
 **Written**: 2026-09-23, by the agent currently driving this repo. Amended 2026-09-24 for the third agent.
 **Audience**: the agents working in this same checkout at the same time.
 **Read this whole file before editing anything.** The coordination rules in §4 are the reason three agents can

@@ -62,9 +62,6 @@ specs/001-premium-rtl-storefront/baseline/*.png
 !specs/001-premium-rtl-storefront/baseline/shop@*-fold.png
 !specs/001-premium-rtl-storefront/baseline/pdp-variant@*-fold.png
 
-# Live agent-pair coordination (this session only — the record lives in notes/)
-.agent-pair/
-
 # Beads / Dolt files (added by bd init)
 .dolt/
 *.db
@@ -72,7 +69,7 @@ specs/001-premium-rtl-storefront/baseline/*.png
 .beads/proxieddb/
 *.gate.lock*
 
-# Agent working space: task briefs, probe scripts, worker reports. Deliberately not part of the
+# Agent working space: task briefs, probe scripts, gate reports. Deliberately not part of the
 # repo history — anything from here that matters has already been written into specs/.
 .scratch/
 

@@ -1,11 +1,13 @@
-# `research/` — the research agent's output directory
+# `research/` — where written-up research goes
 
-**You are the third agent in this checkout and you are read-only everywhere else.** Write only inside this
-folder. Do not edit source, specs, tasks, notes, or `.agent-pair/BOARD.md`'s existing messages — you append
-to the board, that is all.
+**Retired 2026-10-04 as a role, kept as a convention.** This was the lane of a third, read-only research
+agent; the multi-agent layer is gone and one agent works in this checkout now. The format below still applies
+whenever research is written up — findings land in this folder, not scattered through source or spec prose.
 
-Read `.agent-pair/README.md` first (the channel), then `specs/001-premium-rtl-storefront/notes/parallel-agent-plan.md`
-§1–§3 (what the project is, the owner's words, the non-negotiables).
+A research pass still does not edit source, specs, tasks or notes: it writes a file here and reports. For
+what the project is, the owner's own words and the non-negotiables, read
+`specs/001-premium-rtl-storefront/spec.md` (and §1–§3 of `notes/parallel-agent-plan.md`, retired as
+instructions but still the clearest statement of intent).
 
 ## What a good deliverable looks like
 
@@ -28,11 +30,11 @@ Three rules that matter more than the format:
    written in `notes/`, in a spec, or in a code comment — especially if it contradicts the owner — that goes
    at the top of your file, not in a footnote.
 
-## Where your work lands
+## Where the work lands
 
-Post `DONE` on `.agent-pair/BOARD.md` with the file name and the three findings that matter most. The driver
-promotes anything load-bearing into `notes/` or the spec's Amendment Record; you don't edit those, and you
-don't need to wait for that to happen for your work to count.
+Report the file name and the three findings that matter most, in the reply. There has been no board to post
+`DONE` on since 2026-10-04 — what survives gets promoted into `specs/001-premium-rtl-storefront/notes/`, and
+chatter stays out of the repo.
 
 ## The four questions, in the order they are worth most
 

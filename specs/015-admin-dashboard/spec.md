@@ -288,21 +288,21 @@ have.
 
 - **Unit (Vitest, node environment — there is no DOM harness here)**: pure logic only — the read-state
   reducer, period math, numeral/currency formatting. `tests/unit/*.test.ts`, run with `npm run test:unit`.
-- **Browser (scripted Playwright through `tools/dispatch/browser-gate`, one browser at a time on `:3000`)**:
+- **Browser (scripted Playwright, one browser at a time on `:3000`)**:
   overflow at 360 px, keyboard order, contrast measurement, and the three states per section, screenshotted to
   `.scratch/`.
 - **Contract**: each section's rendered number compared to the raw `/api/admin/*` JSON it came from.
 
 ### Boundaries
 
-- **Always**: typecheck and `npm run test:unit` before reporting done; claim a `.agent-pair/locks/` entry per
-  file before editing it; re-read `git status --short` before staging; stage explicit paths only.
+- **Always**: typecheck and `npm run test:unit` before reporting done; re-read `git status --short` before
+  staging; stage explicit paths only.
 - **Ask first**: any new dependency (kit or otherwise); any change to `app/api/**`, `data/**`, `prisma/**`;
   server-side auth gating (Open Question 3); any edit to the constitution beyond FR-002's amendment; commit or
   push.
 - **Never**: `npm test` or bare `npx vitest` (wipes nineteen tables); `git restore`/`checkout --`/`stash`/
-  `add -A` in this shared worktree; delete another agent's lock (move it to `.agent-pair/released/`); touch
-  `docs/inspires/`; fabricate a figure to fill a card; start a second dev server on `:3000`.
+  `add -A` — the owner keeps their own uncommitted edits in this tree; touch `docs/inspires/`; fabricate a
+  figure to fill a card; start a second dev server on `:3000`.
 
 ---
 
