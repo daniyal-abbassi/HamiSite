@@ -5,17 +5,19 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { cn } from "@/lib/utils";
+import { cn, toFaDigits } from "@/lib/utils";
+import { brandLabel } from "@/lib/product-identity";
 import { stockOptions } from "@/lib/content/shop";
-import type { ShopBrand, ShopCategory } from "./types";
+import type { ShopBrand } from "./types";
+import type { CategoryFacet } from "@/lib/shop-query";
 
 const FILTER_KEYS = ["q", "category", "brand", "min", "max", "stock", "special"] as const;
 
 function SidebarHeading({ children }: { children: React.ReactNode }) {
-  return <h3 className="font-mono text-[10px] tracking-[0.08em] text-gold">{children}</h3>;
+  return <h3 className="font-mono text-xs tracking-normal text-aqua">{children}</h3>;
 }
 
-export function FilterSidebar({ categories, brands }: { categories: ShopCategory[]; brands: ShopBrand[] }) {
+export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: CategoryFacet[]; brands: ShopBrand[] }) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -41,16 +43,28 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
     mutate(params);
     params.delete("page");
     const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname);
+    router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
   }
 
-  const rootCategories = categories.filter((category) => category.parentId === null).slice(0, 8);
+  /*
+   * The departments, from the server-built view — not the export's top-level
+   * categories. `slice(0, 8)` of those used to be the list, which put three empty
+   * roots on the page (FR-028's "28 empty doors" in miniature) and, after band 2
+   * made a category mean its subtree, offered «موبایل» (8) beside «موبایل و تبلت»
+   * (135) as two answers to one question. A facet is now the same nine kinds the
+   * homepage carousel and the tile row are built from (T056).
+   *
+   * `showsCount` is the department's own honesty rule: a route that is a subset of
+   * its kind prints no number, because 8 behind a door named «موبایل» is not the
+   * department and the shopper should not be told a figure for it.
+   */
 
   return (
     <aside
-      className="w-full shrink-0 space-y-6 rounded-xl glass p-5 lg:sticky lg:top-24 lg:w-72"
+      className="shop-filter-sidebar w-full shrink-0 space-y-6 rounded-xl glass p-5 lg:sticky lg:top-24 lg:w-72"
       aria-label="فیلتر محصولات"
     >
+      <div className="shop-filter-heading"><h2>انتخاب را دقیق‌تر کنید</h2><span>فیلتر محصولات</span></div>
       {/* Search */}
       <form
         role="search"
@@ -68,22 +82,22 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
           type="search"
           value={query}
           onChange={(event) => setQuery(event.target.value)}
-          placeholder="جستجو در محصولات…"
-          aria-label="جستجو در محصولات"
+          placeholder="جست‌وجو در محصولات…"
+          aria-label="جست‌وجو در محصولات"
           className="bg-background/40 pe-10"
         />
       </form>
 
       {/* Categories */}
-      {rootCategories.length > 0 && (
+      {categoryFacets.length > 0 && (
         <div className="space-y-2.5">
           <SidebarHeading>دسته‌بندی</SidebarHeading>
-          <div className="flex flex-wrap gap-2">
-            {rootCategories.map((category) => {
+          <div className="shop-filter-options flex flex-wrap gap-2">
+            {categoryFacets.map((category) => {
               const active = category.slug === activeCategory;
               return (
                 <button
-                  key={category.id}
+                  key={category.slug}
                   type="button"
                   aria-pressed={active}
                   onClick={() =>
@@ -93,13 +107,16 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
                     })
                   }
                   className={cn(
-                    "rounded-full border px-3.5 py-1 text-[11px] font-bold transition-colors",
+                    "rounded-full border px-3.5 py-1 text-xs font-bold transition-colors",
                     active
-                      ? "border-gold bg-gold/10 text-gold"
-                      : "border-line text-foreground/70 hover:border-gold/50 hover:text-foreground",
+                      ? "border-aqua bg-aqua/10 text-aqua"
+                      : "border-line text-foreground/70 hover:border-aqua/50 hover:text-foreground",
                   )}
                 >
-                  {category.name}
+                  {category.label}
+                  {category.showsCount && (
+                    <span className="ms-1.5 font-mono text-[10px] opacity-60">{toFaDigits(category.count)}</span>
+                  )}
                 </button>
               );
             })}
@@ -111,8 +128,13 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
       {brands.length > 0 && (
         <div className="space-y-2.5">
           <SidebarHeading>برند</SidebarHeading>
-          <div className="flex flex-wrap gap-2">
-            {brands.slice(0, 12).map((brand) => {
+          <div className="shop-brand-options flex flex-wrap gap-2">
+            {/*
+             * All of them, not the first twelve. `listBrands()` already excludes brands
+             * with no products, so the slice only ever hid real doors — ترانیو and
+             * COMTEL were reachable from nothing in the interface (FR-029, SC-014).
+             */}
+            {brands.map((brand) => {
               const active = brand.slug === activeBrand;
               return (
                 <button
@@ -126,13 +148,16 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
                     })
                   }
                   className={cn(
-                    "rounded-full border px-3.5 py-1 text-[11px] font-bold transition-colors",
+                    "rounded-full border px-3.5 py-1 text-xs font-bold transition-colors",
                     active
-                      ? "border-gold bg-gold/10 text-gold"
-                      : "border-line text-foreground/70 hover:border-gold/50 hover:text-foreground",
+                      ? "border-aqua bg-aqua/10 text-aqua"
+                      : "border-line text-foreground/70 hover:border-aqua/50 hover:text-foreground",
                   )}
                 >
-                  {brand.name}
+                  {brandLabel(brand.name)}
+                  {(brand.productCount ?? 0) > 0 && (
+                    <span className="ms-1.5 font-mono text-[10px] opacity-60">{toFaDigits(brand.productCount!)}</span>
+                  )}
                 </button>
               );
             })}
@@ -214,7 +239,7 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
               else params.delete("special");
             })
           }
-          className="size-4 accent-gold"
+          className="size-4 accent-aqua"
         />
         فقط پیشنهادهای ویژه
       </label>
@@ -227,7 +252,7 @@ export function FilterSidebar({ categories, brands }: { categories: ShopCategory
             FILTER_KEYS.forEach((key) => params.delete(key));
           })
         }
-        className="flex w-full items-center justify-center gap-1.5 border-t border-line pt-4 text-[11px] font-bold text-foreground/60 transition-colors hover:text-gold"
+        className="flex w-full items-center justify-center gap-1.5 border-t border-line pt-4 text-xs font-bold text-foreground/60 transition-colors hover:text-aqua"
       >
         <X className="size-3.5" /> حذف همه فیلترها
       </button>

@@ -5,14 +5,7 @@ import { normalizeIranianMobile } from "@/lib/phone";
 import { prisma } from "@/lib/prisma";
 import { partnerRequestTextFields } from "@/lib/content/partners";
 import { assertValidPartnerFile, savePartnerDocument } from "@/lib/partner-uploads";
-import {
-  isValidEconomicCode,
-  isValidIranianMobile,
-  isValidIranianNationalCode,
-  isValidIranianPostalCode,
-  isValidLegalNationalId,
-  toLatinDigits,
-} from "@/lib/validators";
+import { isValidEconomicCode, isValidIranianMobile, isValidIranianNationalCode, isValidIranianPostalCode, isValidLegalNationalId, toLatinDigits, isValidIranianLandline } from "@/lib/validators";
 
 /**
  * POST /api/partners — B2B partnership application (multipart/form-data).
@@ -41,7 +34,15 @@ const textSchema = z
     shopAddress: z.string().trim().min(5, { message: "آدرس فروشگاه الزامی است" }).max(500),
     // INDIVIDUAL
     postalCode: z.string().trim().transform(toLatinDigits).optional(),
-    shopPhone: z.string().trim().min(7, { message: "تلفن فروشگاه معتبر نیست" }).max(20).optional(),
+    // FR-063. The client says the same thing; a shape check on one side only is a
+    // shape check that can be walked around by anyone who does not use the form.
+    shopPhone: z
+      .string()
+      .trim()
+      .optional()
+      .refine((value) => !value || isValidIranianMobile(value) || isValidIranianLandline(value), {
+        message: "تلفن فروشگاه معتبر نیست",
+      }),
     // LEGAL
     companyName: z.string().trim().max(200).optional(),
     companyAddress: z.string().trim().max(500).optional(),

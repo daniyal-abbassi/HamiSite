@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ShoppingBag } from "lucide-react";
+import { ArrowLeft, Phone, ShoppingBag } from "lucide-react";
 import { CartLine } from "@/components/cart/CartLine";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -10,6 +10,7 @@ import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { formatToman } from "@/lib/utils";
+import { storeContact } from "@/lib/content/contact";
 
 export function CartPageClient() {
   const { status } = useAuth();
@@ -42,12 +43,12 @@ export function CartPageClient() {
   if (!hasCart) {
     return (
       <div className="glass mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
-        <ShoppingBag className="size-10 text-gold/60" />
+        <ShoppingBag className="size-10 text-aqua/60" />
         <h2 className="text-lg font-black">وارد حساب خود شوید</h2>
         <p className="text-sm leading-7 text-muted-foreground">
           سبد خرید شما به حساب کاربری متصل است تا در دستگاه‌های مختلف در دسترس بماند.
         </p>
-        <Link href="/login?next=/cart">
+        <Link href={`/login?next=${encodeURIComponent("/cart")}`}>
           <Button>ورود / ثبت‌نام</Button>
         </Link>
       </div>
@@ -57,7 +58,7 @@ export function CartPageClient() {
   if (!cart || cart.items.length === 0) {
     return (
       <div className="glass mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
-        <ShoppingBag className="size-10 text-gold/60" />
+        <ShoppingBag className="size-10 text-aqua/60" />
         <h2 className="text-lg font-black">سبد خرید شما خالی است</h2>
         <p className="text-sm text-muted-foreground">هنوز محصولی انتخاب نکرده‌اید.</p>
         <Link href="/shop">
@@ -108,15 +109,26 @@ export function CartPageClient() {
           </div>
           <div className="flex items-center justify-between">
             <dt className="text-muted-foreground">جمع سبد</dt>
-            <dd className="font-black text-gold">{formatToman(cart.subtotal)}</dd>
+            <dd className="font-black text-aqua">{formatToman(cart.subtotal)}</dd>
           </div>
         </dl>
-        <p className="mt-3 text-[11px] leading-6 text-muted-foreground/70">
-          هزینه ارسال و تخفیف کوپن در مرحله بعد محاسبه می‌شود.
+        <p className="mt-3 text-xs leading-6 text-muted-foreground/70">
+          پرداخت آنلاین در این فروشگاه فعال نیست. برای تأیید قیمت و موجودی تماس بگیرید؛ هزینهٔ ارسال و
+          تخفیف در همان تماس مشخص می‌شود.
         </p>
+        <div className="mt-4 flex flex-wrap items-center gap-2">
+          <a
+            href={storeContact.phoneHref}
+            dir="ltr"
+            className="inline-flex items-center gap-2 rounded-xl bg-oxblood px-4 py-2.5 text-xs font-bold text-white transition-opacity hover:opacity-90"
+          >
+            <Phone className="size-4" aria-hidden="true" />
+            {storeContact.phoneDisplay}
+          </a>
+        </div>
         <Link href="/checkout" className="mt-5 block">
-          <Button className="w-full" size="lg">
-            ادامه و تسویه حساب
+          <Button className="w-full" size="lg" variant="ghost">
+            ادامه با فرم سفارش
             <ArrowLeft className="size-4" />
           </Button>
         </Link>

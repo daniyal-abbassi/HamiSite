@@ -1,0 +1,500 @@
+[
+ {
+  "width": 360,
+  "height": 640,
+  "lenisActive": true,
+  "doc": {
+   "h": 12149,
+   "vh": 640
+  },
+  "states": {
+   "pill": 1,
+   "solid bar": 30
+  },
+  "headerNodes": [
+   {
+    "id": "h0",
+    "tag": "A",
+    "label": "حامی همراه — صفحه اصلی"
+   },
+   {
+    "id": "h8",
+    "tag": "INPUT",
+    "label": "جست‌وجوی محصول"
+   },
+   {
+    "id": "h9",
+    "tag": "A",
+    "label": "ورود به حساب"
+   },
+   {
+    "id": "h10",
+    "tag": "BUTTON",
+    "label": "سبد خرید"
+   }
+  ],
+  "headerWorst": [
+   [
+    "pill|h0",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h0"
+    }
+   ],
+   [
+    "pill|h8",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h8"
+    }
+   ],
+   [
+    "pill|h9",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h9"
+    }
+   ],
+   [
+    "pill|h10",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h10"
+    }
+   ],
+   [
+    "solid bar|h0",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 370,
+     "ground": "56,11,18",
+     "reachedGround": false,
+     "id": "h0"
+    }
+   ],
+   [
+    "solid bar|h8",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 370,
+     "ground": "56,11,18",
+     "reachedGround": false,
+     "id": "h8"
+    }
+   ],
+   [
+    "solid bar|h9",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 370,
+     "ground": "56,11,18",
+     "reachedGround": false,
+     "id": "h9"
+    }
+   ],
+   [
+    "solid bar|h10",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 370,
+     "ground": "56,11,18",
+     "reachedGround": false,
+     "id": "h10"
+    }
+   ]
+  ],
+  "headerFails": [],
+  "edgeSamples": 2,
+  "edgeUnreadable": 0,
+  "edgeMin": 8.57,
+  "edgeFails": [],
+  "worstEdge": [
+   {
+    "step": 4,
+    "y": 1521,
+    "stage": 1,
+    "frame": "bleed",
+    "inside": {
+     "r": 240,
+     "g": 159,
+     "b": 157
+    },
+    "above": {
+     "r": 50,
+     "g": 9,
+     "b": 19
+    },
+    "topEdge": 8.57,
+    "sideEdge": 17.89
+   },
+   {
+    "step": 4,
+    "y": 1521,
+    "stage": 0,
+    "frame": "bleed",
+    "inside": {
+     "r": 255,
+     "g": 255,
+     "b": 255
+    },
+    "above": {
+     "r": 50,
+     "g": 9,
+     "b": 19
+    },
+    "topEdge": 17.73,
+    "sideEdge": 17.89
+   }
+  ]
+ },
+ {
+  "width": 1280,
+  "height": 800,
+  "lenisActive": true,
+  "doc": {
+   "h": 12752,
+   "vh": 800
+  },
+  "states": {
+   "pill": 1,
+   "solid bar": 30
+  },
+  "headerNodes": [
+   {
+    "id": "h0",
+    "tag": "A",
+    "label": "حامی همراه — صفحه اصلی"
+   },
+   {
+    "id": "h3",
+    "tag": "SPAN",
+    "label": "خانه"
+   },
+   {
+    "id": "h5",
+    "tag": "SPAN",
+    "label": "فروشگاه"
+   },
+   {
+    "id": "h7",
+    "tag": "SPAN",
+    "label": "همکاری عمده"
+   },
+   {
+    "id": "h8",
+    "tag": "INPUT",
+    "label": "جست‌وجوی محصول"
+   },
+   {
+    "id": "h9",
+    "tag": "BUTTON",
+    "label": "سبد خرید"
+   },
+   {
+    "id": "h11",
+    "tag": "B",
+    "label": "۰۹۳۳ ۱۲۱ ۴۰۰۰"
+   },
+   {
+    "id": "h12",
+    "tag": "A",
+    "label": "شروع همکاری"
+   }
+  ],
+  "headerWorst": [
+   [
+    "pill|h0",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h0"
+    }
+   ],
+   [
+    "pill|h3",
+    {
+     "min": 13.96,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h3"
+    }
+   ],
+   [
+    "pill|h5",
+    {
+     "min": 7.86,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h5"
+    }
+   ],
+   [
+    "pill|h7",
+    {
+     "min": 7.86,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h7"
+    }
+   ],
+   [
+    "pill|h8",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h8"
+    }
+   ],
+   [
+    "pill|h9",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h9"
+    }
+   ],
+   [
+    "pill|h11",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h11"
+    }
+   ],
+   [
+    "pill|h12",
+    {
+     "min": 13.96,
+     "need": 4.5,
+     "atY": 0,
+     "ground": "58,12,18",
+     "reachedGround": false,
+     "id": "h12"
+    }
+   ],
+   [
+    "solid bar|h0",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 384,
+     "ground": "56,11,18",
+     "reachedGround": false,
+     "id": "h0"
+    }
+   ],
+   [
+    "solid bar|h3",
+    {
+     "min": 13.96,
+     "need": 4.5,
+     "atY": 384,
+     "ground": "56,11,18",
+     "reachedGround": false,
+     "id": "h3"
+    }
+   ],
+   [
+    "solid bar|h5",
+    {
+     "min": 7.86,
+     "need": 4.5,
+     "atY": 384,
+     "ground": "56,11,18",
+     "reachedGround": false,
+     "id": "h5"
+    }
+   ],
+   [
+    "solid bar|h7",
+    {
+     "min": 7.86,
+     "need": 4.5,
+     "atY": 384,
+     "ground": "56,11,18",
+     "reachedGround": false,
+     "id": "h7"
+    }
+   ],
+   [
+    "solid bar|h8",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 384,
+     "ground": "56,11,18",
+     "reachedGround": false,
+     "id": "h8"
+    }
+   ],
+   [
+    "solid bar|h9",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 384,
+     "ground": "56,11,18",
+     "reachedGround": false,
+     "id": "h9"
+    }
+   ],
+   [
+    "solid bar|h11",
+    {
+     "min": 17.45,
+     "need": 4.5,
+     "atY": 384,
+     "ground": "56,11,18",
+     "reachedGround": false,
+     "id": "h11"
+    }
+   ],
+   [
+    "solid bar|h12",
+    {
+     "min": 13.96,
+     "need": 4.5,
+     "atY": 384,
+     "ground": "56,11,18",
+     "reachedGround": false,
+     "id": "h12"
+    }
+   ]
+  ],
+  "headerFails": [],
+  "edgeSamples": 25,
+  "edgeUnreadable": 0,
+  "edgeMin": 16.83,
+  "edgeFails": [],
+  "worstEdge": [
+   {
+    "step": 3,
+    "y": 1181,
+    "stage": 1,
+    "frame": "bleed",
+    "inside": {
+     "r": 245,
+     "g": 248,
+     "b": 247
+    },
+    "above": {
+     "r": 48,
+     "g": 8,
+     "b": 16
+    },
+    "topEdge": 16.83,
+    "sideEdge": 17.74
+   },
+   {
+    "step": 3,
+    "y": 1181,
+    "stage": 0,
+    "frame": "bleed",
+    "inside": {
+     "r": 248,
+     "g": 248,
+     "b": 248
+    },
+    "above": {
+     "r": 48,
+     "g": 8,
+     "b": 16
+    },
+    "topEdge": 16.93,
+    "sideEdge": 17.52
+   },
+   {
+    "step": 3,
+    "y": 1181,
+    "stage": 2,
+    "frame": "bleed",
+    "inside": {
+     "r": 248,
+     "g": 248,
+     "b": 248
+    },
+    "above": {
+     "r": 48,
+     "g": 8,
+     "b": 16
+    },
+    "topEdge": 16.93,
+    "sideEdge": 17.76
+   },
+   {
+    "step": 2,
+    "y": 783,
+    "stage": 1,
+    "frame": "bleed",
+    "inside": {
+     "r": 252,
+     "g": 255,
+     "b": 254
+    },
+    "above": {
+     "r": 52,
+     "g": 10,
+     "b": 17
+    },
+    "topEdge": 17.43,
+    "sideEdge": 17.91
+   },
+   {
+    "step": 2,
+    "y": 783,
+    "stage": 0,
+    "frame": "bleed",
+    "inside": {
+     "r": 255,
+     "g": 255,
+     "b": 255
+    },
+    "above": {
+     "r": 52,
+     "g": 10,
+     "b": 17
+    },
+    "topEdge": 17.54,
+    "sideEdge": 17.61
+   }
+  ]
+ }
+]

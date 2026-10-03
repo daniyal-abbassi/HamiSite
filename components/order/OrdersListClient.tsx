@@ -37,7 +37,7 @@ export function OrdersListClient() {
         });
       } catch (cause) {
         if (cause instanceof ApiClientError && (cause.code === "AUTH_REQUIRED" || cause.status === 401)) {
-          router.replace("/login?next=/orders");
+          router.replace(`/login?next=${encodeURIComponent("/orders")}`);
           return;
         }
         setFailed(true);
@@ -48,7 +48,7 @@ export function OrdersListClient() {
 
   useEffect(() => {
     if (status === "guest") {
-      router.replace("/login?next=/orders");
+      router.replace(`/login?next=${encodeURIComponent("/orders")}`);
       return;
     }
     if (status === "authenticated") void load(page);
@@ -80,7 +80,7 @@ export function OrdersListClient() {
   if (!orders || orders.length === 0) {
     return (
       <div className="glass mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
-        <PackageOpen className="size-10 text-gold/60" />
+        <PackageOpen className="size-10 text-aqua/60" />
         <h2 className="text-lg font-black">هنوز سفارشی ثبت نکرده‌اید</h2>
         <Link href="/shop">
           <Button variant="oxblood">شروع خرید</Button>
@@ -99,10 +99,10 @@ export function OrdersListClient() {
             className="glass flex flex-wrap items-center justify-between gap-3 rounded-2xl p-5 transition-transform duration-slow hover:-translate-y-0.5"
           >
             <span className="min-w-0">
-              <span className="block font-mono text-sm font-black text-gold">{order.orderNumber}</span>
-              <span className="mt-1 block text-[11px] text-muted-foreground">{formatFaDate(order.createdAt)}</span>
+              <span className="block font-mono text-sm font-black text-aqua">{toFaDigits(order.orderNumber)}</span>
+              <span className="mt-1 block text-xs text-muted-foreground">{formatFaDate(order.createdAt)}</span>
             </span>
-            <span className="flex flex-wrap items-center gap-2 text-[11px]">
+            <span className="flex flex-wrap items-center gap-2 text-xs">
               <span className={`rounded-full border border-line bg-foreground/5 px-3 py-1 font-bold ${orderStatusTone(order.status)}`}>
                 {orderStatusLabels[order.status] ?? order.status}
               </span>
@@ -110,7 +110,7 @@ export function OrdersListClient() {
                 {paymentStatusLabels[order.paymentStatus] ?? order.paymentStatus}
               </span>
               <strong className="font-mono text-sm text-foreground">{formatToman(order.totals.totalAmount)}</strong>
-              <ArrowLeft className="size-4 text-gold" />
+              <ArrowLeft className="size-4 text-aqua" />
             </span>
           </Link>
         ))}

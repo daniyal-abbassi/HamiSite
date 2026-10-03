@@ -1,0 +1,425 @@
+#!/usr/bin/env bash
+# dispatch-worker — the Boss's transport to the three worker CLIs on this box.
+#
+# It is a TRANSPORT, not an orchestrator: it decides nothing about what to build, it does not choose
+# tasks, and it never runs a worker it was not told to run. Qoder/GLM (the Boss session) remains the
+# only thing that plans, sequences or judges. This script's whole job is: validate ownership, build
+# the smallest sufficient prompt, spawn one non-interactive worker, capture a structured result,
+# and put that result where the Boss can read it.
+#
+#   tools/dispatch/dispatch-worker --worker hermes --task T027 --prompt-file f.md --mode research --dry-run
+#   tools/dispatch/dispatch-worker --worker opencode --task T030 --prompt-file f.md \
+#          --mode implement --owned "components/home/assembly-band.css" --verify "npm run typecheck"
+#   tools/dispatch/dispatch-worker --continue T030 --prompt-file follow-up.md
+#
+# Safety properties, each enforced below rather than documented only:
+#   * non-interactive only — -p/-z/run. No keystroke injection, no tmux, no TUI attachment.
+#   * no destructive git, ever, by this script (only status/diff --name-only reads).
+#   * writable work requires an explicit owned-file scope, which it claims in .agent-pair/locks.
+#   * an existing lock held by a different agent aborts the dispatch before the worker starts.
+#   * exit 0 is not success: the worker must return the contract JSON and every verification
+#     command must pass, or the result says failed with a reason.
+#   * secrets are never written into the result, the board or the log summary (redaction pass).
+set -u
+
+ROOT="$(git rev-parse --show-toplevel 2>/dev/null)" || { echo "dispatch: not in a git repo" >&2; exit 2; }
+MANIFEST="$ROOT/tools/dispatch/workers.json"
+INBOX="$ROOT/.agent-pair/inbox"
+ACTIVE="$ROOT/.agent-pair/dispatch/active"
+LOCKS="$ROOT/.agent-pair/locks"
+BOARD="$ROOT/.agent-pair/BOARD.md"
+
+WORKER="" TASK="" PROMPT_FILE="" CWD="$ROOT" MODE="research" TIMEOUT=600 DRY=0 KEEP=0 CONTINUE=""
+TOOLSETS="" MODEL="" JEV=0; OWNED=(); VERIFY=()
+
+die() { echo "dispatch: $*" >&2; exit 2; }
+usage() { sed -n '3,20p' "$0"; exit 2; }
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --worker) WORKER="${2:-}"; shift 2 ;;
+    --task) TASK="${2:-}"; shift 2 ;;
+    --prompt-file) PROMPT_FILE="${2:-}"; shift 2 ;;
+    --cwd) CWD="${2:-}"; shift 2 ;;
+    --mode) MODE="${2:-}"; shift 2 ;;
+    --owned) IFS=',' read -r -a _o <<< "${2:-}"; OWNED+=("${_o[@]}"); shift 2 ;;
+    --verify) VERIFY+=("${2:-}"); shift 2 ;;
+    --timeout) TIMEOUT="${2:-600}"; shift 2 ;;
+    --toolsets) TOOLSETS="${2:-}"; shift 2 ;;
+    --model) MODEL="${2:-}"; shift 2 ;;
+    --continue) CONTINUE="${2:-}"; shift 2 ;;
+    --dry-run) DRY=1; shift ;;
+    --keep-locks) KEEP=1; shift ;;
+    --jev) JEV=1; shift ;;
+    -h|--help) usage ;;
+    *) die "unknown argument: $1" ;;
+  esac
+done
+
+[ -f "$MANIFEST" ] || die "missing manifest $MANIFEST"
+# --continue supplies the task and worker from the prior result, so the requirement is checked before that
+# block runs and the id is validated only when we have one (this ordering bug made --continue unusable).
+[ -n "$TASK" ] || [ -n "$CONTINUE" ] || die "--task is required (it names the artifact and the lock), or use --continue <task-id>"
+[ -z "$TASK" ] || [[ "$TASK" =~ ^[A-Za-z0-9._-]+$ ]] || die "--task must match ^[A-Za-z0-9._-]+$"
+[ "$MODE" = "implement" ] || [ "$MODE" = "research" ] || die "--mode is research or implement"
+[ -n "$PROMPT_FILE" ] && [ -s "$PROMPT_FILE" ] || die "--prompt-file must exist and be non-empty"
+
+# ---- continue: inherit worker + session from a previous result -------------------------------
+SESSION_ID=""
+if [ -n "$CONTINUE" ]; then
+  PREV=""
+  for w in qoder hermes opencode; do [ -s "$INBOX/$w/$CONTINUE.json" ] && PREV="$INBOX/$w/$CONTINUE.json"; done
+  [ -n "$PREV" ] || die "--continue $CONTINUE: no prior result under $INBOX/<worker>/"
+  WORKER="${WORKER:-$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1]))["worker"])' "$PREV")}"
+  SESSION_ID="$(python3 -c 'import json,sys;print(json.load(open(sys.argv[1])).get("worker_session_id") or "")' "$PREV")"
+  TASK="$CONTINUE-r$(date +%s)"
+  [ -n "$SESSION_ID" ] || echo "dispatch: warning — prior result stored no session id; continuing blind" >&2
+fi
+[ -n "$WORKER" ] || die "--worker is required (qoder | hermes | opencode)"
+
+WORKER_CMD="$(python3 -c "
+import json
+m=json.load(open('$MANIFEST'))
+w=m['workers'].get('$WORKER')
+if not w: raise SystemExit('unknown worker')
+if not w.get('enabled'): raise SystemExit('worker disabled')
+print(w['command'])
+")" || die "manifest: $WORKER is not dispatchable ($WORKER_CMD)"
+[ -x "$WORKER_CMD" ] || die "$WORKER resolves to $WORKER_CMD which is not executable — detect it again, do not edit this script to guess"
+
+# ---- optional Jev tie-break: only when the Boss explicitly asks ------------------------------
+if [ "$JEV" = "1" ]; then
+  if [ -f "$ROOT/tools/jev/client.mjs" ]; then
+    node -e '
+      import("'"$ROOT"'/tools/jev/client.mjs").then(async ({jev}) => {
+        const r = await jev({ questions: [{ id: "worker", prompt: "For this task, which is the better worker: qoder (repository implementation, spec-aligned), hermes (browser/runtime, visual QA), or opencode (independent implementation or review)? Answer with one word." }], max_tokens: 64 });
+        console.log("jev says:", JSON.stringify(r.answers));
+      }).catch(e => console.error("jev unavailable:", e.message));' 2>&1 | head -3
+  else
+    echo "dispatch: --jev requested but tools/jev/client.mjs is absent; choosing is the Boss's alone" >&2
+  fi
+fi
+
+# ---- ownership: read board, check locks, claim scope -----------------------------------------
+[ -f "$BOARD" ] || die ".agent-pair/BOARD.md is missing — ownership protocol is not optional"
+BOARD_TAIL="$(tail -c 4000 "$BOARD")"
+# .agent-pair/README.md rule 1: slashes become DOUBLE underscores — app/(main)/page.tsx becomes
+# app__(main)__page.tsx.lock. Getting this wrong is not cosmetic: with the single-underscore form, a real
+# lock on a path was invisible to the ownership check and an implement dispatch would have been allowed to
+# write onto another agent's claimed file. Caught by TEST 1 on 2026-09-25, not by reading.
+lockfile_for() { echo "$LOCKS/$(echo "$1" | sed 's|/|__|g').lock"; }
+
+if [ "$MODE" = "implement" ]; then
+  [ ${#OWNED[@]} -gt 0 ] || die "implement dispatch requires --owned with the exact writable paths; unrestricted writers are not dispatched"
+fi
+
+CLAIMED=()
+release_claims() {
+  [ "$KEEP" = "1" ] && return
+  for f in "${CLAIMED[@]:-}"; do rm -f "$f"; done
+}
+trap 'release_claims' EXIT
+
+for p in "${OWNED[@]:-}"; do
+  [ -z "$p" ] && continue
+  lf="$(lockfile_for "$p")"
+  if [ -f "$lf" ]; then
+    holder="$(grep -m1 '^who=' "$lf" | cut -d= -f2)"
+    [ "$holder" = "$WORKER" ] && continue
+    echo "dispatch: REFUSED — $p is locked by '$holder' ($(tr '\n' ' ' < "$lf"))" >&2
+    echo "dispatch: post a REQUEST on $BOARD and wait; this script will not overwrite a claim (see .agent-pair/README.md rule 2)" >&2
+    exit 3
+  fi
+done
+
+# ---- concurrency: refuse overlapping scopes among live dispatches -----------------------------
+mkdir -p "$ACTIVE" "$INBOX/$WORKER"
+for a in "$ACTIVE"/*.json; do
+  [ -e "$a" ] || continue
+  apid="$(python3 -c "import json;print(json.load(open('$a')).get('pid',0))" 2>/dev/null || echo 0)"
+  if [ "$apid" != "0" ] && kill -0 "$apid" 2>/dev/null; then
+    conflict="$(python3 -c "
+import json
+a=json.load(open('$a'))
+mine=set('$(IFS=','; echo "${OWNED[*]:-}")'.split(','))
+theirs=set(a.get('owned',[]))
+both = mine & theirs if mine else set()
+shared_files = both - {'', }
+print(','.join(sorted(shared_files)) if shared_files else '')" 2>/dev/null)"
+    if [ -n "$conflict" ]; then
+      echo "dispatch: REFUSED — scope overlaps live dispatch $(basename "$a" .json) (pid $apid) on: $conflict" >&2
+      echo "dispatch: serialize it, or isolate with --worktree / a git worktree. Two writers, one file, is not a race we win." >&2
+      exit 3
+    fi
+  else
+    rm -f "$a"
+  fi
+done
+
+# ---- beads: verify and claim when bd is actually reachable -----------------------------------
+BD="$(command -v bd 2>/dev/null || true)"
+BEADS_STATUS="skipped-unavailable"
+BEADS_NOTE=""
+if [ -n "$BD" ]; then
+  if "$BD" ready >/dev/null 2>&1; then
+    BEADS_STATUS="ready-checked"
+    "$BD" update "$TASK" --claim >/dev/null 2>&1 && BEADS_STATUS="claimed" || BEADS_STATUS="claim-failed"
+  else
+    BEADS_STATUS="not-ready-or-db-error"
+  fi
+else
+  BEADS_NOTE="bd is not on PATH in this session (.beads/hooks guard every call with 'command -v bd'); state was NOT changed"
+fi
+
+# ---- build the smallest sufficient prompt -----------------------------------------------------
+uuid() { command -v uuidgen >/dev/null 2>&1 && uuidgen | tr 'A-Z' 'a-z' || python3 -c 'import uuid;print(uuid.uuid4())'; }
+[ -n "$SESSION_ID" ] || SESSION_ID="$(uuid)"
+
+CONTRACT="$ROOT/.agent-pair/dispatch/contract.example.json"
+TMP="$(mktemp -d)"; PROMPT_BUILT="$TMP/prompt.txt"
+cat > "$PROMPT_BUILT" <<EOF
+You are a WORKER dispatched by the Boss session (Qoder/GLM) in the shared checkout at $ROOT.
+Task $TASK · worker $WORKER · mode $MODE · session $SESSION_ID
+
+Read the fields below as the whole of your brief. Do not explore the repository beyond them.
+The full contract shape is in tools/dispatch/contract.example.json if a field is unclear.
+
+TASK CONTRACT
+  task_id:             $TASK
+  worker:              $WORKER
+  role:                see BRIEF below
+  objective:           see BRIEF below
+  scope:               ${MODE}
+  owned_files:         $(IFS=', '; echo "${OWNED[*]:-none — read-only dispatch}")
+  allowed_tools:       $([ "$MODE" = "implement" ] && echo "read + the owned files listed" || echo "read and search only")
+  relevant_spec:       see BRIEF below
+  acceptance_criteria: see the Definition of done in the BRIEF
+  verification_commands: $(IFS=' ; '; echo "${VERIFY[*]:-none supplied}")
+  expected_output:     the JSON block described below
+  timeout:             ${TIMEOUT}s
+  working_directory:   $CWD
+
+BRIEF
+$(cat "$PROMPT_FILE")
+
+RULES THAT ARE NOT NEGOTIABLE IN THIS CHECKOUT
+  - Several agents share this working tree live. Write ONLY inside owned_files. If you need anything
+    outside it, stop and report it as a blocker instead of editing it.
+  - Never run git restore/checkout --/stash/reset/add -A, never commit and never push unless the brief
+    above says so explicitly. Another agent's uncommitted file is not yours to discard.
+  - Do not create, edit or delete anything under .agent-pair/ except your own heartbeat file.
+  - Do not print, copy or embed secrets: no .env values, no API keys, no tokens. If a credential is
+    needed, report it as a blocker.
+  - Never run bare 'npm test': this project's vitest setup truncates 19 database tables. Use the exact
+    verification command string given above.
+  - Do not judge frame rate or smoothness from this machine; it is not an instrument.
+
+WHEN YOU FINISH, END YOUR REPLY WITH EXACTLY THIS JSON IN A FENCED BLOCK (no other JSON at the end):
+\`\`\`json
+{"task_id":"$TASK","worker":"$WORKER","status":"completed|blocked|failed|timeout","summary":"<=400 chars, plain text","changed_files":["paths you actually wrote, or []"],"verification":[{"command":"...","exit":0,"note":"what the output showed"}],"blockers":["..."],"next_action":"the single most useful thing the Boss should do","artifacts":["paths written under .agent-pair/inbox/ or specs/**"],"beads_id":"$TASK"}
+\`\`\`
+status is only "completed" if every acceptance criterion in the brief is met by evidence you ran.
+EOF
+
+# ---- argv per worker: only flags observed in that binary's own --help ------------------------
+ARGS=()
+case "$WORKER" in
+  qoder)
+    ARGS=(-p --cwd "$CWD")
+    [ "$MODE" = "implement" ] && ARGS+=(--permission-mode accept_edits) || ARGS+=(--disallowed-tools Write Edit --permission-mode default)
+    [ -n "$MODEL" ] && ARGS+=(-m "$MODEL")
+    if [ -n "$CONTINUE" ] && [ -n "$SESSION_ID" ]; then ARGS+=(-r "$SESSION_ID"); else ARGS+=(--session-id "$SESSION_ID"); fi
+    ARGS+=("$(cat "$PROMPT_BUILT")")
+    ;;
+  hermes)
+    ARGS=(--oneshot "$(cat "$PROMPT_BUILT")")
+    [ -n "$TOOLSETS" ] && ARGS+=(-t "$TOOLSETS")   # opt-in: vocabulary cannot be listed non-interactively
+    [ -n "$MODEL" ] && ARGS+=(-m "$MODEL")
+    if [ -n "$CONTINUE" ] && [ -n "$SESSION_ID" ]; then ARGS=(--resume "$SESSION_ID" --oneshot "$(cat "$PROMPT_BUILT")"); fi
+    ;;
+  opencode)
+    ARGS=(run --format json)
+    [ "$MODE" = "implement" ] && ARGS+=(--auto)
+    [ -n "$MODEL" ] && ARGS+=(-m "$MODEL")
+    if [ -n "$CONTINUE" ] && [ -n "$SESSION_ID" ]; then ARGS+=(--session "$SESSION_ID"); fi
+    ARGS+=("$(cat "$PROMPT_BUILT")" "$CWD")
+    ;;
+esac
+
+# qodercli refuses to start from inside this Boss session unless the SDK entrypoint marker is cleared:
+#   "sdk_invalid_args: Agent SDK entrypoint env is set but required flags are missing. Expected --print
+#    --input-format stream-json --output-format stream-json"  (observed 2026-09-25, smoke-qoder, exit 1 in 2s)
+# QODER_AGENT_SDK_ENTRYPOINT=sdk-ts is inherited from the Boss process. A dispatched worker is a plain
+# headless CLI run, not an SDK child, so the marker is unset rather than forcing stream-json transport on
+# both ends.
+CMD=("$WORKER_CMD" "${ARGS[@]}")
+if [ "$WORKER" = "qoder" ]; then
+  CMD=(env -u QODER_AGENT_SDK_ENTRYPOINT -u QODER_SESSION_TYPE "$WORKER_CMD" "${ARGS[@]}")
+fi
+
+ACTIVE_FILE="$ACTIVE/$TASK.json"
+OWNED_JSON="[]"
+if [ ${#OWNED[@]} -gt 0 ]; then
+  OWNED_JSON="[$(printf '"%s",' "${OWNED[@]}" | sed 's/,$//')]"
+fi
+printf '{"task_id":"%s","worker":"%s","pid":%s,"owned":%s,"mode":"%s","started":"%s"}\n' \
+  "$TASK" "$WORKER" "$$" "$OWNED_JSON" "$MODE" "$(date -Iseconds)" > "$ACTIVE_FILE"
+
+if [ "$DRY" = "1" ]; then
+  echo "=== DRY RUN — nothing was started ==="
+  echo "worker:        $WORKER  ($WORKER_CMD)"
+  argv_line=""
+  for a in "${ARGS[@]}"; do
+    if [ "${#a}" -gt 160 ]; then argv_line+="«${a:0:40}… ${#a}-byte prompt» "; else argv_line+=$(printf '%q ' "$a"); fi
+  done
+  echo "argv:          $argv_line"
+  echo "cwd:           $CWD"
+  echo "task_id:       $TASK"
+  echo "mode:          $MODE   timeout: ${TIMEOUT}s   session: $SESSION_ID"
+  echo "permission:    $([ "$MODE" = "implement" ] && echo "write to owned files only" || echo "read-only (writes refused)" )"
+  echo "owned scope:   $(IFS=', '; echo "${OWNED[*]:-none}")"
+  echo "verify:        $(IFS=' ; '; echo "${VERIFY[*]:-none}")"
+  echo "beads:         $BEADS_STATUS ${BEADS_NOTE}"
+  echo "result path:   $INBOX/$WORKER/$TASK.json"
+  echo "log path:      $INBOX/$WORKER/$TASK.log"
+  echo "prompt file:   $PROMPT_BUILT (kept for inspection: $TMP)"
+  rm -f "$ACTIVE_FILE"
+  exit 0
+fi
+
+# ---- run -----------------------------------------------------------------
+LOG="$INBOX/$WORKER/$TASK.log"
+BEFORE="$(cd "$ROOT" && git status --porcelain=v1 2>/dev/null | awk '{print $NF}' | sort)"
+echo "dispatch: $WORKER → $TASK (mode $MODE, ${TIMEOUT}s). Log: ${LOG}"
+START=$(date +%s)
+( cd "$CWD" && timeout "$TIMEOUT" "${CMD[@]}" ) > "$LOG" 2>&1
+EXIT=$?
+DUR=$(( $(date +%s) - START ))
+
+# ---- extract the contract JSON, then judge, then write ------------------------------------------
+RESULT="$INBOX/$WORKER/$TASK.json"
+VERIFY_FILE="$TMP/verify.txt"
+printf '%s\n' "${VERIFY[@]:-}" > "$VERIFY_FILE"
+python3 - "$LOG" "$RESULT" "$TASK" "$WORKER" "$EXIT" "$DUR" "$BEADS_STATUS" "$SESSION_ID" "$ROOT" "$BEFORE" "$VERIFY_FILE" <<'PY'
+import json,re,subprocess,sys,os
+log,res,task,worker,exit_,dur,beads,sess,root,before,verify_file = sys.argv[1:12]
+exit_ = int(exit_)   # argv is strings; comparing "0" != 0 once reported a clean worker as failed
+raw = open(log, encoding="utf-8", errors="replace").read()
+
+def redact(s):
+    s = re.sub(r'(?i)(sk-[A-Za0-9_\-]{6,}|Bearer\s+\S+|JEV_API_KEY\s*=\s*\S+|token["\s:=]+[A-Za-z0-9_\-]{8,})', '[redacted]', s)
+    return s[:1200]
+
+# opencode --format json writes NDJSON — one event per line, the reply text at part.text (proven by the
+# 2026-09-25 smoke run: 8 lines of {"type":"step_start"|"text",…}). hermes and qoder write plain text.
+# Either way, recover readable text before hunting for the contract block.
+def dig(x):
+    if isinstance(x, dict):
+        if isinstance(x.get("text"), str): return x["text"]
+        if "part" in x:
+            r = dig(x["part"])
+            if r: return r
+        for k in ("message", "content", "result", "parts"):
+            if k in x:
+                r = dig(x[k])
+                if r: return r
+        return ""
+    if isinstance(x, list):
+        return "\n".join(y for y in (dig(i) for i in x) if y)
+    return ""
+
+chunks = []
+for line in raw.splitlines():
+    s = line.strip()
+    if not s: continue
+    try:
+        d = dig(json.loads(s))
+        # A plain-text worker prints the contract JSON as its own line. That line IS valid JSON, and dig()
+        # finds no text field in it, so keeping "" here used to delete the very block we are looking for.
+        chunks.append(d if d else line)
+    except Exception:
+        chunks.append(line)
+text = "\n".join(c for c in chunks if c) or raw
+try:
+    whole = dig(json.loads(raw))          # a single JSON document, not a stream
+    if whole.strip(): text = whole
+except Exception:
+    pass
+
+# A non-greedy \{.*?\} stops at the first nested "}" — the contract has verification:[{…}], so it captured
+# half an object and parsed nothing (that is why smoke-hermes and smoke-qoder read "no contract JSON" while
+# their output plainly ended in the block). Capture the fenced REGION, then widen to the outermost braces.
+cands = []
+for region in re.findall(r'```(?:json)?\s*(.*?)```', text, re.S):
+    region = region.strip()
+    if region: cands.append(region)
+    deep = re.search(r'\{.*\}', region, re.S)
+    if deep: cands.append(deep.group(0))
+bare = re.search(r'\{[^{}]*"task_id"[^{}]*\}', text, re.S)
+if bare: cands.append(bare.group(0))
+payload = None
+for c in reversed(cands):
+    try:
+        d = json.loads(c)
+        if isinstance(d, dict) and "status" in d: payload = d; break
+    except Exception: pass
+
+verif = []
+for cmd in [c for c in open(verify_file).read().splitlines() if c.strip() and c.strip() != ""]:
+    p = subprocess.run(cmd, shell=True, cwd=root, capture_output=True, text=True)
+    verif.append({"command": cmd, "exit": p.returncode, "note": redact((p.stdout or p.stderr).strip().splitlines()[-1] if (p.stdout or p.stderr).strip() else "")})
+
+after = subprocess.run("git status --porcelain=v1 | awk '{print $NF}' | sort", shell=True, cwd=root, capture_output=True, text=True).stdout.split()
+changed = sorted(set(after) - set(filter(None, before.split())))
+
+if payload is None:
+    status = "timeout" if exit_ == 124 else "failed"
+    payload = {"task_id": task, "worker": worker, "status": status,
+               "summary": redact("worker returned no contract JSON (exit %s); last line of output: %s" % (exit_, (text.strip().splitlines() or ["<empty>"])[-1])),
+               "changed_files": changed, "verification": verif,
+               "blockers": ["output-contract not satisfied"], "next_action": "read the log, or re-dispatch with a tighter brief"}
+else:
+    payload["task_id"] = task; payload["worker"] = worker
+    payload["changed_files"] = changed
+    payload["verification"] = (payload.get("verification") or []) + verif
+    vbad = [v for v in payload["verification"] if isinstance(v, dict) and v.get("exit") not in (0, None)]
+    if exit_ == 124: payload["status"] = "timeout"
+    elif payload.get("status") == "blocked": payload["status"] = "blocked"
+    elif vbad: payload["status"] = "failed"; payload.setdefault("blockers", []).append("verification failed: " + ", ".join(v["command"] for v in vbad))
+    elif exit_ != 0: payload["status"] = "failed"; payload.setdefault("blockers", []).append("process exit %s" % exit_)
+    else: payload["status"] = "completed"   # ONLY here: JSON contract met AND verification green AND exit 0
+
+payload["summary"] = redact(str(payload.get("summary","")))
+payload.update({"process_exit": exit_, "duration_s": int(dur), "beads_status": beads,
+                "worker_session_id": sess, "log": os.path.relpath(log, root), "board_tail_at_dispatch": None})
+json.dump(payload, open(res,"w"), ensure_ascii=False, indent=2)
+print(json.dumps(payload, ensure_ascii=False))
+PY
+RC=$?
+rm -rf "$TMP"
+[ $RC -eq 0 ] || { echo "dispatch: result extraction crashed (log preserved at $LOG)" >&2; }
+
+# ---- board, heartbeat, locks ---------------------------------------------------------------
+STATUS="$(python3 -c "import json;print(json.load(open('$RESULT')).get('status','failed'))" 2>/dev/null || echo failed)"
+SUMMARY="$(python3 -c "import json;print(json.load(open('$RESULT')).get('summary','')[:180])" 2>/dev/null || echo '')"
+TS="$(date '+%Y-%m-%d %H:%M %Z')"
+{
+  printf '\n### %s — driver → %s — DISPATCH %s (%s, %s)\n\n' "$TS" "$WORKER" "$TASK" "$MODE" "$STATUS"
+  printf 'Result: `.agent-pair/inbox/%s/%s.json` · log `.agent-pair/inbox/%s/%s.log` · %ss · beads %s\n\n%s\n' \
+    "$WORKER" "$TASK" "$WORKER" "$TASK" "$DUR" "$BEADS_STATUS" "$SUMMARY"
+} >> "$BOARD"
+
+NOW="$(date -Iseconds)"
+printf 'since=%s\ndoing=dispatched task %s by the Boss\nnext=awaiting the Boss reading .agent-pair/inbox/%s/%s.json\n' \
+  "$NOW" "$TASK" "$WORKER" "$TASK" > "$ROOT/.agent-pair/HEARTBEAT-$WORKER.md"
+
+release_claims
+trap - EXIT
+rm -f "$ACTIVE_FILE"
+
+echo
+echo "dispatch: $TASK → $WORKER → $STATUS (${DUR}s, exit $EXIT)"
+echo "dispatch: result $RESULT"
+[ "$BEADS_STATUS" = "skipped-unavailable" ] && echo "dispatch: beads $BEADS_STATUS — $BEADS_NOTE"
+python3 -c "import json;d=json.load(open('$RESULT'));print('dispatch: summary:',d.get('summary','')[:200]);print('dispatch: changed:',d.get('changed_files'));print('dispatch: next:',d.get('next_action'))" 2>/dev/null
+exit 0

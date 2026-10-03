@@ -4,9 +4,27 @@ import type { Config } from "tailwindcss";
  * HAMI brand design system v2 — "Two Chapters" (flat wine + paper) retired.
  * Current world, pinned by the user from a supplied reference
  * (aura-landingSample.html): near-black canvas, atmospheric oxblood-ramp
- * glow, muted antique gold, fully rounded glass surfaces. See the direction
+ * glow, muted antique aqua, fully rounded glass surfaces. See the direction
  * contract at the top of app/layout.tsx before touching this file.
  */
+/**
+ * The one champagne/gold scale the whole site paints with.
+ *
+ * It used to be declared three times — `champagne`, `aqua` and `brass`, each with the same three hex
+ * values — which is how "muted antique aqua" and "champagne-yellow" came to be the same pixel and how
+ * half the accent decisions on this page were made against a name that meant nothing. The literals live
+ * here once now; the aliases below still resolve to it, so nothing visual moves.
+ *
+ * `aqua` is a leftover from the reference template this design was forked from, where the accent really
+ * was a blue-green. Nothing in the brand DNA (burgundy RAL 3004 + champagne, `CLAUDE.md`) has ever been
+ * aqua. The name is kept for the call sites, not for the colour.
+ */
+const champagneScale = {
+  DEFAULT: "#E5D3B3",
+  lite: "#F4EADB",
+  deep: "#C5A880",
+} as const;
+
 const config: Config = {
   darkMode: ["class"],
   content: [
@@ -57,46 +75,59 @@ const config: Config = {
         },
         // Brand DNA v2 — literal hex so opacity modifiers (bg-oxblood/10) just
         // work. RAL 3004 (oxblood DEFAULT) is preserved as the real brand hue;
-        // everything around it (canvas, gold, radius, glass) changed.
+        // everything around it (canvas, aqua, radius, glass) changed.
+        // Brand DNA — Imperial Luxury
         oxblood: {
-          DEFAULT: "#640211", // RAL 3004 — unchanged, the one preserved constant
-          lite: "#9C0A22",
-          mid: "#7D0417",
-          deep: "#3A010A",
+          DEFAULT: "#640211", // RAL 3004 — the brand DNA
+          lite: "#8E0A1E",
+          mid: "#75040F",
+          deep: "#3D020B",
         },
-        gold: {
-          DEFAULT: "#C9A227", // muted antique gold — replaces champagne #d4af6a
-          lite: "#F0DCA0",
-          deep: "#8A6A15",
-        },
+        champagne: champagneScale,
+        // Two aliases of the same scale, kept because 228 `text-aqua` and 3 `accent-brass` call sites
+        // exist and renaming them is churn, not design. They are no longer three *decisions*: the
+        // literals live once, above. New code should say `champagne` — `aqua` is the name of a colour
+        // this brand does not have (see the note on `champagneScale`).
+        aqua: champagneScale,
+        brass: champagneScale,
         ink: {
-          DEFAULT: "#0D0406", // near-black canvas
-          2: "#160709",
-          3: "#1F0A0E",
+          DEFAULT: "#0B0204", // Obsidian Canvas
+          2: "#14060A",       // Smoked Obsidian Card
+          3: "#1E0A10",       // Elevated Surface
         },
-        success: "#3FBF7F",
-        // Matches --line in globals.css — the world's default hairline.
-        line: "rgba(242, 244, 237, 0.10)",
+        success: "#4EAA86",
+        signal: "#E4573F",
+        line: "var(--line)",
+        // Contrast tokens for light‑ambient sections (WCAG‑AA)
+        contrastForeground: "#16080C",
+        contrastBackground: "#F5F5F0",
       },
       borderRadius: {
-        sm: "12px",
-        md: "16px",
-        lg: "var(--radius)", // 22px, see globals.css
-        xl: "28px",
-        "2xl": "34px",
+        sm: "8px",
+        md: "12px",
+        lg: "16px",
+        xl: "22px",
+        "2xl": "28px",
+        "3xl": "34px",
       },
       fontFamily: {
         sans: ["var(--font-vazirmatn)", "Tahoma", "sans-serif"],
         mono: ["var(--font-dm-mono)", "monospace"],
       },
       boxShadow: {
-        // Ambient shadow for glass/card surfaces on the near-black canvas —
-        // replaces the old flat-wine "card"/"seal" pair, which were tuned to
-        // a light-maroon background this world no longer has.
-        card: "0 8px 30px rgba(0, 0, 0, 0.45)",
-        deep: "0 40px 90px rgba(0, 0, 0, 0.6)",
-        "glow-oxblood": "0 10px 30px rgba(100, 2, 17, 0.5)",
-        "glow-gold": "0 10px 30px rgba(201, 162, 39, 0.32)",
+        /* Layered ambient shadows — a hairline contact line, a mid falloff,
+           and a wide low-opacity ambient pool. A single dark blur reads as a
+           smudge under the card; three shallow layers read as light. Every
+           opacity stays ≤ 0.5 so the pools never go muddy on the obsidian
+           canvas. Consumers (shadow-card / shadow-deep / shadow-monolith)
+           are unchanged. */
+        card: "0 1px 2px rgba(0, 0, 0, 0.35), 0 8px 20px -8px rgba(0, 0, 0, 0.38)",
+        deep: "0 1px 2px rgba(0, 0, 0, 0.4), 0 12px 28px -12px rgba(0, 0, 0, 0.45), 0 32px 72px -28px rgba(0, 0, 0, 0.5)",
+        monolith: "0 1px 2px rgba(0, 0, 0, 0.35), 0 10px 24px -10px rgba(0, 0, 0, 0.4), 0 28px 64px -30px rgba(0, 0, 0, 0.5)",
+        "glow-oxblood": "0 12px 35px rgba(100, 2, 17, 0.45)",
+        "glow-gold": "0 8px 24px -4px rgba(229, 211, 179, 0.25)",
+        "glow-cta": "0 12px 32px rgba(229, 211, 179, 0.35)",
+        "glow-brass": "0 16px 42px rgba(229, 211, 179, 0.35)",
       },
       /* Motion duration tokens — design-system scale (instant/fast/normal/slow).
          Arbitrary durations outside this scale are not allowed. */

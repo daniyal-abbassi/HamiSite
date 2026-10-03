@@ -7,6 +7,7 @@ import { GET as me } from "@/app/api/auth/me/route";
 import { hashSessionToken, SESSION_COOKIE_NAME } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
+import { ctx } from "../helpers/request";
 
 let seed: SeedResult;
 
@@ -176,10 +177,10 @@ describe("POST /api/auth/login", () => {
     expect(a).not.toBe(b);
     expect(await prisma.session.count({ where: { userId: seed.retail.id } })).toBe(2);
 
-    await logout(new Request("http://localhost/api/auth/logout", { method: "POST", headers: { cookie: a } }));
+    await logout(new Request("http://localhost/api/auth/logout", { method: "POST", headers: { cookie: a } }), ctx());
 
-    expect((await me(new Request("http://localhost/api/auth/me", { headers: { cookie: a } }))).status).toBe(401);
-    expect((await me(new Request("http://localhost/api/auth/me", { headers: { cookie: b } }))).status).toBe(200);
+    expect((await me(new Request("http://localhost/api/auth/me", { headers: { cookie: a } }), ctx())).status).toBe(401);
+    expect((await me(new Request("http://localhost/api/auth/me", { headers: { cookie: b } }), ctx())).status).toBe(200);
     expect(await prisma.session.count({ where: { userId: seed.retail.id } })).toBe(1);
   });
 });
@@ -310,7 +311,7 @@ describe("POST /api/auth/logout", () => {
     const loginRes = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
     const cookie = loginRes.headers.get("set-cookie")!.split(";")[0];
 
-    const res = await logout(new Request("http://localhost/api/auth/logout", { method: "POST", headers: { cookie } }));
+    const res = await logout(new Request("http://localhost/api/auth/logout", { method: "POST", headers: { cookie } }), ctx());
     expect(res.status).toBe(200);
 
     const setCookie = res.headers.get("set-cookie") ?? "";
@@ -321,7 +322,7 @@ describe("POST /api/auth/logout", () => {
   });
 
   it("returns 401 without a session cookie", async () => {
-    const res = await logout(new Request("http://localhost/api/auth/logout", { method: "POST" }));
+    const res = await logout(new Request("http://localhost/api/auth/logout", { method: "POST" }), ctx());
     expect(res.status).toBe(401);
   });
 });
@@ -331,7 +332,7 @@ describe("GET /api/auth/me", () => {
     const loginRes = await login(jsonRequest({ identifier: seed.admin.username, password: seed.admin.password }));
     const cookie = loginRes.headers.get("set-cookie")!.split(";")[0];
 
-    const res = await me(new Request("http://localhost/api/auth/me", { headers: { cookie } }));
+    const res = await me(new Request("http://localhost/api/auth/me", { headers: { cookie } }), ctx());
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.data.username).toBe(seed.admin.username);
@@ -339,7 +340,7 @@ describe("GET /api/auth/me", () => {
   });
 
   it("returns 401 without a session", async () => {
-    const res = await me(new Request("http://localhost/api/auth/me"));
+    const res = await me(new Request("http://localhost/api/auth/me"), ctx());
     expect(res.status).toBe(401);
   });
   it("authenticates normally when the browser also sends a malformed cookie", async () => {
@@ -348,7 +349,7 @@ describe("GET /api/auth/me", () => {
 
     const res = await me(new Request("http://localhost/api/auth/me", {
       headers: { cookie: `_ga=%zz; ${sessionCookie}` },
-    }));
+    }), ctx());
     expect(res.status).toBe(200);   // was 500 before this fix
   });
 });
@@ -359,12 +360,11 @@ describe("session lifecycle (login -> me -> logout -> me)", () => {
     expect(loginRes.status).toBe(200);
     const cookie = loginRes.headers.get("set-cookie")!.split(";")[0];
 
-    const meBeforeLogout = await me(new Request("http://localhost/api/auth/me", { headers: { cookie } }));
+    const meBeforeLogout = await me(new Request("http://localhost/api/auth/me", { headers: { cookie } }), ctx());
     expect(meBeforeLogout.status).toBe(200);
 
     const logoutRes = await logout(
-      new Request("http://localhost/api/auth/logout", { method: "POST", headers: { cookie } }),
-    );
+      new Request("http://localhost/api/auth/logout", { method: "POST", headers: { cookie } }), ctx());
     expect(logoutRes.status).toBe(200);
     const logoutSetCookie = logoutRes.headers.get("set-cookie") ?? "";
     expect(logoutSetCookie).toMatch(/session_token=;/);
@@ -375,7 +375,7 @@ describe("session lifecycle (login -> me -> logout -> me)", () => {
 
     // Same original cookie, reused after logout — the session row is gone,
     // so this must be rejected even though the cookie string itself is unchanged.
-    const meAfterLogout = await me(new Request("http://localhost/api/auth/me", { headers: { cookie } }));
+    const meAfterLogout = await me(new Request("http://localhost/api/auth/me", { headers: { cookie } }), ctx());
     expect(meAfterLogout.status).toBe(401);
   });
 });

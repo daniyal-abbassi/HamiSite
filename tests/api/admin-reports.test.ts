@@ -1,7 +1,7 @@
 import { beforeEach, describe, expect, it } from "vitest";
 import { POST as createOrder } from "@/app/api/orders/route";
 import { GET as getSummary } from "@/app/api/admin/reports/summary/route";
-import { getRequest, jsonRequest, loginAs } from "../helpers/request";
+import { ctx, getRequest, jsonRequest, loginAs } from "../helpers/request";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
 
 let seed: SeedResult;
@@ -16,7 +16,7 @@ beforeEach(async () => {
 
 describe("admin reports summary", () => {
   it("403s for a non-admin", async () => {
-    const res = await getSummary(getRequest("http://localhost/api/admin/reports/summary", retailCookie));
+    const res = await getSummary(getRequest("http://localhost/api/admin/reports/summary", retailCookie), ctx());
     expect(res.status).toBe(403);
   });
 
@@ -34,10 +34,9 @@ describe("admin reports summary", () => {
           items: [{ productId: seed.product.id, variantId: seed.variant.id, quantity: 2 }],
         },
         retailCookie,
-      ),
-    );
+      ), ctx());
 
-    const res = await getSummary(getRequest("http://localhost/api/admin/reports/summary", adminCookie));
+    const res = await getSummary(getRequest("http://localhost/api/admin/reports/summary", adminCookie), ctx());
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.data.periodDays).toBe(30);

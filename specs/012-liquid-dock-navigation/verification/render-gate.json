@@ -1,0 +1,654 @@
+{
+  "results": [
+    {
+      "id": "G5 server park at RTL index 0 = 80% (FR-067)",
+      "pass": true,
+      "detail": "<span aria-hidden=\"true\" class=\"liquid-selection_marker__8Mki9\" style=\"left:80%;width:20%\">"
+    },
+    {
+      "id": "G5b genuinely RTL Persian",
+      "pass": true,
+      "detail": "dir=rtl and lang=fa in the served document"
+    },
+    {
+      "id": "hydration",
+      "pass": true,
+      "detail": "5 dock anchors; 0 page errors"
+    },
+    {
+      "id": "G2 RTL offsetLeft descends, physical from left",
+      "pass": true,
+      "detail": "267, 200, 134, 67, 0"
+    },
+    {
+      "id": "G2b equal-width slots",
+      "pass": true,
+      "detail": "offsetWidth 67px each"
+    },
+    {
+      "id": "G1 outer height 62px (FR-018)",
+      "pass": true,
+      "detail": "62px"
+    },
+    {
+      "id": "G1b bottom inset 12px (FR-018)",
+      "pass": true,
+      "detail": "12px"
+    },
+    {
+      "id": "G1c item kept py-1.5",
+      "pass": true,
+      "detail": "padding-block-start 6px, item 48px"
+    },
+    {
+      "id": "G1d row is 334px (px-2 is voided by globals.css:912 by design)",
+      "pass": true,
+      "detail": "padding-left 0px — a documented safe-area override, not a regression; group 334px"
+    },
+    {
+      "id": "G1e longest possible trip clears MAX_TRAVEL_PX",
+      "pass": true,
+      "detail": "4 slots × 67px = 268px vs the 320px ceiling"
+    },
+    {
+      "id": "G3 one shape crossed the row",
+      "pass": true,
+      "detail": "22 distinct x positions across 72 rAF frames"
+    },
+    {
+      "id": "G3b stretched then rang back on an elastic",
+      "pass": true,
+      "detail": "peak scaleX 1.250 (upstream 1.25); rang back from 26 to rest at 27"
+    },
+    {
+      "id": "G3c stayed inside the group",
+      "pass": true,
+      "detail": "group 21..339, 72 frames"
+    },
+    {
+      "id": "G3d rested inset-6 inside its slot",
+      "pass": true,
+      "detail": "dx 6px (want 6) dw -11.6px (want -12)"
+    },
+    {
+      "id": "G3e exactly one marker element",
+      "pass": true,
+      "detail": "1 marker(s)"
+    },
+    {
+      "id": "FR-034 no will-change at rest",
+      "pass": true,
+      "detail": "will-change = auto"
+    },
+    {
+      "id": "G6 dial item is unmarkable",
+      "pass": true,
+      "detail": "{\"exists\":true,\"marked\":\"0\",\"ariaCurrent\":null}"
+    },
+    {
+      "id": "G4 reduced motion lands on frame one",
+      "pass": true,
+      "detail": "281 → 218 (slot 212), will-change auto"
+    },
+    {
+      "id": "G7 wrapped group reached a second-line slot",
+      "pass": true,
+      "detail": "4 rows; marker off by dx 0.5 dy 0"
+    },
+    {
+      "id": "FR-020 current item identifiable with JS off",
+      "pass": true,
+      "detail": "{\"found\":true,\"text\":\"خانه\",\"bg\":\"rgba(229, 211, 179, 0.16)\",\"markerW\":66.8}"
+    }
+  ],
+  "slots": [
+    {
+      "text": "خانه",
+      "offsetLeft": 267,
+      "offsetWidth": 67,
+      "rectLeft": 280.2
+    },
+    {
+      "text": "فروشگاه",
+      "offsetLeft": 200,
+      "offsetWidth": 67,
+      "rectLeft": 213.4
+    },
+    {
+      "text": "همکاری",
+      "offsetLeft": 134,
+      "offsetWidth": 67,
+      "rectLeft": 146.6
+    },
+    {
+      "text": "تماس",
+      "offsetLeft": 67,
+      "offsetWidth": 67,
+      "rectLeft": 79.8
+    },
+    {
+      "text": "حساب",
+      "offsetLeft": 0,
+      "offsetWidth": 67,
+      "rectLeft": 13
+    }
+  ],
+  "geo": {
+    "navHeight": 62,
+    "navBottom": 12,
+    "navOffsetW": 336,
+    "navClientW": 334,
+    "navPadLeftPx": "0px",
+    "groupWidth": 334,
+    "itemHeight": 48,
+    "itemPadBlock": "6px",
+    "markerBg": "rgb(229, 211, 179)",
+    "markerRadius": "999px"
+  },
+  "samples": [
+    {
+      "t": 165,
+      "left": 281,
+      "w": 52,
+      "sx": 1,
+      "wc": "transform"
+    },
+    {
+      "t": 182,
+      "left": 281,
+      "w": 52,
+      "sx": 1,
+      "wc": "transform"
+    },
+    {
+      "t": 199,
+      "left": 277,
+      "w": 59.9,
+      "sx": 1.1131,
+      "wc": "transform"
+    },
+    {
+      "t": 217,
+      "left": 274.2,
+      "w": 64,
+      "sx": 1.1739,
+      "wc": "transform"
+    },
+    {
+      "t": 234,
+      "left": 269.8,
+      "w": 66.8,
+      "sx": 1.217,
+      "wc": "transform"
+    },
+    {
+      "t": 250,
+      "left": 261.6,
+      "w": 68.2,
+      "sx": 1.2389,
+      "wc": "transform"
+    },
+    {
+      "t": 267,
+      "left": 245.9,
+      "w": 68.8,
+      "sx": 1.248,
+      "wc": "transform"
+    },
+    {
+      "t": 283,
+      "left": 220.5,
+      "w": 68.9,
+      "sx": 1.25,
+      "wc": "transform"
+    },
+    {
+      "t": 300,
+      "left": 177.3,
+      "w": 68.7,
+      "sx": 1.2464,
+      "wc": "transform"
+    },
+    {
+      "t": 317,
+      "left": 120.4,
+      "w": 62.3,
+      "sx": 1.1481,
+      "wc": "transform"
+    },
+    {
+      "t": 333,
+      "left": 81.8,
+      "w": 54.6,
+      "sx": 1.0364,
+      "wc": "transform"
+    },
+    {
+      "t": 349,
+      "left": 56.9,
+      "w": 50.5,
+      "sx": 0.9522,
+      "wc": "transform"
+    },
+    {
+      "t": 367,
+      "left": 41.6,
+      "w": 49.4,
+      "sx": 0.9146,
+      "wc": "transform"
+    },
+    {
+      "t": 383,
+      "left": 32.5,
+      "w": 49.6,
+      "sx": 0.9229,
+      "wc": "transform"
+    },
+    {
+      "t": 400,
+      "left": 28.8,
+      "w": 50.6,
+      "sx": 0.9558,
+      "wc": "transform"
+    },
+    {
+      "t": 416,
+      "left": 27.2,
+      "w": 51.9,
+      "sx": 0.9962,
+      "wc": "transform"
+    },
+    {
+      "t": 434,
+      "left": 26.3,
+      "w": 53.5,
+      "sx": 1.0204,
+      "wc": "transform"
+    },
+    {
+      "t": 450,
+      "left": 26,
+      "w": 54.1,
+      "sx": 1.0289,
+      "wc": "transform"
+    },
+    {
+      "t": 467,
+      "left": 26.2,
+      "w": 53.7,
+      "sx": 1.0232,
+      "wc": "transform"
+    },
+    {
+      "t": 484,
+      "left": 26.6,
+      "w": 52.8,
+      "sx": 1.0115,
+      "wc": "transform"
+    },
+    {
+      "t": 500,
+      "left": 27,
+      "w": 52,
+      "sx": 0.9994,
+      "wc": "transform"
+    },
+    {
+      "t": 517,
+      "left": 27.1,
+      "w": 51.8,
+      "sx": 0.9924,
+      "wc": "transform"
+    },
+    {
+      "t": 534,
+      "left": 27.2,
+      "w": 51.7,
+      "sx": 0.9905,
+      "wc": "transform"
+    },
+    {
+      "t": 551,
+      "left": 27.1,
+      "w": 51.8,
+      "sx": 0.993,
+      "wc": "transform"
+    },
+    {
+      "t": 565,
+      "left": 27,
+      "w": 51.9,
+      "sx": 0.9972,
+      "wc": "transform"
+    },
+    {
+      "t": 582,
+      "left": 27,
+      "w": 52,
+      "sx": 1.0006,
+      "wc": "transform"
+    },
+    {
+      "t": 599,
+      "left": 26.9,
+      "w": 52.2,
+      "sx": 1.0027,
+      "wc": "transform"
+    },
+    {
+      "t": 615,
+      "left": 26.9,
+      "w": 52.2,
+      "sx": 1.0031,
+      "wc": "transform"
+    },
+    {
+      "t": 632,
+      "left": 26.9,
+      "w": 52.2,
+      "sx": 1.0022,
+      "wc": "transform"
+    },
+    {
+      "t": 649,
+      "left": 27,
+      "w": 52.1,
+      "sx": 1.0008,
+      "wc": "transform"
+    },
+    {
+      "t": 665,
+      "left": 27,
+      "w": 52,
+      "sx": 0.9996,
+      "wc": "transform"
+    },
+    {
+      "t": 682,
+      "left": 27,
+      "w": 52,
+      "sx": 0.999,
+      "wc": "transform"
+    },
+    {
+      "t": 699,
+      "left": 27,
+      "w": 52,
+      "sx": 0.999,
+      "wc": "transform"
+    },
+    {
+      "t": 715,
+      "left": 27,
+      "w": 52,
+      "sx": 0.9994,
+      "wc": "transform"
+    },
+    {
+      "t": 732,
+      "left": 27,
+      "w": 52,
+      "sx": 0.9998,
+      "wc": "transform"
+    },
+    {
+      "t": 749,
+      "left": 27,
+      "w": 52,
+      "sx": 1.0002,
+      "wc": "transform"
+    },
+    {
+      "t": 765,
+      "left": 27,
+      "w": 52,
+      "sx": 1.0003,
+      "wc": "transform"
+    },
+    {
+      "t": 782,
+      "left": 27,
+      "w": 52,
+      "sx": 1.0003,
+      "wc": "transform"
+    },
+    {
+      "t": 799,
+      "left": 27,
+      "w": 52,
+      "sx": 1.0002,
+      "wc": "transform"
+    },
+    {
+      "t": 815,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 832,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 849,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 865,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 882,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 899,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 915,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 932,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 949,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 965,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 982,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 999,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1015,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1032,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1049,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1065,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1082,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1099,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1115,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1132,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1149,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1165,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1182,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1199,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1215,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1232,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1249,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1265,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1282,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1299,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1315,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1332,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    },
+    {
+      "t": 1349,
+      "left": 27,
+      "w": 52,
+      "sx": 1,
+      "wc": "auto"
+    }
+  ]
+}

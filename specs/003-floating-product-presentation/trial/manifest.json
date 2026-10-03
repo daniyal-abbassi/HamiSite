@@ -1,0 +1,414 @@
+{
+ "model": "isnet-general-use",
+ "sampleSize": 24,
+ "assets": [
+  {
+   "productId": 48,
+   "name": "گوشی موبایل سامسونگ مدل Galaxy A06 دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت -",
+   "kind": "phone",
+   "source": "public/images/catalog/48.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/48.webp",
+   "sourceBytes": 65995,
+   "derivedBytes": 95374,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4015,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 120,
+   "name": "گوشی موبایل شیائومی مدل Poco M7 4G دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/120.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/120.webp",
+   "sourceBytes": 65896,
+   "derivedBytes": 106372,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4263,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 134,
+   "name": "ساعت هوشمند تی سی اچ مدل TCH HD2 3D Hero2 دارای قابلیت های کنترل موسیقی (Music Player)، پشتیبانی از زبان فارسی در منو و سیستم‌عامل بند فلز",
+   "kind": "smartwatch",
+   "source": "public/images/catalog/134.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/134.webp",
+   "sourceBytes": 99201,
+   "derivedBytes": 163386,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4307,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 138,
+   "name": "ساعت هوشمند تی سی اچ مدل TCH HD1 3D Hero1 دارای قابلیت های کنترل موسیقی (Music Player)، قابلیت مکالمه از طریق بلوتوث، پشتیبانی از زبان فارسی در منو و سیستم‌عامل، قابلیت تغییر طرح ساعت یا تم بند چرم مصنوعی",
+   "kind": "smartwatch",
+   "source": "public/images/catalog/138.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/138.webp",
+   "sourceBytes": 63808,
+   "derivedBytes": 92418,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5331,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 141,
+   "name": "هدفون بلوتوثی تی سی اچ مدل Blade L10",
+   "kind": "audio",
+   "source": "public/images/catalog/141.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/141.webp",
+   "sourceBytes": 38949,
+   "derivedBytes": 98430,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3066,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 182,
+   "name": "هدفون بلوتوثی اپل مدل AirPods New Generation",
+   "kind": "audio",
+   "source": "public/images/catalog/182.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/182.webp",
+   "sourceBytes": 20218,
+   "derivedBytes": 28476,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2924,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 294,
+   "name": "ساعت هوشمند تی سی اچ مدل Z10 Pro Swift",
+   "kind": "smartwatch",
+   "source": "public/images/catalog/294.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/294.webp",
+   "sourceBytes": 60629,
+   "derivedBytes": 71640,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.5361,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 311,
+   "name": "شارژر فوق سریع 66W",
+   "kind": "charger",
+   "source": "public/images/catalog/311.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/311.webp",
+   "sourceBytes": 10735,
+   "derivedBytes": 11332,
+   "sourceDimensions": [
+    400,
+    400
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4312,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 312,
+   "name": "هدفون بلوتوثی اپل مدل AirPods 4 (نسخه دارای نویز کنسلینگ)",
+   "kind": "audio",
+   "source": "public/images/catalog/312.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/312.webp",
+   "sourceBytes": 29769,
+   "derivedBytes": 63028,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2637,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 313,
+   "name": "هدفون بلوتوثی اپل مدل AirPods 4",
+   "kind": "audio",
+   "source": "public/images/catalog/313.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/313.webp",
+   "sourceBytes": 29769,
+   "derivedBytes": 63028,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2637,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 314,
+   "name": "شارژر دیواری 20 وات اپل مدل (A2344) تایپ سی",
+   "kind": "charger",
+   "source": "public/images/catalog/314.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/314.webp",
+   "sourceBytes": 32685,
+   "derivedBytes": 32954,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4376,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 338,
+   "name": "شارژر دیواری 25 وات سامسونگ مدل EP-T2510 با گارانتی یکتا",
+   "kind": "charger",
+   "source": "public/images/catalog/338.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/338.webp",
+   "sourceBytes": 39426,
+   "derivedBytes": 40466,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.4654,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 348,
+   "name": "خط رند همراه اول 1009 850 0990",
+   "kind": "sim_card",
+   "source": "public/images/catalog/348.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/348.webp",
+   "sourceBytes": 54517,
+   "derivedBytes": 94650,
+   "sourceDimensions": [
+    900,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1526,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 349,
+   "name": "خط رند همراه اول 1006 850 0990",
+   "kind": "sim_card",
+   "source": "public/images/catalog/349.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/349.webp",
+   "sourceBytes": 55355,
+   "derivedBytes": 136376,
+   "sourceDimensions": [
+    900,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.0895,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 361,
+   "name": "شارژر نکسا مدل C130 (۳۰ وات)",
+   "kind": "charger",
+   "source": "public/images/catalog/361.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/361.webp",
+   "sourceBytes": 8501,
+   "derivedBytes": 9804,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1555,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 362,
+   "name": "شارژر دیواری نکسا مدل C220 - با خروجی تایپ-سی",
+   "kind": "charger",
+   "source": "public/images/catalog/362.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/362.webp",
+   "sourceBytes": 13093,
+   "derivedBytes": 41310,
+   "sourceDimensions": [
+    554,
+    554
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1807,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 371,
+   "name": "هندزفری سیمی Nexa مدل F55 تایپ C",
+   "kind": "audio",
+   "source": "public/images/catalog/371.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/371.webp",
+   "sourceBytes": 21282,
+   "derivedBytes": 39176,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.0552,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 373,
+   "name": "شارژر فندکی ایکس‌کین مدل Car 18 | توان 68 وات با 3 خروجی فست شارژ",
+   "kind": "car_charger",
+   "source": "public/images/catalog/373.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/373.webp",
+   "sourceBytes": 90159,
+   "derivedBytes": 55612,
+   "sourceDimensions": [
+    900,
+    900
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.0505,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 375,
+   "name": "شارژر فندکی 55 وات فست مدل WKN-104",
+   "kind": "car_charger",
+   "source": "public/images/catalog/375.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/375.webp",
+   "sourceBytes": 85854,
+   "derivedBytes": 161532,
+   "sourceDimensions": [
+    900,
+    805
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.1833,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 376,
+   "name": "ساعت هوشمند Nexa مدل W6 Ultra",
+   "kind": "smartwatch",
+   "source": "public/images/catalog/376.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/376.webp",
+   "sourceBytes": 70975,
+   "derivedBytes": 107462,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.3526,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 388,
+   "name": "گوشی موبایل تی سی اچ مدل Neo دو سیم کارت ظرفیت 64 گیگابایت و رم 4 گیگابایت",
+   "kind": "phone",
+   "source": "public/images/catalog/388.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/388.webp",
+   "sourceBytes": 56922,
+   "derivedBytes": 73178,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.632,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 389,
+   "name": "پاوربانک 22.5 وات تی سی اچ مدل Compact 2020 ظرفیت 20000 میلی‌آمپرساعت به همراه 2 عدد کابل USB-C / لایتنینگ",
+   "kind": "powerbank",
+   "source": "public/images/catalog/389.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/389.webp",
+   "sourceBytes": 24885,
+   "derivedBytes": 23940,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2753,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 392,
+   "name": "پاوربانک 45 وات تی سی اچ مدل Compact 2045 ظرفیت 20000 میلی‌آمپرساعت",
+   "kind": "powerbank",
+   "source": "public/images/catalog/392.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/392.webp",
+   "sourceBytes": 29813,
+   "derivedBytes": 36406,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2572,
+   "reviewStatus": "unreviewed"
+  },
+  {
+   "productId": 394,
+   "name": "پاوربانک 148 وات تی سی اچ مدل Elite 20148 ظرفیت 20000 میلی‌آمپرساعت",
+   "kind": "powerbank",
+   "source": "public/images/catalog/394.jpg",
+   "derived": "specs/003-floating-product-presentation/trial/isolated/394.webp",
+   "sourceBytes": 24680,
+   "derivedBytes": 24066,
+   "sourceDimensions": [
+    800,
+    800
+   ],
+   "alphaMin": 0,
+   "alphaMax": 255,
+   "opaqueFraction": 0.2496,
+   "reviewStatus": "unreviewed"
+  }
+ ]
+}

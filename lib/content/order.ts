@@ -18,20 +18,20 @@ export const paymentStatusLabels: Record<string, string> = {
   EDITED: "ویرایش شده",
 };
 
-/** Tone classes per payment status — green for settled, red for failed, gold otherwise. */
+/** Tone classes per payment status — green for settled, red for failed, aqua otherwise. */
 export const paymentStatusTones: Record<string, string> = {
   COMPLETED: "text-emerald-400",
   FAILED: "text-destructive",
   REVERSED: "text-destructive",
-  INITIATED: "text-gold",
-  SENT: "text-gold",
+  INITIATED: "text-aqua",
+  SENT: "text-aqua",
   EDITED: "text-muted-foreground",
 };
 
 export function orderStatusTone(status: string): string {
   if (status === "COMPLETED") return "text-emerald-400";
   if (status === "CANCELED" || status === "FAILED" || status === "REVERSED") return "text-destructive";
-  if (status === "SHIPPING") return "text-gold";
+  if (status === "SHIPPING") return "text-aqua";
   return "text-foreground/70";
 }
 

@@ -1,0 +1,73 @@
+<svg width="800" height="960" viewBox="0 0 800 960" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg-computer-accessory" x1="120" y1="60" x2="680" y2="880" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#14080B"/>
+      <stop offset="0.48" stop-color="#2B050D"/>
+      <stop offset="1" stop-color="#09070A"/>
+    </linearGradient>
+    <radialGradient id="glow-computer-accessory" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(210 180) rotate(42) scale(430 420)">
+      <stop stop-color="#F6E5C5" stop-opacity="0.32"/>
+      <stop offset="0.4" stop-color="#C11E3A" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="key-cap" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="rgba(245,228,196,0.20)"/>
+      <stop offset="1" stop-color="rgba(245,228,196,0.05)"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="800" height="960" rx="40" fill="url(#bg-computer-accessory)"/>
+  <rect width="800" height="960" rx="40" fill="url(#glow-computer-accessory)"/>
+  <circle cx="122" cy="120" r="3.5" fill="#C11E3A"/>
+
+  <!-- Keyboard, drawn in three-quarter-flat perspective: a slab with a keyed field and a wide spacebar. -->
+  <g transform="translate(96 404)">
+    <rect x="0" y="0" width="452" height="176" rx="26" fill="#0f1215" stroke="rgba(245,228,196,0.34)" stroke-width="3"/>
+    <rect x="14" y="14" width="424" height="148" rx="18" fill="rgba(255,255,255,0.04)"/>
+
+    <!-- Row 1 -->
+    <g fill="url(#key-cap)" stroke="rgba(245,228,196,0.26)" stroke-width="1.5">
+      <rect x="30" y="30" width="40" height="34" rx="8"/>
+      <rect x="78" y="30" width="40" height="34" rx="8"/>
+      <rect x="126" y="30" width="40" height="34" rx="8"/>
+      <rect x="174" y="30" width="40" height="34" rx="8"/>
+      <rect x="222" y="30" width="40" height="34" rx="8"/>
+      <rect x="270" y="30" width="40" height="34" rx="8"/>
+      <rect x="318" y="30" width="90" height="34" rx="8"/>
+    </g>
+    <!-- Row 2 -->
+    <g fill="url(#key-cap)" stroke="rgba(245,228,196,0.26)" stroke-width="1.5">
+      <rect x="30" y="72" width="62" height="34" rx="8"/>
+      <rect x="100" y="72" width="40" height="34" rx="8"/>
+      <rect x="148" y="72" width="40" height="34" rx="8"/>
+      <rect x="196" y="72" width="40" height="34" rx="8"/>
+      <rect x="244" y="72" width="40" height="34" rx="8"/>
+      <rect x="292" y="72" width="116" height="34" rx="8"/>
+    </g>
+    <!-- Row 3: the spacebar row, and the only oxblood key on the board. -->
+    <g fill="url(#key-cap)" stroke="rgba(245,228,196,0.26)" stroke-width="1.5">
+      <rect x="30" y="114" width="48" height="34" rx="8"/>
+      <rect x="86" y="114" width="48" height="34" rx="8"/>
+      <rect x="142" y="114" width="182" height="34" rx="8"/>
+      <rect x="332" y="114" height="34" width="76" rx="8" fill="rgba(169,25,52,0.7)" stroke="rgba(245,228,196,0.32)"/>
+    </g>
+  </g>
+
+  <!-- Mouse, to the right and slightly forward of the board. -->
+  <g transform="translate(572 452)">
+    <path d="M78 0C121 0 148 34 148 88v84c0 54-27 88-70 88S16 226 16 172V88C16 34 35 0 78 0Z"
+          fill="#0d1115" stroke="rgba(245,228,196,0.38)" stroke-width="3"/>
+    <path d="M78 8v96" stroke="rgba(245,228,196,0.25)" stroke-width="2.5"/>
+    <path d="M20 60h124" stroke="rgba(245,228,196,0.25)" stroke-width="2.5"/>
+    <rect x="68" y="86" width="20" height="40" rx="10" fill="#C11E3A" fill-opacity="0.85"/>
+    <path d="M40 200c0 22 10 38 24 44" stroke="rgba(245,228,196,0.18)" stroke-width="3" stroke-linecap="round"/>
+  </g>
+
+  <!-- Cable sweeping out from under the board, so the pair reads as one kit. -->
+  <path d="M300 596c0 74 66 108 148 108s150 26 150 88"
+        stroke="rgba(245,228,196,0.22)" stroke-width="5" stroke-linecap="round" fill="none"/>
+
+  <g opacity="0.9">
+    <rect x="96" y="742" width="608" height="1" fill="rgba(245,228,196,0.18)"/>
+  </g>
+</svg>

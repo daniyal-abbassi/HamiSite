@@ -38,7 +38,10 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
         aria-label={item.product.name}
       >
         <Image
-          src={resolveProductImage({ name: item.product.name })}
+          src={resolveProductImage({
+            name: item.product.name,
+            images: item.product.image ? [item.product.image] : [],
+          })}
           alt={item.product.name}
           fill
           sizes="80px"
@@ -50,12 +53,12 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
             <h3 className="truncate text-sm font-extrabold">
-              <Link href={`/shop/${item.product.slug}`} className="hover:text-gold">
+              <Link href={`/shop/${item.product.slug}`} className="hover:text-aqua">
                 {item.product.name}
               </Link>
             </h3>
             {variantLabel(item) && (
-              <p className="mt-0.5 font-mono text-[10px] tracking-[0.06em] text-muted-foreground/70">
+              <p className="mt-0.5 font-mono text-xs tracking-normal text-muted-foreground/70">
                 {variantLabel(item)}
               </p>
             )}
@@ -64,14 +67,14 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
             type="button"
             onClick={() => onRemove(item.id)}
             aria-label={`حذف ${item.product.name} از سبد`}
-            className="grid size-8 shrink-0 place-items-center rounded-full text-foreground/50 transition-colors duration-fast hover:bg-destructive/10 hover:text-destructive"
+            className="grid size-11 shrink-0 place-items-center rounded-full text-foreground/50 transition-colors duration-fast hover:bg-destructive/10 hover:text-destructive"
           >
             <Trash2 className="size-4" />
           </button>
         </div>
 
         {item.priceChanged && (
-          <p className="mt-1.5 text-[11px] text-gold">
+          <p className="mt-1.5 text-xs text-aqua">
             قیمت به‌روزرسانی شده — اکنون {formatToman(item.currentUnitPrice)} است.
           </p>
         )}
@@ -100,7 +103,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
               <Plus className="size-3.5" />
             </button>
           </div>
-          <strong className="text-sm font-black text-gold">{formatToman(item.lineTotal)}</strong>
+          <strong className="text-sm font-black text-aqua">{formatToman(item.lineTotal)}</strong>
         </div>
       </div>
     </div>

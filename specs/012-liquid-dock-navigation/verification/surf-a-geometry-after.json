@@ -1,0 +1,224 @@
+{
+  "1280px": {
+    "groups": [
+      {
+        "name": "header-pills",
+        "group": {
+          "x": 806.17,
+          "y": 33,
+          "w": 282.83,
+          "h": 48
+        },
+        "visible": "flex",
+        "childTags": [
+          "span[null]",
+          "a[menuitem]",
+          "a[menuitem]",
+          "a[menuitem]"
+        ],
+        "items": [
+          {
+            "text": "خانه",
+            "current": "page",
+            "box": {
+              "x": 1024,
+              "y": 39,
+              "w": 65.38,
+              "h": 36
+            }
+          },
+          {
+            "text": "فروشگاه",
+            "current": null,
+            "box": {
+              "x": 930.58,
+              "y": 39,
+              "w": 89.89,
+              "h": 36
+            }
+          },
+          {
+            "text": "همکاری عمده",
+            "current": null,
+            "box": {
+              "x": 807.78,
+              "y": 39,
+              "w": 119.56,
+              "h": 36
+            }
+          }
+        ],
+        "marker": {
+          "box": {
+            "x": 1027.17,
+            "y": 43,
+            "w": 57,
+            "h": 28
+          },
+          "insideGroup": true,
+          "insideSlot": true
+        },
+        "wrapperPx": {
+          "x": 800.17,
+          "y": 33,
+          "w": 294.83,
+          "h": 48
+        }
+      },
+      {
+        "name": "featured-tabs",
+        "group": {
+          "x": 1004,
+          "y": 2894.44,
+          "w": 240.81,
+          "h": 46
+        },
+        "visible": "flex",
+        "items": [
+          {
+            "text": "جدیدترین‌ها",
+            "selected": "true",
+            "box": {
+              "x": 1128.23,
+              "y": 2899.44,
+              "w": 111.58,
+              "h": 36
+            }
+          },
+          {
+            "text": "پیشنهاد ویژه",
+            "selected": "false",
+            "box": {
+              "x": 1009,
+              "y": 2899.44,
+              "w": 113.23,
+              "h": 36
+            }
+          }
+        ],
+        "marker": null
+      }
+    ],
+    "scrollY": 0,
+    "docW": 1280,
+    "legacy": {
+      "hoverCircles": 0,
+      "pillLabelHover": 0,
+      "pillLabels": 0,
+      "featuredLayoutFill": 0,
+      "lsMarkers": 2,
+      "willChangeMarkers": 0
+    }
+  },
+  "360px": {
+    "groups": [
+      {
+        "name": "header-pills",
+        "group": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        },
+        "visible": "flex",
+        "childTags": [
+          "span[null]",
+          "a[menuitem]",
+          "a[menuitem]",
+          "a[menuitem]"
+        ],
+        "items": [
+          {
+            "text": "خانه",
+            "current": "page",
+            "box": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "text": "فروشگاه",
+            "current": null,
+            "box": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          },
+          {
+            "text": "همکاری عمده",
+            "current": null,
+            "box": {
+              "x": 0,
+              "y": 0,
+              "w": 0,
+              "h": 0
+            }
+          }
+        ],
+        "marker": {
+          "box": {
+            "x": 0,
+            "y": 0,
+            "w": 0,
+            "h": 0
+          },
+          "insideGroup": true,
+          "insideSlot": true
+        },
+        "wrapperPx": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      {
+        "name": "featured-tabs",
+        "group": {
+          "x": 69.94,
+          "y": 2621.44,
+          "w": 220.13,
+          "h": 42
+        },
+        "visible": "flex",
+        "items": [
+          {
+            "text": "جدیدترین‌ها",
+            "selected": "true",
+            "box": {
+              "x": 183.7,
+              "y": 2626.44,
+              "w": 101.36,
+              "h": 32
+            }
+          },
+          {
+            "text": "پیشنهاد ویژه",
+            "selected": "false",
+            "box": {
+              "x": 74.94,
+              "y": 2626.44,
+              "w": 102.77,
+              "h": 32
+            }
+          }
+        ],
+        "marker": null
+      }
+    ],
+    "scrollY": 0,
+    "docW": 360,
+    "legacy": {
+      "hoverCircles": 0,
+      "pillLabelHover": 0,
+      "pillLabels": 0,
+      "featuredLayoutFill": 0,
+      "lsMarkers": 2,
+      "willChangeMarkers": 0
+    }
+  }
+}

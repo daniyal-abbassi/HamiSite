@@ -4,7 +4,7 @@ import { POST as createOrder } from "@/app/api/orders/route";
 import { GET as listAdminOrders } from "@/app/api/admin/orders/route";
 import { PATCH as updateStatus } from "@/app/api/admin/orders/[id]/status/route";
 import { prisma } from "@/lib/prisma";
-import { getRequest, jsonRequest, loginAs } from "../helpers/request";
+import { ctx, getRequest, jsonRequest, loginAs } from "../helpers/request";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
 
 let seed: SeedResult;
@@ -30,56 +30,55 @@ function orderPayload() {
 
 describe("admin orders", () => {
   it("403s listing for a non-admin", async () => {
-    const res = await listAdminOrders(getRequest("http://localhost/api/admin/orders", retailCookie));
+    const res = await listAdminOrders(getRequest("http://localhost/api/admin/orders", retailCookie), ctx());
     expect(res.status).toBe(403);
   });
 
   it("lists orders across all users", async () => {
-    await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie));
+    await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx());
 
-    const res = await listAdminOrders(getRequest("http://localhost/api/admin/orders", adminCookie));
+    const res = await listAdminOrders(getRequest("http://localhost/api/admin/orders", adminCookie), ctx());
     const body = await res.json();
     expect(body.data).toHaveLength(1);
     expect(body.data[0].customer.id).toBe(seed.retail.id);
   });
 
   it("filters by userId and status", async () => {
-    await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie));
+    await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx());
 
     const res = await listAdminOrders(
-      getRequest(`http://localhost/api/admin/orders?userId=${seed.retail.id}&status=PENDING`, adminCookie),
-    );
+      getRequest(`http://localhost/api/admin/orders?userId=${seed.retail.id}&status=PENDING`, adminCookie), ctx());
     const body = await res.json();
     expect(body.data).toHaveLength(1);
   });
 
   it("400s listing orders with an invalid status query param", async () => {
-    const res = await listAdminOrders(getRequest("http://localhost/api/admin/orders?status=NOT_A_STATUS", adminCookie));
+    const res = await listAdminOrders(getRequest("http://localhost/api/admin/orders?status=NOT_A_STATUS", adminCookie), ctx());
     expect(res.status).toBe(400);
   });
 
   it("400s listing orders with an invalid userId query param", async () => {
-    const res = await listAdminOrders(getRequest("http://localhost/api/admin/orders?userId=not-a-number", adminCookie));
+    const res = await listAdminOrders(getRequest("http://localhost/api/admin/orders?userId=not-a-number", adminCookie), ctx());
     expect(res.status).toBe(400);
   });
 
   it("403s a status update for a non-admin", async () => {
-    const created = await (await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie))).json();
+    const created = await (await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx())).json();
 
     const res = await updateStatus(
       jsonRequest(`http://localhost/api/admin/orders/${created.data.id}/status`, "PATCH", { status: "PROCESSING" }, retailCookie),
-      { params: { id: String(created.data.id) } },
+      ctx({ id: String(created.data.id) }),
     );
     expect(res.status).toBe(403);
   });
 
   it("transitions status and restocks a LIMITED variant on cancel", async () => {
-    const created = await (await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie))).json();
+    const created = await (await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx())).json();
     const variantBefore = await prisma.productVariant.findUniqueOrThrow({ where: { id: seed.variant.id } });
 
     const res = await updateStatus(
       jsonRequest(`http://localhost/api/admin/orders/${created.data.id}/status`, "PATCH", { status: "CANCELED" }, adminCookie),
-      { params: { id: String(created.data.id) } },
+      ctx({ id: String(created.data.id) }),
     );
     expect(res.status).toBe(200);
     const body = await res.json();

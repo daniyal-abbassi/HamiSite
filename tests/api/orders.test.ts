@@ -2,7 +2,7 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { GET as listOrders, POST as createOrder } from "@/app/api/orders/route";
 import { GET as getOrder, PATCH as patchOrder } from "@/app/api/orders/[id]/route";
 import { prisma } from "@/lib/prisma";
-import { getRequest, jsonRequest, loginAs } from "../helpers/request";
+import { ctx, getRequest, jsonRequest, loginAs } from "../helpers/request";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
 
 let seed: SeedResult;
@@ -32,8 +32,7 @@ function orderPayload(overrides: Record<string, unknown> = {}) {
 describe("order authorization", () => {
   it("POST /api/orders ignores a spoofed userId and creates the order for the session user", async () => {
     const res = await createOrder(
-      jsonRequest("http://localhost/api/orders", "POST", orderPayload({ userId: seed.wholesale.id }), retailCookie),
-    );
+      jsonRequest("http://localhost/api/orders", "POST", orderPayload({ userId: seed.wholesale.id }), retailCookie), ctx());
     expect(res.status).toBe(200);
 
     const order = await prisma.order.findFirstOrThrow({ where: { orderNumber: (await res.clone().json()).data.orderNumber } });
@@ -41,10 +40,10 @@ describe("order authorization", () => {
   });
 
   it("GET /api/orders ignores a spoofed userId and only returns the session user's orders", async () => {
-    await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie));
-    await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), wholesaleCookie));
+    await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx());
+    await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), wholesaleCookie), ctx());
 
-    const res = await listOrders(getRequest(`http://localhost/api/orders?userId=${seed.wholesale.id}`, retailCookie));
+    const res = await listOrders(getRequest(`http://localhost/api/orders?userId=${seed.wholesale.id}`, retailCookie), ctx());
     const body = await res.json();
     expect(body.data).toHaveLength(1);
     expect(body.data[0].customer.id).toBe(seed.retail.id);
@@ -52,46 +51,42 @@ describe("order authorization", () => {
 
   it("a user cannot GET another user's order by id", async () => {
     const created = await (
-      await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie))
+      await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx())
     ).json();
 
-    const res = await getOrder(getRequest(`http://localhost/api/orders/${created.data.id}`, wholesaleCookie), {
-      params: { id: String(created.data.id) },
-    });
+    const res = await getOrder(getRequest(`http://localhost/api/orders/${created.data.id}`, wholesaleCookie), ctx({ id: String(created.data.id) }));
     expect(res.status).toBe(404);
   });
 
   it("an admin can GET any order by id", async () => {
     const created = await (
-      await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie))
+      await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx())
     ).json();
 
-    const res = await getOrder(getRequest(`http://localhost/api/orders/${created.data.id}`, adminCookie), {
-      params: { id: String(created.data.id) },
-    });
+    const res = await getOrder(getRequest(`http://localhost/api/orders/${created.data.id}`, adminCookie), ctx({ id: String(created.data.id) }));
     expect(res.status).toBe(200);
   });
 
   it("a non-admin cannot PATCH an order's status", async () => {
     const created = await (
-      await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie))
+      await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx())
     ).json();
 
     const res = await patchOrder(
       jsonRequest(`http://localhost/api/orders/${created.data.id}`, "PATCH", { status: "PROCESSING" }, retailCookie),
-      { params: { id: String(created.data.id) } },
+      ctx({ id: String(created.data.id) }),
     );
     expect(res.status).toBe(403);
   });
 
   it("an admin can PATCH an order's status", async () => {
     const created = await (
-      await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie))
+      await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx())
     ).json();
 
     const res = await patchOrder(
       jsonRequest(`http://localhost/api/orders/${created.data.id}`, "PATCH", { status: "PROCESSING" }, adminCookie),
-      { params: { id: String(created.data.id) } },
+      ctx({ id: String(created.data.id) }),
     );
     expect(res.status).toBe(200);
   });
@@ -111,8 +106,7 @@ describe("order authorization", () => {
         "POST",
         orderPayload({ addressId: victimAddress.id }),
         retailCookie,
-      ),
-    );
+      ), ctx());
     expect(res.status).toBe(400);
 
     const ordersWithVictimAddress = await prisma.order.findMany({ where: { addressId: victimAddress.id } });
@@ -126,8 +120,7 @@ describe("order authorization", () => {
         "POST",
         orderPayload({ agentId: seed.retail.id }),
         wholesaleCookie,
-      ),
-    );
+      ), ctx());
     expect(res.status).toBe(400);
 
     const ordersWithBadAgent = await prisma.order.findMany({ where: { agentId: seed.retail.id } });
@@ -144,8 +137,7 @@ describe("B2B credit reversal keys off persisted paymentTerm", () => {
           "POST",
           orderPayload({ paymentTerm: "CASH", paymentMethod: "credit" }),
           wholesaleCookie,
-        ),
-      )
+        ), ctx())
     ).json();
 
     const afterCreate = await prisma.user.findUniqueOrThrow({ where: { id: seed.wholesale.id } });
@@ -153,7 +145,7 @@ describe("B2B credit reversal keys off persisted paymentTerm", () => {
 
     const res = await patchOrder(
       jsonRequest(`http://localhost/api/orders/${created.data.id}`, "PATCH", { status: "CANCELED" }, adminCookie),
-      { params: { id: String(created.data.id) } },
+      ctx({ id: String(created.data.id) }),
     );
     expect(res.status).toBe(200);
 
@@ -164,8 +156,7 @@ describe("B2B credit reversal keys off persisted paymentTerm", () => {
   it("a genuine CREDIT_60_DAYS order's creditUsed increment is reversed on cancellation", async () => {
     const created = await (
       await createOrder(
-        jsonRequest("http://localhost/api/orders", "POST", orderPayload({ paymentTerm: "CREDIT_60_DAYS" }), wholesaleCookie),
-      )
+        jsonRequest("http://localhost/api/orders", "POST", orderPayload({ paymentTerm: "CREDIT_60_DAYS" }), wholesaleCookie), ctx())
     ).json();
 
     const afterCreate = await prisma.user.findUniqueOrThrow({ where: { id: seed.wholesale.id } });
@@ -174,7 +165,7 @@ describe("B2B credit reversal keys off persisted paymentTerm", () => {
 
     const res = await patchOrder(
       jsonRequest(`http://localhost/api/orders/${created.data.id}`, "PATCH", { status: "CANCELED" }, adminCookie),
-      { params: { id: String(created.data.id) } },
+      ctx({ id: String(created.data.id) }),
     );
     expect(res.status).toBe(200);
 
@@ -191,13 +182,12 @@ describe("B2B credit reversal keys off persisted paymentTerm", () => {
           "POST",
           orderPayload({ paymentTerm: "CASH", paymentMethod: "credit" }),
           wholesaleCookie,
-        ),
-      )
+        ), ctx())
     ).json();
 
     const res = await patchOrder(
       jsonRequest(`http://localhost/api/orders/${created.data.id}`, "PATCH", { status: "CANCELED" }, adminCookie),
-      { params: { id: String(created.data.id) } },
+      ctx({ id: String(created.data.id) }),
     );
     expect(res.status).toBe(200);
 

@@ -10,6 +10,7 @@ import { Select } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { VariantsManager } from "@/components/admin/products/VariantsManager";
+import { CatalogImageManager, type CatalogImage } from "@/components/admin/CatalogImageManager";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { apiDelete, apiGet, apiPatch, apiPost } from "@/lib/api-client";
 import type { AdminBrand, AdminCategory, AdminVariantListItem, CreateProductInput } from "@/types/admin";
@@ -39,7 +40,7 @@ type FormValues = {
   isDigital: boolean;
   specialOffer: boolean;
   available: boolean;
-  showPrice: boolean;
+  showPrice: boolean | undefined;
 };
 
 const EMPTY: FormValues = {
@@ -73,6 +74,7 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
   const [categories, setCategories] = useState<AdminCategory[]>([]);
   const [brands, setBrands] = useState<AdminBrand[]>([]);
   const [variants, setVariants] = useState<AdminVariantListItem[]>([]);
+  const [images, setImages] = useState<CatalogImage[]>([]);
   const [loading, setLoading] = useState(mode === "edit");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -88,7 +90,7 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
   // Reference data (categories + brands) for the selects.
   useEffect(() => {
     let cancelled = false;
-    Promise.all([apiGet<AdminCategory[]>("/api/categories?tree=true"), apiGet<AdminBrand[]>("/api/brands")])
+    Promise.all([apiGet<AdminCategory[]>("/api/admin/categories?tree=true"), apiGet<AdminBrand[]>("/api/admin/brands")])
       .then(([cats, brs]) => {
         if (cancelled) return;
         setCategories(cats);
@@ -108,7 +110,12 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
   // Load product detail on edit — the public endpoint is keyed by slug, so the
   // list page passes it via query params (id alone has no admin GET endpoint).
   useEffect(() => {
-    if (mode !== "edit" || !initialSlug) {
+    if (mode !== "edit") {
+      setLoading(false);
+      return;
+    }
+    if (!initialSlug) {
+      setError("آدرس محصول پیدا نشد. از فهرست محصولات دوباره وارد شوید.");
       setLoading(false);
       return;
     }
@@ -123,47 +130,30 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
           slug: product.slug,
           englishName: product.englishName ?? "",
           price: defaultVariant ? String(defaultVariant.price) : "0",
-          compareAtPrice: "",
+          compareAtPrice: String(defaultVariant?.compareAtPrice ?? ""),
           costPerItem: "",
-          batchSize: "1",
+          batchSize: String(product.batchSize ?? 1),
           stock: String(product.stock ?? 0),
           stockType: product.stockType.toUpperCase(),
           description: product.description ?? "",
           analysis: product.analysis ?? "",
-          guarantee: defaultVariant?.guarantee ?? "",
-          minOrderQuantity: "",
-          maxOrderQuantity: "",
-          seoTitle: "",
-          seoDescription: "",
+          guarantee: defaultVariant?.guarantee ?? product.guarantee ?? "",
+          minOrderQuantity: String(product.minOrderQuantity ?? ""),
+          maxOrderQuantity: String(product.maxOrderQuantity ?? ""),
+          seoTitle: product.seoTitle ?? "",
+          seoDescription: product.seoDescription ?? "",
           mainCategoryId: product.mainCategory ? String(product.mainCategory.id) : "",
           brandId: product.brand ? String(product.brand.id) : "",
           isDigital: product.isDigital,
           specialOffer: product.specialOffer,
-          available: true,
-          showPrice: true,
+          available: product.available,
+          showPrice: product.showPrice,
         });
-        setVariants(
-          product.variants.map((variant) => ({
-            id: variant.id,
-            color: variant.color,
-            storage: variant.storage,
-            guarantee: variant.guarantee,
-            price: variant.price,
-            compareAtPrice: variant.compareAtPrice,
-            stock: variant.stock,
-            stockType: variant.stockType,
-            barcode: variant.barcode,
-            productIdentifier: variant.productIdentifier,
-            isDefault: variant.isDefault,
-            quoted: {
-              quantity: 1,
-              paymentTerm: "CASH",
-              role: "ADMIN",
-              unitPrice: variant.unitPrice,
-              matchedTier: variant.matchedTier,
-            },
-          })),
-        );
+        setImages((product.images ?? []).map((image) => ({ id: image.id, url: image.url, altText: image.altText ?? null, isDefault: image.isDefault })));
+        setVariants(product.variants.map((variant) => ({
+          ...variant,
+          quoted: { quantity: 1, paymentTerm: "CASH", role: "ADMIN", unitPrice: variant.unitPrice, matchedTier: variant.matchedTier },
+        })));
       })
       .catch(() => {
         if (!cancelled) setError("محصول پیدا نشد یا در بارگذاری آن خطایی رخ داد.");
@@ -182,28 +172,10 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
     if (mode !== "edit" || !initialSlug) return;
     try {
       const product = await apiGet<ProductDetail>(`/api/products/${encodeURIComponent(initialSlug)}?quantity=1`);
-      setVariants(
-        product.variants.map((variant) => ({
-          id: variant.id,
-          color: variant.color,
-          storage: variant.storage,
-          guarantee: variant.guarantee,
-          price: variant.price,
-          compareAtPrice: variant.compareAtPrice,
-          stock: variant.stock,
-          stockType: variant.stockType,
-          barcode: variant.barcode,
-          productIdentifier: variant.productIdentifier,
-          isDefault: variant.isDefault,
-          quoted: {
-            quantity: 1,
-            paymentTerm: "CASH",
-            role: "ADMIN",
-            unitPrice: variant.unitPrice,
-            matchedTier: variant.matchedTier,
-          },
-        })),
-      );
+      setVariants(product.variants.map((variant) => ({
+        ...variant,
+        quoted: { quantity: 1, paymentTerm: "CASH", role: "ADMIN", unitPrice: variant.unitPrice, matchedTier: variant.matchedTier },
+      })));
     } catch {
       // Keep the stale list; the error is surfaced on the next manual action.
     }
@@ -250,7 +222,7 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
     payload.isDigital = values.isDigital;
     payload.specialOffer = values.specialOffer;
     payload.available = values.available;
-    payload.showPrice = values.showPrice;
+    if (values.showPrice !== undefined) payload.showPrice = values.showPrice;
     return payload;
   }
 
@@ -287,12 +259,8 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
     setMessage(null);
     try {
       if (mode === "edit" && productId) {
-        const updated = await apiPatch<{ id: number; slug: string }>(`/api/admin/products/${productId}`, buildPatchPayload());
+        await apiPatch(`/api/admin/products/${productId}`, buildPatchPayload());
         setMessage("محصول به‌روزرسانی شد.");
-        if (updated.slug && updated.slug !== initialSlug) {
-          // Slug changed — refresh the page against the new slug so edits stay keyed correctly.
-          setTimeout(() => router.replace(`/admin/products/${updated.id}?slug=${encodeURIComponent(updated.slug)}`), 600);
-        }
       } else {
         const created = await apiPost<{ id: number; slug: string }>("/api/admin/products", buildCreatePayload());
         router.push(`/admin/products/${created.id}?slug=${encodeURIComponent(created.slug)}`);
@@ -341,7 +309,8 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
 
       {/* Basic info */}
       <section className="rounded-2xl border border-line bg-ink-2/60 p-6">
-        <h2 className="text-sm font-black">اطلاعات پایه</h2>
+        <h2 className="text-sm font-black">هویت و رسانه محصول</h2>
+        <p className="mt-1 text-xs text-muted-foreground">نام، شناسه و تصویرهایی که مشتری در فروشگاه می‌بیند.</p>
         <div className="brand-hairline my-4" />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <div>
@@ -356,6 +325,17 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
             <Field label="نام انگلیسی" htmlFor="p-english" />
             <Input id="p-english" value={values.englishName} onChange={setField("englishName")} className="h-10" dir="ltr" />
           </div>
+        </div>
+        <div className="mt-5">
+          <CatalogImageManager entity="product" ownerId={productId ?? null} images={images} onImagesChange={setImages} />
+        </div>
+      </section>
+
+      <section className="rounded-2xl border border-line bg-ink-2/60 p-6">
+        <h2 className="text-sm font-black">قیمت و موجودی</h2>
+        <p className="mt-1 text-xs text-muted-foreground">قیمت پایه و محدودیت‌های سفارش این محصول.</p>
+        <div className="brand-hairline my-4" />
+        <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <div>
             <Field label="دسته اصلی" htmlFor="p-category" />
             <Select id="p-category" value={values.mainCategoryId} onChange={setField("mainCategoryId")} className="h-10">
@@ -443,7 +423,7 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
             <Switch id="p-available" checked={values.available} onCheckedChange={setBool("available")} />
           </FlagRow>
           <FlagRow label="نمایش قیمت" hint="قیمت به خریدار نمایش داده شود">
-            <Switch id="p-showprice" checked={values.showPrice} onCheckedChange={setBool("showPrice")} />
+            <Switch id="p-showprice" checked={values.showPrice ?? true} onCheckedChange={setBool("showPrice")} />
           </FlagRow>
           <FlagRow label="پیشنهاد ویژه" hint="برچسب ویژه و اولویت در فروشگاه">
             <Switch id="p-special" checked={values.specialOffer} onCheckedChange={setBool("specialOffer")} />
@@ -500,8 +480,7 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
 
       {mode === "edit" && (
         <p className="text-[11px] leading-5 text-muted-foreground/60">
-          نکته: برخی فیلدها (هزینه تمام‌شده، SEO، حداقل/حداکثر سفارش) در اندپوینت عمومی محصول موجود نیستند و فقط هنگام ایجاد یا با
-          ورود دستی اعمال می‌شوند؛ اگر مقداری وارد نکنید، مقدار قبلی دست‌نخورده می‌ماند.
+          هزینه تمام‌شده و وضعیت نمایش قیمت در کاتالوگ عمومی ثبت نشده‌اند؛ اگر آن‌ها را تغییر ندهید، مقدار ذخیره‌شده دست‌نخورده می‌ماند.
         </p>
       )}
     </div>

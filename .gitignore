@@ -7,9 +7,75 @@ dist/
 tsconfig.tsbuildinfo
 .superpowers/
 actuall_old_webSite_api_token.txt
+jev.txt
 graphify-out/
 data/uploads/
 .worktrees/
 oldWebsite-openapi.json
 .claude/settings.json
 .claude/settings.local.json
+
+# Superdesign temporary component HTML
+.superdesign/tmp/
+
+# Universal editor/OS noise
+.DS_Store
+Thumbs.db
+*.tmp
+*.swp
+.vscode/
+.idea/
+
+# Local env variants and test output
+.env.local
+.env.*.local
+coverage/
+test-results/
+playwright-report/
+
+# Vendored agent skill trees and tool scratch state. Installed per-machine by the
+# skills CLI, regenerated on demand, and noise for both review and the graph.
+.claude/skills/
+.agents/skills/
+.impeccable/
+.playwright-mcp/
+.clinerules/
+
+# Local hand-off archives
+*.zip
+
+# Regenerable isolation-trial output — the manifests and contact sheets are the evidence,
+# the 188 derived WebPs are reproducible with scripts/isolate-catalog-images.py.
+specs/003-floating-product-presentation/trial/isolated/
+specs/003-floating-product-presentation/trial/full/isolated/
+
+# Band verification probes write their measurements next to themselves.
+specs/**/verification/*-result.json
+
+# Full-page baseline screenshots are regenerable with verification/capture-baseline.mjs;
+# the manifests and the -fold crops are what get committed.
+# Full-page captures run to tens of megabytes per band and are regenerable with
+# verification/capture-baseline.mjs. The above-the-fold crops for the three surfaces
+# the band's claims are stated against are the evidence that gets committed.
+specs/001-premium-rtl-storefront/baseline/*.png
+!specs/001-premium-rtl-storefront/baseline/home@*-fold.png
+!specs/001-premium-rtl-storefront/baseline/shop@*-fold.png
+!specs/001-premium-rtl-storefront/baseline/pdp-variant@*-fold.png
+
+# Live agent-pair coordination (this session only — the record lives in notes/)
+.agent-pair/
+
+# Beads / Dolt files (added by bd init)
+.dolt/
+*.db
+.beads-credential-key
+.beads/proxieddb/
+*.gate.lock*
+
+# Agent working space: task briefs, probe scripts, worker reports. Deliberately not part of the
+# repo history — anything from here that matters has already been written into specs/.
+.scratch/
+
+# Qoder IDE per-machine state and vendored skill trees (installed locally, not source)
+.qoder/settings.local.json
+.qoder/skills/

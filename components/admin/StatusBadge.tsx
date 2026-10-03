@@ -12,9 +12,28 @@ const stockLabels: Record<string, string> = {
 
 const stockTones: Record<string, string> = {
   unlimited: "text-emerald-400",
-  limited: "text-gold",
+  limited: "text-aqua",
   out_of_stock: "text-destructive",
   call: "text-muted-foreground/80",
+};
+
+const orderStyles: Record<string, { badge: string; dot: string }> = {
+  PENDING: { badge: "border-amber-200 bg-amber-50 text-amber-900", dot: "bg-amber-500" },
+  PROCESSING: { badge: "border-sky-200 bg-sky-50 text-sky-900", dot: "bg-sky-500" },
+  SHIPPING: { badge: "border-violet-200 bg-violet-50 text-violet-900", dot: "bg-violet-500" },
+  COMPLETED: { badge: "border-emerald-200 bg-emerald-50 text-emerald-900", dot: "bg-emerald-500" },
+  CANCELED: { badge: "border-slate-200 bg-slate-100 text-slate-700", dot: "bg-slate-500" },
+  FAILED: { badge: "border-rose-200 bg-rose-50 text-rose-900", dot: "bg-rose-500" },
+  REVERSED: { badge: "border-orange-200 bg-orange-50 text-orange-900", dot: "bg-orange-500" },
+};
+
+const paymentStyles: Record<string, { badge: string; dot: string }> = {
+  INITIATED: { badge: "border-slate-200 bg-slate-50 text-slate-700", dot: "bg-slate-500" },
+  SENT: { badge: "border-blue-200 bg-blue-50 text-blue-900", dot: "bg-blue-500" },
+  COMPLETED: { badge: "border-emerald-200 bg-emerald-50 text-emerald-900", dot: "bg-emerald-500" },
+  FAILED: { badge: "border-rose-200 bg-rose-50 text-rose-900", dot: "bg-rose-500" },
+  REVERSED: { badge: "border-orange-200 bg-orange-50 text-orange-900", dot: "bg-orange-500" },
+  EDITED: { badge: "border-violet-200 bg-violet-50 text-violet-900", dot: "bg-violet-500" },
 };
 
 const roleLabels: Record<string, string> = {
@@ -43,16 +62,17 @@ export function StatusBadge({ value, kind }: { value: string; kind: StatusKind }
         ? (paymentStatusTones[value] ?? "text-muted-foreground")
         : kind === "stock"
           ? (stockTones[value] ?? "text-muted-foreground")
-          : "text-gold";
+          : "text-aqua";
+  const semanticStyle = kind === "order" ? orderStyles[value] : kind === "payment" ? paymentStyles[value] : undefined;
 
   return (
     <span
       className={cn(
-        "inline-flex items-center gap-1.5 rounded-full border border-line bg-foreground/5 px-2.5 py-1 text-[11px] font-bold",
-        tone,
+        "inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[11px] font-bold",
+        semanticStyle?.badge ?? cn("border-line bg-foreground/5", tone),
       )}
     >
-      <i className={cn("size-1.5 rounded-full", value === "COMPLETED" || value === "unlimited" ? "bg-emerald-400" : "bg-gold")} />
+      <i className={cn("size-1.5 rounded-full", semanticStyle?.dot ?? (value === "COMPLETED" || value === "unlimited" ? "bg-emerald-500" : "bg-aqua"))} />
       {label}
     </span>
   );

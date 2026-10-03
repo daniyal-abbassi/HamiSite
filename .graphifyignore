@@ -1,0 +1,22 @@
+# Keeps the knowledge graph scoped to this app.
+#
+# The original graph was narrowed by hand during an interactive build (159 of
+# 590 files). That choice was not persisted anywhere, so a later bare
+# `graphify update .` — the command CLAUDE.md tells you to run after changing
+# code — silently re-swept the whole tree and grew the graph from 692 to 2828
+# nodes, 1558 of them from the reference projects. This file makes the scope
+# durable instead of a one-off answer to a prompt.
+
+# Reference-only, per CLAUDE.md: incompatible versions, never built or run.
+# Also excluded from the root tsconfig for the same reason.
+docs/inspires/
+
+# A second, self-contained Next.js app that lives inside this repo. Excluded
+# from tsconfig too — it has its own package.json, its own React major, and
+# is not part of this application's graph.
+premium-3d-mobile-commerce/
+
+# Build output and tooling state.
+.next/
+.playwright-mcp/
+.impeccable/

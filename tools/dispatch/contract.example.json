@@ -1,0 +1,30 @@
+{
+  "$comment": "The task contract the Boss fills for every dispatch. dispatch-worker builds the worker's brief from these fields plus the prompt file; it deliberately does NOT paste the Boss's conversation or the repository. Keep each value the smallest thing the worker needs to act correctly — the brief in the prompt file carries the specifics.",
+  "task_id": "007-T027-band-height",
+  "beads_id": "8sv.2",
+  "worker": "hermes",
+  "role": "browser/runtime measurement, no writes",
+  "objective": "Measure the static composition height of the assembly band at 360 and 1280 and report whether its sticky shell pins.",
+  "scope": "research",
+  "owned_files": [],
+  "writable_paths_if_implement": ["components/home/assembly-band.css"],
+  "allowed_tools": ["read", "search", "browser"],
+  "relevant_spec": [
+    "specs/007-motion-assembly-band/tasks.md#T027",
+    "specs/007-motion-assembly-band/spec.md#SC-001",
+    "specs/007-motion-assembly-band/blueprint.md#section-3"
+  ],
+  "acceptance_criteria": [
+    "report the band section's rendered height in px at 360 and at 1280",
+    "report whether .assembly-band__shell top holds at 0 across the pin window",
+    "report the measured boxes of the immovable bar, MobileDock and Header in px"
+  ],
+  "verification_commands": ["npm run typecheck"],
+  "expected_output": "the fenced JSON block defined in dispatch-worker's prompt template",
+  "timeout": 900,
+  "working_directory": "/home/lain/lain_projects/hami-site-2/HamiSite-basic-structure",
+  "$notes": {
+    "why_task_id_is_not_a_beads_id": "task_id names the artifact (.agent-pair/inbox/<worker>/<task-id>.json) and the lock; beads_id is the execution issue if one exists. They are separate because Spec Kit tasks.md stays the planned source and Beads is live state.",
+    "why_verification_commands_is_a_string_list": "dispatch-worker runs each one after the worker exits and records its real exit code. A worker that exits 0 but fails verification is reported 'failed', never 'completed'."
+  }
+}

@@ -14,7 +14,7 @@ export function AdminGate({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     if (status === "guest") {
-      router.replace("/login?next=/admin");
+      router.replace(`/login?next=${encodeURIComponent("/admin")}`);
     } else if (status === "authenticated" && user?.role !== "ADMIN") {
       router.replace("/");
     }

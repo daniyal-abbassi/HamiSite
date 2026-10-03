@@ -5,15 +5,15 @@ type Props = {
   value: string;
   hint?: string;
   icon?: LucideIcon;
-  accent?: "gold" | "green" | "red" | "default";
+  accent?: "aqua" | "green" | "red" | "default";
 };
 
 /** Operate-mode stat card for the admin dashboard — flat hairline surface
  * (no glass lift), one number with a muted label. */
 export function StatCard({ label, value, hint, icon: Icon, accent = "default" }: Props) {
   const tone =
-    accent === "gold"
-      ? "text-gold"
+    accent === "aqua"
+      ? "text-aqua"
       : accent === "green"
         ? "text-emerald-400"
         : accent === "red"
@@ -28,7 +28,7 @@ export function StatCard({ label, value, hint, icon: Icon, accent = "default" }:
         {hint && <p className="mt-1 text-[11px] text-muted-foreground/70">{hint}</p>}
       </div>
       {Icon && (
-        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-foreground/5 text-gold">
+        <span className="grid size-10 shrink-0 place-items-center rounded-xl bg-foreground/5 text-aqua">
           <Icon className="size-5" />
         </span>
       )}

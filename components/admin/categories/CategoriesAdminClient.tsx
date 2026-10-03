@@ -7,13 +7,14 @@ import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Switch } from "@/components/ui/switch";
+import { CatalogImageManager } from "@/components/admin/CatalogImageManager";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { apiDelete, apiGet, apiPatch, apiPost } from "@/lib/api-client";
 import type { AdminCategory, CreateCategoryInput } from "@/types/admin";
 
-type CatForm = { name: string; slug: string; description: string; parentId: string; available: boolean };
+type CatForm = { name: string; slug: string; description: string; parentId: string; available: boolean; imageUrl: string | null };
 
-const EMPTY: CatForm = { name: "", slug: "", description: "", parentId: "", available: true };
+const EMPTY: CatForm = { name: "", slug: "", description: "", parentId: "", available: true, imageUrl: null };
 
 export function CategoriesAdminClient() {
   const [categories, setCategories] = useState<AdminCategory[] | null>(null);
@@ -25,7 +26,7 @@ export function CategoriesAdminClient() {
 
   const load = useCallback(async () => {
     try {
-      setCategories(await apiGet<AdminCategory[]>("/api/categories?tree=true"));
+      setCategories(await apiGet<AdminCategory[]>("/api/admin/categories?tree=true"));
     } catch {
       setCategories([]);
     }
@@ -62,6 +63,7 @@ export function CategoriesAdminClient() {
       description: category.description ?? "",
       parentId: category.parentId ? String(category.parentId) : "",
       available: true,
+      imageUrl: category.imageUrl,
     });
     setError(null);
     setDialogOpen(true);
@@ -114,14 +116,14 @@ export function CategoriesAdminClient() {
           className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-line bg-ink/40 px-4 py-3 hover:bg-ink-2/40"
           style={{ marginInlineStart: `${depth * 22}px` }}
         >
-          <div className="flex min-w-0 items-center gap-2.5">
-            <FolderTree className="size-4 shrink-0 text-gold/70" />
+          <div className="flex min-w-0 items-center gap-3">
+            {category.imageUrl ? <img src={category.imageUrl} alt={category.imageAlt ?? ""} className="size-10 shrink-0 rounded-lg bg-ink-2 object-contain p-1" /> : <span className="grid size-10 shrink-0 place-items-center rounded-lg bg-foreground/5"><FolderTree className="size-4 text-aqua/70" /></span>}
             <div className="min-w-0">
               <p className="text-[13px] font-bold">
                 {category.name}
                 <span className="ms-2 font-mono text-[10px] font-normal text-muted-foreground/60">{category.slug}</span>
               </p>
-              {category.description && <p className="truncate text-[11px] text-muted-foreground">{category.description}</p>}
+              {category.description && <p className="truncate text-[11px] text-muted-foreground">{category.description.replace(/<[^>]*>/g, " ").replace(/&nbsp;/g, " ").trim()}</p>}
             </div>
           </div>
           <div className="flex items-center gap-1.5">
@@ -129,7 +131,7 @@ export function CategoriesAdminClient() {
               <Plus className="size-3.5" />
               زیردسته
             </Button>
-            <Button variant="ghost" size="sm" onClick={() => openEdit(category)}>
+            <Button variant="ghost" size="sm" onClick={() => openEdit(category)} aria-label={`ویرایش ${category.name}`}>
               <Pencil className="size-3.5" />
             </Button>
             <Button variant="ghost" size="sm" onClick={() => void remove(category.id, category.name)} aria-label={`حذف ${category.name}`}>
@@ -206,6 +208,10 @@ export function CategoriesAdminClient() {
             <FieldLabel>توضیحات</FieldLabel>
             <Input value={form.description} onChange={(e) => setForm((prev) => ({ ...prev, description: e.target.value }))} className="h-10" />
           </div>
+          <CatalogImageManager entity="category" ownerId={editingId} imageUrl={form.imageUrl} onImageUrlChange={(imageUrl) => {
+            setForm((prev) => ({ ...prev, imageUrl }));
+            if (editingId != null) setCategories((current) => current?.map((node) => patchCategoryImage(node, editingId, imageUrl)) ?? current);
+          }} />
           <div className="flex items-center justify-between rounded-xl border border-line bg-ink/40 px-3.5 py-2.5">
             <label className="text-[12px] font-bold">فعال (نمایش در فروشگاه)</label>
             <Switch checked={form.available} onCheckedChange={(checked) => setForm((prev) => ({ ...prev, available: checked }))} />
@@ -222,6 +228,11 @@ export function CategoriesAdminClient() {
       </Dialog>
     </div>
   );
+}
+
+function patchCategoryImage(category: AdminCategory, id: number | null, imageUrl: string | null): AdminCategory {
+  if (category.id === id) return { ...category, imageUrl };
+  return { ...category, children: category.children?.map((child) => patchCategoryImage(child, id, imageUrl)) };
 }
 
 function FieldLabel({ children }: { children: React.ReactNode }) {

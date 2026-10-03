@@ -1,6 +1,6 @@
 /* Home page bespoke editorial styles — the pieces Tailwind can't express
    cleanly. Repainted for the "Aura" world (near-black canvas, oxblood glow,
-   muted gold, full rounded geometry) — see the direction contract at the
+   muted aqua, full rounded geometry) — see the direction contract at the
    top of app/layout.tsx. */
 
 /* ---------- scroll reveal ---------- */
@@ -21,62 +21,507 @@
   }
 }
 
-/* ---------- category mosaic ---------- */
-.cat-grid {
-  display: grid;
-  gap: 14px;
-  grid-template-columns: repeat(2, 1fr);
-  grid-auto-rows: 200px;
-}
-@media (min-width: 768px) {
-  .cat-grid {
-    grid-template-columns: repeat(4, 1fr);
-    grid-template-areas:
-      "mobile mobile audio charging"
-      "mobile mobile watch power"
-      "feature party party services";
-    grid-auto-rows: 230px;
-  }
-}
-.cat-card {
+
+
+
+
+
+/* ---------- category catalogue: quiet, direct navigation ---------- */
+/*
+ * The section used to sit on a cream card — `#faf4e6` paper, `#21181a` ink — which is the light
+ * chapter feature 005's FR-039 explicitly forbids signing this surface off against. The carousel's
+ * panels are dark lacquer artwork with champagne line-work; on cream they read as holes cut in the
+ * page. So the section now sits one step off the obsidian ground and the type is knocked out in
+ * champagne, which is also what makes the arc's depth cue legible at all.
+ *
+ * `--catalogue-brand` was oxblood `#640211`. Against `#120104` that measures about 1.5:1 — present
+ * in the file, invisible to a shopper — so the accent is champagne and the oxblood stays where it
+ * has room to breathe: the button fill.
+ */
+.category-catalogue {
+  --catalogue-paper: #120104;
+  --catalogue-ink: #f0ece9;
+  --catalogue-muted: #b9b3b0;
+  --catalogue-brand: #e5d3b3;
   position: relative;
+  margin-block: 2.5rem;
+  padding: clamp(1.25rem, 4vw, 3rem);
+  border-radius: 28px;
+  background: var(--catalogue-paper);
+  color: var(--catalogue-ink);
+  scroll-margin-block-start: 7rem;
+}
+.category-catalogue__head {
   display: flex;
-  overflow: hidden;
-  border-radius: 22px;
-  border: 1px solid var(--line);
-  background: var(--card);
-  transition: transform 0.35s cubic-bezier(0.2, 0.7, 0.3, 1), border-color 0.35s;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-block-end: 2rem;
 }
-.cat-card:hover {
-  transform: translateY(-4px);
-  border-color: rgba(201, 162, 39, 0.5);
+.category-kicker {
+  color: var(--catalogue-brand);
+  font-size: 0.875rem;
+  font-weight: 700;
 }
-.cat-card--mobile { grid-area: mobile; }
-.cat-card--audio { grid-area: audio; }
-.cat-card--charging { grid-area: charging; }
-.cat-card--watch { grid-area: watch; }
-.cat-card--power { grid-area: power; }
-.cat-card--feature { grid-area: feature; }
-.cat-card--party { grid-area: party; }
-.cat-card--services { grid-area: services; }
-.cat-art {
+.category-catalogue h2 {
+  margin-block: 0.75rem;
+  color: var(--catalogue-ink);
+  font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+  font-weight: 800;
+  line-height: 1.5;
+  text-wrap: balance;
+}
+.category-catalogue h2 span { color: var(--catalogue-brand); }
+.category-catalogue__head p {
+  max-width: 30rem;
+  color: var(--catalogue-muted);
+  font-size: 0.9375rem;
+  line-height: 1.9;
+}
+.category-catalogue__all {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  min-height: 48px;
+  padding: 0.75rem 1.25rem;
+  border: 1px solid var(--catalogue-brand);
+  border-radius: 999px;
+  background: var(--catalogue-brand);
+  color: var(--catalogue-paper);
+  font-size: 0.875rem;
+  font-weight: 700;
+  transition: transform 100ms ease-out;
+}
+.category-catalogue a:focus-visible {
+  outline: 3px solid var(--catalogue-brand);
+  outline-offset: 5px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .category-catalogue__all:hover { background: #c5a880; border-color: #c5a880; color: #16080c; }
+}
+.category-catalogue__all:active { transform: scale(0.97); }
+@media (prefers-reduced-motion: reduce) {
+  .category-catalogue__all { transition: none; }
+  .category-catalogue__all:active { transform: none; }
+}
+@media (prefers-contrast: more) {
+  .category-catalogue { --catalogue-muted: #21181a; }
+}
+
+/* ---------- brands: stacked rows (feature 004 / US1) ---------- */
+/* Separation is a hairline, never a band: US2's emphasis lays a coloured band over the
+   chosen row, and the resting list must not already look like something is selected. */
+.brand-rows {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  border-top: 1px solid rgba(229, 211, 179, 0.16);
+}
+/* The row. Its height never changes — emphasis moves surface and visibility only, so the
+   row below the one you pressed cannot slide out from under your thumb (research.md D5,
+   contract C11). The detail region is therefore reserved from the start. */
+.brand-rows__item {
+  position: relative;
+  /* Own stacking context, so the emphasis layer below can sit behind the row's content
+     without a z-index on every child. */
+  isolation: isolate;
+  display: grid;
+  /* ordinal | mark | label | count | expand, then the story band across the full measure.
+     Every column is placed on the inline axis, so the list mirrors for RTL without a
+     second rule anywhere. The mark column is fixed at 5.75rem because the Samsung
+     wordmark measures 91px at the optical height BrandMarks gives it — a narrower column
+     would have the mark bleed into the name. */
+  grid-template-columns: 1.5rem 5.75rem minmax(0, 1fr) auto 2.75rem;
+  grid-template-areas:
+    "index mark label count expand"
+    "detail detail detail detail detail";
+  align-items: center;
+  gap: 0.125rem 0.25rem;
+  min-height: 6rem;
+  padding: 0.75rem 0.25rem;
+  border-bottom: 1px solid rgba(229, 211, 179, 0.16);
+  color: #f0ece9;
+  transition: border-color 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+/* The emphasis surface is a pseudo-element whose opacity moves, not a `background`
+   transition. A gradient is a background-image and background-image does not interpolate,
+   so transitioning it — or the background-color underneath it, which never changes — makes
+   the band appear in one frame while everything around it eases. US2 scenario 5 asks for a
+   transition that arrives smoothly with no flicker, and opacity is also the cheaper of the
+   two to composite. */
+.brand-rows__item::before {
+  content: "";
   position: absolute;
   inset: 0;
+  z-index: -1;
+  background: linear-gradient(to left, rgba(100, 2, 17, 0.85), rgba(61, 2, 11, 0.55));
+  opacity: 0;
+  transition: opacity 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+/* The row itself is the destination: one stretched link under the whole thing, so the
+   first press anywhere on the row navigates (C6) and the expand control is lifted back
+   above it as the only other target. */
+.brand-rows__go {
+  grid-area: 1 / 1 / -1 / -1;
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 0.5rem;
+}
+.brand-rows__go:focus-visible {
+  outline: 2px solid #e5d3b3;
+  outline-offset: -3px;
+}
+.brand-rows__item[data-emphasised] {
+  border-bottom-color: rgba(229, 211, 179, 0.4);
+}
+.brand-rows__item[data-emphasised]::before {
+  opacity: 1;
+}
+.brand-rows__index {
+  grid-area: index;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 0.8125rem;
+  letter-spacing: 0;
+  /* 0.72, not the 0.5 this started at: the ordinal sits where the emphasised band is at
+     its brightest, and at 0.5 it measured 3.3:1 there — below 4.5:1 for text this small. */
+  color: rgba(229, 211, 179, 0.72);
+}
+.brand-rows__mark {
+  grid-area: mark;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  color: #e5d3b3;
+}
+/* 001/FR-057 — tracking breaks letter joining in Persian. Set to zero explicitly rather
+   than left alone, so an inherited `tracking-*` cannot reach it and the browser check in
+   quickstart §3 reads a real value instead of "normal". */
+.brand-rows__label {
+  grid-area: label;
+  font-size: 1.25rem;
+  font-weight: 900;
+  line-height: 1.5;
+  letter-spacing: 0;
+}
+/* The count is a fact from the catalogue, on the name's own line, on all six rows, in both
+   states. It is what makes the row answer with something real whatever brand it is. */
+.brand-rows__count {
+  grid-area: count;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0;
+  color: rgba(229, 211, 179, 0.68);
+  transition: color 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.brand-rows__item[data-emphasised] .brand-rows__count {
+  color: #f4eadb;
+}
+/* The expand control. Its own focus stop, its own accessible name, and a 44px target —
+   it is the only thing above the row link, so it is the only press that does not navigate. */
+.brand-rows__expand {
+  grid-area: expand;
+  position: relative;
+  z-index: 2;
   display: grid;
   place-items: center;
-  background:
-    radial-gradient(circle at 70% 30%, rgba(201, 162, 39, 0.16), transparent 55%),
-    linear-gradient(150deg, rgba(156, 10, 34, 0.55), rgba(58, 1, 10, 0.85));
-  color: rgba(201, 162, 39, 0.75);
+  justify-self: end;
+  width: 2.75rem;
+  min-height: 2.75rem;
+  border-radius: 0.5rem;
+  color: rgba(229, 211, 179, 0.6);
+  transition: color 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
 }
-.cat-art i {
+.brand-rows__expand:hover {
+  color: #e5d3b3;
+}
+.brand-rows__expand:focus-visible {
+  outline: 2px solid #e5d3b3;
+  outline-offset: -2px;
+}
+.brand-rows__chevron {
+  width: 1.125rem;
+  height: 1.125rem;
+  transition: transform 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.brand-rows__item[data-emphasised] .brand-rows__chevron {
+  transform: rotate(180deg);
+}
+/* The story band under the name. Its height is fixed rather than content-driven, so all
+   six rows share one geometry and a brand with no written story is not a shorter row —
+   Q3 asks for the opposite. `visibility` keeps the hidden story out of the accessibility
+   tree, so a resting row announces as a destination and nothing else. */
+.brand-rows__detail {
+  grid-area: detail;
+  display: grid;
+  height: 2.75rem;
+  padding-block-start: 0.375rem;
+}
+.brand-rows__story {
+  display: grid;
+  gap: 0.125rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 220ms cubic-bezier(0.2, 0.7, 0.3, 1), visibility 0s linear 220ms;
+}
+.brand-rows__item[data-emphasised] .brand-rows__story {
+  opacity: 1;
+  visibility: visible;
+  transition: opacity 220ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.brand-rows__story-title {
+  font-size: 0.9375rem;
+  font-weight: 800;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: #f4eadb;
+}
+.brand-rows__story-text {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: rgba(240, 236, 233, 0.72);
+  max-width: 46ch;
+}
+@media (prefers-reduced-motion: reduce) {
+  /* C17: the same brands, marks, stories and destinations, with emphasis as a state
+     change rather than travel. Nothing is hidden and nothing moves. */
+  .brand-rows__item,
+  .brand-rows__item::before,
+  .brand-rows__expand,
+  .brand-rows__story {
+    transition: none;
+  }
+  .brand-rows__chevron {
+    transition: none;
+    transform: none;
+  }
+  .brand-rows__item[data-emphasised] .brand-rows__chevron {
+    transform: none;
+  }
+}
+@media (min-width: 768px) {
+  /* The list is capped rather than stretched: a six-row brand list at 1232px is one
+     long hairline with nothing on it. */
+  .brand-rows { max-width: 46rem; }
+  .brand-rows__item {
+    grid-template-columns: 2.25rem 8rem minmax(0, 1fr) auto 3rem;
+    gap: 0.25rem 1.5rem;
+    min-height: 5rem;
+    padding: 0.75rem 0.5rem;
+  }
+  .brand-rows__label { font-size: 1.5rem; }
+}
+
+/* ---------- 008 brands deck (T011/T012) — six sticky cards, CSS only ----------
+   Research D1: the deck is what the browser makes of six sticky blocks in normal
+   flow. No scroll listener, no library, no JS in the stacking path.
+   D3: card i holds at i×16px, so the five cards behind the active one read as a
+   stacked edge. D6: `isolation` on the list creates the section's stacking
+   context once — the six z-indexes order themselves among themselves and cannot
+   climb over the dock (z-40) or the header (z-50). D8: logical properties only;
+   nothing here names left, right or top. */
+
+/* Deviation, deliberate and logged (notes/deck-build-log.md): #brands still
+   carries `overflow-hidden` from the deleted T070/T071 decorations, and an
+   overflow-hidden ancestor is the classic silent death of position: sticky —
+   the descendant sticks to a box that never scrolls. Overriding it here, in a
+   file this task owns, instead of editing BrandShowcase.tsx, which it does not. */
+#brands {
+  overflow: visible;
+}
+
+.brand-deck {
+  margin: 0;
+  padding: 0;
+  /* The deck's arrival room, as a length rather than a padding value — see ::after below. */
+  --deck-room: 240px;
+  /* The artwork IS the card now, so the deck's width sets its height: these six are 2.68:1 to
+     2.91:1, and an uncapped 1536 px container would ask the tallest for 573 px against 008's 460
+     ceiling — the picture would spill over the card below it. Capping the deck at 1080 keeps
+     every card inside the ceiling at every viewport without cropping a single frame, and reads
+     better than a full-bleed banner on a wide screen. */
+  max-inline-size: 1080px;
+  margin-inline: auto;
+  /* The first run (measure-deck at 360×640) held five of six tops: the last card never arrived
+     because the chapter ended under it. Sticky travel is bounded by this box, so the deck's own
+     scroll room is part of its geometry, not a spacer — FR-008's ceiling is 6.5 screens.
+     It has to be CONTENT, not padding: a sticky element is constrained by its containing block's
+     content box, and padding sits outside that box. Measured, not assumed — with the cards at
+     117 px the sixth card never reached its rest position at padding-block-end 240, 300, 340 or
+     420, and all four walks were identical, which is what gave the mechanism away. */
+  list-style: none;
+  display: grid;
+  gap: 20px;
+  isolation: isolate;
+}
+.brand-deck::after {
+  content: "";
+  display: block;
+  block-size: var(--deck-room);
+}
+.brand-deck__item {
+  position: sticky;
+  inset-block-start: calc(var(--stack-i, 0) * 16px);
+  z-index: calc(var(--stack-i, 0) + 1);
+}
+/* The artwork IS the card (owner, on the phone, 2026-09-27). The panel that used to hold it —
+   28px padding, a 1px rule, a two-stop ground derived from --card-ground, a 24px radius and a
+   drop shadow — is gone, because it drew a second card around the first one and the maker's own
+   frame was already drawn into the picture. What is left here is a positioning context and the
+   008 budget's ceiling. */
+.brand-deck__card {
+  position: relative;
+  display: block;
+  max-block-size: 460px; /* the T008 budget: 640 − 88 dock − 80 edges − 12 slack (research D2) */
+  color: #f0ece9;
+  text-decoration: none;
+}
+/* The six artworks are cropped to their own drawn frames (the transparent margin is cut, not
+   scaled away — see notes/artwork-amendment.md), so each card's box is the card the picture
+   shows and nothing else. Radii differ by a few percent between the six because each was
+   cropped to its own alpha bounds; that is the artwork's shape, not a drift in the system. */
+.brand-deck__art {
+  position: relative;
+  display: block;
+  inline-size: 100%;
+}
+.brand-deck__art img {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+}
+/* A scrim under the name, not a style on it. Every one of the six is dark at its lower edge and
+   bright in its middle, and FR-013 asks for legible text over whatever the treatment does — with
+   the treatment now being a photograph of a phone, the only honest way to promise that is to
+   darken what the text sits on. It is one rule for all six, so the six stay one family (FR-012). */
+.brand-deck__art::after {
+  content: "";
   position: absolute;
-  border: 1px solid rgba(201, 162, 39, 0.25);
-  border-radius: 50%;
+  inset-inline: 0;
+  inset-block-end: 0;
+  block-size: 44%;
+  background: linear-gradient(to top, rgba(5, 2, 3, 0.86) 0%, rgba(5, 2, 3, 0.42) 46%, rgba(5, 2, 3, 0) 100%);
+  pointer-events: none;
 }
-.cat-art i:nth-child(1) { width: 46%; aspect-ratio: 1; }
-.cat-art i:nth-child(2) { width: 66%; aspect-ratio: 1; opacity: 0.55; }
-.cat-art i:nth-child(3) { width: 88%; aspect-ratio: 1; opacity: 0.25; }
+/* The mark plate and the sourced line are no longer painted: the picture carries the wordmark and
+   the description was removed by order. Both classes stay here unrendered, as the 008 story
+   classes do, until the deck's polish pass can also retire the 008 records. */
+.brand-deck__mark {
+  display: flex;
+  align-items: center;
+  min-block-size: 40px; /* research D4's optical height for the mark plate */
+  color: var(--card-accent, #e5d3b3);
+}
+/* On the picture, at the reading edge — inline-start is the right in RTL — and inside the drawn
+   frame. Every one of the six puts its wordmark at the upper right and leaves the ground below it
+   dark and empty, so that corner is the only spot that is legible on all six without moving. */
+.brand-deck__label {
+  position: absolute;
+  inset-block-end: 9%;
+  inset-inline-start: 5.5%;
+  z-index: 1;
+  font-size: 1.5rem;
+  font-weight: 900;
+  line-height: 1.35;
+  letter-spacing: 0; /* Persian: tracking breaks letter joining (001/FR-057) */
+  color: #f0ece9;
+  text-shadow: 0 1px 14px rgba(0, 0, 0, 0.8);
+}
+/* 011 FR-006's sourced line is no longer rendered — removed on the owner's order the same day it
+   shipped ("delete the description"). The six lines stay in lib/brand-identity.ts with their
+   sources and their tests, because the rule they were written under (a card may not say something
+   about a maker it cannot support) still holds; the card simply says less now. */
+.brand-deck__line {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  letter-spacing: 0; /* Persian: tracking breaks letter joining (001/FR-057) */
+  color: rgba(240, 236, 233, 0.72);
+  max-inline-size: 46ch;
+}
+/* The 008 story classes stay styled but unrendered: the component dropped the three-of-six
+   story field when 011's six-of-six sourced lines replaced it. Deleted only when the
+   deck's polish pass can also touch the 008 records. */
+.brand-deck__story {
+  display: grid;
+  gap: 0.125rem;
+  max-inline-size: 46ch;
+}
+.brand-deck__story-title {
+  font-size: 0.9375rem;
+  font-weight: 800;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: #f4eadb;
+}
+.brand-deck__story-text {
+  font-size: 0.8125rem;
+  line-height: 1.6;
+  letter-spacing: 0;
+  color: rgba(240, 236, 233, 0.72);
+}
+/* Opposite corner from the name, so the two never collide at any width. This is the only place
+   011's hue system still paints anything: the count takes the maker's accent, which is the one
+   colour claim the evidence supports, instead of the ground that used to fill the panel. */
+.brand-deck__count {
+  position: absolute;
+  inset-block-end: 10%;
+  inset-inline-end: 5.5%;
+  z-index: 1;
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 0.6875rem;
+  letter-spacing: 0;
+  color: var(--card-accent, rgba(229, 211, 179, 0.68));
+  text-shadow: 0 1px 10px rgba(0, 0, 0, 0.75);
+}
+.brand-deck__card:focus-visible {
+  outline: 2px solid #e5d3b3;
+  outline-offset: 3px;
+  border-radius: 18px;
+}
+@media (hover: hover) and (pointer: fine) {
+  .brand-deck__card:hover {
+    border-color: rgba(229, 211, 179, 0.45);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* D7/FR-013: reduced motion gets the static stack — the same six cards, in the
+     same order, mechanism off. `position: static`, not a transition tweak: the
+     travel IS the mechanism, and the grid gap separates what no longer sticks.
+     The 240px arrival room goes with it — with nothing sticking there is
+     nothing to arrive. */
+  .brand-deck { --deck-room: 0px; }
+  .brand-deck__item { position: static; }
+}
+@media print {
+  .brand-deck { --deck-room: 0px; }
+  .brand-deck__item { position: static; }
+}
+/* FR-014/T025-T026: the budget's own verdict, not a media guess. The component
+   renders data-deck="static" whenever cardFitBudget says the deck no longer
+   fits — same DOM, mechanism off. */
+.brand-deck[data-deck="static"] .brand-deck__item { position: static; }
+.brand-deck[data-deck="static"] { --deck-room: 0px; }
+/* Edge case 1: a viewport shorter than the fit case's floor can never show a
+   held card. 348 = MIN_CARD_HEIGHT 180 + dock 88 + deepest edge 80 — the same
+   arithmetic cardFitBudget runs; if those constants move, this line moves with
+   them (brand-deck.test.ts pins the budget). */
+@media (max-height: 347px) {
+  .brand-deck { --deck-room: 0px; }
+  .brand-deck__item { position: static; }
+}
+@media (forced-colors: active) {
+  /* The name and the count sit on a photograph, so the OS palette must not be allowed to repaint
+     them: a forced CanvasText over the dark lower edge of these six is unreadable, and the border
+     this rule used to draw would frame a picture that already has its own. The scrim holds too.
+     The focus ring still comes from the system, which is the part forced colors is for. */
+  .brand-deck__label,
+  .brand-deck__count,
+  .brand-deck__art::after { forced-color-adjust: none; }
+}
+
 
 /* ---------- why-hami proof compositions ---------- */
 .proof-media {
@@ -85,13 +530,13 @@
   display: grid;
   place-items: center;
   overflow: hidden;
-  border-bottom: 1px solid var(--line);
-  background: linear-gradient(150deg, rgba(156, 10, 34, 0.5), rgba(58, 1, 10, 0.75));
+  border-bottom: 1px solid rgba(229, 211, 179, 0.15);
+  background: linear-gradient(150deg, #7A0A1F, #3A010A);
 }
 .store-architecture i {
   display: block;
   height: 2px;
-  background: rgba(201, 162, 39, 0.4);
+  background: rgba(229, 211, 179, 0.4);
 }
 .store-architecture i:nth-child(1) { width: 120px; }
 .store-architecture i:nth-child(2) { width: 88px; }
@@ -100,9 +545,9 @@
 .brand-composition b {
   display: block;
   font-family: var(--font-dm-mono), monospace;
-  font-size: 11px;
+  font-size: 12px;
   letter-spacing: 0.08em;
-  color: rgba(240, 220, 160, 0.85);
+  color: #F0ECE9;
 }
 .brand-composition { text-align: center; }
 .b2b-route { text-align: center; }
@@ -111,14 +556,21 @@
   width: 64px;
   height: 1px;
   margin: 10px 0;
-  background: rgba(201, 162, 39, 0.6);
+  background: rgba(229, 211, 179, 0.6);
 }
 .b2b-route small {
   display: block;
   font-family: var(--font-dm-mono), monospace;
-  font-size: 9px;
+  font-size: 12px;
   letter-spacing: 0.12em;
-  color: rgba(201, 162, 39, 0.7);
+  color: rgba(229, 211, 179, 0.7);
+}
+/* Legible now (12px), but still a decorative kicker a phone doesn't need —
+   hidden on mobile purely to declutter, not for readability. */
+@media (max-width: 767px) {
+  .b2b-route small {
+    display: none;
+  }
 }
 
 /* ---------- store experience photo slots ---------- */
@@ -140,15 +592,15 @@
 .store-slot > div > i {
   width: 90px;
   height: 1px;
-  background: rgba(201, 162, 39, 0.45);
+  background: rgba(214, 207, 203, 0.45);
 }
 .store-slot > div > i:nth-child(2) { width: 60px; }
 .store-slot > div > span {
   width: 34px;
   height: 46px;
   border-radius: 10px;
-  border: 1px solid rgba(201, 162, 39, 0.4);
-  background: rgba(201, 162, 39, 0.08);
+  border: 1px solid rgba(214, 207, 203, 0.4);
+  background: rgba(214, 207, 203, 0.08);
 }
 
 /* ---------- final conversion atmosphere ---------- */
@@ -157,33 +609,12 @@
   overflow: hidden;
   isolation: isolate;
 }
-.final-conversion::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  z-index: -2;
-  background: linear-gradient(170deg, #160709, #0D0406 70%);
-}
-.final-conversion .beam {
-  position: absolute;
-  top: -30%;
-  right: 12%;
-  width: 1px;
-  height: 160%;
-  z-index: -1;
-  background: linear-gradient(to bottom, transparent, rgba(201, 162, 39, 0.55), transparent);
-}
-.final-conversion .glow {
-  position: absolute;
-  bottom: -140px;
-  left: 50%;
-  width: 480px;
-  height: 280px;
-  transform: translateX(-50%);
-  z-index: -1;
-  background: radial-gradient(ellipse at center, rgba(100, 2, 17, 0.35), transparent 70%);
-  filter: blur(10px);
-}
+/* T115 deleted the `.final-conversion::before` gradient (170deg #160709 → #0D0406).
+   It painted the whole section box, gutter included, with a tone within ΔE 1.3 of
+   the `close` stage the travelling ground already supplies at that scroll position
+   (progression.ts: #160406) — a duplicate repaint that cost the arc its last leg
+   and bought nothing visually. The separation this block used to claim comes from
+   the arc itself now, plus the T071 deletion above it. */
 
 /* ---------- online services FAQ (native details) ---------- */
 .faq details {
@@ -201,10 +632,454 @@
   list-style: none;
 }
 .faq summary::-webkit-details-marker { display: none; }
-.faq details[open] summary { color: var(--gold); }
+.faq details[open] summary { color: var(--aqua); }
 .faq details > p {
   margin: 0 0 16px;
   font-size: 13px;
   line-height: 2;
   color: rgb(var(--foreground) / 0.65);
+}
+
+/* T073 / T090: the `[data-ambience="light"]` chapter system is deleted here and above.
+   Nothing in the repo sets that attribute any more — the light/dark chapters were retired
+   with HeaderChapterWatcher — so ~110 lines of cream-on-wine overrides were styling a state
+   that cannot occur, including a second `.grad` implementation, which is why the emphasis
+   treatment depended on which rule file happened to load last. `.cat-ambient-stage` and
+   `.cat-corner-glow` go with them: no component renders either class, and the cream
+   «phantom shape» they drew is the surface 005's FR-039 forbids this section from becoming. */
+
+/* ===========================================================================
+   T-P1 — LIGHT CHAPTERS. Two opaque paper bands inside the dark tour.
+   ---------------------------------------------------------------------------
+   The owner's brief, twice and by name (`palatemcp.com`): the six-stop tone
+   tour is not enough on its own — "use white somewhere". What that reference
+   actually does is not a light theme: its `body` never changes, and each
+   `<section>` paints its own opaque colour with the text inverting inside it.
+   That is the device here. The page still opens dark and closes dark; the
+   light is the rooms in between, sequenced dark → paper → dark → paper → dark.
+
+   The previous attempt at this died for a boring reason: `[data-ambience="light"]`
+   (deleted above by T073/T090) styled a state nothing set, so ~110 lines of
+   cream overrides applied to a section that never asked for them. This version
+   hangs off a class on the section's own element, which cannot drift out of
+   existence without the section visibly changing.
+
+   ## Why overriding tokens is nearly the whole implementation
+   The palette is RGB-triplet custom properties consumed as
+   `rgb(var(--x) / <alpha-value>)` (tailwind.config.ts), so ~140
+   `text-foreground/NN` usages and every `border-line` flip from inside the band
+   with no component edits. `--foreground` on paper has to be ink: the page's
+   platinum `#F0ECE9` measures **1.04:1** against `#f4f1ea`, which is the
+   white-on-white failure this project has already hit twice.
+
+   ## What that trick cannot reach, and is fixed per-case below
+   `aqua`, `champagne`, `gold`, `ink` and `oxblood` are **literal hex** in the
+   Tailwind theme (the config says so: "literal hex so opacity modifiers just
+   work"). A utility like `text-aqua` compiles to `#E5D3B3` and no variable
+   overrides it — and champagne on paper is **1.30:1**, i.e. invisible. Those
+   are handled by scoped attribute rules, matching the `[class*=…]` idiom
+   `app/globals.css` already uses for the touch-target block.
+
+   ## The one alpha that cannot be saved by any ground
+   `text-foreground/55` measures 4.35:1 on paper, and no lighter ground fixes
+   it — pure white reaches only 4.50, because the composite is a mid-grey
+   whatever sits under it. So the tier is lifted, not the ground. See the
+   `:where([class~="text-foreground/55"])` rule.
+   =========================================================================== */
+
+.band-paper {
+  /* The band's own world, named once and referenced everywhere below. */
+  --paper: #f4f1ea;
+  --paper-ink: 17 4 8;          /* #110408 — the brand's edge-ink */
+  --paper-muted: 74 62 60;      /* #4A3E3C — 9.10:1 on paper */
+  --paper-brand: #640211;       /* Imperial Oxblood — 11.94:1, the inverse of champagne */
+
+  background-color: var(--paper);
+  color: rgb(var(--paper-ink));
+
+  /* Everything alpha'd against the page now inverts for free. */
+  --background: 244 241 234;
+  --foreground: var(--paper-ink);
+  --card: 255 255 255;
+  --card-foreground: var(--paper-ink);
+  --popover: 255 255 255;
+  --popover-foreground: var(--paper-ink);
+  --muted: 240 237 236;
+  --muted-foreground: var(--paper-muted);
+  --border: var(--paper-ink);
+  --input: var(--paper-ink);
+  --ring: 100 2 17;             /* focus goes oxblood; a champagne ring on ivory is no ring */
+
+  /* The brand accent, inverted. On the canvas this is champagne at 12%; on paper
+     the same hairline has to be ink, which is why `--line` is a variable at all. */
+  --line: rgba(17, 4, 8, 0.16);
+
+  /* Literal-hex tokens that *are* read directly by bespoke CSS (`.eyebrow`,
+     `.faq details[open]`) — overriding these is free and catches those rules. */
+  --aqua: #640211;
+  --champagne: #640211;
+  --gold: #640211;
+
+  /* The CTA fill. Champagne on ivory is 1.30:1 and the button dissolves into the
+     page; oxblood filled with paper text is the same weight in the opposite sign. */
+  --primary: 100 2 17;
+  --primary-foreground: 244 234 219;
+
+  /* A paper band separates from the canvas by value alone. The dark world's
+     shadows are near-black at 0.65+ and read as dirt under a light surface, so
+     the depth here is a hairline and a shallow warm shadow — the same treatment
+     `.product-card` already carries. */
+  box-shadow: 0 1px 0 rgba(17, 4, 8, 0.06), 0 26px 60px -40px rgba(17, 4, 8, 0.55);
+}
+
+/* --- Utilities the token override cannot reach: literal-hex brand accents. ---
+   Every one of these was champagne and therefore invisible on paper. */
+.band-paper :where([class*="text-aqua"], [class*="text-champagne"], [class*="text-gold"]) {
+  color: var(--paper-brand);
+}
+.band-paper :where([class*="bg-aqua"], [class*="bg-champagne"], [class*="bg-gold"]) {
+  background-color: rgba(100, 2, 17, 0.55);
+}
+.band-paper :where([class*="border-aqua"], [class*="border-champagne"], [class*="border-gold"]) {
+  border-color: rgba(100, 2, 17, 0.45);
+}
+.band-paper :where([class*="hover:text-aqua"]:hover),
+.band-paper :where([class*="hover:text-champagne"]:hover) {
+  color: #3d020b;
+}
+
+/* `text-foreground/55` is 4.35:1 on any paper (see the header). Lift the tier to
+   the lowest alpha that clears AA on this ground: 0.62 → 5.05:1. */
+.band-paper :where([class~="text-foreground/55"], [class~="text-foreground/5"]) {
+  color: rgb(var(--foreground) / 0.62);
+}
+
+/* --- Dark surfaces inside a light chapter must not stay dark. ---
+   `.glass` is an opaque near-black gradient with a champagne rim; a `glass` card
+   on ivory is a hole cut in the page — the exact complaint FR-039 makes about the
+   reverse case. Paper treatment: white surface, ink hairline, shallow shadow. */
+.band-paper .glass,
+.band-paper .glass-smoked {
+  background: #ffffff;
+  border: 1px solid var(--line);
+  box-shadow: 0 1px 2px rgba(17, 4, 8, 0.06), 0 14px 30px -22px rgba(17, 4, 8, 0.45);
+}
+.band-paper .glass::before {
+  /* The two-tone champagne/oxblood rim. Keep the geometry, change the metal:
+     an ink hairline that fades, which is what makes it read as an edge and not a frame. */
+  background: linear-gradient(140deg, rgba(17, 4, 8, 0.22), transparent 38%, transparent 62%, rgba(100, 2, 17, 0.3));
+}
+.band-paper .glass-smoked:hover {
+  border-color: rgba(17, 4, 8, 0.3);
+  box-shadow: 0 2px 4px rgba(17, 4, 8, 0.08), 0 22px 40px -24px rgba(17, 4, 8, 0.55);
+}
+
+/* The eyebrow pill and the emphasis word are champagne-literal in globals.css. */
+.band-paper .eyebrow {
+  color: var(--paper-brand);
+  background: rgba(100, 2, 17, 0.06);
+  border-color: rgba(100, 2, 17, 0.28);
+  box-shadow: none;
+}
+.band-paper .eyebrow i {
+  background: var(--paper-brand);
+  box-shadow: none;
+}
+.band-paper .emphasis {
+  color: var(--paper-brand);
+}
+
+/* §6.2 warns that product photography may need a frame on paper. Neither band
+   carries a product photo today — the categories chapter is mounted above, and
+   #online-services has no images at all — so no rule is written for it. When a
+   band does gain one, it needs an ink hairline so a white box does not dissolve
+   into the ground; that is a real fix for a real surface, not a placeholder. */
+
+@media (prefers-contrast: more) {
+  .band-paper {
+    --line: rgba(17, 4, 8, 0.45);
+    --muted-foreground: 40 26 24;
+  }
+}
+
+@media (forced-colors: active) {
+  /* The band is a colour and colour is what forced-colours removes; the border is
+     what keeps a light chapter legible as a distinct region without it. */
+  .band-paper {
+    border: 1px solid CanvasText;
+    box-shadow: none;
+  }
+}
+
+/* --- The categories chapter. -------------------------------------------------
+   `.category-catalogue` already owns a four-variable palette of its own, which is
+   why flipping this section is a token reassignment rather than a rewrite. Note
+   what this reverses: 005's FR-039 kept this surface dark because its panels are
+   dark lacquer artwork with champagne line-work, and on cream they read as holes.
+   That objection is answered below, at the panels — the line-work and the active
+   label go ink/oxblood, because a band that ignores the reason it was rejected is
+   just the old bug with the sign inverted. */
+.category-catalogue.band-paper {
+  --catalogue-paper: var(--paper);
+  --catalogue-ink: #110408;
+  --catalogue-muted: #4a3e3c;
+  --catalogue-brand: #640211;
+  background: var(--catalogue-paper);
+  color: var(--catalogue-ink);
+}
+@media (hover: hover) and (pointer: fine) {
+  /* The dark world hovers this button *to* champagne, which on an ivory band is a
+     button that evaporates on approach. It deepens instead. */
+  .category-catalogue.band-paper .category-catalogue__all:hover {
+    background: #3d020b;
+    border-color: #3d020b;
+    color: #f4eadb;
+  }
+}
+
+/* ==== 010 categories masonry — plan.md, research D1/D2, contracts Q1–Q9. =========
+   The arrangement lives here and nowhere else. `grid-auto-rows` plus a per-tier
+   `grid-row: span N` is the whole layout: the browser's sparse row-major auto-placement
+   fills each column from the top, so the bottoms stagger by themselves and no hole can
+   open mid-column. That is why this chapter is complete before a single script runs
+   (FR-008) and why its height is known at first paint (FR-022).
+
+   The spans are the numbers in `lib/category-masonry.ts`, which is also what
+   tests/unit/category-masonry.test.ts asserts against. Edit one without the other and
+   the suite fails — deliberately: Q1 measures the browser against that table, so a
+   stylesheet free-handing its own geometry would make the measurement meaningless.
+
+   Nothing here hides a tile. There is no `opacity: 0` and no resident blur in this
+   block: the arrival's starting state exists only in script memory, so a stalled or
+   blocked script renders exactly what CSS drew (FR-011).
+   -------------------------------------------------------------------------- */
+.cat-masonry {
+  display: grid;
+  grid-auto-rows: 8px;
+  /* `row` is the default, and `sparse` (which cannot be named) is the default flow.
+     Both are load-bearing here — `dense` would let a later small tile jump ahead of an
+     earlier one and repaint the DOM order out of visual order. Written out so nobody
+     "tidies" it away. */
+  grid-auto-flow: row;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  /* Preflight already removed the markers; restoring the declaration is what keeps
+     `role="list"` honest in WebKit, which drops list semantics from a markerless ul. */
+  list-style: none;
+}
+
+.cat-masonry__item {
+  display: block;
+}
+
+/* Three attributes, one per breakpoint, because the tier a department holds CHANGES with width — that rotation
+   is the whole of FR-013a. A single `data-tier` re-scaled by media queries would keep every department at its
+   mobile tier forever, which is precisely the permanently-largest-tile shape that ended 009's variant B. */
+.cat-masonry__item[data-tier-base="S"] { grid-row: span 8; }
+.cat-masonry__item[data-tier-base="M"] { grid-row: span 11; }
+.cat-masonry__item[data-tier-base="L"] { grid-row: span 14; }
+
+.cat-card {
+  position: relative;
+  display: block;
+  isolation: isolate;
+  overflow: hidden;
+  height: 100%;
+  border-radius: 18px;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 1px 0 rgba(17, 4, 8, 0.06), 0 18px 36px -26px rgba(17, 4, 8, 0.55);
+}
+/* The ground under a panel. It is dark on purpose: if a file is missing the tile degrades
+   to a named dark doorway rather than a white hole on the paper, and a missing picture
+   stays visibly missing instead of being filled with a stand-in (Principle I). */
+.cat-card {
+  background: linear-gradient(165deg, #1e0a10 0%, #0b0204 58%, #050101 100%);
+}
+.cat-card__art {
+  position: absolute;
+  inset-inline: 0;
+  inset-block: 0;
+  z-index: -1;
+  display: block;
+}
+.cat-card__art img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 38%; /* the bottom glow band must never be cropped away */
+  display: block;
+}
+/* The label plate. Contrast is load-bearing, not decorative: the nine shipped panels
+   sample (2,1,2)…(11,11,9) at their bottom bands, and the scrim pins the worst-case
+   guarantee at 17.5:1 even if a later generation comes back lighter. */
+.cat-card::after {
+  content: "";
+  position: absolute;
+  inset-block-start: auto;
+  inset-block-end: 0;
+  inset-inline: 0;
+  z-index: 0;
+  height: 46%;
+  background: linear-gradient(to top, rgba(5, 1, 1, 0.88) 0%, rgba(5, 1, 1, 0.55) 45%, transparent 100%);
+  pointer-events: none;
+}
+/* Permanently visible, never behind a hover (FR-005). `letter-spacing` is pinned to 0 as
+   an explicit reset: Persian letter joining breaks under tracking (001/FR-057), and a
+   `tracking-*` utility anywhere up the tree would otherwise reach this text. */
+.cat-card__label {
+  position: absolute;
+  inset-block-start: auto;
+  inset-block-end: 12px;
+  inset-inline: 14px;
+  z-index: 1;
+  color: #f0ece9; /* 16.8:1 min on the sampled bands; 17.7:1 on phone */
+  font-size: clamp(15px, 4.2vw, 19px);
+  font-weight: 700;
+  line-height: 1.45;
+  letter-spacing: 0;
+  text-wrap: balance;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
+}
+/* Above the label line, on the reading side. The component exposes it to assistive tech
+   through `aria-describedby`, so this rule owns placement and nothing else. */
+.cat-card__count {
+  position: absolute;
+  inset-block-start: auto;
+  inset-block-end: 44px;
+  inset-inline-start: 14px;
+  inset-inline-end: auto;
+  z-index: 1;
+  display: inline-block;
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(229, 211, 179, 0.14); /* over the band → #29211D → 10.8:1 under champagne */
+  border: 1px solid rgba(229, 211, 179, 0.35);
+  color: #e5d3b3;
+  font-size: 11.5px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+/* Two-layer ring: a single colour cannot pass on both grounds (white-on-ivory is 1.5:1,
+   champagne-on-ivory 1.3:1). White line vs the dark photo ≈17:1; oxblood halo vs paper
+   11.9:1. Either layer alone clears 3:1 against the surface it sits on. */
+.cat-card:focus-visible {
+  outline: 3px solid #ffffff;
+  outline-offset: 3px;
+  box-shadow: 0 0 0 6px rgba(100, 2, 17, 0.85);
+}
+@media (min-width: 768px) {
+  .cat-masonry {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .cat-masonry__item[data-tier-md="S"] { grid-row: span 10; }
+  .cat-masonry__item[data-tier-md="M"] { grid-row: span 14; }
+  .cat-masonry__item[data-tier-md="L"] { grid-row: span 17; }
+}
+@media (min-width: 1280px) {
+  .cat-masonry {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 20px;
+  }
+  .cat-masonry__item[data-tier-xl="S"] { grid-row: span 11; }
+  .cat-masonry__item[data-tier-xl="M"] { grid-row: span 15; }
+  .cat-masonry__item[data-tier-xl="L"] { grid-row: span 19; }
+  .cat-card__label { inset-block-end: 16px; inset-inline: 18px; font-size: 19px; }
+  .cat-card__count { inset-block-end: 52px; inset-inline-start: 18px; }
+}
+/* Press and hover — one response, reached by two paths (FR-012, US3).
+   A phone fires `:active` on touch, so the same declaration answers the finger without a `touchstart` listener
+   standing in for a hover that will never come. The scale lands on the image inside `overflow: hidden` rather
+   than on the grid item, because a 3% scale on a row-spanned item changes its painted bounds against its
+   neighbours (D8). Nothing here touches the label's presence: Q4 forbids a name living behind an interaction,
+   and the brightness step below is the only hover effect the text gets. */
+.cat-card__art img {
+  transition: transform 260ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+.cat-card:active .cat-card__art img {
+  transform: scale(1.03);
+}
+@media (hover: hover) and (pointer: fine) {
+  /* The guard is not decoration. Without it a phone latches the hovered state on after a tap and the tile stays
+     enlarged while the shopper reads the next one. */
+  .cat-card:hover .cat-card__art img {
+    transform: scale(1.03);
+  }
+  .cat-card:hover .cat-card__label {
+    color: #ffffff;
+  }
+}
+/* Print: every department on the page, named, and none caught half-faded mid-arrival. The hidden state normally
+   exists only in script memory, but a print *during* the wave would otherwise be enough. */
+@media print {
+  .cat-masonry__item,
+  .cat-card,
+  .cat-card__art,
+  .cat-card__art img {
+    opacity: 1 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  /* The arrival is not created at all under reduced motion; this neutralises everything
+     else that could still move inside the chapter. */
+  .cat-card,
+  .cat-card__art img { transition: none; }
+  .cat-card:active .cat-card__art img,
+  .cat-card:hover .cat-card__art img { transform: none; }
+}
+@media (forced-colors: active) {
+  .cat-card { border: 1px solid CanvasText; }
+}
+/* ==== end 010 categories masonry ==== */
+
+
+
+/* ===========================================================================
+   T-P5 — focus and pressed states the homepage controls were missing.
+   ---------------------------------------------------------------------------
+   §9 of notes/parallel-agent-plan.md asked for `summary` to be added to the
+   global `:where(a, button, input, select, textarea):focus-visible` list, and
+   granted it as the one exception to the globals.css restriction. It is not
+   needed: `grep -rn "<summary" components/ app/` returns exactly one element in
+   the whole codebase — the FAQ in #online-services, on this page, in a file this
+   task owns. So the rule lives here and `app/globals.css` keeps one owner.
+   (Driver: if a `<summary>` ever appears off the homepage, this belongs in the
+   `:where()` list instead — a REQUEST, not a silent duplicate.)
+   =========================================================================== */
+
+/* The FAQ disclosure is a real control and it had no ring: `summary` is not in
+   the global selector list, so keyboard users reached it and saw nothing. The
+   specificity has to beat `.faq summary`'s own rules, hence the element pair. */
+.faq summary:focus-visible {
+  outline: 2px solid var(--aqua);
+  outline-offset: 3px;
+  border-radius: 8px;
+}
+
+/* Pressed feedback for the hand-rolled pills on this page. `Button` carries
+   `active:translate-y-px` from its own primitive, but these are raw <button> and
+   <a> elements styled inline, and a press on them was indistinguishable from a
+   hover. One shared treatment rather than per-component edits. The selectors are
+   the markup as it is: NewArrivals' rail arrows are `rounded-full` buttons, and the
+   featured tabs are the only `[role="tab"]` on the page. (The categories carousel's
+   nav buttons were in this list until feature 010 deleted the component; the masonry
+   tiles carry their own press state, so the list has no categories entry.) */
+#new-arrivals button[class*="rounded-full"]:active,
+#accessories a[class*="rounded-full"]:active,
+#online-services a[class*="rounded-full"]:active,
+#featured [role="tab"]:active {
+  transform: scale(0.97);
+}
+
+/* On a paper chapter the ring must invert with everything else. `--aqua` is
+   already re-pointed at oxblood by `.band-paper`, so these inherit it — stated
+   here because a champagne ring on ivory is 1.30:1 and would otherwise be the
+   one control affordance the light chapters silently lost. */
+.band-paper .faq summary:focus-visible {
+  outline-color: var(--paper-brand);
 }

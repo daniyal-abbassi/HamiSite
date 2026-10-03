@@ -1,72 +1,101 @@
 import Link from "next/link";
-import {
-  ArrowLeft,
-  BatteryCharging,
-  Globe2,
-  Headphones,
-  Phone,
-  Plug,
-  Smartphone,
-  Speaker,
-  Watch,
-  type LucideIcon,
-} from "lucide-react";
-import { Reveal } from "@/components/home/Reveal";
-import { categoryMosaic } from "@/lib/content/home";
+import Image from "next/image";
+import { ArrowLeft } from "lucide-react";
+import { categoryDepartments } from "@/lib/category-departments";
+import { imageSizesAttribute } from "@/lib/category-masonry";
+import { CategoryArrival } from "@/components/home/CategoryArrival";
+import { toFaDigits } from "@/lib/utils";
 
-const categoryIcons: Record<string, LucideIcon> = {
-  smartphone: Smartphone,
-  headphones: Headphones,
-  plug: Plug,
-  battery: BatteryCharging,
-  watch: Watch,
-  phone: Phone,
-  speaker: Speaker,
-  globe: Globe2,
-};
-
+/**
+ * The categories surface — feature 010.
+ *
+ * A masonry gallery: nine department tiles whose heights follow the authored rhythm in
+ * `lib/category-masonry.ts`, laid out entirely by CSS Grid row-spans. That split is the design. The stylesheet
+ * owns where every tile sits, so the chapter is complete in the HTML the server sends and a shopper with
+ * scripting unavailable still sees, reads and reaches all nine departments (FR-008). Script owns one thing
+ * only — the one-time arrival — and it starts from the *rendered* state rather than from a hidden one, so a
+ * stalled script leaves the composition intact instead of empty (FR-011).
+ *
+ * This stays a server component. `CategoryArrival` wraps the grid as a client boundary and receives this
+ * markup as `children`, which is what keeps the guarantee above true after the motion exists.
+ *
+ * The department set is derived, not authored — see `lib/category-departments.ts` for why the stored category
+ * tree cannot be shown as it stands (11 of 32 categories hold no products, and the brand axis is fused into the
+ * type axis).
+ */
 export function CategoryHub() {
-  return (
-    <section id="categories" className="wrap container py-20" aria-labelledby="categories-title">
-      <Reveal>
-        <div className="flex flex-wrap items-end justify-between gap-6">
-          <div>
-            <span className="eyebrow"><i /> فروشگاه</span>
-            <h2 id="categories-title" className="mt-4 text-3xl font-black tracking-tight md:text-4xl">
-              دسته‌بندی <span className="grad">محصولات.</span>
-            </h2>
-            <p className="mt-3 text-sm text-foreground/60">هر چیزی که برای تجربه بهتر موبایل نیاز داری</p>
-          </div>
-          <Link href="/shop" className="inline-flex items-center gap-1.5 text-sm font-bold text-gold hover:underline">
-            مشاهده همه <ArrowLeft className="size-4" />
-          </Link>
-        </div>
-      </Reveal>
+  const departments = categoryDepartments();
+  const sizes = imageSizesAttribute();
 
-      <Reveal delay={80}>
-        <div className="cat-grid mt-10" role="list">
-          {categoryMosaic.map((category) => {
-            const Icon = categoryIcons[category.icon] ?? Globe2;
-            return (
-              <Link key={category.key} href={category.href} className={`cat-card cat-card--${category.layout}`} role="listitem">
-                <div className="cat-art" aria-hidden="true">
-                  <i /><i /><i />
-                  <Icon className="size-12 md:size-14" strokeWidth={1.1} />
-                </div>
-                <div className="relative mt-auto w-full bg-gradient-to-t from-ink/95 via-ink/70 to-transparent p-4 pt-10">
-                  <span className="font-mono text-[10px] text-gold">{category.number}</span>
-                  <small className="mt-0.5 block font-mono text-[8px] tracking-[0.1em] text-foreground/50">{category.eyebrow}</small>
-                  <h3 className="mt-1 text-sm font-black md:text-base">{category.title}</h3>
-                  <p className="mt-0.5 hidden text-[11px] text-foreground/55 md:block">{category.detail}</p>
-                  <b className="mt-2 flex items-center gap-1 text-[11px] font-bold text-gold">
-                    مشاهده <ArrowLeft className="size-3.5" />
-                  </b>
-                </div>
-              </Link>
-            );
-          })}
+  return (
+    <section id="categories" className="category-catalogue band-paper wrap container" aria-labelledby="categories-title">
+      <div className="category-catalogue__head">
+        <div>
+          <span className="category-kicker">دسته‌بندی محصولات</span>
+          <h2 id="categories-title">برای هر سبک، <span>یک انتخاب.</span></h2>
+          <p>دسته‌ای را انتخاب کن و مستقیم وارد ویترین محصولات شو.</p>
         </div>
-      </Reveal>
+        <Link href="/shop" className="category-catalogue__all">
+          مشاهده همه محصولات <ArrowLeft className="size-4" aria-hidden="true" />
+        </Link>
+      </div>
+
+      {/* The grid is server-rendered and this wrapper only ever animates it. Children cross the client
+          boundary already composed, which is what keeps contract Q3 true after the arrival exists. */}
+      <CategoryArrival>
+        {/* `role="list"` is explicit because the stylesheet removes the markers, and WebKit drops list semantics
+            from a markerless ul — the announcement would otherwise become a bare group of links. */}
+        <ul className="cat-masonry" role="list">
+          {departments.map((department) => (
+            <li
+              className="cat-masonry__item"
+              key={department.kind}
+              data-tier-base={department.rhythm.base}
+              data-tier-md={department.rhythm.md}
+              data-tier-xl={department.rhythm.xl}
+            >
+              {/*
+               * The whole tile is one link and the destination is the department's own listing, in the same
+               * window (FR-007). There is no click handler: opening the department in a new window would strand a
+               * shopper who meant to keep browsing and break the page's own history.
+               */}
+              <Link
+                href={department.href}
+                className="cat-card"
+                aria-describedby={department.showsCount ? `cat-count-${department.kind}` : undefined}
+              >
+                {/*
+                 * `alt=""` because the department name is adjacent live text — the panel adds no information the
+                 * label does not carry, and «تصویر یک شارژر» announced nine times is noise. If a panel ever gains
+                 * content this rule flips and it loses `alt=""`.
+                 */}
+                <span className="cat-card__art">
+                  <Image
+                    src={department.image}
+                    alt=""
+                    fill
+                    sizes={sizes}
+                    className="cat-card__image"
+                    unoptimized
+                  />
+                </span>
+                {/* Permanently visible. Hover, focus and press must never be the route to a department's name —
+                    the reference this layout was drawn from reveals its title on hover, which on a phone means it
+                    is never revealed at all (FR-005). */}
+                <span className="cat-card__label">{department.label}</span>
+                {/* FR-014: a count appears only where the destination genuinely holds that many. Phones, chargers
+                    and power banks are silent by rule, not by omission — their route and their kind disagree, so
+                    any figure here would either overstate or understate. */}
+                {department.showsCount ? (
+                  <span className="cat-card__count" id={`cat-count-${department.kind}`}>
+                    {toFaDigits(department.reachableCount)} محصول
+                  </span>
+                ) : null}
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </CategoryArrival>
     </section>
   );
 }

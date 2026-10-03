@@ -1,0 +1,135 @@
+{
+  "maxTravelPx": 320,
+  "viewports": {
+    "360": [
+      {
+        "filter": "unfiltered",
+        "chips": 5,
+        "chipTexts": [
+          "۱",
+          "۲",
+          "۳",
+          "۴",
+          "۵"
+        ],
+        "firstOffsetLeft": 181,
+        "lastOffsetLeft": 0,
+        "firstToLastPx": 181,
+        "chipWidth": 39.25,
+        "totalText": "۱۸۹ محصول"
+      },
+      {
+        "filter": "brand اپل (largest brand)",
+        "chips": 5,
+        "chipTexts": [
+          "۱",
+          "۲",
+          "۳",
+          "۴",
+          "۵"
+        ],
+        "firstOffsetLeft": 181,
+        "lastOffsetLeft": 0,
+        "firstToLastPx": 181,
+        "chipWidth": 39.25,
+        "totalText": "۴۹ محصول"
+      },
+      {
+        "filter": "category موبایل و تبلت (largest category)",
+        "chips": 5,
+        "chipTexts": [
+          "۱",
+          "۲",
+          "۳",
+          "۴",
+          "۵"
+        ],
+        "firstOffsetLeft": 181,
+        "lastOffsetLeft": 0,
+        "firstToLastPx": 181,
+        "chipWidth": 39.25,
+        "totalText": "۱۳۵ محصول"
+      },
+      {
+        "filter": "category هدفون (narrowest that paginates)",
+        "chips": 2,
+        "chipTexts": [
+          "۱",
+          "۲"
+        ],
+        "firstOffsetLeft": 50,
+        "lastOffsetLeft": 0,
+        "firstToLastPx": 50,
+        "chipWidth": 44,
+        "totalText": "۱۹ محصول"
+      }
+    ],
+    "1280": [
+      {
+        "filter": "unfiltered",
+        "chips": 5,
+        "chipTexts": [
+          "۱",
+          "۲",
+          "۳",
+          "۴",
+          "۵"
+        ],
+        "firstOffsetLeft": 200,
+        "lastOffsetLeft": 0,
+        "firstToLastPx": 200,
+        "chipWidth": 44,
+        "totalText": "۱۸۹ محصول"
+      },
+      {
+        "filter": "brand اپل (largest brand)",
+        "chips": 5,
+        "chipTexts": [
+          "۱",
+          "۲",
+          "۳",
+          "۴",
+          "۵"
+        ],
+        "firstOffsetLeft": 200,
+        "lastOffsetLeft": 0,
+        "firstToLastPx": 200,
+        "chipWidth": 44,
+        "totalText": "۴۹ محصول"
+      },
+      {
+        "filter": "category موبایل و تبلت (largest category)",
+        "chips": 5,
+        "chipTexts": [
+          "۱",
+          "۲",
+          "۳",
+          "۴",
+          "۵"
+        ],
+        "firstOffsetLeft": 200,
+        "lastOffsetLeft": 0,
+        "firstToLastPx": 200,
+        "chipWidth": 44,
+        "totalText": "۱۳۵ محصول"
+      },
+      {
+        "filter": "category هدفون (narrowest that paginates)",
+        "chips": 2,
+        "chipTexts": [
+          "۱",
+          "۲"
+        ],
+        "firstOffsetLeft": 50,
+        "lastOffsetLeft": 0,
+        "firstToLastPx": 50,
+        "chipWidth": 44,
+        "totalText": "۱۹ محصول"
+      }
+    ]
+  },
+  "maxPossibleTripPx": 200,
+  "clampEngages": false,
+  "tripsClamped": 0,
+  "verdict": "clamp never engages: the longest real trip is 200px < 320px, so no trip is suppressed and the constant is safe for this surface"
+}

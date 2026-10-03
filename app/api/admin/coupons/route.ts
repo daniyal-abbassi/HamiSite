@@ -1,7 +1,7 @@
 import { CouponType, Role } from "@prisma/client";
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
-import { ApiError, ok, withErrorHandling } from "@/lib/http";
+import { ApiError, ok, parsePagination, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
 import { toNumber } from "@/lib/serializers";
 
@@ -33,6 +33,30 @@ function serializeAdminCoupon<T extends { amount: unknown; maxDiscountAmount: un
     minCartPrice: toNumber(coupon.minCartPrice),
   };
 }
+
+export const GET = withAuth(
+  async (request) => {
+    return withErrorHandling(async () => {
+      const pagination = parsePagination(new URL(request.url).searchParams);
+      const [total, coupons] = await Promise.all([
+        prisma.coupon.count(),
+        prisma.coupon.findMany({
+          orderBy: { createdAt: "desc" },
+          skip: pagination.skip,
+          take: pagination.take,
+          include: { products: { select: { id: true } }, categories: { select: { id: true } }, brands: { select: { id: true } } },
+        }),
+      ]);
+      return ok(coupons.map(serializeAdminCoupon), {
+        page: pagination.page,
+        pageSize: pagination.pageSize,
+        total,
+        hasNextPage: pagination.page * pagination.pageSize < total,
+      });
+    });
+  },
+  { roles: [Role.ADMIN] },
+);
 
 export const POST = withAuth(
   async (request) => {

@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Pencil, Plus, Search } from "lucide-react";
-import { Pagination } from "@/components/admin/Pagination";
+import { Pagination } from "@/components/admin/ui/Pagination";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,7 +29,7 @@ export function ProductsAdminClient() {
     setProducts(null);
     setFailed(false);
     try {
-      const params = new URLSearchParams({ page: String(targetPage), pageSize: String(PAGE_SIZE), includeVariants: "false" });
+      const params = new URLSearchParams({ page: String(targetPage), pageSize: String(PAGE_SIZE) });
       if (q.trim()) params.set("q", q.trim());
       const { data, meta: responseMeta } = await apiGetWithMeta<AdminProductListItem[]>(`/api/products?${params.toString()}`);
       setProducts(data);
@@ -63,13 +63,13 @@ export function ProductsAdminClient() {
             <Input
               value={query}
               onChange={(event) => setQuery(event.target.value)}
-              placeholder="جستجوی نام یا slug…"
-              aria-label="جستجوی محصول"
+              placeholder="جست‌وجوی نام یا slug…"
+              aria-label="جست‌وجوی محصول"
               className="w-64 pe-9"
             />
           </div>
           <Button type="submit" size="sm" variant="ghost">
-            جستجو
+            جست‌وجو
           </Button>
         </form>
         <div className="flex items-center gap-3">
@@ -97,8 +97,8 @@ export function ProductsAdminClient() {
         </div>
       ) : (
         <>
-          <div className="overflow-hidden rounded-2xl border border-line">
-            <table className="w-full text-sm">
+          <div className="overflow-x-auto rounded-2xl border border-line bg-ink/20">
+            <table className="w-full min-w-[860px] text-sm">
               <thead>
                 <tr className="border-b border-line bg-ink-2/60 font-mono text-[10px] font-bold tracking-[0.1em] text-muted-foreground/80">
                   <th className="px-4 py-3 text-start">محصول</th>
@@ -112,31 +112,44 @@ export function ProductsAdminClient() {
               </thead>
               <tbody className="divide-y divide-line/70">
                 {products.map((product) => (
-                  <tr key={product.id} className="transition-colors hover:bg-foreground/5">
-                    <td className="px-4 py-3">
-                      <div className="flex items-center gap-3">
-                        <div className="relative size-10 shrink-0 overflow-hidden rounded-lg bg-ink/40">
+                  <tr key={product.id} className="transition-colors hover:bg-foreground/[0.035]">
+                    <td className="max-w-[420px] px-4 py-3.5">
+                      <div className="flex min-w-0 items-center gap-3.5">
+                        <div className="relative size-14 shrink-0 overflow-hidden rounded-xl border border-line/80 bg-ink-2">
                           <Image
                             src={resolveProductImage(product)}
                             alt=""
                             fill
-                            sizes="40px"
-                            className="object-contain p-1"
+                            sizes="56px"
+                            className="object-contain p-1.5"
                           />
                         </div>
                         <div className="min-w-0">
-                          <Link href={`/admin/products/${product.id}`} className="block truncate font-bold hover:text-gold">
+                          <Link
+                            href={`/admin/products/${product.id}?slug=${encodeURIComponent(product.slug)}`}
+                            title={product.name}
+                            className="block max-w-full truncate font-bold leading-6 hover:text-aqua"
+                          >
                             {product.name}
                           </Link>
+                          {product.englishName && (
+                            <span className="block max-w-full truncate text-[11px] text-foreground/75" dir="ltr" title={product.englishName}>
+                              {product.englishName}
+                            </span>
+                          )}
                           <span className="block truncate font-mono text-[10px] text-muted-foreground/70">{product.slug}</span>
                         </div>
                       </div>
                     </td>
-                    <td className="hidden px-4 py-3 text-[12px] text-muted-foreground lg:table-cell">
+                    <td className="hidden max-w-36 px-4 py-3 text-[12px] text-muted-foreground lg:table-cell">
+                      <span className="block truncate" title={product.brand?.name ?? undefined}>
                       {product.brand?.name ?? "—"}
+                      </span>
                     </td>
-                    <td className="hidden px-4 py-3 text-[12px] text-muted-foreground md:table-cell">
+                    <td className="hidden max-w-44 px-4 py-3 text-[12px] text-muted-foreground md:table-cell">
+                      <span className="block truncate" title={product.mainCategory?.name ?? undefined}>
                       {product.mainCategory?.name ?? "—"}
+                      </span>
                     </td>
                     <td className="px-4 py-3">
                       <StatusBadge value={product.stockType} kind="stock" />
@@ -151,7 +164,7 @@ export function ProductsAdminClient() {
                     </td>
                     <td className="hidden px-4 py-3 text-center sm:table-cell">
                       {product.specialOffer ? (
-                        <span className="rounded-full bg-oxblood/40 px-2.5 py-1 text-[10px] font-bold text-gold-lite">ویژه</span>
+                        <span className="rounded-full bg-oxblood/40 px-2.5 py-1 text-[10px] font-bold text-aqua-lite">ویژه</span>
                       ) : (
                         <span className="text-muted-foreground/40">—</span>
                       )}
@@ -159,8 +172,8 @@ export function ProductsAdminClient() {
                     <td className="px-4 py-3 text-end">
                       <Link
                         href={`/admin/products/${product.id}?slug=${encodeURIComponent(product.slug)}`}
-                        aria-label={`ویرایش ${product.name}`}
-                        className="inline-flex items-center gap-1 text-[12px] font-bold text-gold hover:underline"
+                        aria-label={`ویرایش ${product.name}${product.englishName ? `، ${product.englishName}` : ""}`}
+                        className="inline-flex items-center gap-1 text-[12px] font-bold text-aqua hover:underline"
                       >
                         <Pencil className="size-3.5" />
                         ویرایش

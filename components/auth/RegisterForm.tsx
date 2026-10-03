@@ -143,7 +143,7 @@ export function RegisterForm() {
       <div>
         <label htmlFor={id} className="mb-1.5 block text-xs font-bold text-foreground/85">
           {label}
-          {required && <span className="ms-1 text-gold">*</span>}
+          {required && <span className="ms-1 text-aqua">*</span>}
         </label>
         <Input
           id={id}
@@ -156,7 +156,7 @@ export function RegisterForm() {
           onChange={setField(field)}
           aria-invalid={Boolean(fieldErrors[field])}
         />
-        {fieldErrors[field] && <p className="mt-1 text-[11px] text-destructive">{fieldErrors[field]}</p>}
+        {fieldErrors[field] && <p className="mt-1 text-xs text-destructive">{fieldErrors[field]}</p>}
       </div>
     );
   }
@@ -189,12 +189,12 @@ export function RegisterForm() {
             className={cn(
               "rounded-xl border p-3.5 text-start transition-all duration-fast",
               role === option.key
-                ? "border-gold bg-gold/10 shadow-glow-gold"
-                : "border-line bg-foreground/5 hover:border-gold/40",
+                ? "border-aqua bg-aqua/10 shadow-glow-cta"
+                : "border-line bg-foreground/5 hover:border-aqua/40",
             )}
           >
-            <span className={cn("block text-sm font-black", role === option.key && "text-gold")}>{option.title}</span>
-            <span className="mt-1 block text-[11px] text-muted-foreground">{option.note}</span>
+            <span className={cn("block text-sm font-black", role === option.key && "text-aqua")}>{option.title}</span>
+            <span className="mt-1 block text-xs text-muted-foreground">{option.note}</span>
           </button>
         ))}
       </div>
@@ -232,7 +232,7 @@ export function RegisterForm() {
         قبلاً ثبت‌نام کرده‌اید؟{" "}
         <Link
           href={nextPath !== "/" ? `/login?next=${encodeURIComponent(nextPath)}` : "/login"}
-          className="font-bold text-gold underline-offset-4 hover:underline"
+          className="font-bold text-aqua underline-offset-4 hover:underline"
         >
           وارد شوید
         </Link>

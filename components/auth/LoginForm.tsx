@@ -64,7 +64,7 @@ export function LoginForm() {
         <span>ورود</span>
         <i />
       </div>
-      <h1 className="mt-3 text-xl font-black">خوش آمدید 👋</h1>
+      <h1 className="mt-3 text-xl font-black">خوش آمدید</h1>
       <p className="mt-1.5 text-[13px] leading-6 text-muted-foreground">
         با نام کاربری یا شماره موبایل وارد شوید.
       </p>
@@ -84,7 +84,7 @@ export function LoginForm() {
             aria-invalid={Boolean(fieldErrors.identifier)}
             placeholder="مثلاً ۰۹۱۲۱۱۱۲۲۳۳"
           />
-          {fieldErrors.identifier && <p className="mt-1 text-[11px] text-destructive">{fieldErrors.identifier}</p>}
+          {fieldErrors.identifier && <p className="mt-1 text-xs text-destructive">{fieldErrors.identifier}</p>}
         </div>
 
         <div>
@@ -101,7 +101,7 @@ export function LoginForm() {
             onChange={(event) => setPassword(event.target.value)}
             aria-invalid={Boolean(fieldErrors.password)}
           />
-          {fieldErrors.password && <p className="mt-1 text-[11px] text-destructive">{fieldErrors.password}</p>}
+          {fieldErrors.password && <p className="mt-1 text-xs text-destructive">{fieldErrors.password}</p>}
         </div>
 
         {error && (
@@ -120,7 +120,7 @@ export function LoginForm() {
         حساب ندارید؟{" "}
         <Link
           href={nextPath !== "/" ? `/register?next=${encodeURIComponent(nextPath)}` : "/register"}
-          className="font-bold text-gold underline-offset-4 hover:underline"
+          className="font-bold text-aqua underline-offset-4 hover:underline"
         >
           ثبت‌نام کنید
         </Link>

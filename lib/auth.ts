@@ -184,11 +184,23 @@ type AuthedHandler<Params> = (
   ctx: { user: User; params: Params },
 ) => Promise<NextResponse>;
 
-export function withAuth<Params = undefined>(
+// Default is `{}`, not `undefined`, to match Next 15's ParamMap: a route with
+// no dynamic segments is typed `{ params: Promise<{}> }`. Because the context
+// argument is checked contravariantly, `Promise<undefined>` here would reject
+// every param-less route. All 23 dynamic routes already pass their own generic.
+// eslint-disable-next-line @typescript-eslint/no-empty-object-type
+export function withAuth<Params = {}>(
   handler: AuthedHandler<Params>,
   options?: { roles?: Role[] },
 ) {
-  return async (request: Request, routeCtx?: { params: Params }) => {
+  // Next 15 hands route handlers `params` as a Promise. Awaiting it here — at
+  // the single point every authenticated route already funnels through — keeps
+  // the synchronous `{ user, params }` contract every handler was written
+  // against, so none of the 26 routes wrapped by withAuth needed an edit.
+  // routeCtx is NOT optional: Next 15's build-time validator compares this
+  // signature against RouteContext<'/the/route'>, and a `| undefined` in the
+  // second argument fails that check for every dynamic route.
+  return async (request: Request, routeCtx: { params: Promise<Params> }) => {
     return withErrorHandling(async () => {
       const resolved = await resolveSession(request);
       if (!resolved) {
@@ -202,7 +214,8 @@ export function withAuth<Params = undefined>(
         throw ApiError.coded(403, "FORBIDDEN_ROLE", "Forbidden");
       }
 
-      const response = await handler(request, { user, params: routeCtx?.params as Params });
+      const params = await routeCtx.params;
+      const response = await handler(request, { user, params });
       // Sliding expiry: every successful authenticated request refreshes the
       // cookie's expiry to match the DB row's just-bumped expiresAt — unless
       // the handler itself already set the session cookie on this response

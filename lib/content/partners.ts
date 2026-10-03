@@ -4,14 +4,14 @@
  */
 
 export const partnerPageCopy = {
-  eyebrow: "FOR BUSINESS / APPLICATION",
-  titleLead: "همکاری",
-  titleTail: "با حامی همراه.",
+  eyebrow: "برای همکاران، با حامی همراه",
+  titleLead: "همکارِ امروز،",
+  titleTail: "همراهِ فردا.",
   intro:
-    "اگر فروشگاه، همکار عمده یا مجموعه‌ای فعال در حوزه موبایل و لوازم جانبی دارید، فرم را تکمیل کنید؛ کارشناسان حامی همراه پس از بررسی مدارک با شما تماس می‌گیرند.",
+    "شما کسب‌وکارتان را می‌شناسید، ما بازار موبایل را. اگر فروشگاه یا شرکتی در این حوزه دارید، اینجا نقطهٔ شروع همکاری ماست.",
   steps: [
-    { index: "۰۱", title: "تکمیل فرم و بارگذاری مدارک", description: "مدارک هویتی و فروشگاهی را مطابق نوع شخصیت حقوقی یا حقیقی بارگذاری کنید." },
-    { index: "۰۲", title: "بررسی مدارک", description: "کارشناسان اعتبارسنجی، مدارک را بررسی و در صورت نیاز تماس می‌گیرند." },
+    { index: "۰۱", title: "معرفی کسب‌وکار شما", description: "فرم را تکمیل کنید و مدارک فروشگاه یا شرکت خود را بفرستید." },
+    { index: "۰۲", title: "بررسی و گفتگو", description: "کارشناسان مدارک را بررسی می‌کنند و برای تکمیل مراحل با شما تماس می‌گیرند." },
     { index: "۰۳", title: "فعال‌سازی حساب همکاری", description: "پس از تأیید، قیمت همکاری و مسیر ثبت سفارش فعال می‌شود." },
   ] as const,
 } as const;
@@ -39,6 +39,7 @@ export const partnerIndividualFields = [
 ] as const;
 
 export const partnerLegalFields = [
+  { key: "companyName", label: "نام شرکت", placeholder: "نام ثبت‌شده شرکت", required: true, span: "full" as const },
   { key: "legalNationalId", label: "شناسه ملی شرکت", placeholder: "۱۱ رقم", required: true, dir: "ltr" as const },
   { key: "companyAddress", label: "آدرس شرکت", placeholder: "آدرس ثبت‌شده شرکت", required: true, span: "full" as const },
   { key: "registrationNotice", label: "آگهی تغییرات (فایل)", kind: "file" as const, required: true },

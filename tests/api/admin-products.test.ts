@@ -6,7 +6,7 @@ import { POST as createVariant } from "@/app/api/admin/products/[id]/variants/ro
 import { DELETE as deleteVariant, PATCH as patchVariant } from "@/app/api/admin/products/[id]/variants/[variantId]/route";
 import { PATCH as adjustStock } from "@/app/api/admin/variants/[id]/stock/route";
 import { prisma } from "@/lib/prisma";
-import { jsonRequest, loginAs } from "../helpers/request";
+import { ctx, jsonRequest, loginAs } from "../helpers/request";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
 
 let seed: SeedResult;
@@ -25,12 +25,12 @@ function payload(overrides: Record<string, unknown> = {}) {
 
 describe("admin products", () => {
   it("403s for a non-admin", async () => {
-    const res = await createProduct(jsonRequest("http://localhost/api/admin/products", "POST", payload(), retailCookie));
+    const res = await createProduct(jsonRequest("http://localhost/api/admin/products", "POST", payload(), retailCookie), ctx());
     expect(res.status).toBe(403);
   });
 
   it("creates a product and writes a CREATED history row", async () => {
-    const res = await createProduct(jsonRequest("http://localhost/api/admin/products", "POST", payload(), adminCookie));
+    const res = await createProduct(jsonRequest("http://localhost/api/admin/products", "POST", payload(), adminCookie), ctx());
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.data.price).toBe(500000);
@@ -42,15 +42,15 @@ describe("admin products", () => {
   });
 
   it("409s on a duplicate slug", async () => {
-    await createProduct(jsonRequest("http://localhost/api/admin/products", "POST", payload(), adminCookie));
-    const res = await createProduct(jsonRequest("http://localhost/api/admin/products", "POST", payload(), adminCookie));
+    await createProduct(jsonRequest("http://localhost/api/admin/products", "POST", payload(), adminCookie), ctx());
+    const res = await createProduct(jsonRequest("http://localhost/api/admin/products", "POST", payload(), adminCookie), ctx());
     expect(res.status).toBe(409);
   });
 
   it("patches a product and writes an UPDATED history row", async () => {
     const res = await patchProduct(
       jsonRequest(`http://localhost/api/admin/products/${seed.product.id}`, "PATCH", { price: 999000 }, adminCookie),
-      { params: { id: String(seed.product.id) } },
+      ctx({ id: String(seed.product.id) }),
     );
     expect(res.status).toBe(200);
     const body = await res.json();
@@ -62,13 +62,12 @@ describe("admin products", () => {
 
   it("409s when patching to a slug that collides with a different product", async () => {
     const createRes = await createProduct(
-      jsonRequest("http://localhost/api/admin/products", "POST", payload({ slug: "other-phone" }), adminCookie),
-    );
+      jsonRequest("http://localhost/api/admin/products", "POST", payload({ slug: "other-phone" }), adminCookie), ctx());
     expect(createRes.status).toBe(200);
 
     const res = await patchProduct(
       jsonRequest(`http://localhost/api/admin/products/${seed.product.id}`, "PATCH", { slug: "other-phone" }, adminCookie),
-      { params: { id: String(seed.product.id) } },
+      ctx({ id: String(seed.product.id) }),
     );
     expect(res.status).toBe(409);
   });
@@ -81,7 +80,7 @@ describe("admin products", () => {
         { slug: seed.product.slug, price: 750000 },
         adminCookie,
       ),
-      { params: { id: String(seed.product.id) } },
+      ctx({ id: String(seed.product.id) }),
     );
     expect(res.status).toBe(200);
     const body = await res.json();
@@ -91,7 +90,7 @@ describe("admin products", () => {
   it("deletes a product after recording a DELETED history row", async () => {
     const res = await deleteProduct(
       jsonRequest(`http://localhost/api/admin/products/${seed.product.id}`, "DELETE", undefined, adminCookie),
-      { params: { id: String(seed.product.id) } },
+      ctx({ id: String(seed.product.id) }),
     );
     expect(res.status).toBe(200);
 
@@ -104,7 +103,7 @@ describe("admin variants", () => {
   it("403s for a non-admin creating a variant", async () => {
     const res = await createVariant(
       jsonRequest(`http://localhost/api/admin/products/${seed.product.id}/variants`, "POST", { color: "red", price: 100 }, retailCookie),
-      { params: { id: String(seed.product.id) } },
+      ctx({ id: String(seed.product.id) }),
     );
     expect(res.status).toBe(403);
   });
@@ -117,7 +116,7 @@ describe("admin variants", () => {
         { color: "red", storage: "256GB", price: 1_400_000, stock: 10 },
         adminCookie,
       ),
-      { params: { id: String(seed.product.id) } },
+      ctx({ id: String(seed.product.id) }),
     );
     expect(res.status).toBe(200);
     const body = await res.json();
@@ -130,7 +129,7 @@ describe("admin variants", () => {
   it("404s creating a variant under a nonexistent product", async () => {
     const res = await createVariant(
       jsonRequest("http://localhost/api/admin/products/999999/variants", "POST", { price: 100 }, adminCookie),
-      { params: { id: "999999" } },
+      ctx({ id: "999999" }),
     );
     expect(res.status).toBe(404);
   });
@@ -143,7 +142,7 @@ describe("admin variants", () => {
         { price: 1_300_000 },
         adminCookie,
       ),
-      { params: { id: String(seed.product.id), variantId: String(seed.variant.id) } },
+      ctx({ id: String(seed.product.id), variantId: String(seed.variant.id) }),
     );
     expect(res.status).toBe(200);
     const body = await res.json();
@@ -152,8 +151,7 @@ describe("admin variants", () => {
 
   it("404s patching or deleting a variant that belongs to a different product", async () => {
     const otherProductRes = await createProduct(
-      jsonRequest("http://localhost/api/admin/products", "POST", payload({ slug: "other-variant-owner" }), adminCookie),
-    );
+      jsonRequest("http://localhost/api/admin/products", "POST", payload({ slug: "other-variant-owner" }), adminCookie), ctx());
     expect(otherProductRes.status).toBe(200);
     const otherProduct = await otherProductRes.json();
 
@@ -164,7 +162,7 @@ describe("admin variants", () => {
         { color: "blue", price: 200_000 },
         adminCookie,
       ),
-      { params: { id: String(otherProduct.data.id) } },
+      ctx({ id: String(otherProduct.data.id) }),
     );
     expect(otherVariantRes.status).toBe(200);
     const otherVariant = await otherVariantRes.json();
@@ -176,7 +174,7 @@ describe("admin variants", () => {
         { price: 1_000 },
         adminCookie,
       ),
-      { params: { id: String(seed.product.id), variantId: String(otherVariant.data.id) } },
+      ctx({ id: String(seed.product.id), variantId: String(otherVariant.data.id) }),
     );
     expect(patchRes.status).toBe(404);
 
@@ -187,7 +185,7 @@ describe("admin variants", () => {
         undefined,
         adminCookie,
       ),
-      { params: { id: String(seed.product.id), variantId: String(otherVariant.data.id) } },
+      ctx({ id: String(seed.product.id), variantId: String(otherVariant.data.id) }),
     );
     expect(deleteRes.status).toBe(404);
   });
@@ -200,7 +198,7 @@ describe("admin variants", () => {
         undefined,
         adminCookie,
       ),
-      { params: { id: String(seed.product.id), variantId: String(seed.variant.id) } },
+      ctx({ id: String(seed.product.id), variantId: String(seed.variant.id) }),
     );
     expect(res.status).toBe(200);
     const variant = await prisma.productVariant.findUnique({ where: { id: seed.variant.id } });
@@ -210,7 +208,7 @@ describe("admin variants", () => {
   it("adjusts stock and requires a reason, writing an audited history row", async () => {
     const missingReason = await adjustStock(
       jsonRequest(`http://localhost/api/admin/variants/${seed.variant.id}/stock`, "PATCH", { stock: 5 }, adminCookie),
-      { params: { id: String(seed.variant.id) } },
+      ctx({ id: String(seed.variant.id) }),
     );
     expect(missingReason.status).toBe(400);
 
@@ -221,7 +219,7 @@ describe("admin variants", () => {
         { stock: 5, reason: "Warehouse recount" },
         adminCookie,
       ),
-      { params: { id: String(seed.variant.id) } },
+      ctx({ id: String(seed.variant.id) }),
     );
     expect(res.status).toBe(200);
 

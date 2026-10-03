@@ -1,0 +1,65 @@
+{
+  "nestedRouteFound": "/shop/گوشی-موبایل-شیائومی-مدل-poco-x7-pro-دو-سیم-کارت-ظرفیت-512-گیگابایت-و-رم-12-گیگابایت-گلوبال",
+  "viaTrustedClickOnCard": {
+    "route": "/shop",
+    "groupsMatched": 1,
+    "visibleGroups": 1,
+    "markedPills": [
+      "فروشگاه"
+    ],
+    "markerOpacity": "1",
+    "markerVisibility": "visible",
+    "markerRect": {
+      "x": 934.2,
+      "w": 82,
+      "h": 28
+    },
+    "paints": true,
+    "reachedNested": false
+  },
+  "onNestedRoute": {
+    "route": "/shop/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%B4%DB%8C%D8%A7%D8%A6%D9%88%D9%85%DB%8C-%D9%85%D8%AF%D9%84-poco-x7-pro-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-512-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-12-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%DA%AF%D9%84%D9%88%D8%A8%D8%A7%D9%84",
+    "groupsMatched": 1,
+    "visibleGroups": 1,
+    "markedPills": [],
+    "markerOpacity": "0",
+    "markerVisibility": "hidden",
+    "markerRect": {
+      "x": 806.2,
+      "w": 0,
+      "h": 48
+    },
+    "paints": false,
+    "isNested": true
+  },
+  "onCart": {
+    "route": "/cart",
+    "groupsMatched": 1,
+    "visibleGroups": 1,
+    "markedPills": [],
+    "markerOpacity": "0",
+    "markerVisibility": "hidden",
+    "markerRect": {
+      "x": 806.2,
+      "w": 0,
+      "h": 48
+    },
+    "paints": false
+  },
+  "onHome": {
+    "route": "/",
+    "groupsMatched": 1,
+    "visibleGroups": 1,
+    "markedPills": [
+      "خانه"
+    ],
+    "markerOpacity": "1",
+    "markerVisibility": "visible",
+    "markerRect": {
+      "x": 1027.2,
+      "w": 57,
+      "h": 28
+    },
+    "paints": true
+  }
+}

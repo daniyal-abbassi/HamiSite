@@ -1,0 +1,3725 @@
+{
+  "capturedAt": "2026-09-28T02:03:50.886Z",
+  "routes": {
+    "shopUnfiltered": {
+      "360": {
+        "viewport": {
+          "name": "360",
+          "width": 360,
+          "height": 740
+        },
+        "hydration": {
+          "reactFiberPresent": false,
+          "bodyChildren": 84
+        },
+        "surfaces": {
+          "categoryTiles": {
+            "present": true,
+            "groupTag": "DIV",
+            "groupClass": "liquid-selection_group__RHDbb !gap-3 overflow-x-auto pb-2 !flex-nowrap lg:!grid lg:grid-cols-6 lg:!overflow-visible",
+            "ariaSnapshot": "- region \"دسته‌بندی‌های فروشگاه\":\n  - link \"گوشی موبایل\":\n    - /url: /categories/%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D9%88-%D8%AA%D8%A8%D9%84%D8%AA\n  - link \"هدفون و ایرپاد ۱۹ محصول\":\n    - /url: /categories/%D9%87%D8%AF%D9%81%D9%88%D9%86-%D8%A7%DB%8C%D8%B1%D9%BE%D8%A7%D8%AF-%D9%88-%D9%87%D9%86%D8%AF%D8%B2%D9%81%D8%B1%DB%8C\n  - link \"شارژر و کابل\":\n    - /url: /categories/%D8%A2%D8%AF%D8%A7%D9%BE%D8%AA%D9%88%D8%B1-%DA%A9%D8%A7%D8%A8%D9%84-%D9%88-%D8%B4%D8%A7%D8%B1%DA%98%D8%B1\n  - link \"ساعت هوشمند ۷ محصول\":\n    - /url: /categories/%D8%B3%D8%A7%D8%B9%D8%AA-%D9%88-%D9%85%DA%86-%D8%A8%D9%86%D8%AF-%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF\n  - link \"پاوربانک\":\n    - /url: /categories/%D9%BE%D8%A7%D9%88%D8%B1-%D8%A8%D8%A7%D9%86%DA%A9\n  - link \"لوازم کامپیوتر ۵ محصول\":\n    - /url: /categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+            "group": {
+              "rect": {
+                "x": 24,
+                "y": 771.59375,
+                "width": 312,
+                "height": 156,
+                "top": 771.59375,
+                "right": 336,
+                "bottom": 927.59375,
+                "left": 24
+              },
+              "display": "flex",
+              "flexWrap": "nowrap",
+              "gap": "12px",
+              "overflow": "auto",
+              "paddingBottom": "8px"
+            },
+            "items": [
+              {
+                "href": "/categories/%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D9%88-%D8%AA%D8%A8%D9%84%D8%AA",
+                "text": "گوشی موبایل",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 200,
+                "offsetTop": 0,
+                "offsetWidth": 112,
+                "offsetHeight": 148,
+                "rect": {
+                  "x": 224,
+                  "y": 771.59375,
+                  "width": 112,
+                  "height": 148,
+                  "top": 771.59375,
+                  "right": 336,
+                  "bottom": 919.59375,
+                  "left": 224
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D9%87%D8%AF%D9%81%D9%88%D9%86-%D8%A7%DB%8C%D8%B1%D9%BE%D8%A7%D8%AF-%D9%88-%D9%87%D9%86%D8%AF%D8%B2%D9%81%D8%B1%DB%8C",
+                "text": "هدفون و ایرپاد۱۹ محصول",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 76,
+                "offsetTop": 0,
+                "offsetWidth": 112,
+                "offsetHeight": 148,
+                "rect": {
+                  "x": 100,
+                  "y": 771.59375,
+                  "width": 112,
+                  "height": 148,
+                  "top": 771.59375,
+                  "right": 212,
+                  "bottom": 919.59375,
+                  "left": 100
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D8%A2%D8%AF%D8%A7%D9%BE%D8%AA%D9%88%D8%B1-%DA%A9%D8%A7%D8%A8%D9%84-%D9%88-%D8%B4%D8%A7%D8%B1%DA%98%D8%B1",
+                "text": "شارژر و کابل",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": -48,
+                "offsetTop": 0,
+                "offsetWidth": 112,
+                "offsetHeight": 148,
+                "rect": {
+                  "x": -24,
+                  "y": 771.59375,
+                  "width": 112,
+                  "height": 148,
+                  "top": 771.59375,
+                  "right": 88,
+                  "bottom": 919.59375,
+                  "left": -24
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D8%B3%D8%A7%D8%B9%D8%AA-%D9%88-%D9%85%DA%86-%D8%A8%D9%86%D8%AF-%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF",
+                "text": "ساعت هوشمند۷ محصول",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": -172,
+                "offsetTop": 0,
+                "offsetWidth": 112,
+                "offsetHeight": 148,
+                "rect": {
+                  "x": -148,
+                  "y": 771.59375,
+                  "width": 112,
+                  "height": 148,
+                  "top": 771.59375,
+                  "right": -36,
+                  "bottom": 919.59375,
+                  "left": -148
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D9%BE%D8%A7%D9%88%D8%B1-%D8%A8%D8%A7%D9%86%DA%A9",
+                "text": "پاوربانک",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": -296,
+                "offsetTop": 0,
+                "offsetWidth": 112,
+                "offsetHeight": 148,
+                "rect": {
+                  "x": -272,
+                  "y": 771.59375,
+                  "width": 112,
+                  "height": 148,
+                  "top": 771.59375,
+                  "right": -160,
+                  "bottom": 919.59375,
+                  "left": -272
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+                "text": "لوازم کامپیوتر۵ محصول",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": -420,
+                "offsetTop": 0,
+                "offsetWidth": 112,
+                "offsetHeight": 148,
+                "rect": {
+                  "x": -396,
+                  "y": 771.59375,
+                  "width": 112,
+                  "height": 148,
+                  "top": 771.59375,
+                  "right": -284,
+                  "bottom": 919.59375,
+                  "left": -396
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              }
+            ]
+          },
+          "pagination": {
+            "present": true,
+            "groupClass": "mt-10 flex items-center justify-center gap-1.5",
+            "group": {
+              "rect": {
+                "x": 24,
+                "y": 3659.96875,
+                "width": 312,
+                "height": 44,
+                "top": 3659.96875,
+                "right": 336,
+                "bottom": 3703.96875,
+                "left": 24
+              },
+              "display": "flex",
+              "flexWrap": "nowrap",
+              "gap": "6px"
+            },
+            "buttons": [
+              {
+                "text": "",
+                "ariaCurrent": null,
+                "ariaLabel": "صفحه قبل",
+                "ariaPressed": null,
+                "disabled": true,
+                "offsetLeft": 296,
+                "offsetWidth": 40,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 296.09375,
+                  "y": 3659.96875,
+                  "width": 39.90625,
+                  "height": 44,
+                  "top": 3659.96875,
+                  "right": 336,
+                  "bottom": 3703.96875,
+                  "left": 296.09375
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۱",
+                "ariaCurrent": "page",
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 181,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 250.84375,
+                  "y": 3659.96875,
+                  "width": 39.25,
+                  "height": 44,
+                  "top": 3659.96875,
+                  "right": 290.09375,
+                  "bottom": 3703.96875,
+                  "left": 250.84375
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۲",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 136,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 205.609375,
+                  "y": 3659.96875,
+                  "width": 39.234375,
+                  "height": 44,
+                  "top": 3659.96875,
+                  "right": 244.84375,
+                  "bottom": 3703.96875,
+                  "left": 205.609375
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۳",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 90,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 160.375,
+                  "y": 3659.96875,
+                  "width": 39.234375,
+                  "height": 44,
+                  "top": 3659.96875,
+                  "right": 199.609375,
+                  "bottom": 3703.96875,
+                  "left": 160.375
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۴",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 45,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 115.140625,
+                  "y": 3659.96875,
+                  "width": 39.234375,
+                  "height": 44,
+                  "top": 3659.96875,
+                  "right": 154.375,
+                  "bottom": 3703.96875,
+                  "left": 115.140625
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۵",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 0,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 69.90625,
+                  "y": 3659.96875,
+                  "width": 39.234375,
+                  "height": 44,
+                  "top": 3659.96875,
+                  "right": 109.140625,
+                  "bottom": 3703.96875,
+                  "left": 69.90625
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "",
+                "ariaCurrent": null,
+                "ariaLabel": "صفحه بعد",
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 24,
+                "offsetWidth": 40,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 24,
+                  "y": 3659.96875,
+                  "width": 39.90625,
+                  "height": 44,
+                  "top": 3659.96875,
+                  "right": 63.90625,
+                  "bottom": 3703.96875,
+                  "left": 24
+                },
+                "borderRadius": "22px"
+              }
+            ],
+            "ariaSnapshot": "- navigation \"صفحه‌بندی محصولات\":\n  - button \"صفحه قبل\" [disabled]\n  - button \"۱\"\n  - button \"۲\"\n  - button \"۳\"\n  - button \"۴\"\n  - button \"۵\"\n  - button \"صفحه بعد\""
+          }
+        }
+      },
+      "1280": {
+        "viewport": {
+          "name": "1280",
+          "width": 1280,
+          "height": 800
+        },
+        "hydration": {
+          "reactFiberPresent": false,
+          "bodyChildren": 84
+        },
+        "surfaces": {
+          "categoryTiles": {
+            "present": true,
+            "groupTag": "DIV",
+            "groupClass": "liquid-selection_group__RHDbb !gap-3 overflow-x-auto pb-2 !flex-nowrap lg:!grid lg:grid-cols-6 lg:!overflow-visible",
+            "ariaSnapshot": "- region \"دسته‌بندی‌های فروشگاه\":\n  - link \"گوشی موبایل\":\n    - /url: /categories/%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D9%88-%D8%AA%D8%A8%D9%84%D8%AA\n  - link \"هدفون و ایرپاد ۱۹ محصول\":\n    - /url: /categories/%D9%87%D8%AF%D9%81%D9%88%D9%86-%D8%A7%DB%8C%D8%B1%D9%BE%D8%A7%D8%AF-%D9%88-%D9%87%D9%86%D8%AF%D8%B2%D9%81%D8%B1%DB%8C\n  - link \"شارژر و کابل\":\n    - /url: /categories/%D8%A2%D8%AF%D8%A7%D9%BE%D8%AA%D9%88%D8%B1-%DA%A9%D8%A7%D8%A8%D9%84-%D9%88-%D8%B4%D8%A7%D8%B1%DA%98%D8%B1\n  - link \"ساعت هوشمند ۷ محصول\":\n    - /url: /categories/%D8%B3%D8%A7%D8%B9%D8%AA-%D9%88-%D9%85%DA%86-%D8%A8%D9%86%D8%AF-%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF\n  - link \"پاوربانک\":\n    - /url: /categories/%D9%BE%D8%A7%D9%88%D8%B1-%D8%A8%D8%A7%D9%86%DA%A9\n  - link \"لوازم کامپیوتر ۵ محصول\":\n    - /url: /categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+            "group": {
+              "rect": {
+                "x": 24,
+                "y": 650,
+                "width": 1232,
+                "height": 153,
+                "top": 650,
+                "right": 1256,
+                "bottom": 803,
+                "left": 24
+              },
+              "display": "grid",
+              "flexWrap": "nowrap",
+              "gap": "12px",
+              "overflow": "visible",
+              "paddingBottom": "8px"
+            },
+            "items": [
+              {
+                "href": "/categories/%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D9%88-%D8%AA%D8%A8%D9%84%D8%AA",
+                "text": "گوشی موبایل",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 1037,
+                "offsetTop": 0,
+                "offsetWidth": 195,
+                "offsetHeight": 145,
+                "rect": {
+                  "x": 1060.671875,
+                  "y": 650,
+                  "width": 195.328125,
+                  "height": 145,
+                  "top": 650,
+                  "right": 1256,
+                  "bottom": 795,
+                  "left": 1060.671875
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D9%87%D8%AF%D9%81%D9%88%D9%86-%D8%A7%DB%8C%D8%B1%D9%BE%D8%A7%D8%AF-%D9%88-%D9%87%D9%86%D8%AF%D8%B2%D9%81%D8%B1%DB%8C",
+                "text": "هدفون و ایرپاد۱۹ محصول",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 829,
+                "offsetTop": 0,
+                "offsetWidth": 195,
+                "offsetHeight": 145,
+                "rect": {
+                  "x": 853.34375,
+                  "y": 650,
+                  "width": 195.328125,
+                  "height": 145,
+                  "top": 650,
+                  "right": 1048.671875,
+                  "bottom": 795,
+                  "left": 853.34375
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D8%A2%D8%AF%D8%A7%D9%BE%D8%AA%D9%88%D8%B1-%DA%A9%D8%A7%D8%A8%D9%84-%D9%88-%D8%B4%D8%A7%D8%B1%DA%98%D8%B1",
+                "text": "شارژر و کابل",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 622,
+                "offsetTop": 0,
+                "offsetWidth": 195,
+                "offsetHeight": 145,
+                "rect": {
+                  "x": 646.015625,
+                  "y": 650,
+                  "width": 195.328125,
+                  "height": 145,
+                  "top": 650,
+                  "right": 841.34375,
+                  "bottom": 795,
+                  "left": 646.015625
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D8%B3%D8%A7%D8%B9%D8%AA-%D9%88-%D9%85%DA%86-%D8%A8%D9%86%D8%AF-%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF",
+                "text": "ساعت هوشمند۷ محصول",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 415,
+                "offsetTop": 0,
+                "offsetWidth": 195,
+                "offsetHeight": 145,
+                "rect": {
+                  "x": 438.671875,
+                  "y": 650,
+                  "width": 195.34375,
+                  "height": 145,
+                  "top": 650,
+                  "right": 634.015625,
+                  "bottom": 795,
+                  "left": 438.671875
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D9%BE%D8%A7%D9%88%D8%B1-%D8%A8%D8%A7%D9%86%DA%A9",
+                "text": "پاوربانک",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 207,
+                "offsetTop": 0,
+                "offsetWidth": 195,
+                "offsetHeight": 145,
+                "rect": {
+                  "x": 231.34375,
+                  "y": 650,
+                  "width": 195.328125,
+                  "height": 145,
+                  "top": 650,
+                  "right": 426.671875,
+                  "bottom": 795,
+                  "left": 231.34375
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+                "text": "لوازم کامپیوتر۵ محصول",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 0,
+                "offsetTop": 0,
+                "offsetWidth": 195,
+                "offsetHeight": 145,
+                "rect": {
+                  "x": 24.015625,
+                  "y": 650,
+                  "width": 195.328125,
+                  "height": 145,
+                  "top": 650,
+                  "right": 219.34375,
+                  "bottom": 795,
+                  "left": 24.015625
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              }
+            ]
+          },
+          "pagination": {
+            "present": true,
+            "groupClass": "mt-10 flex items-center justify-center gap-1.5",
+            "group": {
+              "rect": {
+                "x": 24,
+                "y": 3297.421875,
+                "width": 912,
+                "height": 44,
+                "top": 3297.421875,
+                "right": 936,
+                "bottom": 3341.421875,
+                "left": 24
+              },
+              "display": "flex",
+              "flexWrap": "nowrap",
+              "gap": "6px"
+            },
+            "buttons": [
+              {
+                "text": "",
+                "ariaCurrent": null,
+                "ariaLabel": "صفحه قبل",
+                "ariaPressed": null,
+                "disabled": true,
+                "offsetLeft": 608,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 608,
+                  "y": 3297.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3297.421875,
+                  "right": 652,
+                  "bottom": 3341.421875,
+                  "left": 608
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۱",
+                "ariaCurrent": "page",
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 200,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 558,
+                  "y": 3297.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3297.421875,
+                  "right": 602,
+                  "bottom": 3341.421875,
+                  "left": 558
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۲",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 150,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 508,
+                  "y": 3297.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3297.421875,
+                  "right": 552,
+                  "bottom": 3341.421875,
+                  "left": 508
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۳",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 100,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 458,
+                  "y": 3297.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3297.421875,
+                  "right": 502,
+                  "bottom": 3341.421875,
+                  "left": 458
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۴",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 50,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 408,
+                  "y": 3297.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3297.421875,
+                  "right": 452,
+                  "bottom": 3341.421875,
+                  "left": 408
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۵",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 0,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 358,
+                  "y": 3297.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3297.421875,
+                  "right": 402,
+                  "bottom": 3341.421875,
+                  "left": 358
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "",
+                "ariaCurrent": null,
+                "ariaLabel": "صفحه بعد",
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 308,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 308,
+                  "y": 3297.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3297.421875,
+                  "right": 352,
+                  "bottom": 3341.421875,
+                  "left": 308
+                },
+                "borderRadius": "22px"
+              }
+            ],
+            "ariaSnapshot": "- navigation \"صفحه‌بندی محصولات\":\n  - button \"صفحه قبل\" [disabled]\n  - button \"۱\"\n  - button \"۲\"\n  - button \"۳\"\n  - button \"۴\"\n  - button \"۵\"\n  - button \"صفحه بعد\""
+          }
+        }
+      }
+    },
+    "shopCategoryActive": {
+      "360": {
+        "viewport": {
+          "name": "360",
+          "width": 360,
+          "height": 740
+        },
+        "hydration": {
+          "reactFiberPresent": false,
+          "bodyChildren": 84
+        },
+        "surfaces": {
+          "categoryTiles": {
+            "present": true,
+            "groupTag": "DIV",
+            "groupClass": "liquid-selection_group__RHDbb !gap-3 overflow-x-auto pb-2 !flex-nowrap lg:!grid lg:grid-cols-6 lg:!overflow-visible",
+            "ariaSnapshot": "- region \"دسته‌بندی‌های فروشگاه\":\n  - link \"گوشی موبایل\":\n    - /url: /shop\n  - link \"هدفون و ایرپاد ۱۹ محصول\":\n    - /url: /categories/%D9%87%D8%AF%D9%81%D9%88%D9%86-%D8%A7%DB%8C%D8%B1%D9%BE%D8%A7%D8%AF-%D9%88-%D9%87%D9%86%D8%AF%D8%B2%D9%81%D8%B1%DB%8C\n  - link \"شارژر و کابل\":\n    - /url: /categories/%D8%A2%D8%AF%D8%A7%D9%BE%D8%AA%D9%88%D8%B1-%DA%A9%D8%A7%D8%A8%D9%84-%D9%88-%D8%B4%D8%A7%D8%B1%DA%98%D8%B1\n  - link \"ساعت هوشمند ۷ محصول\":\n    - /url: /categories/%D8%B3%D8%A7%D8%B9%D8%AA-%D9%88-%D9%85%DA%86-%D8%A8%D9%86%D8%AF-%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF\n  - link \"پاوربانک\":\n    - /url: /categories/%D9%BE%D8%A7%D9%88%D8%B1-%D8%A8%D8%A7%D9%86%DA%A9\n  - link \"لوازم کامپیوتر ۵ محصول\":\n    - /url: /categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+            "group": {
+              "rect": {
+                "x": 24,
+                "y": 771.59375,
+                "width": 312,
+                "height": 156,
+                "top": 771.59375,
+                "right": 336,
+                "bottom": 927.59375,
+                "left": 24
+              },
+              "display": "flex",
+              "flexWrap": "nowrap",
+              "gap": "12px",
+              "overflow": "auto",
+              "paddingBottom": "8px"
+            },
+            "items": [
+              {
+                "href": "/shop",
+                "text": "گوشی موبایل",
+                "ariaCurrent": "true",
+                "ariaLabel": null,
+                "offsetLeft": 200,
+                "offsetTop": 0,
+                "offsetWidth": 112,
+                "offsetHeight": 148,
+                "rect": {
+                  "x": 224,
+                  "y": 771.59375,
+                  "width": 112,
+                  "height": 148,
+                  "top": 771.59375,
+                  "right": 336,
+                  "bottom": 919.59375,
+                  "left": 224
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D9%87%D8%AF%D9%81%D9%88%D9%86-%D8%A7%DB%8C%D8%B1%D9%BE%D8%A7%D8%AF-%D9%88-%D9%87%D9%86%D8%AF%D8%B2%D9%81%D8%B1%DB%8C",
+                "text": "هدفون و ایرپاد۱۹ محصول",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 76,
+                "offsetTop": 0,
+                "offsetWidth": 112,
+                "offsetHeight": 148,
+                "rect": {
+                  "x": 100,
+                  "y": 771.59375,
+                  "width": 112,
+                  "height": 148,
+                  "top": 771.59375,
+                  "right": 212,
+                  "bottom": 919.59375,
+                  "left": 100
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D8%A2%D8%AF%D8%A7%D9%BE%D8%AA%D9%88%D8%B1-%DA%A9%D8%A7%D8%A8%D9%84-%D9%88-%D8%B4%D8%A7%D8%B1%DA%98%D8%B1",
+                "text": "شارژر و کابل",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": -48,
+                "offsetTop": 0,
+                "offsetWidth": 112,
+                "offsetHeight": 148,
+                "rect": {
+                  "x": -24,
+                  "y": 771.59375,
+                  "width": 112,
+                  "height": 148,
+                  "top": 771.59375,
+                  "right": 88,
+                  "bottom": 919.59375,
+                  "left": -24
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D8%B3%D8%A7%D8%B9%D8%AA-%D9%88-%D9%85%DA%86-%D8%A8%D9%86%D8%AF-%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF",
+                "text": "ساعت هوشمند۷ محصول",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": -172,
+                "offsetTop": 0,
+                "offsetWidth": 112,
+                "offsetHeight": 148,
+                "rect": {
+                  "x": -148,
+                  "y": 771.59375,
+                  "width": 112,
+                  "height": 148,
+                  "top": 771.59375,
+                  "right": -36,
+                  "bottom": 919.59375,
+                  "left": -148
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D9%BE%D8%A7%D9%88%D8%B1-%D8%A8%D8%A7%D9%86%DA%A9",
+                "text": "پاوربانک",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": -296,
+                "offsetTop": 0,
+                "offsetWidth": 112,
+                "offsetHeight": 148,
+                "rect": {
+                  "x": -272,
+                  "y": 771.59375,
+                  "width": 112,
+                  "height": 148,
+                  "top": 771.59375,
+                  "right": -160,
+                  "bottom": 919.59375,
+                  "left": -272
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+                "text": "لوازم کامپیوتر۵ محصول",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": -420,
+                "offsetTop": 0,
+                "offsetWidth": 112,
+                "offsetHeight": 148,
+                "rect": {
+                  "x": -396,
+                  "y": 771.59375,
+                  "width": 112,
+                  "height": 148,
+                  "top": 771.59375,
+                  "right": -284,
+                  "bottom": 919.59375,
+                  "left": -396
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              }
+            ]
+          },
+          "pagination": {
+            "present": true,
+            "groupClass": "mt-10 flex items-center justify-center gap-1.5",
+            "group": {
+              "rect": {
+                "x": 24,
+                "y": 3653.96875,
+                "width": 312,
+                "height": 44,
+                "top": 3653.96875,
+                "right": 336,
+                "bottom": 3697.96875,
+                "left": 24
+              },
+              "display": "flex",
+              "flexWrap": "nowrap",
+              "gap": "6px"
+            },
+            "buttons": [
+              {
+                "text": "",
+                "ariaCurrent": null,
+                "ariaLabel": "صفحه قبل",
+                "ariaPressed": null,
+                "disabled": true,
+                "offsetLeft": 296,
+                "offsetWidth": 40,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 296.09375,
+                  "y": 3653.96875,
+                  "width": 39.90625,
+                  "height": 44,
+                  "top": 3653.96875,
+                  "right": 336,
+                  "bottom": 3697.96875,
+                  "left": 296.09375
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۱",
+                "ariaCurrent": "page",
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 181,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 250.84375,
+                  "y": 3653.96875,
+                  "width": 39.25,
+                  "height": 44,
+                  "top": 3653.96875,
+                  "right": 290.09375,
+                  "bottom": 3697.96875,
+                  "left": 250.84375
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۲",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 136,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 205.609375,
+                  "y": 3653.96875,
+                  "width": 39.234375,
+                  "height": 44,
+                  "top": 3653.96875,
+                  "right": 244.84375,
+                  "bottom": 3697.96875,
+                  "left": 205.609375
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۳",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 90,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 160.375,
+                  "y": 3653.96875,
+                  "width": 39.234375,
+                  "height": 44,
+                  "top": 3653.96875,
+                  "right": 199.609375,
+                  "bottom": 3697.96875,
+                  "left": 160.375
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۴",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 45,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 115.140625,
+                  "y": 3653.96875,
+                  "width": 39.234375,
+                  "height": 44,
+                  "top": 3653.96875,
+                  "right": 154.375,
+                  "bottom": 3697.96875,
+                  "left": 115.140625
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۵",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 0,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 69.90625,
+                  "y": 3653.96875,
+                  "width": 39.234375,
+                  "height": 44,
+                  "top": 3653.96875,
+                  "right": 109.140625,
+                  "bottom": 3697.96875,
+                  "left": 69.90625
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "",
+                "ariaCurrent": null,
+                "ariaLabel": "صفحه بعد",
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 24,
+                "offsetWidth": 40,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 24,
+                  "y": 3653.96875,
+                  "width": 39.90625,
+                  "height": 44,
+                  "top": 3653.96875,
+                  "right": 63.90625,
+                  "bottom": 3697.96875,
+                  "left": 24
+                },
+                "borderRadius": "22px"
+              }
+            ],
+            "ariaSnapshot": "- navigation \"صفحه‌بندی محصولات\":\n  - button \"صفحه قبل\" [disabled]\n  - button \"۱\"\n  - button \"۲\"\n  - button \"۳\"\n  - button \"۴\"\n  - button \"۵\"\n  - button \"صفحه بعد\""
+          }
+        }
+      },
+      "1280": {
+        "viewport": {
+          "name": "1280",
+          "width": 1280,
+          "height": 800
+        },
+        "hydration": {
+          "reactFiberPresent": true,
+          "bodyChildren": 85
+        },
+        "surfaces": {
+          "categoryTiles": {
+            "present": true,
+            "groupTag": "DIV",
+            "groupClass": "liquid-selection_group__RHDbb !gap-3 overflow-x-auto pb-2 !flex-nowrap lg:!grid lg:grid-cols-6 lg:!overflow-visible",
+            "ariaSnapshot": "- region \"دسته‌بندی‌های فروشگاه\":\n  - link \"گوشی موبایل\":\n    - /url: /shop\n  - link \"هدفون و ایرپاد ۱۹ محصول\":\n    - /url: /categories/%D9%87%D8%AF%D9%81%D9%88%D9%86-%D8%A7%DB%8C%D8%B1%D9%BE%D8%A7%D8%AF-%D9%88-%D9%87%D9%86%D8%AF%D8%B2%D9%81%D8%B1%DB%8C\n  - link \"شارژر و کابل\":\n    - /url: /categories/%D8%A2%D8%AF%D8%A7%D9%BE%D8%AA%D9%88%D8%B1-%DA%A9%D8%A7%D8%A8%D9%84-%D9%88-%D8%B4%D8%A7%D8%B1%DA%98%D8%B1\n  - link \"ساعت هوشمند ۷ محصول\":\n    - /url: /categories/%D8%B3%D8%A7%D8%B9%D8%AA-%D9%88-%D9%85%DA%86-%D8%A8%D9%86%D8%AF-%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF\n  - link \"پاوربانک\":\n    - /url: /categories/%D9%BE%D8%A7%D9%88%D8%B1-%D8%A8%D8%A7%D9%86%DA%A9\n  - link \"لوازم کامپیوتر ۵ محصول\":\n    - /url: /categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+            "group": {
+              "rect": {
+                "x": 24,
+                "y": 650,
+                "width": 1232,
+                "height": 153,
+                "top": 650,
+                "right": 1256,
+                "bottom": 803,
+                "left": 24
+              },
+              "display": "grid",
+              "flexWrap": "nowrap",
+              "gap": "12px",
+              "overflow": "visible",
+              "paddingBottom": "8px"
+            },
+            "items": [
+              {
+                "href": "/shop",
+                "text": "گوشی موبایل",
+                "ariaCurrent": "true",
+                "ariaLabel": null,
+                "offsetLeft": 1037,
+                "offsetTop": 0,
+                "offsetWidth": 195,
+                "offsetHeight": 145,
+                "rect": {
+                  "x": 1060.671875,
+                  "y": 650,
+                  "width": 195.328125,
+                  "height": 145,
+                  "top": 650,
+                  "right": 1256,
+                  "bottom": 795,
+                  "left": 1060.671875
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D9%87%D8%AF%D9%81%D9%88%D9%86-%D8%A7%DB%8C%D8%B1%D9%BE%D8%A7%D8%AF-%D9%88-%D9%87%D9%86%D8%AF%D8%B2%D9%81%D8%B1%DB%8C",
+                "text": "هدفون و ایرپاد۱۹ محصول",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 829,
+                "offsetTop": 0,
+                "offsetWidth": 195,
+                "offsetHeight": 145,
+                "rect": {
+                  "x": 853.34375,
+                  "y": 650,
+                  "width": 195.328125,
+                  "height": 145,
+                  "top": 650,
+                  "right": 1048.671875,
+                  "bottom": 795,
+                  "left": 853.34375
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D8%A2%D8%AF%D8%A7%D9%BE%D8%AA%D9%88%D8%B1-%DA%A9%D8%A7%D8%A8%D9%84-%D9%88-%D8%B4%D8%A7%D8%B1%DA%98%D8%B1",
+                "text": "شارژر و کابل",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 622,
+                "offsetTop": 0,
+                "offsetWidth": 195,
+                "offsetHeight": 145,
+                "rect": {
+                  "x": 646.015625,
+                  "y": 650,
+                  "width": 195.328125,
+                  "height": 145,
+                  "top": 650,
+                  "right": 841.34375,
+                  "bottom": 795,
+                  "left": 646.015625
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D8%B3%D8%A7%D8%B9%D8%AA-%D9%88-%D9%85%DA%86-%D8%A8%D9%86%D8%AF-%D9%87%D9%88%D8%B4%D9%85%D9%86%D8%AF",
+                "text": "ساعت هوشمند۷ محصول",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 415,
+                "offsetTop": 0,
+                "offsetWidth": 195,
+                "offsetHeight": 145,
+                "rect": {
+                  "x": 438.671875,
+                  "y": 650,
+                  "width": 195.34375,
+                  "height": 145,
+                  "top": 650,
+                  "right": 634.015625,
+                  "bottom": 795,
+                  "left": 438.671875
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D9%BE%D8%A7%D9%88%D8%B1-%D8%A8%D8%A7%D9%86%DA%A9",
+                "text": "پاوربانک",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 207,
+                "offsetTop": 0,
+                "offsetWidth": 195,
+                "offsetHeight": 145,
+                "rect": {
+                  "x": 231.34375,
+                  "y": 650,
+                  "width": 195.328125,
+                  "height": 145,
+                  "top": 650,
+                  "right": 426.671875,
+                  "bottom": 795,
+                  "left": 231.34375
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              },
+              {
+                "href": "/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+                "text": "لوازم کامپیوتر۵ محصول",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "offsetLeft": 0,
+                "offsetTop": 0,
+                "offsetWidth": 195,
+                "offsetHeight": 145,
+                "rect": {
+                  "x": 24.015625,
+                  "y": 650,
+                  "width": 195.328125,
+                  "height": 145,
+                  "top": 650,
+                  "right": 219.34375,
+                  "bottom": 795,
+                  "left": 24.015625
+                },
+                "borderRadius": "22px",
+                "justifyContent": "flex-start",
+                "minWidth": "112px",
+                "whiteSpace": "normal",
+                "transition": "color 0.38s cubic-bezier(0.2, 0.7, 0.3, 1)"
+              }
+            ]
+          },
+          "pagination": {
+            "present": true,
+            "groupClass": "mt-10 flex items-center justify-center gap-1.5",
+            "group": {
+              "rect": {
+                "x": 24,
+                "y": 3343.40625,
+                "width": 912,
+                "height": 44,
+                "top": 3343.40625,
+                "right": 936,
+                "bottom": 3387.40625,
+                "left": 24
+              },
+              "display": "flex",
+              "flexWrap": "nowrap",
+              "gap": "6px"
+            },
+            "buttons": [
+              {
+                "text": "",
+                "ariaCurrent": null,
+                "ariaLabel": "صفحه قبل",
+                "ariaPressed": null,
+                "disabled": true,
+                "offsetLeft": 608,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 608,
+                  "y": 3343.40625,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3343.40625,
+                  "right": 652,
+                  "bottom": 3387.40625,
+                  "left": 608
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۱",
+                "ariaCurrent": "page",
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 200,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 558,
+                  "y": 3343.40625,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3343.40625,
+                  "right": 602,
+                  "bottom": 3387.40625,
+                  "left": 558
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۲",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 150,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 508,
+                  "y": 3343.40625,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3343.40625,
+                  "right": 552,
+                  "bottom": 3387.40625,
+                  "left": 508
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۳",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 100,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 458,
+                  "y": 3343.40625,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3343.40625,
+                  "right": 502,
+                  "bottom": 3387.40625,
+                  "left": 458
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۴",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 50,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 408,
+                  "y": 3343.40625,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3343.40625,
+                  "right": 452,
+                  "bottom": 3387.40625,
+                  "left": 408
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۵",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 0,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 358,
+                  "y": 3343.40625,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3343.40625,
+                  "right": 402,
+                  "bottom": 3387.40625,
+                  "left": 358
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "",
+                "ariaCurrent": null,
+                "ariaLabel": "صفحه بعد",
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 308,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 308,
+                  "y": 3343.40625,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3343.40625,
+                  "right": 352,
+                  "bottom": 3387.40625,
+                  "left": 308
+                },
+                "borderRadius": "22px"
+              }
+            ],
+            "ariaSnapshot": "- navigation \"صفحه‌بندی محصولات\":\n  - button \"صفحه قبل\" [disabled]\n  - button \"۱\"\n  - button \"۲\"\n  - button \"۳\"\n  - button \"۴\"\n  - button \"۵\"\n  - button \"صفحه بعد\""
+          }
+        }
+      }
+    },
+    "shopBrandApple": {
+      "360": {
+        "viewport": {
+          "name": "360",
+          "width": 360,
+          "height": 740
+        },
+        "hydration": {
+          "reactFiberPresent": true,
+          "bodyChildren": 79
+        },
+        "surfaces": {
+          "pagination": {
+            "present": true,
+            "groupClass": "mt-10 flex items-center justify-center gap-1.5",
+            "group": {
+              "rect": {
+                "x": 24,
+                "y": 3584.96875,
+                "width": 312,
+                "height": 44,
+                "top": 3584.96875,
+                "right": 336,
+                "bottom": 3628.96875,
+                "left": 24
+              },
+              "display": "flex",
+              "flexWrap": "nowrap",
+              "gap": "6px"
+            },
+            "buttons": [
+              {
+                "text": "",
+                "ariaCurrent": null,
+                "ariaLabel": "صفحه قبل",
+                "ariaPressed": null,
+                "disabled": true,
+                "offsetLeft": 296,
+                "offsetWidth": 40,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 296.09375,
+                  "y": 3584.96875,
+                  "width": 39.90625,
+                  "height": 44,
+                  "top": 3584.96875,
+                  "right": 336,
+                  "bottom": 3628.96875,
+                  "left": 296.09375
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۱",
+                "ariaCurrent": "page",
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 181,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 250.84375,
+                  "y": 3584.96875,
+                  "width": 39.25,
+                  "height": 44,
+                  "top": 3584.96875,
+                  "right": 290.09375,
+                  "bottom": 3628.96875,
+                  "left": 250.84375
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۲",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 136,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 205.609375,
+                  "y": 3584.96875,
+                  "width": 39.234375,
+                  "height": 44,
+                  "top": 3584.96875,
+                  "right": 244.84375,
+                  "bottom": 3628.96875,
+                  "left": 205.609375
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۳",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 90,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 160.375,
+                  "y": 3584.96875,
+                  "width": 39.234375,
+                  "height": 44,
+                  "top": 3584.96875,
+                  "right": 199.609375,
+                  "bottom": 3628.96875,
+                  "left": 160.375
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۴",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 45,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 115.140625,
+                  "y": 3584.96875,
+                  "width": 39.234375,
+                  "height": 44,
+                  "top": 3584.96875,
+                  "right": 154.375,
+                  "bottom": 3628.96875,
+                  "left": 115.140625
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۵",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 0,
+                "offsetWidth": 39,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 69.90625,
+                  "y": 3584.96875,
+                  "width": 39.234375,
+                  "height": 44,
+                  "top": 3584.96875,
+                  "right": 109.140625,
+                  "bottom": 3628.96875,
+                  "left": 69.90625
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "",
+                "ariaCurrent": null,
+                "ariaLabel": "صفحه بعد",
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 24,
+                "offsetWidth": 40,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 24,
+                  "y": 3584.96875,
+                  "width": 39.90625,
+                  "height": 44,
+                  "top": 3584.96875,
+                  "right": 63.90625,
+                  "bottom": 3628.96875,
+                  "left": 24
+                },
+                "borderRadius": "22px"
+              }
+            ],
+            "ariaSnapshot": "- navigation \"صفحه‌بندی محصولات\":\n  - button \"صفحه قبل\" [disabled]\n  - button \"۱\"\n  - button \"۲\"\n  - button \"۳\"\n  - button \"۴\"\n  - button \"۵\"\n  - button \"صفحه بعد\""
+          }
+        }
+      },
+      "1280": {
+        "viewport": {
+          "name": "1280",
+          "width": 1280,
+          "height": 800
+        },
+        "hydration": {
+          "reactFiberPresent": false,
+          "bodyChildren": 78
+        },
+        "surfaces": {
+          "pagination": {
+            "present": true,
+            "groupClass": "mt-10 flex items-center justify-center gap-1.5",
+            "group": {
+              "rect": {
+                "x": 24,
+                "y": 3231.421875,
+                "width": 912,
+                "height": 44,
+                "top": 3231.421875,
+                "right": 936,
+                "bottom": 3275.421875,
+                "left": 24
+              },
+              "display": "flex",
+              "flexWrap": "nowrap",
+              "gap": "6px"
+            },
+            "buttons": [
+              {
+                "text": "",
+                "ariaCurrent": null,
+                "ariaLabel": "صفحه قبل",
+                "ariaPressed": null,
+                "disabled": true,
+                "offsetLeft": 608,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 608,
+                  "y": 3231.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3231.421875,
+                  "right": 652,
+                  "bottom": 3275.421875,
+                  "left": 608
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۱",
+                "ariaCurrent": "page",
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 200,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 558,
+                  "y": 3231.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3231.421875,
+                  "right": 602,
+                  "bottom": 3275.421875,
+                  "left": 558
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۲",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 150,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 508,
+                  "y": 3231.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3231.421875,
+                  "right": 552,
+                  "bottom": 3275.421875,
+                  "left": 508
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۳",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 100,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 458,
+                  "y": 3231.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3231.421875,
+                  "right": 502,
+                  "bottom": 3275.421875,
+                  "left": 458
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۴",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 50,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 408,
+                  "y": 3231.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3231.421875,
+                  "right": 452,
+                  "bottom": 3275.421875,
+                  "left": 408
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "۵",
+                "ariaCurrent": null,
+                "ariaLabel": null,
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 0,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 358,
+                  "y": 3231.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3231.421875,
+                  "right": 402,
+                  "bottom": 3275.421875,
+                  "left": 358
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "text": "",
+                "ariaCurrent": null,
+                "ariaLabel": "صفحه بعد",
+                "ariaPressed": null,
+                "disabled": false,
+                "offsetLeft": 308,
+                "offsetWidth": 44,
+                "offsetHeight": 44,
+                "rect": {
+                  "x": 308,
+                  "y": 3231.421875,
+                  "width": 44,
+                  "height": 44,
+                  "top": 3231.421875,
+                  "right": 352,
+                  "bottom": 3275.421875,
+                  "left": 308
+                },
+                "borderRadius": "22px"
+              }
+            ],
+            "ariaSnapshot": "- navigation \"صفحه‌بندی محصولات\":\n  - button \"صفحه قبل\" [disabled]\n  - button \"۱\"\n  - button \"۲\"\n  - button \"۳\"\n  - button \"۴\"\n  - button \"۵\"\n  - button \"صفحه بعد\""
+          }
+        }
+      }
+    },
+    "productGallery": {
+      "360": {
+        "viewport": {
+          "name": "360",
+          "width": 360,
+          "height": 740
+        },
+        "hydration": {
+          "reactFiberPresent": true,
+          "bodyChildren": 111
+        },
+        "surfaces": {
+          "gallery": {
+            "present": true,
+            "groupClass": "liquid-selection_group__RHDbb !gap-2",
+            "group": {
+              "rect": {
+                "x": 24,
+                "y": 538,
+                "width": 312,
+                "height": 568,
+                "top": 538,
+                "right": 336,
+                "bottom": 1106,
+                "left": 24
+              },
+              "display": "flex",
+              "flexWrap": "wrap",
+              "gap": "8px",
+              "alignItems": "stretch"
+            },
+            "counterText": "۱ / ۳۰",
+            "items": [
+              {
+                "ariaPressed": "true",
+                "ariaLabel": "نمای ۱ از ۳۰",
+                "offsetLeft": 248,
+                "offsetTop": 0,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 272,
+                  "y": 538,
+                  "width": 64,
+                  "height": 64,
+                  "top": 538,
+                  "right": 336,
+                  "bottom": 602,
+                  "left": 272
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲ از ۳۰",
+                "offsetLeft": 176,
+                "offsetTop": 0,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 200,
+                  "y": 538,
+                  "width": 64,
+                  "height": 64,
+                  "top": 538,
+                  "right": 264,
+                  "bottom": 602,
+                  "left": 200
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۳ از ۳۰",
+                "offsetLeft": 104,
+                "offsetTop": 0,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 128,
+                  "y": 538,
+                  "width": 64,
+                  "height": 64,
+                  "top": 538,
+                  "right": 192,
+                  "bottom": 602,
+                  "left": 128
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۴ از ۳۰",
+                "offsetLeft": 32,
+                "offsetTop": 0,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 56,
+                  "y": 538,
+                  "width": 64,
+                  "height": 64,
+                  "top": 538,
+                  "right": 120,
+                  "bottom": 602,
+                  "left": 56
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۵ از ۳۰",
+                "offsetLeft": 248,
+                "offsetTop": 72,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 272,
+                  "y": 610,
+                  "width": 64,
+                  "height": 64,
+                  "top": 610,
+                  "right": 336,
+                  "bottom": 674,
+                  "left": 272
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۶ از ۳۰",
+                "offsetLeft": 176,
+                "offsetTop": 72,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 200,
+                  "y": 610,
+                  "width": 64,
+                  "height": 64,
+                  "top": 610,
+                  "right": 264,
+                  "bottom": 674,
+                  "left": 200
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۷ از ۳۰",
+                "offsetLeft": 104,
+                "offsetTop": 72,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 128,
+                  "y": 610,
+                  "width": 64,
+                  "height": 64,
+                  "top": 610,
+                  "right": 192,
+                  "bottom": 674,
+                  "left": 128
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۸ از ۳۰",
+                "offsetLeft": 32,
+                "offsetTop": 72,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 56,
+                  "y": 610,
+                  "width": 64,
+                  "height": 64,
+                  "top": 610,
+                  "right": 120,
+                  "bottom": 674,
+                  "left": 56
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۹ از ۳۰",
+                "offsetLeft": 248,
+                "offsetTop": 144,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 272,
+                  "y": 682,
+                  "width": 64,
+                  "height": 64,
+                  "top": 682,
+                  "right": 336,
+                  "bottom": 746,
+                  "left": 272
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۰ از ۳۰",
+                "offsetLeft": 176,
+                "offsetTop": 144,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 200,
+                  "y": 682,
+                  "width": 64,
+                  "height": 64,
+                  "top": 682,
+                  "right": 264,
+                  "bottom": 746,
+                  "left": 200
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۱ از ۳۰",
+                "offsetLeft": 104,
+                "offsetTop": 144,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 128,
+                  "y": 682,
+                  "width": 64,
+                  "height": 64,
+                  "top": 682,
+                  "right": 192,
+                  "bottom": 746,
+                  "left": 128
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۲ از ۳۰",
+                "offsetLeft": 32,
+                "offsetTop": 144,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 56,
+                  "y": 682,
+                  "width": 64,
+                  "height": 64,
+                  "top": 682,
+                  "right": 120,
+                  "bottom": 746,
+                  "left": 56
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۳ از ۳۰",
+                "offsetLeft": 248,
+                "offsetTop": 216,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 272,
+                  "y": 754,
+                  "width": 64,
+                  "height": 64,
+                  "top": 754,
+                  "right": 336,
+                  "bottom": 818,
+                  "left": 272
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۴ از ۳۰",
+                "offsetLeft": 176,
+                "offsetTop": 216,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 200,
+                  "y": 754,
+                  "width": 64,
+                  "height": 64,
+                  "top": 754,
+                  "right": 264,
+                  "bottom": 818,
+                  "left": 200
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۵ از ۳۰",
+                "offsetLeft": 104,
+                "offsetTop": 216,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 128,
+                  "y": 754,
+                  "width": 64,
+                  "height": 64,
+                  "top": 754,
+                  "right": 192,
+                  "bottom": 818,
+                  "left": 128
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۶ از ۳۰",
+                "offsetLeft": 32,
+                "offsetTop": 216,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 56,
+                  "y": 754,
+                  "width": 64,
+                  "height": 64,
+                  "top": 754,
+                  "right": 120,
+                  "bottom": 818,
+                  "left": 56
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۷ از ۳۰",
+                "offsetLeft": 248,
+                "offsetTop": 288,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 272,
+                  "y": 826,
+                  "width": 64,
+                  "height": 64,
+                  "top": 826,
+                  "right": 336,
+                  "bottom": 890,
+                  "left": 272
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۸ از ۳۰",
+                "offsetLeft": 176,
+                "offsetTop": 288,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 200,
+                  "y": 826,
+                  "width": 64,
+                  "height": 64,
+                  "top": 826,
+                  "right": 264,
+                  "bottom": 890,
+                  "left": 200
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۹ از ۳۰",
+                "offsetLeft": 104,
+                "offsetTop": 288,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 128,
+                  "y": 826,
+                  "width": 64,
+                  "height": 64,
+                  "top": 826,
+                  "right": 192,
+                  "bottom": 890,
+                  "left": 128
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۰ از ۳۰",
+                "offsetLeft": 32,
+                "offsetTop": 288,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 56,
+                  "y": 826,
+                  "width": 64,
+                  "height": 64,
+                  "top": 826,
+                  "right": 120,
+                  "bottom": 890,
+                  "left": 56
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۱ از ۳۰",
+                "offsetLeft": 248,
+                "offsetTop": 360,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 272,
+                  "y": 898,
+                  "width": 64,
+                  "height": 64,
+                  "top": 898,
+                  "right": 336,
+                  "bottom": 962,
+                  "left": 272
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۲ از ۳۰",
+                "offsetLeft": 176,
+                "offsetTop": 360,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 200,
+                  "y": 898,
+                  "width": 64,
+                  "height": 64,
+                  "top": 898,
+                  "right": 264,
+                  "bottom": 962,
+                  "left": 200
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۳ از ۳۰",
+                "offsetLeft": 104,
+                "offsetTop": 360,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 128,
+                  "y": 898,
+                  "width": 64,
+                  "height": 64,
+                  "top": 898,
+                  "right": 192,
+                  "bottom": 962,
+                  "left": 128
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۴ از ۳۰",
+                "offsetLeft": 32,
+                "offsetTop": 360,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 56,
+                  "y": 898,
+                  "width": 64,
+                  "height": 64,
+                  "top": 898,
+                  "right": 120,
+                  "bottom": 962,
+                  "left": 56
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۵ از ۳۰",
+                "offsetLeft": 248,
+                "offsetTop": 432,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 272,
+                  "y": 970,
+                  "width": 64,
+                  "height": 64,
+                  "top": 970,
+                  "right": 336,
+                  "bottom": 1034,
+                  "left": 272
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۶ از ۳۰",
+                "offsetLeft": 176,
+                "offsetTop": 432,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 200,
+                  "y": 970,
+                  "width": 64,
+                  "height": 64,
+                  "top": 970,
+                  "right": 264,
+                  "bottom": 1034,
+                  "left": 200
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۷ از ۳۰",
+                "offsetLeft": 104,
+                "offsetTop": 432,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 128,
+                  "y": 970,
+                  "width": 64,
+                  "height": 64,
+                  "top": 970,
+                  "right": 192,
+                  "bottom": 1034,
+                  "left": 128
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۸ از ۳۰",
+                "offsetLeft": 32,
+                "offsetTop": 432,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 56,
+                  "y": 970,
+                  "width": 64,
+                  "height": 64,
+                  "top": 970,
+                  "right": 120,
+                  "bottom": 1034,
+                  "left": 56
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۹ از ۳۰",
+                "offsetLeft": 248,
+                "offsetTop": 504,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 272,
+                  "y": 1042,
+                  "width": 64,
+                  "height": 64,
+                  "top": 1042,
+                  "right": 336,
+                  "bottom": 1106,
+                  "left": 272
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۳۰ از ۳۰",
+                "offsetLeft": 176,
+                "offsetTop": 504,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 200,
+                  "y": 1042,
+                  "width": 64,
+                  "height": 64,
+                  "top": 1042,
+                  "right": 264,
+                  "bottom": 1106,
+                  "left": 200
+                },
+                "borderRadius": "22px"
+              }
+            ],
+            "ariaSnapshot": "- group \"نمای دیگر این محصول\":\n  - button \"نمای ۱ از ۳۰\" [pressed]\n  - button \"نمای ۲ از ۳۰\"\n  - button \"نمای ۳ از ۳۰\"\n  - button \"نمای ۴ از ۳۰\"\n  - button \"نمای ۵ از ۳۰\"\n  - button \"نمای ۶ از ۳۰\"\n  - button \"نمای ۷ از ۳۰\"\n  - button \"نمای ۸ از ۳۰\"\n  - button \"نمای ۹ از ۳۰\"\n  - button \"نمای ۱۰ از ۳۰\"\n  - button \"نمای ۱۱ از ۳۰\"\n  - button \"نمای ۱۲ از ۳۰\"\n  - button \"نمای ۱۳ از ۳۰\"\n  - button \"نمای ۱۴ از ۳۰\"\n  - button \"نمای ۱۵ از ۳۰\"\n  - button \"نمای ۱۶ از ۳۰\"\n  - button \"نمای ۱۷ از ۳۰\"\n  - button \"نمای ۱۸ از ۳۰\"\n  - button \"نمای ۱۹ از ۳۰\"\n  - button \"نمای ۲۰ از ۳۰\"\n  - button \"نمای ۲۱ از ۳۰\"\n  - button \"نمای ۲۲ از ۳۰\"\n  - button \"نمای ۲۳ از ۳۰\"\n  - button \"نمای ۲۴ از ۳۰\"\n  - button \"نمای ۲۵ از ۳۰\"\n  - button \"نمای ۲۶ از ۳۰\"\n  - button \"نمای ۲۷ از ۳۰\"\n  - button \"نمای ۲۸ از ۳۰\"\n  - button \"نمای ۲۹ از ۳۰\"\n  - button \"نمای ۳۰ از ۳۰\""
+          },
+          "variantChips": {
+            "present": true,
+            "groups": [
+              {
+                "label": "رنگ",
+                "groupClass": "liquid-selection_group__RHDbb !gap-2",
+                "group": {
+                  "rect": {
+                    "x": 24,
+                    "y": 1607,
+                    "width": 312,
+                    "height": 34,
+                    "top": 1607,
+                    "right": 336,
+                    "bottom": 1641,
+                    "left": 24
+                  },
+                  "display": "flex",
+                  "flexWrap": "wrap",
+                  "gap": "8px"
+                },
+                "items": [
+                  {
+                    "text": "مشکی",
+                    "ariaPressed": "true",
+                    "ariaLabel": "رنگ: مشکی",
+                    "offsetLeft": 246,
+                    "offsetTop": 0,
+                    "offsetWidth": 66,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 269.828125,
+                      "y": 1607,
+                      "width": 66.171875,
+                      "height": 34,
+                      "top": 1607,
+                      "right": 336,
+                      "bottom": 1641,
+                      "left": 269.828125
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "بنفش",
+                    "ariaPressed": "false",
+                    "ariaLabel": "رنگ: بنفش",
+                    "offsetLeft": 174,
+                    "offsetTop": 0,
+                    "offsetWidth": 64,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 197.515625,
+                      "y": 1607,
+                      "width": 64.3125,
+                      "height": 34,
+                      "top": 1607,
+                      "right": 261.828125,
+                      "bottom": 1641,
+                      "left": 197.515625
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "سفید",
+                    "ariaPressed": "false",
+                    "ariaLabel": "رنگ: سفید",
+                    "offsetLeft": 104,
+                    "offsetTop": 0,
+                    "offsetWidth": 62,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 127.640625,
+                      "y": 1607,
+                      "width": 61.875,
+                      "height": 34,
+                      "top": 1607,
+                      "right": 189.515625,
+                      "bottom": 1641,
+                      "left": 127.640625
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "Lavender",
+                    "ariaPressed": "false",
+                    "ariaLabel": "رنگ: Lavender",
+                    "offsetLeft": 11,
+                    "offsetTop": 0,
+                    "offsetWidth": 85,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 34.625,
+                      "y": 1607,
+                      "width": 85.015625,
+                      "height": 34,
+                      "top": 1607,
+                      "right": 119.640625,
+                      "bottom": 1641,
+                      "left": 34.625
+                    },
+                    "borderRadius": "999px"
+                  }
+                ]
+              }
+            ],
+            "ariaSnapshot": "- group \"نمای دیگر این محصول\":\n  - button \"نمای ۱ از ۳۰\" [pressed]\n  - button \"نمای ۲ از ۳۰\"\n  - button \"نمای ۳ از ۳۰\"\n  - button \"نمای ۴ از ۳۰\"\n  - button \"نمای ۵ از ۳۰\"\n  - button \"نمای ۶ از ۳۰\"\n  - button \"نمای ۷ از ۳۰\"\n  - button \"نمای ۸ از ۳۰\"\n  - button \"نمای ۹ از ۳۰\"\n  - button \"نمای ۱۰ از ۳۰\"\n  - button \"نمای ۱۱ از ۳۰\"\n  - button \"نمای ۱۲ از ۳۰\"\n  - button \"نمای ۱۳ از ۳۰\"\n  - button \"نمای ۱۴ از ۳۰\"\n  - button \"نمای ۱۵ از ۳۰\"\n  - button \"نمای ۱۶ از ۳۰\"\n  - button \"نمای ۱۷ از ۳۰\"\n  - button \"نمای ۱۸ از ۳۰\"\n  - button \"نمای ۱۹ از ۳۰\"\n  - button \"نمای ۲۰ از ۳۰\"\n  - button \"نمای ۲۱ از ۳۰\"\n  - button \"نمای ۲۲ از ۳۰\"\n  - button \"نمای ۲۳ از ۳۰\"\n  - button \"نمای ۲۴ از ۳۰\"\n  - button \"نمای ۲۵ از ۳۰\"\n  - button \"نمای ۲۶ از ۳۰\"\n  - button \"نمای ۲۷ از ۳۰\"\n  - button \"نمای ۲۸ از ۳۰\"\n  - button \"نمای ۲۹ از ۳۰\"\n  - button \"نمای ۳۰ از ۳۰\"\n- text: ۱ / ۳۰"
+          }
+        }
+      },
+      "1280": {
+        "viewport": {
+          "name": "1280",
+          "width": 1280,
+          "height": 800
+        },
+        "hydration": {
+          "reactFiberPresent": false,
+          "bodyChildren": 110
+        },
+        "surfaces": {
+          "gallery": {
+            "present": true,
+            "groupClass": "liquid-selection_group__RHDbb !gap-2",
+            "group": {
+              "rect": {
+                "x": 660,
+                "y": 800,
+                "width": 596,
+                "height": 280,
+                "top": 800,
+                "right": 1256,
+                "bottom": 1080,
+                "left": 660
+              },
+              "display": "flex",
+              "flexWrap": "wrap",
+              "gap": "8px",
+              "alignItems": "stretch"
+            },
+            "counterText": "۱ / ۳۰",
+            "items": [
+              {
+                "ariaPressed": "true",
+                "ariaLabel": "نمای ۱ از ۳۰",
+                "offsetLeft": 532,
+                "offsetTop": 0,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 1192,
+                  "y": 800,
+                  "width": 64,
+                  "height": 64,
+                  "top": 800,
+                  "right": 1256,
+                  "bottom": 864,
+                  "left": 1192
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲ از ۳۰",
+                "offsetLeft": 460,
+                "offsetTop": 0,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 1120,
+                  "y": 800,
+                  "width": 64,
+                  "height": 64,
+                  "top": 800,
+                  "right": 1184,
+                  "bottom": 864,
+                  "left": 1120
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۳ از ۳۰",
+                "offsetLeft": 388,
+                "offsetTop": 0,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 1048,
+                  "y": 800,
+                  "width": 64,
+                  "height": 64,
+                  "top": 800,
+                  "right": 1112,
+                  "bottom": 864,
+                  "left": 1048
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۴ از ۳۰",
+                "offsetLeft": 316,
+                "offsetTop": 0,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 976,
+                  "y": 800,
+                  "width": 64,
+                  "height": 64,
+                  "top": 800,
+                  "right": 1040,
+                  "bottom": 864,
+                  "left": 976
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۵ از ۳۰",
+                "offsetLeft": 244,
+                "offsetTop": 0,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 904,
+                  "y": 800,
+                  "width": 64,
+                  "height": 64,
+                  "top": 800,
+                  "right": 968,
+                  "bottom": 864,
+                  "left": 904
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۶ از ۳۰",
+                "offsetLeft": 172,
+                "offsetTop": 0,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 832,
+                  "y": 800,
+                  "width": 64,
+                  "height": 64,
+                  "top": 800,
+                  "right": 896,
+                  "bottom": 864,
+                  "left": 832
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۷ از ۳۰",
+                "offsetLeft": 100,
+                "offsetTop": 0,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 760,
+                  "y": 800,
+                  "width": 64,
+                  "height": 64,
+                  "top": 800,
+                  "right": 824,
+                  "bottom": 864,
+                  "left": 760
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۸ از ۳۰",
+                "offsetLeft": 28,
+                "offsetTop": 0,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 688,
+                  "y": 800,
+                  "width": 64,
+                  "height": 64,
+                  "top": 800,
+                  "right": 752,
+                  "bottom": 864,
+                  "left": 688
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۹ از ۳۰",
+                "offsetLeft": 532,
+                "offsetTop": 72,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 1192,
+                  "y": 872,
+                  "width": 64,
+                  "height": 64,
+                  "top": 872,
+                  "right": 1256,
+                  "bottom": 936,
+                  "left": 1192
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۰ از ۳۰",
+                "offsetLeft": 460,
+                "offsetTop": 72,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 1120,
+                  "y": 872,
+                  "width": 64,
+                  "height": 64,
+                  "top": 872,
+                  "right": 1184,
+                  "bottom": 936,
+                  "left": 1120
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۱ از ۳۰",
+                "offsetLeft": 388,
+                "offsetTop": 72,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 1048,
+                  "y": 872,
+                  "width": 64,
+                  "height": 64,
+                  "top": 872,
+                  "right": 1112,
+                  "bottom": 936,
+                  "left": 1048
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۲ از ۳۰",
+                "offsetLeft": 316,
+                "offsetTop": 72,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 976,
+                  "y": 872,
+                  "width": 64,
+                  "height": 64,
+                  "top": 872,
+                  "right": 1040,
+                  "bottom": 936,
+                  "left": 976
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۳ از ۳۰",
+                "offsetLeft": 244,
+                "offsetTop": 72,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 904,
+                  "y": 872,
+                  "width": 64,
+                  "height": 64,
+                  "top": 872,
+                  "right": 968,
+                  "bottom": 936,
+                  "left": 904
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۴ از ۳۰",
+                "offsetLeft": 172,
+                "offsetTop": 72,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 832,
+                  "y": 872,
+                  "width": 64,
+                  "height": 64,
+                  "top": 872,
+                  "right": 896,
+                  "bottom": 936,
+                  "left": 832
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۵ از ۳۰",
+                "offsetLeft": 100,
+                "offsetTop": 72,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 760,
+                  "y": 872,
+                  "width": 64,
+                  "height": 64,
+                  "top": 872,
+                  "right": 824,
+                  "bottom": 936,
+                  "left": 760
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۶ از ۳۰",
+                "offsetLeft": 28,
+                "offsetTop": 72,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 688,
+                  "y": 872,
+                  "width": 64,
+                  "height": 64,
+                  "top": 872,
+                  "right": 752,
+                  "bottom": 936,
+                  "left": 688
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۷ از ۳۰",
+                "offsetLeft": 532,
+                "offsetTop": 144,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 1192,
+                  "y": 944,
+                  "width": 64,
+                  "height": 64,
+                  "top": 944,
+                  "right": 1256,
+                  "bottom": 1008,
+                  "left": 1192
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۸ از ۳۰",
+                "offsetLeft": 460,
+                "offsetTop": 144,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 1120,
+                  "y": 944,
+                  "width": 64,
+                  "height": 64,
+                  "top": 944,
+                  "right": 1184,
+                  "bottom": 1008,
+                  "left": 1120
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۱۹ از ۳۰",
+                "offsetLeft": 388,
+                "offsetTop": 144,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 1048,
+                  "y": 944,
+                  "width": 64,
+                  "height": 64,
+                  "top": 944,
+                  "right": 1112,
+                  "bottom": 1008,
+                  "left": 1048
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۰ از ۳۰",
+                "offsetLeft": 316,
+                "offsetTop": 144,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 976,
+                  "y": 944,
+                  "width": 64,
+                  "height": 64,
+                  "top": 944,
+                  "right": 1040,
+                  "bottom": 1008,
+                  "left": 976
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۱ از ۳۰",
+                "offsetLeft": 244,
+                "offsetTop": 144,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 904,
+                  "y": 944,
+                  "width": 64,
+                  "height": 64,
+                  "top": 944,
+                  "right": 968,
+                  "bottom": 1008,
+                  "left": 904
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۲ از ۳۰",
+                "offsetLeft": 172,
+                "offsetTop": 144,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 832,
+                  "y": 944,
+                  "width": 64,
+                  "height": 64,
+                  "top": 944,
+                  "right": 896,
+                  "bottom": 1008,
+                  "left": 832
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۳ از ۳۰",
+                "offsetLeft": 100,
+                "offsetTop": 144,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 760,
+                  "y": 944,
+                  "width": 64,
+                  "height": 64,
+                  "top": 944,
+                  "right": 824,
+                  "bottom": 1008,
+                  "left": 760
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۴ از ۳۰",
+                "offsetLeft": 28,
+                "offsetTop": 144,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 688,
+                  "y": 944,
+                  "width": 64,
+                  "height": 64,
+                  "top": 944,
+                  "right": 752,
+                  "bottom": 1008,
+                  "left": 688
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۵ از ۳۰",
+                "offsetLeft": 532,
+                "offsetTop": 216,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 1192,
+                  "y": 1016,
+                  "width": 64,
+                  "height": 64,
+                  "top": 1016,
+                  "right": 1256,
+                  "bottom": 1080,
+                  "left": 1192
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۶ از ۳۰",
+                "offsetLeft": 460,
+                "offsetTop": 216,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 1120,
+                  "y": 1016,
+                  "width": 64,
+                  "height": 64,
+                  "top": 1016,
+                  "right": 1184,
+                  "bottom": 1080,
+                  "left": 1120
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۷ از ۳۰",
+                "offsetLeft": 388,
+                "offsetTop": 216,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 1048,
+                  "y": 1016,
+                  "width": 64,
+                  "height": 64,
+                  "top": 1016,
+                  "right": 1112,
+                  "bottom": 1080,
+                  "left": 1048
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۸ از ۳۰",
+                "offsetLeft": 316,
+                "offsetTop": 216,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 976,
+                  "y": 1016,
+                  "width": 64,
+                  "height": 64,
+                  "top": 1016,
+                  "right": 1040,
+                  "bottom": 1080,
+                  "left": 976
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۲۹ از ۳۰",
+                "offsetLeft": 244,
+                "offsetTop": 216,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 904,
+                  "y": 1016,
+                  "width": 64,
+                  "height": 64,
+                  "top": 1016,
+                  "right": 968,
+                  "bottom": 1080,
+                  "left": 904
+                },
+                "borderRadius": "22px"
+              },
+              {
+                "ariaPressed": "false",
+                "ariaLabel": "نمای ۳۰ از ۳۰",
+                "offsetLeft": 172,
+                "offsetTop": 216,
+                "offsetWidth": 64,
+                "offsetHeight": 64,
+                "rect": {
+                  "x": 832,
+                  "y": 1016,
+                  "width": 64,
+                  "height": 64,
+                  "top": 1016,
+                  "right": 896,
+                  "bottom": 1080,
+                  "left": 832
+                },
+                "borderRadius": "22px"
+              }
+            ],
+            "ariaSnapshot": "- group \"نمای دیگر این محصول\":\n  - button \"نمای ۱ از ۳۰\" [pressed]\n  - button \"نمای ۲ از ۳۰\"\n  - button \"نمای ۳ از ۳۰\"\n  - button \"نمای ۴ از ۳۰\"\n  - button \"نمای ۵ از ۳۰\"\n  - button \"نمای ۶ از ۳۰\"\n  - button \"نمای ۷ از ۳۰\"\n  - button \"نمای ۸ از ۳۰\"\n  - button \"نمای ۹ از ۳۰\"\n  - button \"نمای ۱۰ از ۳۰\"\n  - button \"نمای ۱۱ از ۳۰\"\n  - button \"نمای ۱۲ از ۳۰\"\n  - button \"نمای ۱۳ از ۳۰\"\n  - button \"نمای ۱۴ از ۳۰\"\n  - button \"نمای ۱۵ از ۳۰\"\n  - button \"نمای ۱۶ از ۳۰\"\n  - button \"نمای ۱۷ از ۳۰\"\n  - button \"نمای ۱۸ از ۳۰\"\n  - button \"نمای ۱۹ از ۳۰\"\n  - button \"نمای ۲۰ از ۳۰\"\n  - button \"نمای ۲۱ از ۳۰\"\n  - button \"نمای ۲۲ از ۳۰\"\n  - button \"نمای ۲۳ از ۳۰\"\n  - button \"نمای ۲۴ از ۳۰\"\n  - button \"نمای ۲۵ از ۳۰\"\n  - button \"نمای ۲۶ از ۳۰\"\n  - button \"نمای ۲۷ از ۳۰\"\n  - button \"نمای ۲۸ از ۳۰\"\n  - button \"نمای ۲۹ از ۳۰\"\n  - button \"نمای ۳۰ از ۳۰\""
+          },
+          "variantChips": {
+            "present": true,
+            "groups": [
+              {
+                "label": "رنگ",
+                "groupClass": "liquid-selection_group__RHDbb !gap-2",
+                "group": {
+                  "rect": {
+                    "x": 24,
+                    "y": 556.5,
+                    "width": 596,
+                    "height": 34,
+                    "top": 556.5,
+                    "right": 620,
+                    "bottom": 590.5,
+                    "left": 24
+                  },
+                  "display": "flex",
+                  "flexWrap": "wrap",
+                  "gap": "8px"
+                },
+                "items": [
+                  {
+                    "text": "مشکی",
+                    "ariaPressed": "true",
+                    "ariaLabel": "رنگ: مشکی",
+                    "offsetLeft": 530,
+                    "offsetTop": 0,
+                    "offsetWidth": 66,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 553.828125,
+                      "y": 556.5,
+                      "width": 66.171875,
+                      "height": 34,
+                      "top": 556.5,
+                      "right": 620,
+                      "bottom": 590.5,
+                      "left": 553.828125
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "بنفش",
+                    "ariaPressed": "false",
+                    "ariaLabel": "رنگ: بنفش",
+                    "offsetLeft": 458,
+                    "offsetTop": 0,
+                    "offsetWidth": 64,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 481.515625,
+                      "y": 556.5,
+                      "width": 64.3125,
+                      "height": 34,
+                      "top": 556.5,
+                      "right": 545.828125,
+                      "bottom": 590.5,
+                      "left": 481.515625
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "سفید",
+                    "ariaPressed": "false",
+                    "ariaLabel": "رنگ: سفید",
+                    "offsetLeft": 388,
+                    "offsetTop": 0,
+                    "offsetWidth": 62,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 411.640625,
+                      "y": 556.5,
+                      "width": 61.875,
+                      "height": 34,
+                      "top": 556.5,
+                      "right": 473.515625,
+                      "bottom": 590.5,
+                      "left": 411.640625
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "Lavender",
+                    "ariaPressed": "false",
+                    "ariaLabel": "رنگ: Lavender",
+                    "offsetLeft": 295,
+                    "offsetTop": 0,
+                    "offsetWidth": 85,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 318.625,
+                      "y": 556.5,
+                      "width": 85.015625,
+                      "height": 34,
+                      "top": 556.5,
+                      "right": 403.640625,
+                      "bottom": 590.5,
+                      "left": 318.625
+                    },
+                    "borderRadius": "999px"
+                  }
+                ]
+              }
+            ],
+            "ariaSnapshot": "- group \"نمای دیگر این محصول\":\n  - button \"نمای ۱ از ۳۰\" [pressed]\n  - button \"نمای ۲ از ۳۰\"\n  - button \"نمای ۳ از ۳۰\"\n  - button \"نمای ۴ از ۳۰\"\n  - button \"نمای ۵ از ۳۰\"\n  - button \"نمای ۶ از ۳۰\"\n  - button \"نمای ۷ از ۳۰\"\n  - button \"نمای ۸ از ۳۰\"\n  - button \"نمای ۹ از ۳۰\"\n  - button \"نمای ۱۰ از ۳۰\"\n  - button \"نمای ۱۱ از ۳۰\"\n  - button \"نمای ۱۲ از ۳۰\"\n  - button \"نمای ۱۳ از ۳۰\"\n  - button \"نمای ۱۴ از ۳۰\"\n  - button \"نمای ۱۵ از ۳۰\"\n  - button \"نمای ۱۶ از ۳۰\"\n  - button \"نمای ۱۷ از ۳۰\"\n  - button \"نمای ۱۸ از ۳۰\"\n  - button \"نمای ۱۹ از ۳۰\"\n  - button \"نمای ۲۰ از ۳۰\"\n  - button \"نمای ۲۱ از ۳۰\"\n  - button \"نمای ۲۲ از ۳۰\"\n  - button \"نمای ۲۳ از ۳۰\"\n  - button \"نمای ۲۴ از ۳۰\"\n  - button \"نمای ۲۵ از ۳۰\"\n  - button \"نمای ۲۶ از ۳۰\"\n  - button \"نمای ۲۷ از ۳۰\"\n  - button \"نمای ۲۸ از ۳۰\"\n  - button \"نمای ۲۹ از ۳۰\"\n  - button \"نمای ۳۰ از ۳۰\"\n- text: ۱ / ۳۰"
+          }
+        }
+      }
+    },
+    "productThreeGroups": {
+      "360": {
+        "viewport": {
+          "name": "360",
+          "width": 360,
+          "height": 740
+        },
+        "hydration": {
+          "reactFiberPresent": false,
+          "bodyChildren": 41
+        },
+        "surfaces": {
+          "gallery": {
+            "present": false
+          },
+          "variantChips": {
+            "present": true,
+            "groups": [
+              {
+                "label": "دامنه",
+                "groupClass": "liquid-selection_group__RHDbb !gap-2",
+                "group": {
+                  "rect": {
+                    "x": 24,
+                    "y": 834,
+                    "width": 312,
+                    "height": 34,
+                    "top": 834,
+                    "right": 336,
+                    "bottom": 868,
+                    "left": 24
+                  },
+                  "display": "flex",
+                  "flexWrap": "wrap",
+                  "gap": "8px"
+                },
+                "items": [
+                  {
+                    "text": "جیمیل",
+                    "ariaPressed": "true",
+                    "ariaLabel": "دامنه: جیمیل",
+                    "offsetLeft": 243,
+                    "offsetTop": 0,
+                    "offsetWidth": 69,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 267.4375,
+                      "y": 834,
+                      "width": 68.5625,
+                      "height": 34,
+                      "top": 834,
+                      "right": 336,
+                      "bottom": 868,
+                      "left": 267.4375
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "هاتمیل",
+                    "ariaPressed": "false",
+                    "ariaLabel": "دامنه: هاتمیل",
+                    "offsetLeft": 164,
+                    "offsetTop": 0,
+                    "offsetWidth": 71,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 188.296875,
+                      "y": 834,
+                      "width": 71.140625,
+                      "height": 34,
+                      "top": 834,
+                      "right": 259.4375,
+                      "bottom": 868,
+                      "left": 188.296875
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "آنلاین",
+                    "ariaPressed": "false",
+                    "ariaLabel": "دامنه: آنلاین",
+                    "offsetLeft": 92,
+                    "offsetTop": 0,
+                    "offsetWidth": 64,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 116.421875,
+                      "y": 834,
+                      "width": 63.875,
+                      "height": 34,
+                      "top": 834,
+                      "right": 180.296875,
+                      "bottom": 868,
+                      "left": 116.421875
+                    },
+                    "borderRadius": "999px"
+                  }
+                ]
+              },
+              {
+                "label": "سرور",
+                "groupClass": "liquid-selection_group__RHDbb !gap-2",
+                "group": {
+                  "rect": {
+                    "x": 24,
+                    "y": 908,
+                    "width": 312,
+                    "height": 34,
+                    "top": 908,
+                    "right": 336,
+                    "bottom": 942,
+                    "left": 24
+                  },
+                  "display": "flex",
+                  "flexWrap": "wrap",
+                  "gap": "8px"
+                },
+                "items": [
+                  {
+                    "text": "2015",
+                    "ariaPressed": "true",
+                    "ariaLabel": "سرور: 2015",
+                    "offsetLeft": 251,
+                    "offsetTop": 0,
+                    "offsetWidth": 61,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 274.953125,
+                      "y": 908,
+                      "width": 61.046875,
+                      "height": 34,
+                      "top": 908,
+                      "right": 336,
+                      "bottom": 942,
+                      "left": 274.953125
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "2025",
+                    "ariaPressed": "false",
+                    "ariaLabel": "سرور: 2025",
+                    "offsetLeft": 180,
+                    "offsetTop": 0,
+                    "offsetWidth": 62,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 204.46875,
+                      "y": 908,
+                      "width": 62.484375,
+                      "height": 34,
+                      "top": 908,
+                      "right": 266.953125,
+                      "bottom": 942,
+                      "left": 204.46875
+                    },
+                    "borderRadius": "999px"
+                  }
+                ]
+              },
+              {
+                "label": "نوع",
+                "groupClass": "liquid-selection_group__RHDbb !gap-2",
+                "group": {
+                  "rect": {
+                    "x": 24,
+                    "y": 982,
+                    "width": 312,
+                    "height": 76,
+                    "top": 982,
+                    "right": 336,
+                    "bottom": 1058,
+                    "left": 24
+                  },
+                  "display": "flex",
+                  "flexWrap": "wrap",
+                  "gap": "8px"
+                },
+                "items": [
+                  {
+                    "text": "فقط اپ استور",
+                    "ariaPressed": "true",
+                    "ariaLabel": "نوع: فقط اپ استور",
+                    "offsetLeft": 210,
+                    "offsetTop": 0,
+                    "offsetWidth": 102,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 233.75,
+                      "y": 982,
+                      "width": 102.25,
+                      "height": 34,
+                      "top": 982,
+                      "right": 336,
+                      "bottom": 1016,
+                      "left": 233.75
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "اپ استور + آیکلود",
+                    "ariaPressed": "false",
+                    "ariaLabel": "نوع: اپ استور + آیکلود",
+                    "offsetLeft": 82,
+                    "offsetTop": 0,
+                    "offsetWidth": 120,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 106,
+                      "y": 982,
+                      "width": 119.75,
+                      "height": 34,
+                      "top": 982,
+                      "right": 225.75,
+                      "bottom": 1016,
+                      "left": 106
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "اپ استور + آیکلود + شماره",
+                    "ariaPressed": "false",
+                    "ariaLabel": "نوع: اپ استور + آیکلود + شماره",
+                    "offsetLeft": 150,
+                    "offsetTop": 42,
+                    "offsetWidth": 162,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 174.328125,
+                      "y": 1024,
+                      "width": 161.671875,
+                      "height": 34,
+                      "top": 1024,
+                      "right": 336,
+                      "bottom": 1058,
+                      "left": 174.328125
+                    },
+                    "borderRadius": "999px"
+                  }
+                ]
+              }
+            ],
+            "ariaSnapshot": null
+          }
+        }
+      },
+      "1280": {
+        "viewport": {
+          "name": "1280",
+          "width": 1280,
+          "height": 800
+        },
+        "hydration": {
+          "reactFiberPresent": false,
+          "bodyChildren": 41
+        },
+        "surfaces": {
+          "gallery": {
+            "present": false
+          },
+          "variantChips": {
+            "present": true,
+            "groups": [
+              {
+                "label": "دامنه",
+                "groupClass": "liquid-selection_group__RHDbb !gap-2",
+                "group": {
+                  "rect": {
+                    "x": 24,
+                    "y": 484.5,
+                    "width": 596,
+                    "height": 34,
+                    "top": 484.5,
+                    "right": 620,
+                    "bottom": 518.5,
+                    "left": 24
+                  },
+                  "display": "flex",
+                  "flexWrap": "wrap",
+                  "gap": "8px"
+                },
+                "items": [
+                  {
+                    "text": "جیمیل",
+                    "ariaPressed": "true",
+                    "ariaLabel": "دامنه: جیمیل",
+                    "offsetLeft": 527,
+                    "offsetTop": 0,
+                    "offsetWidth": 69,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 551.4375,
+                      "y": 484.5,
+                      "width": 68.5625,
+                      "height": 34,
+                      "top": 484.5,
+                      "right": 620,
+                      "bottom": 518.5,
+                      "left": 551.4375
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "هاتمیل",
+                    "ariaPressed": "false",
+                    "ariaLabel": "دامنه: هاتمیل",
+                    "offsetLeft": 448,
+                    "offsetTop": 0,
+                    "offsetWidth": 71,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 472.296875,
+                      "y": 484.5,
+                      "width": 71.140625,
+                      "height": 34,
+                      "top": 484.5,
+                      "right": 543.4375,
+                      "bottom": 518.5,
+                      "left": 472.296875
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "آنلاین",
+                    "ariaPressed": "false",
+                    "ariaLabel": "دامنه: آنلاین",
+                    "offsetLeft": 376,
+                    "offsetTop": 0,
+                    "offsetWidth": 64,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 400.421875,
+                      "y": 484.5,
+                      "width": 63.875,
+                      "height": 34,
+                      "top": 484.5,
+                      "right": 464.296875,
+                      "bottom": 518.5,
+                      "left": 400.421875
+                    },
+                    "borderRadius": "999px"
+                  }
+                ]
+              },
+              {
+                "label": "سرور",
+                "groupClass": "liquid-selection_group__RHDbb !gap-2",
+                "group": {
+                  "rect": {
+                    "x": 24,
+                    "y": 558.5,
+                    "width": 596,
+                    "height": 34,
+                    "top": 558.5,
+                    "right": 620,
+                    "bottom": 592.5,
+                    "left": 24
+                  },
+                  "display": "flex",
+                  "flexWrap": "wrap",
+                  "gap": "8px"
+                },
+                "items": [
+                  {
+                    "text": "2015",
+                    "ariaPressed": "true",
+                    "ariaLabel": "سرور: 2015",
+                    "offsetLeft": 535,
+                    "offsetTop": 0,
+                    "offsetWidth": 61,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 558.953125,
+                      "y": 558.5,
+                      "width": 61.046875,
+                      "height": 34,
+                      "top": 558.5,
+                      "right": 620,
+                      "bottom": 592.5,
+                      "left": 558.953125
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "2025",
+                    "ariaPressed": "false",
+                    "ariaLabel": "سرور: 2025",
+                    "offsetLeft": 464,
+                    "offsetTop": 0,
+                    "offsetWidth": 62,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 488.46875,
+                      "y": 558.5,
+                      "width": 62.484375,
+                      "height": 34,
+                      "top": 558.5,
+                      "right": 550.953125,
+                      "bottom": 592.5,
+                      "left": 488.46875
+                    },
+                    "borderRadius": "999px"
+                  }
+                ]
+              },
+              {
+                "label": "نوع",
+                "groupClass": "liquid-selection_group__RHDbb !gap-2",
+                "group": {
+                  "rect": {
+                    "x": 24,
+                    "y": 632.5,
+                    "width": 596,
+                    "height": 34,
+                    "top": 632.5,
+                    "right": 620,
+                    "bottom": 666.5,
+                    "left": 24
+                  },
+                  "display": "flex",
+                  "flexWrap": "wrap",
+                  "gap": "8px"
+                },
+                "items": [
+                  {
+                    "text": "فقط اپ استور",
+                    "ariaPressed": "true",
+                    "ariaLabel": "نوع: فقط اپ استور",
+                    "offsetLeft": 494,
+                    "offsetTop": 0,
+                    "offsetWidth": 102,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 517.75,
+                      "y": 632.5,
+                      "width": 102.25,
+                      "height": 34,
+                      "top": 632.5,
+                      "right": 620,
+                      "bottom": 666.5,
+                      "left": 517.75
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "اپ استور + آیکلود",
+                    "ariaPressed": "false",
+                    "ariaLabel": "نوع: اپ استور + آیکلود",
+                    "offsetLeft": 366,
+                    "offsetTop": 0,
+                    "offsetWidth": 120,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 390,
+                      "y": 632.5,
+                      "width": 119.75,
+                      "height": 34,
+                      "top": 632.5,
+                      "right": 509.75,
+                      "bottom": 666.5,
+                      "left": 390
+                    },
+                    "borderRadius": "999px"
+                  },
+                  {
+                    "text": "اپ استور + آیکلود + شماره",
+                    "ariaPressed": "false",
+                    "ariaLabel": "نوع: اپ استور + آیکلود + شماره",
+                    "offsetLeft": 196,
+                    "offsetTop": 0,
+                    "offsetWidth": 162,
+                    "offsetHeight": 34,
+                    "rect": {
+                      "x": 220.328125,
+                      "y": 632.5,
+                      "width": 161.671875,
+                      "height": 34,
+                      "top": 632.5,
+                      "right": 382,
+                      "bottom": 666.5,
+                      "left": 220.328125
+                    },
+                    "borderRadius": "999px"
+                  }
+                ]
+              }
+            ],
+            "ariaSnapshot": null
+          }
+        }
+      }
+    }
+  }
+}

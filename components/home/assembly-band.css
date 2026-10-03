@@ -1,0 +1,71 @@
+/* Feature 007 — the closing band. One section, composed for 360 first, with a word-unit heading arrival.
+ *
+ * There is no pin here, and that is measured, not preferred: `.scratch/t027-out3.json` and
+ * specs/007-motion-assembly-band/notes/band-geometry-measured.md show the sticky shell's content was
+ * 2,345px against a 2,400px track — 54.6px of real travel, a pin from y=96 to y=150 — while
+ * `animation-range` believed it had 1,600px. The scrub never advanced (all 111 sampled positions held the
+ * same transform), and the phone number sat at document y≈2229, off screen the entire time. The static
+ * composition is already 20.8% shorter than the three sections it replaces, so the mechanism was buying
+ * nothing and costing FR-018.
+ */
+
+.assembly-band {
+  /* The persistent MobileDock is `fixed inset-x-3 bottom-3 … md:hidden`, measured at top 726 / bottom 788
+     in a 360×800 viewport — 62px tall with a 12px inset. Actions in flow need that strip back or the dock
+     parks on top of them, and no z-index inside this section can win: `.wrap` is `position: relative;
+     z-index: 2` (app/globals.css:174-177), which caps every descendant below the dock's z-40. */
+  --band-dock-clearance: 5.5rem;
+}
+
+@media (min-width: 768px) {
+  /* md:hidden — the dock is gone, so the reservation must go with it rather than leave dead space. */
+  .assembly-band {
+    --band-dock-clearance: 0rem;
+  }
+}
+
+/* The two actions that matter, in flow, at the end of the composition. Both are positionally fixed because
+   nothing here animates them (FR-018). */
+.assembly-band__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding-block-end: var(--band-dock-clearance);
+}
+
+/* Heading arrival (HeadingArrival.tsx): word units only — Persian letters change shape by joining, so the
+   unit is the word and never the letter (FR-002). Opacity, translate and blur only; no letter-spacing, and
+   the spaces between the words stay as text so line breaking is unchanged. */
+.heading-arrival__word {
+  display: inline-block;
+  transition:
+    opacity 550ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    translate 550ms cubic-bezier(0.2, 0.7, 0.3, 1),
+    filter 550ms cubic-bezier(0.2, 0.7, 0.3, 1);
+}
+
+.heading-arrival--armed .heading-arrival__word {
+  opacity: 0;
+  translate: 0 0.5em;
+  filter: blur(6px);
+}
+
+.heading-arrival--settled .heading-arrival__word {
+  opacity: 1;
+  translate: 0 0;
+  filter: blur(0);
+}
+
+/* Reduced motion and print both have to clear the ARRIVED state, not just the timing: the hidden words live
+   in `.heading-arrival--armed` above, so neutralising the transition alone would leave a heading that never
+   became visible (FR-013, and the defect the 2026-09-25 review caught in the old print block). */
+@media (prefers-reduced-motion: reduce), print {
+  .heading-arrival__word {
+    transition: none;
+    opacity: 1;
+    translate: none;
+    filter: none;
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "schemaVersion": 1,
+  "targets": {
+    "site-header": {
+      "targetKind": "existing-ui",
+      "projectId": "3bef60da-7023-4048-b3c5-46f284d8f2d7",
+      "baselineDraftId": "d8cb4fd1-9d4b-4e6d-81e9-5fed33f10247",
+      "activeDraftId": "702e98f6-0e87-4ad5-ac35-bbeb04348123",
+      "designSystemPath": ".superdesign/design-system.md",
+      "referenceIds": [
+        "public-brand-hami-mark.png"
+      ],
+      "brandAssets": {
+        "logo": {
+          "assetKey": "public-brand-hami-mark.png",
+          "url": "https://vgbujcuwptvheqijyjbe.supabase.co/storage/v1/object/public/hmac-uploads/projects/3bef60da-7023-4048-b3c5-46f284d8f2d7/brand-assets/public-brand-hami-mark.png/hami-mark.png",
+          "sourcePath": "public/brand/hami-mark.png"
+        }
+      },
+      "contextFiles": [
+        ".superdesign/design-system.md",
+        "components/layout/Header.tsx",
+        "components/layout/MobileNav.tsx",
+        "components/layout/CartButton.tsx",
+        "components/layout/UserMenu.tsx",
+        "components/ui/input.tsx",
+        "components/ui/button.tsx",
+        "lib/utils.ts",
+        "lib/content/home.ts",
+        "tailwind.config.ts",
+        "app/globals.css"
+      ],
+      "fingerprints": {
+        ".superdesign/design-system.md": "16675497b554598ebe7c7747c6c3d1d38e17ed2eef0b62842fee080663033198",
+        "components/layout/Header.tsx": "dc47fc1f89083e30eaca2d8cd64710f4e1cf6a4b180420476d86b8eb36ddc5ff",
+        "components/layout/MobileNav.tsx": "7a8347e6e30742b06f6c2316cbc04b5d2ff4f5d8475df34063af7c9d4cab3549",
+        "components/layout/CartButton.tsx": "61ad8f71a4173fa248c28490267f752412e9a6845fbb1866c29a5c0d24ad8ad4",
+        "components/layout/UserMenu.tsx": "f7e1ea703accea7deb466d8fcdfd55406ca544b1f36a7ca759436be8ca7df6f8",
+        "components/ui/input.tsx": "fbab0801d389ca80ba32e39697cbed227301990ad17f6b3d0ef1a009c0e5e528",
+        "components/ui/button.tsx": "c9f62eb54fff9c9315a91efca0e6d7bfc8998eb9d638394b935564385c509fec",
+        "lib/utils.ts": "b86319ab3ae271536f921e7f06c72cf5d2634f69559c351402dbde5be693db0d",
+        "lib/content/home.ts": "a7e55c53c7a62721eb5bce52eff1b419c75af63092943d42979d9eaf2a45c212",
+        "tailwind.config.ts": "f7816a880503f90dfe3c48f9700ad619a2b00cf91d78fc50e1d3946d725f0200",
+        "app/globals.css": "8b35357203651207ff55f1dd7b241832f48c44b1b1532b8e392f322e786c22d3"
+      },
+      "drafts": {
+        "d8cb4fd1-9d4b-4e6d-81e9-5fed33f10247": {
+          "title": "Current Navbar",
+          "visualDirection": "faithful reproduction of the shipped Aura header (baseline, no design change)",
+          "currentVersion": 1
+        },
+        "702e98f6-0e87-4ad5-ac35-bbeb04348123": {
+          "title": "Hami Hamrah Floating Midnight Glass Header",
+          "visualDirection": "floating glass island, midnight-blue/steel tint (#0F1830 / rgba(23,35,63,.75)), fixed on scroll with a tightened scrolled state; gold kept as the single accent; 4 nav links with a gold active underline; search promoted to md+",
+          "parentDraftId": "d8cb4fd1-9d4b-4e6d-81e9-5fed33f10247",
+          "currentVersion": 1
+        }
+      },
+      "updatedAt": "2026-09-06T13:38:58.997073+00:00"
+    }
+  }
+}

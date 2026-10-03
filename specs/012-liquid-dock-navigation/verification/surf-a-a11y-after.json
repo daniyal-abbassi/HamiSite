@@ -1,0 +1,286 @@
+{
+  "1280px": {
+    "pills": [
+      {
+        "tag": "a",
+        "role": "menuitem",
+        "text": "خانه",
+        "ariaLabel": "خانه",
+        "ariaCurrent": "page",
+        "ariaSelected": null,
+        "ariaPressed": null,
+        "ariaControls": null,
+        "ariaLabelledby": null,
+        "tabindex": null,
+        "href": "/"
+      },
+      {
+        "tag": "a",
+        "role": "menuitem",
+        "text": "فروشگاه",
+        "ariaLabel": "فروشگاه",
+        "ariaCurrent": null,
+        "ariaSelected": null,
+        "ariaPressed": null,
+        "ariaControls": null,
+        "ariaLabelledby": null,
+        "tabindex": null,
+        "href": "/shop"
+      },
+      {
+        "tag": "a",
+        "role": "menuitem",
+        "text": "همکاری عمده",
+        "ariaLabel": "همکاری عمده",
+        "ariaCurrent": null,
+        "ariaSelected": null,
+        "ariaPressed": null,
+        "ariaControls": null,
+        "ariaLabelledby": null,
+        "tabindex": null,
+        "href": "/partners"
+      }
+    ],
+    "pillNavRoles": [
+      {
+        "role": "menubar",
+        "text": "خانه فروشگاه همکاری عمده"
+      },
+      {
+        "role": "menuitem",
+        "text": "خانه"
+      },
+      {
+        "role": "menuitem",
+        "text": "فروشگاه"
+      },
+      {
+        "role": "menuitem",
+        "text": "همکاری عمده"
+      }
+    ],
+    "tablist": [
+      {
+        "tag": "div",
+        "role": "tablist",
+        "text": "جدیدترین‌ها پیشنهاد ویژه",
+        "ariaLabel": "فیلتر محصولات منتخب",
+        "ariaCurrent": null,
+        "ariaSelected": null,
+        "ariaPressed": null,
+        "ariaControls": null,
+        "ariaLabelledby": null,
+        "tabindex": null,
+        "children": [
+          {
+            "tag": "button",
+            "role": "tab",
+            "text": "جدیدترین‌ها",
+            "ariaLabel": null,
+            "ariaCurrent": null,
+            "ariaSelected": "true",
+            "ariaPressed": null,
+            "ariaControls": "featured-panel",
+            "ariaLabelledby": null,
+            "tabindex": "0",
+            "id": "featured-tab-newest"
+          },
+          {
+            "tag": "button",
+            "role": "tab",
+            "text": "پیشنهاد ویژه",
+            "ariaLabel": null,
+            "ariaCurrent": null,
+            "ariaSelected": "false",
+            "ariaPressed": null,
+            "ariaControls": "featured-panel",
+            "ariaLabelledby": null,
+            "tabindex": "-1",
+            "id": "featured-tab-special"
+          }
+        ]
+      }
+    ],
+    "tabpanels": [
+      {
+        "tag": "div",
+        "role": "tabpanel",
+        "text": "تی سی اچ TCH Boom Trap L30 هدفون بلوتوثی تی سی اچ ناموجود −۱۸٪ گارانتی ۱۸ ماهه شرکتی ۲٬۵۰۰٬۰۰۰ تومان ۲٬۰۵۰٬۰۰۰ تومان شیائومی Redmi A5 گوشی موبایل شیائومی دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت - ناموجود −۲٪ گارانتی ۱۸ ماهه شرکتی ۴۱٬۵۰۰٬۰۰۰ تومان ۴۰٬۴۸۰٬۰۰۰ تومان شیائومی Redmi 15 4G گوشی موبایل شیائومی دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت - باتری ۷۰۰۰ ناموجود −۱٪ گارانتی ۱۸ ماهه شرکتی ۶۲٬۵۰۰٬۰۰۰ تومان ۶۱٬۷۸۰٬۰۰۰ تومان شیائومی Poco C85 گوشی موبایل شیائومی دو سیم کارت ظرفیت 256 گیگابایت و رم 8 گیگابایت ناموجود −۳٪ گارانتی ۱۸ ماهه شرکتی ۵۶٬۵۰۰٬۰۰۰ تومان ۵۴٬۸۸۰٬۰۰۰ تومان شیائومی Poco C71 گوشی موبایل شیائومی دو سیم کارت ظرفیت 128 گیگابایت و رم 4 گیگابایت ناموجود −۳٪ گارانتی ۱۸ ماهه شرکتی ۴۳٬۵۰۰٬۰۰۰ تومان ۴۲٬۲۸۰٬۰۰۰ تومان سامسونگ Galaxy A56 گوشی موبایل سامسونگ دو سیم کارت ظرفیت 128 گیگابایت و رم 8 گیگابایت - ویتنام ناموجود −۲٪ گارانتی ۱۸ ماهه شرکتی ۱۰۲٬۵۰۰٬۰۰۰ تومان ۱۰۰٬۰۰۰٬۰۰۰ تومان",
+        "ariaLabel": null,
+        "ariaCurrent": null,
+        "ariaSelected": null,
+        "ariaPressed": null,
+        "ariaControls": null,
+        "ariaLabelledby": "featured-tab-newest",
+        "tabindex": "0",
+        "id": "featured-panel"
+      }
+    ],
+    "markers": [
+      {
+        "className": "liquid-selection_marker__8Mki9",
+        "style": null,
+        "offsetParent": "set",
+        "rect": {
+          "x": 806,
+          "y": 33,
+          "w": 0,
+          "h": 48
+        }
+      },
+      {
+        "className": "liquid-selection_marker__8Mki9",
+        "style": "left:80%;width:20%",
+        "offsetParent": "null",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      }
+    ]
+  },
+  "360px": {
+    "pills": [
+      {
+        "tag": "a",
+        "role": "menuitem",
+        "text": "خانه",
+        "ariaLabel": "خانه",
+        "ariaCurrent": "page",
+        "ariaSelected": null,
+        "ariaPressed": null,
+        "ariaControls": null,
+        "ariaLabelledby": null,
+        "tabindex": null,
+        "href": "/"
+      },
+      {
+        "tag": "a",
+        "role": "menuitem",
+        "text": "فروشگاه",
+        "ariaLabel": "فروشگاه",
+        "ariaCurrent": null,
+        "ariaSelected": null,
+        "ariaPressed": null,
+        "ariaControls": null,
+        "ariaLabelledby": null,
+        "tabindex": null,
+        "href": "/shop"
+      },
+      {
+        "tag": "a",
+        "role": "menuitem",
+        "text": "همکاری عمده",
+        "ariaLabel": "همکاری عمده",
+        "ariaCurrent": null,
+        "ariaSelected": null,
+        "ariaPressed": null,
+        "ariaControls": null,
+        "ariaLabelledby": null,
+        "tabindex": null,
+        "href": "/partners"
+      }
+    ],
+    "pillNavRoles": [
+      {
+        "role": "menubar",
+        "text": "خانهفروشگاههمکاری عمده"
+      },
+      {
+        "role": "menuitem",
+        "text": "خانه"
+      },
+      {
+        "role": "menuitem",
+        "text": "فروشگاه"
+      },
+      {
+        "role": "menuitem",
+        "text": "همکاری عمده"
+      }
+    ],
+    "tablist": [
+      {
+        "tag": "div",
+        "role": "tablist",
+        "text": "جدیدترین‌ها پیشنهاد ویژه",
+        "ariaLabel": "فیلتر محصولات منتخب",
+        "ariaCurrent": null,
+        "ariaSelected": null,
+        "ariaPressed": null,
+        "ariaControls": null,
+        "ariaLabelledby": null,
+        "tabindex": null,
+        "children": [
+          {
+            "tag": "button",
+            "role": "tab",
+            "text": "جدیدترین‌ها",
+            "ariaLabel": null,
+            "ariaCurrent": null,
+            "ariaSelected": "true",
+            "ariaPressed": null,
+            "ariaControls": "featured-panel",
+            "ariaLabelledby": null,
+            "tabindex": "0",
+            "id": "featured-tab-newest"
+          },
+          {
+            "tag": "button",
+            "role": "tab",
+            "text": "پیشنهاد ویژه",
+            "ariaLabel": null,
+            "ariaCurrent": null,
+            "ariaSelected": "false",
+            "ariaPressed": null,
+            "ariaControls": "featured-panel",
+            "ariaLabelledby": null,
+            "tabindex": "-1",
+            "id": "featured-tab-special"
+          }
+        ]
+      }
+    ],
+    "tabpanels": [
+      {
+        "tag": "div",
+        "role": "tabpanel",
+        "text": "تی سی اچ TCH Boom Trap L30 هدفون بلوتوثی تی سی اچ ناموجود −۱۸٪ ۲٬۵۰۰٬۰۰۰ تومان ۲٬۰۵۰٬۰۰۰ تومان شیائومی Redmi A5 گوشی موبایل شیائومی ناموجود −۲٪ ۴۱٬۵۰۰٬۰۰۰ تومان ۴۰٬۴۸۰٬۰۰۰ تومان شیائومی Redmi 15 4G گوشی موبایل شیائومی ناموجود −۱٪ ۶۲٬۵۰۰٬۰۰۰ تومان ۶۱٬۷۸۰٬۰۰۰ تومان شیائومی Poco C85 گوشی موبایل شیائومی ناموجود −۳٪ ۵۶٬۵۰۰٬۰۰۰ تومان ۵۴٬۸۸۰٬۰۰۰ تومان شیائومی Poco C71 گوشی موبایل شیائومی ناموجود −۳٪ ۴۳٬۵۰۰٬۰۰۰ تومان ۴۲٬۲۸۰٬۰۰۰ تومان سامسونگ Galaxy A56 گوشی موبایل سامسونگ ناموجود −۲٪ ۱۰۲٬۵۰۰٬۰۰۰ تومان ۱۰۰٬۰۰۰٬۰۰۰ تومان",
+        "ariaLabel": null,
+        "ariaCurrent": null,
+        "ariaSelected": null,
+        "ariaPressed": null,
+        "ariaControls": null,
+        "ariaLabelledby": "featured-tab-newest",
+        "tabindex": "0",
+        "id": "featured-panel"
+      }
+    ],
+    "markers": [
+      {
+        "className": "liquid-selection_marker__8Mki9",
+        "style": null,
+        "offsetParent": "null",
+        "rect": {
+          "x": 0,
+          "y": 0,
+          "w": 0,
+          "h": 0
+        }
+      },
+      {
+        "className": "liquid-selection_marker__8Mki9",
+        "style": "left:80%;width:20%",
+        "offsetParent": "set",
+        "rect": {
+          "x": 280,
+          "y": 833,
+          "w": 67,
+          "h": 48
+        }
+      }
+    ]
+  }
+}

@@ -3,19 +3,39 @@
 import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ChevronLeft, ChevronRight, LayoutGrid, List, PackageSearch } from "lucide-react";
+import { ChevronLeft, ChevronRight, LayoutGrid, List, PackageSearch, X } from "lucide-react";
 import { Skeleton } from "@/components/ui/skeleton";
+import { LiquidSelection } from "@/components/liquid/LiquidSelection";
 import { cn, toFaDigits } from "@/lib/utils";
 import { sortOptions } from "@/lib/content/shop";
-import { ProductCard } from "./ProductCard";
+import { ProductCard, type CardVariant } from "./ProductCard";
 import { ProductListRow } from "./ProductListRow";
 import type { ShopMeta, ShopProduct } from "./types";
 
 type ShopResultsProps = {
+  cardVariant?: CardVariant;
   products: ShopProduct[] | null;
   meta: ShopMeta | null;
-  error: boolean;
+  /** No longer set by the listing: the products arrive rendered from the
+     server, so there is no client fetch left that could fail. Optional so the
+     the error branch that used to sit here is deleted: since band 1 the listing is
+     rendered on the server, so a failed read is the route's error boundary, not a
+     prop — and the «تلاش دوباره» it rendered linked back to the page it was on. */
   activeSort: string;
+  /**
+   * Filters currently applied, already labelled. FR-026 requires them "visible as
+   * removable controls" — and below `lg` the filter panel is a closed sheet, so
+   * without this row a phone shopper can neither see nor lift what is narrowing
+   * their results. `audits/02` measured zero elements outside `<aside>` carrying
+   * the active label at 360px.
+   */
+  activeFilters?: { key: string; label: string }[];
+  /**
+   * A brand or category slug that matched nothing in the catalogue. Distinct from an
+   * empty result set on purpose: "we don't carry that" and "nothing matches your
+   * filters" are different facts, and conflating them is how a broken link survives.
+   */
+  unknownFilter?: string | null;
 };
 
 function pageWindow(page: number, totalPages: number): number[] {
@@ -26,7 +46,14 @@ function pageWindow(page: number, totalPages: number): number[] {
   return Array.from({ length: end - start + 1 }, (_, index) => start + index);
 }
 
-export function ShopResults({ products, meta, error, activeSort }: ShopResultsProps) {
+export function ShopResults({
+  products,
+  cardVariant = "obsidian",
+  meta,
+  activeSort,
+  unknownFilter = null,
+  activeFilters = [],
+}: ShopResultsProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -49,15 +76,51 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
     else params.delete("sort");
     params.delete("page");
     const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname);
+    router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+  }
+
+  function removeFilter(key: string) {
+    const params = new URLSearchParams(searchParams.toString());
+    params.delete(key);
+    params.delete("page");
+    const queryString = params.toString();
+    router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+  }
+
+  function clearAllFilters() {
+    router.push(pathname, { scroll: false });
   }
 
   return (
-    <div className="min-w-0 flex-1">
+    <div className="shop-results min-w-0 flex-1">
+      {activeFilters.length > 0 && (
+        <div className="mb-3 flex flex-wrap items-center gap-2" role="group" aria-label="فیلترهای فعال">
+          {activeFilters.map((filter) => (
+            <button
+              key={`${filter.key}-${filter.label}`}
+              type="button"
+              onClick={() => removeFilter(filter.key)}
+              className="inline-flex items-center gap-1.5 rounded-full border border-champagne/30 bg-champagne/10 px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-champagne/60"
+            >
+              {filter.label}
+              <X className="size-3.5" aria-hidden="true" />
+              <span className="sr-only">حذف فیلتر {filter.label}</span>
+            </button>
+          ))}
+          <button
+            type="button"
+            onClick={clearAllFilters}
+            className="text-xs font-bold text-aqua underline-offset-4 hover:underline"
+          >
+            حذف همه فیلترها
+          </button>
+        </div>
+      )}
+
       {/* Toolbar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl glass px-4 py-3">
+      <div className="shop-results-toolbar flex flex-wrap items-center justify-between gap-3 rounded-xl glass px-4 py-3">
         <p className="text-xs text-foreground/60" aria-live="polite">
-          {error ? "—" : products === null ? "در حال بارگذاری…" : `${toFaDigits(meta?.total ?? products.length)} محصول`}
+          {unknownFilter ? "—" : products === null ? "در حال بارگذاری…" : `${toFaDigits(meta?.total ?? products.length)} محصول`}
         </p>
         <div className="flex items-center gap-2">
           <label className="sr-only" htmlFor="shop-sort">مرتب‌سازی</label>
@@ -65,7 +128,7 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
             id="shop-sort"
             value={activeSort}
             onChange={(event) => changeSort(event.target.value)}
-            className="rounded-xl border border-input bg-background/40 px-2.5 py-1.5 text-[11px] font-bold"
+            className="h-11 rounded-xl border border-input bg-background/40 px-3 py-0 text-xs font-bold md:h-9"
           >
             <option value="">مرتب‌سازی: پیش‌فرض</option>
             {sortOptions.map((option) => (
@@ -81,8 +144,8 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
               aria-label="نمایش شبکه‌ای"
               onClick={() => setListView(false)}
               className={cn(
-                "grid size-8 place-items-center",
-                !listView ? "bg-gold/15 text-gold" : "text-foreground/50 hover:text-foreground",
+                "grid size-11 place-items-center",
+                !listView ? "bg-aqua/15 text-aqua" : "text-foreground/50 hover:text-foreground",
               )}
             >
               <LayoutGrid className="size-4" />
@@ -93,8 +156,8 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
               aria-label="نمایش فهرستی"
               onClick={() => setListView(true)}
               className={cn(
-                "grid size-8 place-items-center border-s border-line",
-                listView ? "bg-gold/15 text-gold" : "text-foreground/50 hover:text-foreground",
+                "grid size-11 place-items-center border-s border-line",
+                listView ? "bg-aqua/15 text-aqua" : "text-foreground/50 hover:text-foreground",
               )}
             >
               <List className="size-4" />
@@ -103,20 +166,21 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
         </div>
       </div>
 
-      {/* Error */}
-      {error && (
-        <div className="mt-6 rounded-xl glass p-10 text-center" role="status">
-          <b className="block font-extrabold">دریافت محصولات موقتاً ممکن نیست.</b>
-          <p className="mt-2 text-sm text-foreground/60">اتصال خود را بررسی کنید و دوباره تلاش کنید.</p>
-          <Link href="/shop" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-gold hover:underline">
-            تلاش دوباره
+      {/* Unrecognised brand or category — never an unfiltered catalogue */}
+      {unknownFilter && (
+        <div className="mt-6 rounded-xl glass p-12 text-center" role="status">
+          <PackageSearch className="mx-auto size-10 text-aqua/60" aria-hidden="true" />
+          <b className="mt-4 block font-extrabold">«{unknownFilter}» در برندها یا دسته‌بندی‌های ما پیدا نشد.</b>
+          <p className="mt-2 text-sm text-foreground/60">این پیوند ممکن است قدیمی باشد؛ فهرست کامل محصولات را ببینید.</p>
+          <Link href="/shop" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
+            مشاهده همه محصولات
           </Link>
         </div>
       )}
 
-      {/* Loading */}
-      {products === null && !error && (
-        <div className={cn("mt-6", listView ? "space-y-4" : "grid grid-cols-2 gap-5 xl:grid-cols-3")} aria-busy="true">
+      {/* Error */}
+      {!unknownFilter && products === null && (
+        <div className={cn("mt-6", listView ? "space-y-4" : "grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-2 2xl:grid-cols-3")} aria-busy="true">
           {Array.from({ length: 6 }).map((_, index) => (
             <div key={index} className="space-y-3">
               <Skeleton className="aspect-square w-full" />
@@ -128,67 +192,81 @@ export function ShopResults({ products, meta, error, activeSort }: ShopResultsPr
       )}
 
       {/* Empty */}
-      {products !== null && !error && products.length === 0 && (
+      {!unknownFilter && products !== null && products.length === 0 && (
         <div className="mt-6 rounded-xl glass p-12 text-center" role="status">
-          <PackageSearch className="mx-auto size-10 text-gold/60" aria-hidden="true" />
+          <PackageSearch className="mx-auto size-10 text-aqua/60" aria-hidden="true" />
           <b className="mt-4 block font-extrabold">محصولی با این فیلترها پیدا نشد.</b>
           <p className="mt-2 text-sm text-foreground/60">محدوده قیمت را تغییر دهید یا فیلترها را حذف کنید.</p>
-          <Link href="/shop" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-gold hover:underline">
+          <Link href="/shop" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
             حذف همه فیلترها
           </Link>
         </div>
       )}
 
       {/* Results + pagination */}
-      {products !== null && !error && products.length > 0 && (
+      {!unknownFilter && products !== null && products.length > 0 && (
         <>
           {listView ? (
-            <div className="mt-6 space-y-4">
+            <div className="shop-product-list mt-6 space-y-4">
               {products.map((product) => (
                 <ProductListRow key={product.id} product={product} />
               ))}
             </div>
           ) : (
-            <div className="mt-6 grid grid-cols-2 gap-5 xl:grid-cols-3">
+            /* Two-up on mobile, matching the home rails. This was the last
+               place still handing a phone one full-width card per row — on the
+               page whose entire job is browsing a 189-product catalogue, which
+               is where it hurt most. The compact card rules in the mobile block
+               of globals.css apply here unchanged, so the two surfaces cannot
+               drift apart. */
+            <div className="shop-product-grid mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-2 2xl:grid-cols-3">
               {products.map((product) => (
-                <ProductCard key={product.id} product={product} />
+                <ProductCard key={product.id} product={product} variant={cardVariant} frame="plinth" />
               ))}
             </div>
           )}
 
           {totalPages > 1 && (
-            <nav className="mt-10 flex items-center justify-center gap-1.5" aria-label="صفحه‌بندی محصولات">
+            <nav className="shop-pagination mt-10 flex items-center justify-center gap-1.5" aria-label="صفحه‌بندی محصولات">
               <button
                 type="button"
                 disabled={page <= 1}
                 onClick={() => goToPage(page - 1)}
                 aria-label="صفحه قبل"
-                className="grid size-9 place-items-center rounded-xl border border-line text-foreground/70 transition-colors hover:border-gold/50 disabled:opacity-30"
+                className="grid size-11 place-items-center rounded-xl border border-line text-foreground/70 transition-colors hover:border-aqua/50 disabled:opacity-30"
               >
                 <ChevronRight className="size-4" />
               </button>
-              {pageWindow(page, totalPages).map((target) => (
-                <button
-                  key={target}
-                  type="button"
-                  onClick={() => goToPage(target)}
-                  aria-current={target === page ? "page" : undefined}
-                  className={cn(
-                    "grid size-9 place-items-center rounded-xl border text-xs font-bold transition-colors",
-                    target === page
-                      ? "border-gold bg-gold/15 text-gold"
-                      : "border-line text-foreground/70 hover:border-gold/50",
-                  )}
-                >
-                  {toFaDigits(target)}
-                </button>
-              ))}
+              {/*
+                The page numbers are the marker's group; the two chevrons stay outside it,
+                because they are not answers to "which page am I on" — they are the control
+                that moves the page, and a marker resting on a stepper would claim a
+                destination that does not exist.
+
+                `announce="page"` is load-bearing: these are buttons, so the component's
+                default would be `aria-pressed`, and today's markup says `aria-current="page"`.
+                The active number's aqua fill is dropped for the same reason the dock's
+                per-tab background was: the marker is the one indication (FR-040), and a
+                tinted button would paint over the body that is supposed to be seen.
+              */}
+              <LiquidSelection
+                className="!gap-1.5 !flex-nowrap !min-w-0"
+                itemClassName="grid size-11 place-items-center !rounded-xl border border-line text-xs font-bold hover:border-aqua/50"
+                value={String(page)}
+                announce="page"
+                markerInset={6}
+                onChange={(id) => goToPage(Number(id))}
+                items={pageWindow(page, totalPages).map((target) => ({
+                  id: String(target),
+                  label: toFaDigits(target),
+                }))}
+              />
               <button
                 type="button"
                 disabled={page >= totalPages}
                 onClick={() => goToPage(page + 1)}
                 aria-label="صفحه بعد"
-                className="grid size-9 place-items-center rounded-xl border border-line text-foreground/70 transition-colors hover:border-gold/50 disabled:opacity-30"
+                className="grid size-11 place-items-center rounded-xl border border-line text-foreground/70 transition-colors hover:border-aqua/50 disabled:opacity-30"
               >
                 <ChevronLeft className="size-4" />
               </button>

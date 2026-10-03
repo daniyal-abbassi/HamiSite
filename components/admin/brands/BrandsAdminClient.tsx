@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Dialog } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { CatalogImageManager } from "@/components/admin/CatalogImageManager";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { apiDelete, apiGet, apiPatch, apiPost } from "@/lib/api-client";
 import type { AdminBrand, CreateBrandInput } from "@/types/admin";
@@ -24,7 +25,7 @@ export function BrandsAdminClient() {
 
   const load = useCallback(async () => {
     try {
-      setBrands(await apiGet<AdminBrand[]>("/api/brands"));
+      setBrands(await apiGet<AdminBrand[]>("/api/admin/brands"));
     } catch {
       setBrands([]);
     }
@@ -115,9 +116,7 @@ export function BrandsAdminClient() {
           {brands.map((brand) => (
             <div key={brand.id} className="flex items-center justify-between gap-3 rounded-xl border border-line bg-ink/40 px-4 py-3.5">
               <div className="flex min-w-0 items-center gap-2.5">
-                <span className="grid size-9 shrink-0 place-items-center rounded-lg bg-foreground/5">
-                  <Building2 className="size-4 text-gold" />
-                </span>
+                {brand.imageUrl ? <img src={brand.imageUrl} alt={brand.imageAlt ?? ""} className="size-11 shrink-0 rounded-lg bg-ink-2 object-contain p-1" /> : <span className="grid size-11 shrink-0 place-items-center rounded-lg bg-foreground/5"><Building2 className="size-4 text-aqua" /></span>}
                 <div className="min-w-0">
                   <p className="truncate text-[13px] font-bold">{brand.name}</p>
                   <p className="truncate font-mono text-[10px] text-muted-foreground/60">{brand.slug}</p>
@@ -150,6 +149,10 @@ export function BrandsAdminClient() {
             <FieldLabel>آدرس تصویر (اختیاری)</FieldLabel>
             <Input value={form.imageUrl} onChange={(e) => setForm((prev) => ({ ...prev, imageUrl: e.target.value }))} className="h-10" dir="ltr" />
           </div>
+          <CatalogImageManager entity="brand" ownerId={editingId} imageUrl={form.imageUrl || null} onImageUrlChange={(imageUrl) => {
+            setForm((prev) => ({ ...prev, imageUrl: imageUrl ?? "" }));
+            if (editingId != null) setBrands((current) => current?.map((brand) => brand.id === editingId ? { ...brand, imageUrl } : brand) ?? current);
+          }} />
           <div>
             <FieldLabel>ترتیب نمایش</FieldLabel>
             <Input type="number" value={form.order} onChange={(e) => setForm((prev) => ({ ...prev, order: e.target.value }))} className="h-10" />

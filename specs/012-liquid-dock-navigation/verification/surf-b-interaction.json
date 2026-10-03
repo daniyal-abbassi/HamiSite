@@ -1,0 +1,297 @@
+{
+  "ranAt": "2026-09-28T02:00:55.733Z",
+  "checks": [
+    {
+      "name": "tiles 1280: exactly one marker, parked inside the group",
+      "pass": true,
+      "detail": "marker {\"x\":1067,\"y\":656,\"w\":183,\"h\":133} in group {\"x\":24,\"y\":650,\"w\":1232,\"h\":153}"
+    },
+    {
+      "name": "tiles 1280: active tile carries aria-current=true (as before)",
+      "pass": true,
+      "detail": "گوشی موبایل"
+    },
+    {
+      "name": "tiles 1280: marker rests under the active tile",
+      "pass": true,
+      "detail": "marker centre 1159 in tile [1061, 1256]"
+    },
+    {
+      "name": "tiles 1280: no per-tile active border survives (one border colour)",
+      "pass": true,
+      "detail": "rgba(229, 211, 179, 0.12)"
+    },
+    {
+      "name": "tiles 1280: accessible names identical to before",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "tiles 1280: with JS blocked the current tile is still marked",
+      "pass": true,
+      "detail": "گوشی موبایل bg=rgba(229, 211, 179, 0.16)"
+    },
+    {
+      "name": "tiles 1280: with JS blocked the marker paints nothing",
+      "pass": true,
+      "detail": "marker width=0px"
+    },
+    {
+      "name": "tiles 360: exactly one marker, parked inside the group",
+      "pass": true,
+      "detail": "marker {\"x\":230,\"y\":777.59375,\"w\":100,\"h\":136} in group {\"x\":24,\"y\":771.59375,\"w\":312,\"h\":156}"
+    },
+    {
+      "name": "tiles 360: active tile carries aria-current=true (as before)",
+      "pass": true,
+      "detail": "گوشی موبایل"
+    },
+    {
+      "name": "tiles 360: marker rests under the active tile",
+      "pass": true,
+      "detail": "marker centre 280 in tile [224, 336]"
+    },
+    {
+      "name": "tiles 360: no per-tile active border survives (one border colour)",
+      "pass": true,
+      "detail": "rgba(229, 211, 179, 0.12)"
+    },
+    {
+      "name": "tiles 360: accessible names identical to before",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "tiles 360: with JS blocked the current tile is still marked",
+      "pass": true,
+      "detail": "گوشی موبایل bg=rgba(229, 211, 179, 0.16)"
+    },
+    {
+      "name": "tiles 360: with JS blocked the marker paints nothing",
+      "pass": true,
+      "detail": "marker width=0px"
+    },
+    {
+      "name": "tiles 360: the row does NOT wrap (one line, overflow-x scrolls)",
+      "pass": true,
+      "detail": "rows=1 scrollW=732 clientW=312"
+    },
+    {
+      "name": "gallery 1280: thumbnails genuinely wrap onto more than one row",
+      "pass": true,
+      "detail": "4 rows: {\"800\":8,\"872\":8,\"944\":8,\"1016\":6}"
+    },
+    {
+      "name": "gallery 1280: trusted click moved the selection to the last thumb",
+      "pass": true,
+      "detail": "aria-pressed index=29, clicked=29"
+    },
+    {
+      "name": "gallery 1280: flight sampled in-page (62 samples), marker travelled",
+      "pass": true,
+      "detail": "16 distinct x, 6 distinct y, peak w=56 vs resting 56"
+    },
+    {
+      "name": "gallery 1280: corner path — the marker dropped to the target row before crossing",
+      "pass": true,
+      "detail": "y arrived at x=1196 (start 1196), final x=836"
+    },
+    {
+      "name": "gallery 1280: marker rests inside the group",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gallery 1280: marker rests inside the clicked slot",
+      "pass": true,
+      "detail": "marker {\"x\":836,\"y\":424,\"w\":56,\"h\":56} in slot {\"x\":832,\"y\":420,\"w\":64,\"h\":64}"
+    },
+    {
+      "name": "gallery 1280: no per-thumb active border survives",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gallery 1280: accessible names identical to before, exactly one pressed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gallery 1280: with JS blocked the current thumb is still marked",
+      "pass": true,
+      "detail": "نمای ۱ از ۳۰ bg=rgba(229, 211, 179, 0.16)"
+    },
+    {
+      "name": "gallery 1280: with JS blocked the marker paints nothing",
+      "pass": true,
+      "detail": "marker width=0px"
+    },
+    {
+      "name": "gallery 360: thumbnails genuinely wrap onto more than one row",
+      "pass": true,
+      "detail": "8 rows: {\"538\":4,\"610\":4,\"682\":4,\"754\":4,\"826\":4,\"898\":4,\"970\":4,\"1042\":2}"
+    },
+    {
+      "name": "gallery 360: trusted click moved the selection to the last thumb",
+      "pass": true,
+      "detail": "aria-pressed index=29, clicked=29"
+    },
+    {
+      "name": "gallery 360: flight sampled in-page (64 samples), marker travelled",
+      "pass": true,
+      "detail": "16 distinct x, 6 distinct y, peak w=56 vs resting 56"
+    },
+    {
+      "name": "gallery 360: corner path — the marker dropped to the target row before crossing",
+      "pass": true,
+      "detail": "y arrived at x=276 (start 276), final x=204"
+    },
+    {
+      "name": "gallery 360: marker rests inside the group",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gallery 360: marker rests inside the clicked slot",
+      "pass": true,
+      "detail": "marker {\"x\":204,\"y\":394,\"w\":56,\"h\":56} in slot {\"x\":200,\"y\":390,\"w\":64,\"h\":64}"
+    },
+    {
+      "name": "gallery 360: no per-thumb active border survives",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gallery 360: accessible names identical to before, exactly one pressed",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "gallery 360: with JS blocked the current thumb is still marked",
+      "pass": true,
+      "detail": "نمای ۱ از ۳۰ bg=rgba(229, 211, 179, 0.16)"
+    },
+    {
+      "name": "gallery 360: with JS blocked the marker paints nothing",
+      "pass": true,
+      "detail": "marker width=0px"
+    },
+    {
+      "name": "detail 1280: three independent option groups, each with its own marker",
+      "pass": true,
+      "detail": "دامنه:3 | سرور:2 | نوع:3"
+    },
+    {
+      "name": "detail 1280: groups on one row each at this width (nothing to wrap)",
+      "pass": true,
+      "detail": "rows: 1/1/1"
+    },
+    {
+      "name": "detail 1280: only the clicked group's marker animated (FR-033)",
+      "pass": true,
+      "detail": "distinct x per group: 1/23/1"
+    },
+    {
+      "name": "detail 1280: trusted click moved the selection in the second group",
+      "pass": true,
+      "detail": "aria-pressed index=1"
+    },
+    {
+      "name": "detail 1280: accessible names identical to before, one pressed per group",
+      "pass": true,
+      "detail": "pressed per group: 1/1/1"
+    },
+    {
+      "name": "detail 1280: no per-chip active border survives",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "detail 1280: with JS blocked the current chip is still marked",
+      "pass": true,
+      "detail": "دامنه: جیمیل bg=rgba(229, 211, 179, 0.16)"
+    },
+    {
+      "name": "detail 1280: with JS blocked the marker paints nothing",
+      "pass": true,
+      "detail": "marker width=0px"
+    },
+    {
+      "name": "detail 360: three independent option groups, each with its own marker",
+      "pass": true,
+      "detail": "دامنه:3 | سرور:2 | نوع:3"
+    },
+    {
+      "name": "detail 360: at least one group wraps (نوع)",
+      "pass": true,
+      "detail": "wrapping: نوع"
+    },
+    {
+      "name": "detail 360: only the clicked group's marker animated (FR-033)",
+      "pass": true,
+      "detail": "distinct x per group: 1/26/1"
+    },
+    {
+      "name": "detail 360: trusted click moved the selection in the second group",
+      "pass": true,
+      "detail": "aria-pressed index=1"
+    },
+    {
+      "name": "detail 360: accessible names identical to before, one pressed per group",
+      "pass": true,
+      "detail": "pressed per group: 1/1/1"
+    },
+    {
+      "name": "detail 360: no per-chip active border survives",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "detail 360: second-row نوع chip reached via the corner path",
+      "pass": true,
+      "detail": "y arrived at x=238, final x=178"
+    },
+    {
+      "name": "detail 360: with JS blocked the current chip is still marked",
+      "pass": true,
+      "detail": "دامنه: جیمیل bg=rgba(229, 211, 179, 0.16)"
+    },
+    {
+      "name": "detail 360: with JS blocked the marker paints nothing",
+      "pass": true,
+      "detail": "marker width=0px"
+    },
+    {
+      "name": "pagination 1280: jump 1 -> last page (16) arrives, marker resting on it",
+      "pass": true,
+      "detail": "current=۱۶ inside=true"
+    },
+    {
+      "name": "pagination 1280: every leg of the jump travelled (none suppressed)",
+      "pass": true,
+      "detail": ""
+    },
+    {
+      "name": "pagination 360: jump 1 -> last page (16) arrives, marker resting on it",
+      "pass": true,
+      "detail": "current=۱۶ inside=true"
+    },
+    {
+      "name": "pagination 360: every leg of the jump travelled (none suppressed)",
+      "pass": true,
+      "detail": ""
+    }
+  ],
+  "screenshots": [
+    "surf-b-tiles-1280.png",
+    "surf-b-tiles-1280-nojs.png",
+    "surf-b-tiles-360.png",
+    "surf-b-tiles-360-nojs.png",
+    "surf-b-gallery-1280.png",
+    "surf-b-gallery-360.png",
+    "surf-b-chips-1280.png",
+    "surf-b-chips-360.png",
+    "surf-b-pagination-1280.png",
+    "surf-b-pagination-360.png"
+  ]
+}

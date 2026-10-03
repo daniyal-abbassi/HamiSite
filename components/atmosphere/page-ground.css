@@ -1,0 +1,69 @@
+/* Static base. Homepage color belongs to sections, never scroll progress. */
+.hami-page-ground {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Scope to the home route. Full-width bands retain the reading width through
+   padding. Section edges move with the page; no overlay or color tween. */
+.hami-page-ground--home ~ main > section {
+  margin-block: 0;
+  border-radius: 0;
+}
+
+.hami-page-ground--home ~ main > :is(#obtainable-now, #categories, #new-arrivals) {
+  width: 100%;
+  max-width: none;
+  padding-inline: max(24px, calc((100% - 1232px) / 2));
+}
+
+.hami-page-ground--home ~ main > #top { background-color: #30080f; }
+.hami-page-ground--home ~ main > #obtainable-now { background-color: #211b20; }
+.hami-page-ground--home ~ main > #featured { background-color: #09090b; }
+
+.hami-page-ground--home ~ main > #categories {
+  background-color: #f4f1ea;
+  padding-block: clamp(48px, 6vw, 88px);
+  box-shadow: none;
+}
+
+.hami-page-ground--home ~ main > #brands {
+  background-color: #14161c;
+  padding-top: clamp(48px, 6vw, 88px);
+}
+
+.hami-page-ground--home ~ main > #new-arrivals {
+  background-color: #f4f1ea;
+  box-shadow: none;
+}
+
+.hami-page-ground--home ~ main > #b2b { background-color: #30080f; }
+
+.hami-page-ground--home ~ main > #online-services {
+  background-color: #f4f1ea;
+  box-shadow: none;
+}
+
+.hami-page-ground--home ~ main > #store-experience { background-color: #111114; }
+
+/* Keep the opening actions inside the canvas on the narrowest phones. */
+@media (max-width: 359px) {
+  .hami-page-ground--home ~ main #top [aria-label="مسیرهای اصلی"] {
+    flex-direction: column;
+  }
+
+  .hami-page-ground--home ~ main #top [aria-label="مسیرهای اصلی"] > a {
+    justify-content: center;
+  }
+}
+
+@media (forced-colors: active) {
+  .hami-page-ground { display: none; }
+  .hami-page-ground--home ~ main > section { background: Canvas; }
+}
+
+@media print {
+  .hami-page-ground { display: none; }
+}

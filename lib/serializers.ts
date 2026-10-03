@@ -21,7 +21,10 @@ export function serializeStockType(stockType: StockType) {
     case StockType.CALL:
       return "call";
     default:
-      return "limited";
+      // Unrecognised must never become a positive claim: this value reaches
+      // shopper-visible cart labels through lib/cart.ts, and FR-056 requires an
+      // uninterpretable state to fall back to "contact us".
+      return "call";
   }
 }
 

@@ -71,6 +71,18 @@ What a generic online phone retailer can't truthfully claim:
 - No additional business constraints (regions served, warranty/return
   policy specifics, etc.) are confirmed beyond what's above; treat anything
   not listed here as undecided rather than inferred.
+- About and Contact pages are planned but not built yet — the Footer links
+  to `/about` and `/contact`, which don't exist as routes. The Footer's
+  `/my-orders` link is a wrong path (orders live at `/orders` and
+  `/order/[id]`); fixing it is a code change, not a product decision.
+- Verified store contact fact: the phone number 0933 121 4000 (user-confirmed
+  2026-09-19), single-sourced in `lib/content/contact.ts` — every tel: link
+  imports from there. No verified street address or email exists yet: do not
+  fabricate one anywhere. In-page CTAs that need a destination still route to
+  `#store-experience` / `/partners`.
+- A home-page CampaignBanner section existed and was removed (2026-09-19):
+  it carried no real offer. Restore it only when there is an actual campaign
+  to feature, wired to real promotion data.
 
 ## Brand Commitments
 
@@ -82,13 +94,16 @@ What a generic online phone retailer can't truthfully claim:
 - Real, factual brand affiliations to surface as trust signals (not to
   embellish further): certified Redmi dealer (Mashhad, via Radman Paj);
   official TCH regional sales representative.
-- Real logo assets are now on hand at `docs/Brand's Images/logo/` — square
+- Real logo assets are on hand at `docs/Brand's Images/logo/` — square
   icon-only mark, Persian wordmark-only, and full lockups on both dark
-  (burgundy) and light backgrounds. The icon-only mark is already wired into
-  `components/layout/Header.tsx` and `app/icon.png` (favicon). No
-  cream/transparent icon variant exists yet for dark surfaces —
-  `components/layout/Footer.tsx` still uses the old text-only "H" placeholder
-  for that reason, not an oversight.
+  (burgundy) and light backgrounds. Deploy-ready copies live in
+  `public/brand/`: `hami-mark.png` is wired into `components/layout/Header.tsx`,
+  `components/layout/Footer.tsx` (on a champagne gradient tile),
+  `components/home/CampaignBanner.tsx`, and `app/icon.png` (favicon); the
+  cream/transparent variant `hami-mark-alpha.png` exists and is used inside
+  `public/brand/categories/*.svg` badges. A Persian wordmark PNG
+  (`hami-wordmark-fa.png`) is also on disk but not wired into any component
+  yet.
 
 ## Evidence on Hand
 

@@ -1,12 +1,6 @@
 import { describe, expect, it } from "vitest";
-import {
-  isValidEconomicCode,
-  isValidIranianMobile,
-  isValidIranianNationalCode,
-  isValidIranianPostalCode,
-  isValidLegalNationalId,
-  toLatinDigits,
-} from "@/lib/validators";
+import { normalizeIranianMobile } from "@/lib/phone";
+import { isValidEconomicCode, isValidIranianMobile, isValidIranianNationalCode, isValidIranianPostalCode, isValidLegalNationalId, toLatinDigits, isValidIranianLandline } from "@/lib/validators";
 
 describe("toLatinDigits", () => {
   it("converts Persian and Arabic digits to Latin", () => {
@@ -68,5 +62,42 @@ describe("Iranian location/legal identifiers", () => {
     expect(isValidEconomicCode("411111111111")).toBe(true);
     expect(isValidEconomicCode("۴۱۱۱۱۱۱۱۱۱۱۱")).toBe(true);
     expect(isValidEconomicCode("411111")).toBe(false);
+  });
+});
+describe("FR-063 — isValidIranianLandline", () => {
+  it("accepts a geographic number with its area code", () => {
+    expect(isValidIranianLandline("05131234567")).toBe(true);
+    expect(isValidIranianLandline("02112345678")).toBe(true);
+  });
+
+  it("accepts the separators and digit shapes a person actually types", () => {
+    expect(isValidIranianLandline("051 3123 4567")).toBe(true);
+    expect(isValidIranianLandline("۰۵۱۳۱۲۳۴۵۶۷")).toBe(true);
+    expect(isValidIranianLandline("+98 51 3123 4567")).toBe(true);
+    expect(isValidIranianLandline("00985131234567")).toBe(true);
+  });
+
+  it("rejects a mobile, a short number and a non-Iranian country code", () => {
+    expect(isValidIranianLandline("09121234567")).toBe(false);
+    expect(isValidIranianLandline("0513123")).toBe(false);
+    expect(isValidIranianLandline("+15131234567")).toBe(false);
+    expect(isValidIranianLandline("")).toBe(false);
+  });
+});
+
+describe("FR-062 — normalizeIranianMobile accepts what shoppers paste", () => {
+  it("folds the 0098 trunk-dial form, which the old rule returned untouched", () => {
+    expect(normalizeIranianMobile("00989121234567")).toBe("+989121234567");
+    expect(normalizeIranianMobile("۰۰۹۸۹۱۲۱۲۳۴۵۶۷")).toBe("+989121234567");
+  });
+
+  it("keeps the forms it already handled", () => {
+    expect(normalizeIranianMobile("09121234567")).toBe("+989121234567");
+    expect(normalizeIranianMobile("+989121234567")).toBe("+989121234567");
+    expect(normalizeIranianMobile(" ۰۹۱۲۱۲۳۴۵۶۷ ")).toBe("+989121234567");
+  });
+
+  it("still leaves a non-mobile identifier alone", () => {
+    expect(normalizeIranianMobile("daniyal")).toBe("daniyal");
   });
 });

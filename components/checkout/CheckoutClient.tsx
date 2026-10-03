@@ -12,6 +12,7 @@ import { useCart } from "@/components/providers/CartProvider";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { ApiClientError, apiGet, apiPost } from "@/lib/api-client";
 import { paymentTermLabels, shippingOptions, type ShippingOptionKey } from "@/lib/content/order";
+import { isValidIranianPostalCode } from "@/lib/validators";
 import { cn, formatToman } from "@/lib/utils";
 import type { Address, CouponValidation, OrderCreationResult, PaymentInitiation } from "@/types/store";
 
@@ -104,6 +105,11 @@ export function CheckoutClient() {
     if (newAddress.city.trim().length < 2) return "شهر را وارد کنید.";
     if (newAddress.addressText.trim().length < 5) return "نشانی کامل را وارد کنید.";
     if (newAddress.phone.trim().length < 5) return "شماره تماس را وارد کنید.";
+    // FR-064: the field is optional, so an empty one stays acceptable — but a
+    // partially-typed code that cannot be a postal code must not reach the server.
+    if (newAddress.postalCode.trim() && !isValidIranianPostalCode(newAddress.postalCode)) {
+      return "کد پستی باید ۱۰ رقم باشد.";
+    }
     return null;
   }, [addressMode, selectedAddressId, newAddress]);
 
@@ -186,7 +192,7 @@ export function CheckoutClient() {
       }
     } catch (cause) {
       if (cause instanceof ApiClientError && cause.code === "AUTH_REQUIRED") {
-        router.replace("/login?next=/checkout");
+      router.replace(`/login?next=${encodeURIComponent("/checkout")}`);
         return;
       }
       setError(apiErrorToFa(cause));
@@ -211,7 +217,7 @@ export function CheckoutClient() {
   if (!cart || cart.items.length === 0) {
     return (
       <div className="glass mx-auto flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
-        <ShoppingBag className="size-10 text-gold/60" />
+        <ShoppingBag className="size-10 text-aqua/60" />
         <h2 className="text-lg font-black">سبد خرید خالی است</h2>
         <p className="text-sm text-muted-foreground">برای تسویه حساب ابتدا محصولی به سبد اضافه کنید.</p>
         <Link href="/shop">
@@ -231,7 +237,7 @@ export function CheckoutClient() {
         {/* ۱ — آدرس */}
         <section className="glass rounded-2xl p-6">
           <header className="flex items-center gap-2.5">
-            <span className="grid size-7 place-items-center rounded-full bg-gold/15 font-mono text-[11px] font-bold text-gold">۱</span>
+            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-xs font-bold text-aqua">۱</span>
             <h2 className="text-base font-black">اطلاعات تماس و آدرس</h2>
           </header>
           <div className="brand-hairline my-4" />
@@ -244,14 +250,14 @@ export function CheckoutClient() {
                   className={cn(
                     "flex cursor-pointer items-start gap-3 rounded-xl border p-3.5 transition-all duration-fast",
                     addressMode === "saved" && selectedAddressId === address.id
-                      ? "border-gold bg-gold/10"
-                      : "border-line bg-foreground/5 hover:border-gold/40",
+                      ? "border-aqua bg-aqua/10"
+                      : "border-line bg-foreground/5 hover:border-aqua/40",
                   )}
                 >
                   <input
                     type="radio"
                     name="address"
-                    className="mt-1 accent-[#C9A227]"
+                    className="mt-1 accent-brass"
                     checked={addressMode === "saved" && selectedAddressId === address.id}
                     onChange={() => {
                       setAddressMode("saved");
@@ -261,7 +267,7 @@ export function CheckoutClient() {
                   <span className="min-w-0 text-[13px] leading-6">
                     <strong className="block">
                       {address.firstName || user?.firstName} {address.lastName || user?.lastName} — {address.city}
-                      {address.isDefault && <span className="ms-2 rounded-full bg-gold/15 px-2 py-0.5 text-[10px] text-gold">پیش‌فرض</span>}
+                      {address.isDefault && <span className="ms-2 rounded-full bg-aqua/15 px-2 py-0.5 text-xs text-aqua">پیش‌فرض</span>}
                     </strong>
                     <span className="block text-muted-foreground">{address.address}</span>
                   </span>
@@ -270,7 +276,7 @@ export function CheckoutClient() {
               <button
                 type="button"
                 onClick={() => setAddressMode("new")}
-                className="text-xs font-bold text-gold underline-offset-4 hover:underline"
+                className="text-xs font-bold text-aqua underline-offset-4 hover:underline"
               >
                 + افزودن آدرس جدید
               </button>
@@ -280,38 +286,57 @@ export function CheckoutClient() {
           {(addressMode === "new" || (addresses ?? []).length === 0) && (
             <div className="grid gap-3.5 sm:grid-cols-2">
               <div>
-                <label htmlFor="co-firstName" className="mb-1 block text-[11px] font-bold text-foreground/80">نام</label>
+                <label htmlFor="co-firstName" className="mb-1 block text-xs font-bold text-foreground/80">نام</label>
                 <Input id="co-firstName" className={inputClass} value={newAddress.firstName} onChange={newAddressField("firstName")} autoComplete="given-name" />
               </div>
               <div>
-                <label htmlFor="co-lastName" className="mb-1 block text-[11px] font-bold text-foreground/80">نام خانوادگی</label>
+                <label htmlFor="co-lastName" className="mb-1 block text-xs font-bold text-foreground/80">نام خانوادگی</label>
                 <Input id="co-lastName" className={inputClass} value={newAddress.lastName} onChange={newAddressField("lastName")} autoComplete="family-name" />
               </div>
               <div>
-                <label htmlFor="co-phone" className="mb-1 block text-[11px] font-bold text-foreground/80">شماره تماس *</label>
+                <label htmlFor="co-phone" className="mb-1 block text-xs font-bold text-foreground/80">شماره تماس *</label>
                 <Input id="co-phone" className={inputClass} value={newAddress.phone} onChange={newAddressField("phone")} type="tel" autoComplete="tel" />
               </div>
               <div>
-                <label htmlFor="co-city" className="mb-1 block text-[11px] font-bold text-foreground/80">شهر *</label>
+                <label htmlFor="co-city" className="mb-1 block text-xs font-bold text-foreground/80">شهر *</label>
                 <Input id="co-city" className={inputClass} value={newAddress.city} onChange={newAddressField("city")} autoComplete="address-level2" />
               </div>
               <div className="sm:col-span-2">
-                <label htmlFor="co-province" className="mb-1 block text-[11px] font-bold text-foreground/80">استان</label>
+                <label htmlFor="co-province" className="mb-1 block text-xs font-bold text-foreground/80">استان</label>
                 <Input id="co-province" className={inputClass} value={newAddress.province} onChange={newAddressField("province")} autoComplete="address-level1" />
               </div>
               <div className="sm:col-span-2">
-                <label htmlFor="co-addressText" className="mb-1 block text-[11px] font-bold text-foreground/80">نشانی کامل *</label>
+                <label htmlFor="co-addressText" className="mb-1 block text-xs font-bold text-foreground/80">نشانی کامل *</label>
                 <Input id="co-addressText" className={inputClass} value={newAddress.addressText} onChange={newAddressField("addressText")} autoComplete="street-address" />
               </div>
               <div className="sm:col-span-2">
-                <label htmlFor="co-postalCode" className="mb-1 block text-[11px] font-bold text-foreground/80">کد پستی</label>
-                <Input id="co-postalCode" className={inputClass} value={newAddress.postalCode} onChange={newAddressField("postalCode")} autoComplete="postal-code" />
+                <label htmlFor="co-postalCode" className="mb-1 block text-xs font-bold text-foreground/80">کد پستی</label>
+                {/* An Iranian postal code is ten digits. Without inputMode the
+                    phone opens a full alphabetic keyboard for a field that can
+                    only ever take numbers; without `dir="ltr"` the digits render
+                    right-to-left and a pasted code reads backwards; and without
+                    the hint the shopper has to guess the length. FR-064. */}
+                <Input
+                  id="co-postalCode"
+                  className={inputClass}
+                  inputMode="numeric"
+                  dir="ltr"
+                  maxLength={10}
+                  placeholder="۱۰ رقم"
+                  aria-describedby="co-postalCode-hint"
+                  value={newAddress.postalCode}
+                  onChange={newAddressField("postalCode")}
+                  autoComplete="postal-code"
+                />
+                <span id="co-postalCode-hint" className="mt-1 block text-[11px] text-muted-foreground">
+                  کد پستی ۱۰ رقمی (اختیاری)
+                </span>
               </div>
               {(addresses ?? []).length > 0 && (
                 <button
                   type="button"
                   onClick={() => setAddressMode("saved")}
-                  className="text-xs font-bold text-gold underline-offset-4 hover:underline sm:col-span-2"
+                  className="text-xs font-bold text-aqua underline-offset-4 hover:underline sm:col-span-2"
                 >
                   استفاده از آدرس‌های ذخیره‌شده
                 </button>
@@ -323,9 +348,9 @@ export function CheckoutClient() {
         {/* ۲ — ارسال */}
         <section className="glass rounded-2xl p-6">
           <header className="flex items-center gap-2.5">
-            <span className="grid size-7 place-items-center rounded-full bg-gold/15 font-mono text-[11px] font-bold text-gold">۲</span>
+            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-xs font-bold text-aqua">۲</span>
             <h2 className="flex items-center gap-2 text-base font-black">
-              <Truck className="size-4 text-gold" />
+              <Truck className="size-4 text-aqua" />
               روش ارسال
             </h2>
           </header>
@@ -336,23 +361,23 @@ export function CheckoutClient() {
                 key={option.key}
                 className={cn(
                   "cursor-pointer rounded-xl border p-3.5 transition-all duration-fast",
-                  shippingKey === option.key ? "border-gold bg-gold/10" : "border-line bg-foreground/5 hover:border-gold/40",
+                  shippingKey === option.key ? "border-aqua bg-aqua/10" : "border-line bg-foreground/5 hover:border-aqua/40",
                 )}
               >
                 <span className="flex items-center justify-between gap-2">
                   <input
                     type="radio"
                     name="shipping"
-                    className="accent-[#C9A227]"
+                    className="accent-brass"
                     checked={shippingKey === option.key}
                     onChange={() => setShippingKey(option.key)}
                   />
                   <strong className="text-[13px]">{option.label}</strong>
                 </span>
-                <span className="mt-2 block font-mono text-[11px] text-gold">
+                <span className="mt-2 block font-mono text-xs text-aqua">
                   {option.price === 0 ? "رایگان" : formatToman(option.price)}
                 </span>
-                <span className="mt-1 block text-[11px] text-muted-foreground">{option.note}</span>
+                <span className="mt-1 block text-xs text-muted-foreground">{option.note}</span>
               </label>
             ))}
           </div>
@@ -361,9 +386,9 @@ export function CheckoutClient() {
         {/* ۳ — کوپن */}
         <section className="glass rounded-2xl p-6">
           <header className="flex items-center gap-2.5">
-            <span className="grid size-7 place-items-center rounded-full bg-gold/15 font-mono text-[11px] font-bold text-gold">۳</span>
+            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-xs font-bold text-aqua">۳</span>
             <h2 className="flex items-center gap-2 text-base font-black">
-              <BadgePercent className="size-4 text-gold" />
+              <BadgePercent className="size-4 text-aqua" />
               کد تخفیف
             </h2>
           </header>
@@ -390,7 +415,7 @@ export function CheckoutClient() {
         {/* ۴ — پرداخت */}
         <section className="glass rounded-2xl p-6">
           <header className="flex items-center gap-2.5">
-            <span className="grid size-7 place-items-center rounded-full bg-gold/15 font-mono text-[11px] font-bold text-gold">۴</span>
+            <span className="grid size-7 place-items-center rounded-full bg-aqua/15 font-mono text-xs font-bold text-aqua">۴</span>
             <h2 className="text-base font-black">پرداخت</h2>
           </header>
           <div className="brand-hairline my-4" />
@@ -401,14 +426,14 @@ export function CheckoutClient() {
                   key={term}
                   className={cn(
                     "cursor-pointer rounded-xl border p-3.5 text-[13px] transition-all duration-fast",
-                    paymentTerm === term ? "border-gold bg-gold/10" : "border-line bg-foreground/5 hover:border-gold/40",
+                    paymentTerm === term ? "border-aqua bg-aqua/10" : "border-line bg-foreground/5 hover:border-aqua/40",
                   )}
                 >
                   <span className="flex items-center gap-2.5">
                     <input
                       type="radio"
                       name="paymentTerm"
-                      className="accent-[#C9A227]"
+                      className="accent-brass"
                       checked={paymentTerm === term}
                       onChange={() => setPaymentTerm(term)}
                     />
@@ -418,16 +443,26 @@ export function CheckoutClient() {
               ))}
             </div>
           ) : (
-            <p className="text-[13px] text-muted-foreground">پرداخت آنلاین از طریق درگاه امن انجام می‌شود.</p>
+            /* The spec is explicit that no payment capability is confirmed for
+               this business, so nothing may promise one. The form itself is
+               frozen backend work and stays exactly as it is. */
+            <p className="text-[13px] text-muted-foreground">
+              پرداخت آنلاین در این فروشگاه فعال نیست؛ زمان و شیوهٔ پرداخت پس از تماس با فروشگاه مشخص می‌شود.
+            </p>
           )}
           <div className="mt-4">
-            <label htmlFor="co-note" className="mb-1 block text-[11px] font-bold text-foreground/80">یادداشت سفارش (اختیاری)</label>
+            <label htmlFor="co-note" className="mb-1 block text-xs font-bold text-foreground/80">یادداشت سفارش (اختیاری)</label>
             <Input id="co-note" className={inputClass} value={note} onChange={(event) => setNote(event.target.value)} placeholder="مثلاً زمان مناسب تحویل…" />
           </div>
         </section>
       </div>
 
       {/* Summary */}
+      {/* T097 / FR-044: the summary used to carry `order-first` below `lg`, so on a
+          phone it painted above the address and shipping controls that come earlier
+          in the DOM — keyboard and screen-reader order ran one way and the screen the
+          other. The order override is gone; on a phone the summary now follows the
+          controls, which is also the reading order of a checkout. */}
       <aside className="glass h-fit rounded-2xl p-6 lg:sticky lg:top-24">
         <h2 className="text-base font-black">سفارش شما</h2>
         <div className="brand-hairline my-4" />
@@ -436,7 +471,7 @@ export function CheckoutClient() {
             <li key={item.id} className="flex items-start justify-between gap-2 text-[12px]">
               <span className="min-w-0">
                 <span className="block truncate font-bold">{item.product.name}</span>
-                <span className="font-mono text-[10px] text-muted-foreground">
+                <span className="font-mono text-xs text-muted-foreground">
                   {[item.variant?.storage, item.variant?.color].filter(Boolean).join(" — ") || "—"} ×{" "}
                   {item.quantity.toLocaleString("fa-IR")}
                 </span>
@@ -463,7 +498,7 @@ export function CheckoutClient() {
           </div>
           <div className="flex justify-between border-t border-line pt-3 text-base">
             <dt className="font-black">مبلغ نهایی</dt>
-            <dd className="font-black text-gold" aria-live="polite">
+            <dd className="font-black text-aqua" aria-live="polite">
               {formatToman(total)}
             </dd>
           </div>
@@ -479,7 +514,7 @@ export function CheckoutClient() {
           <Check className="size-5" />
           ثبت نهایی سفارش
         </Button>
-        <p className="mt-3 text-center text-[10px] leading-5 text-muted-foreground/70">
+        <p className="mt-3 text-center text-xs leading-5 text-muted-foreground/70">
           با ثبت سفارش، موجودی رزرو و در صورت لغو به انبار بازگردانده می‌شود.
         </p>
       </aside>
