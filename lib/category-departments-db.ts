@@ -27,6 +27,7 @@
  */
 
 import { categorySubtreeCounts, countProductsByKind, listCategories } from "@/lib/catalog-db";
+import { categoryPanels, type CategoryPanel } from "@/lib/category-departments";
 import { RHYTHM, type Tier, type TierBreakpoint } from "@/lib/category-masonry";
 
 export type DepartmentKind =
@@ -205,4 +206,9 @@ export async function categoryDepartments(): Promise<Department[]> {
   }
 
   return departments;
+}
+
+/** A count-free projection for the homepage category presentation. */
+export async function categoryVitrinePanels(): Promise<CategoryPanel[]> {
+  return categoryPanels(await categoryDepartments());
 }

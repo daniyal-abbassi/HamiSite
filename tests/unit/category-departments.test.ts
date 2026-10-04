@@ -19,6 +19,7 @@ import {
   BRAND_SHAPED_CATEGORY_SLUGS,
   DEPARTMENT_TOTAL,
   categoryDepartments,
+  categoryPanels,
 } from "@/lib/category-departments";
 
 const exportData = JSON.parse(
@@ -36,6 +37,7 @@ const kindTotals = exportData.products.reduce<Record<string, number>>((acc, p) =
 }, {});
 
 const departments = categoryDepartments();
+const panels = categoryPanels(departments);
 const categoryBySlug = new Map(exportData.categories.map((c) => [c.slug, c]));
 
 /*
@@ -68,6 +70,16 @@ const KNOWN_SHORTFALL_KINDS = new Set(["phone", "charger", "powerbank"]);
 const KNOWN_SURPLUS_KINDS = new Set(["phone", "charger"]);
 
 describe("categoryDepartments", () => {
+  it("projects nine visual panels without catalogue counts", () => {
+    expect(panels).toHaveLength(DEPARTMENT_TOTAL);
+    for (const panel of panels) {
+      expect(panel).toMatchObject({ kind: expect.any(String), label: expect.any(String), href: expect.any(String) });
+      expect(panel).not.toHaveProperty("reachableCount");
+      expect(panel).not.toHaveProperty("kindTotal");
+      expect(panel).not.toHaveProperty("showsCount");
+    }
+  });
+
   /*
    * Property-style, not snapshot-style. An earlier version of this file asserted
    * `9` and `189` directly, which meant SC-005's promise — "re-verifiable after an

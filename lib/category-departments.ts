@@ -129,6 +129,15 @@ export type Department = {
   showsCount: boolean;
 };
 
+/** The visual category presentation deliberately carries no catalogue counts. */
+export type CategoryPanel = Pick<Department, "kind" | "label" | "slug" | "categoryId" | "href" | "badge" | "image" | "rhythm">;
+
+export function categoryPanels(departments: readonly Department[]): CategoryPanel[] {
+  return departments.map(({ kind, label, slug, categoryId, href, badge, image, rhythm }) => ({
+    kind, label, slug, categoryId, href, badge, image, rhythm,
+  }));
+}
+
 /**
  * Categories whose name is a brand rather than a department. `آیفون-استوک` holds 45 phones and is the
  * single best route for the `phone` kind on a pure product-count basis, which is exactly why it must be
