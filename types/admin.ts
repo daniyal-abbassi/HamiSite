@@ -1,14 +1,11 @@
 /**
- * Admin dashboard types — shapes as produced by the existing API surface.
- * No backend changes; product-list uses the public /api/products endpoint
- * (available products only), product edit keeps fields the public detail
- * endpoint exposes.
+ * Admin dashboard types — shapes returned by the role-protected admin API.
  */
 
 import type { Address, OrderDetail } from "@/types/store";
 
 // ---------------------------------------------------------------------------
-// Products (public endpoints)
+// Products
 // ---------------------------------------------------------------------------
 
 export type AdminProductListItem = {
@@ -85,6 +82,7 @@ export type AdminProductDetail = {
   seoDescription: string | null;
   brand: { id: number; name: string; slug: string } | null;
   mainCategory: { id: number; name: string; slug: string } | null;
+  images: { id: number; url: string; altText: string | null; isDefault: boolean; order: number }[];
   variants: AdminVariantListItem[];
 };
 
@@ -156,6 +154,21 @@ export type CreateProductInput = {
   guarantee?: string;
   seoTitle?: string;
   seoDescription?: string;
+};
+
+export type UpdateProductInput = Omit<Partial<CreateProductInput>, "mainCategoryId" | "brandId" | "compareAtPrice" | "costPerItem" | "minOrderQuantity" | "maxOrderQuantity" | "englishName" | "description" | "analysis" | "guarantee" | "seoTitle" | "seoDescription"> & {
+  mainCategoryId?: number | null;
+  brandId?: number | null;
+  compareAtPrice?: number | null;
+  costPerItem?: number | null;
+  minOrderQuantity?: number | null;
+  maxOrderQuantity?: number | null;
+  englishName?: string | null;
+  description?: string | null;
+  analysis?: string | null;
+  guarantee?: string | null;
+  seoTitle?: string | null;
+  seoDescription?: string | null;
 };
 
 export type CreateVariantInput = {

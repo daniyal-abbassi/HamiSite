@@ -1,6 +1,7 @@
 import { HistoryAction } from "@prisma/client";
 import { beforeEach, describe, expect, it } from "vitest";
 import { POST as createProduct } from "@/app/api/admin/products/route";
+import { GET as getAdminProduct } from "@/app/api/admin/products/[id]/route";
 import { DELETE as deleteProduct, PATCH as patchProduct } from "@/app/api/admin/products/[id]/route";
 import { POST as createVariant } from "@/app/api/admin/products/[id]/variants/route";
 import { DELETE as deleteVariant, PATCH as patchVariant } from "@/app/api/admin/products/[id]/variants/[variantId]/route";
@@ -30,7 +31,7 @@ describe("admin products", () => {
   });
 
   it("creates a product and writes a CREATED history row", async () => {
-    const res = await createProduct(jsonRequest("http://localhost/api/admin/products", "POST", payload(), adminCookie), ctx());
+    const res = await createProduct(jsonRequest("http://localhost/api/admin/products", "POST", payload({ costPerItem: 250000 }), adminCookie), ctx());
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.data.price).toBe(500000);
@@ -39,6 +40,31 @@ describe("admin products", () => {
     expect(history).toHaveLength(1);
     expect(history[0].action).toBe(HistoryAction.CREATED);
     expect(history[0].changedById).toBe(seed.admin.id);
+    const saved = await prisma.product.findUniqueOrThrow({ where: { id: body.data.id } });
+    expect(saved.costPerItem?.toNumber()).toBe(250000);
+  });
+
+  it("loads admin detail by id and clears nullable product fields", async () => {
+    const create = await createProduct(
+      jsonRequest("http://localhost/api/admin/products", "POST", payload({ costPerItem: 250000, description: "Details" }), adminCookie), ctx());
+    const created = await create.json();
+    const detail = await getAdminProduct(
+      jsonRequest(`http://localhost/api/admin/products/${created.data.id}`, "GET", undefined, adminCookie),
+      ctx({ id: String(created.data.id) }),
+    );
+    expect(detail.status).toBe(200);
+    expect((await detail.json()).data.costPerItem).toBe(250000);
+
+    const update = await patchProduct(
+      jsonRequest(`http://localhost/api/admin/products/${created.data.id}`, "PATCH", {
+        costPerItem: null, description: null, brandId: null, mainCategoryId: null,
+      }, adminCookie),
+      ctx({ id: String(created.data.id) }),
+    );
+    expect(update.status).toBe(200);
+    const saved = await prisma.product.findUniqueOrThrow({ where: { id: created.data.id } });
+    expect(saved.costPerItem).toBeNull();
+    expect(saved.description).toBeNull();
   });
 
   it("409s on a duplicate slug", async () => {

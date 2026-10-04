@@ -13,8 +13,7 @@ import { VariantsManager } from "@/components/admin/products/VariantsManager";
 import { CatalogImageManager, type CatalogImage } from "@/components/admin/CatalogImageManager";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { apiDelete, apiGet, apiPatch, apiPost } from "@/lib/api-client";
-import type { AdminBrand, AdminCategory, AdminVariantListItem, CreateProductInput } from "@/types/admin";
-import type { ProductDetail } from "@/types/store";
+import type { AdminBrand, AdminCategory, AdminProductDetail, AdminVariantListItem, CreateProductInput, UpdateProductInput } from "@/types/admin";
 
 const STOCK_TYPES = ["UNLIMITED", "LIMITED", "OUT_OF_STOCK", "CALL"] as const;
 
@@ -68,7 +67,7 @@ const EMPTY: FormValues = {
   showPrice: true,
 };
 
-export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new" | "edit"; productId?: number; slug?: string }) {
+export function ProductForm({ mode, productId }: { mode: "new" | "edit"; productId?: number }) {
   const router = useRouter();
   const [values, setValues] = useState<FormValues>(EMPTY);
   const [categories, setCategories] = useState<AdminCategory[]>([]);
@@ -114,14 +113,14 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
       setLoading(false);
       return;
     }
-    if (!initialSlug) {
-      setError("آدرس محصول پیدا نشد. از فهرست محصولات دوباره وارد شوید.");
+    if (!productId) {
+      setError("شناسه محصول معتبر نیست.");
       setLoading(false);
       return;
     }
     let cancelled = false;
     setLoading(true);
-    apiGet<ProductDetail>(`/api/products/${encodeURIComponent(initialSlug)}?quantity=1`)
+    apiGet<AdminProductDetail>(`/api/admin/products/${productId}`)
       .then((product) => {
         if (cancelled) return;
         const defaultVariant = product.variants.find((variant) => variant.isDefault) ?? product.variants[0];
@@ -131,7 +130,7 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
           englishName: product.englishName ?? "",
           price: defaultVariant ? String(defaultVariant.price) : "0",
           compareAtPrice: String(defaultVariant?.compareAtPrice ?? ""),
-          costPerItem: "",
+          costPerItem: product.costPerItem == null ? "" : String(product.costPerItem),
           batchSize: String(product.batchSize ?? 1),
           stock: String(product.stock ?? 0),
           stockType: product.stockType.toUpperCase(),
@@ -150,10 +149,7 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
           showPrice: product.showPrice,
         });
         setImages((product.images ?? []).map((image) => ({ id: image.id, url: image.url, altText: image.altText ?? null, isDefault: image.isDefault })));
-        setVariants(product.variants.map((variant) => ({
-          ...variant,
-          quoted: { quantity: 1, paymentTerm: "CASH", role: "ADMIN", unitPrice: variant.unitPrice, matchedTier: variant.matchedTier },
-        })));
+        setVariants(product.variants);
       })
       .catch(() => {
         if (!cancelled) setError("محصول پیدا نشد یا در بارگذاری آن خطایی رخ داد.");
@@ -164,22 +160,19 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
     return () => {
       cancelled = true;
     };
-  }, [mode, initialSlug]);
+  }, [mode, productId]);
 
   // Variants + product detail reload after variant CRUD — refetches the
   // public detail endpoint (keyed by slug) and syncs the variants table.
   const reloadProduct = useCallback(async () => {
-    if (mode !== "edit" || !initialSlug) return;
+    if (mode !== "edit" || !productId) return;
     try {
-      const product = await apiGet<ProductDetail>(`/api/products/${encodeURIComponent(initialSlug)}?quantity=1`);
-      setVariants(product.variants.map((variant) => ({
-        ...variant,
-        quoted: { quantity: 1, paymentTerm: "CASH", role: "ADMIN", unitPrice: variant.unitPrice, matchedTier: variant.matchedTier },
-      })));
+      const product = await apiGet<AdminProductDetail>(`/api/admin/products/${productId}`);
+      setVariants(product.variants);
     } catch {
       // Keep the stale list; the error is surfaced on the next manual action.
     }
-  }, [mode, initialSlug]);
+  }, [mode, productId]);
 
   const flatCategoryRows = useMemo(() => {
     const rows: { id: number; label: string }[] = [];
@@ -199,26 +192,26 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
     return Number.isFinite(parsed) ? parsed : undefined;
   }
 
-  function buildPatchPayload(): Partial<CreateProductInput> {
-    const payload: Partial<CreateProductInput> = {};
+  function buildPatchPayload(): UpdateProductInput {
+    const payload: UpdateProductInput = {};
     if (values.name.trim()) payload.name = values.name.trim();
     if (values.slug.trim()) payload.slug = values.slug.trim();
-    if (values.englishName.trim()) payload.englishName = values.englishName.trim();
-    if (values.description.trim()) payload.description = values.description.trim();
-    if (values.analysis.trim()) payload.analysis = values.analysis.trim();
-    if (values.guarantee.trim()) payload.guarantee = values.guarantee.trim();
-    if (values.seoTitle.trim()) payload.seoTitle = values.seoTitle.trim();
-    if (values.seoDescription.trim()) payload.seoDescription = values.seoDescription.trim();
-    if (values.mainCategoryId) payload.mainCategoryId = Number(values.mainCategoryId);
-    if (values.brandId) payload.brandId = Number(values.brandId);
+    payload.englishName = values.englishName.trim() || null;
+    payload.description = values.description.trim() || null;
+    payload.analysis = values.analysis.trim() || null;
+    payload.guarantee = values.guarantee.trim() || null;
+    payload.seoTitle = values.seoTitle.trim() || null;
+    payload.seoDescription = values.seoDescription.trim() || null;
+    payload.mainCategoryId = values.mainCategoryId ? Number(values.mainCategoryId) : null;
+    payload.brandId = values.brandId ? Number(values.brandId) : null;
     if (values.price !== "") payload.price = Number(values.price) || 0;
-    if (values.compareAtPrice !== "") payload.compareAtPrice = num(values.compareAtPrice);
-    if (values.costPerItem !== "") payload.costPerItem = num(values.costPerItem);
+    payload.compareAtPrice = num(values.compareAtPrice) ?? null;
+    payload.costPerItem = num(values.costPerItem) ?? null;
     if (values.batchSize !== "") payload.batchSize = num(values.batchSize);
     if (values.stock !== "") payload.stock = Number(values.stock) || 0;
     payload.stockType = values.stockType as CreateProductInput["stockType"];
-    if (values.minOrderQuantity !== "") payload.minOrderQuantity = num(values.minOrderQuantity);
-    if (values.maxOrderQuantity !== "") payload.maxOrderQuantity = num(values.maxOrderQuantity);
+    payload.minOrderQuantity = num(values.minOrderQuantity) ?? null;
+    payload.maxOrderQuantity = num(values.maxOrderQuantity) ?? null;
     payload.isDigital = values.isDigital;
     payload.specialOffer = values.specialOffer;
     payload.available = values.available;
@@ -263,7 +256,7 @@ export function ProductForm({ mode, productId, slug: initialSlug }: { mode: "new
         setMessage("محصول به‌روزرسانی شد.");
       } else {
         const created = await apiPost<{ id: number; slug: string }>("/api/admin/products", buildCreatePayload());
-        router.push(`/admin/products/${created.id}?slug=${encodeURIComponent(created.slug)}`);
+        router.push(`/admin/products/${created.id}`);
       }
     } catch (cause) {
       setError(apiErrorToFa(cause));

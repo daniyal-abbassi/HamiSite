@@ -6,13 +6,13 @@ import { findProductBySlug, findProductSlugById } from "@/lib/catalog-db";
 import { prisma } from "@/lib/prisma";
 
 const updateSchema = z.object({
-  name: z.string().trim().min(1), englishName: z.string(), slug: z.string().trim().min(1), description: z.string(), analysis: z.string(),
-  mainCategoryId: z.number().int().positive(), brandId: z.number().int().positive(), isDigital: z.boolean(), price: z.number().min(0),
-  compareAtPrice: z.number().min(0), specialOffer: z.boolean(), specialOfferEnd: z.string(), batchSize: z.number().int().positive(),
+  name: z.string().trim().min(1), englishName: z.string().nullable(), slug: z.string().trim().min(1), description: z.string().nullable(), analysis: z.string().nullable(),
+  mainCategoryId: z.number().int().positive().nullable(), brandId: z.number().int().positive().nullable(), isDigital: z.boolean(), price: z.number().min(0),
+  compareAtPrice: z.number().min(0).nullable(), costPerItem: z.number().min(0).nullable(), specialOffer: z.boolean(), specialOfferEnd: z.string().nullable(), batchSize: z.number().int().positive(),
   available: z.boolean(), showPrice: z.boolean(), hasVariants: z.boolean(), stock: z.number().int().min(0),
   stockType: z.enum(["UNLIMITED", "LIMITED", "OUT_OF_STOCK", "CALL", "unlimited", "limited", "out_of_stock", "call"]),
-  minOrderQuantity: z.number().int().positive(), maxOrderQuantity: z.number().int().positive(), guarantee: z.string(),
-  seoTitle: z.string(), seoDescription: z.string(),
+  minOrderQuantity: z.number().int().positive().nullable(), maxOrderQuantity: z.number().int().positive().nullable(), guarantee: z.string().nullable(),
+  seoTitle: z.string().nullable(), seoDescription: z.string().nullable(),
 }).partial().refine((data) => Object.keys(data).length > 0, { message: "At least one field must be provided" });
 
 function parseId(raw: string) {
@@ -43,12 +43,13 @@ export const PATCH = withAuth<{ id: string }>(async (request, { params, user }) 
         name: input.name, englishName: input.englishName, slug: input.slug,
         description: input.description, descriptionText: input.description,
         analysis: input.analysis,
-        ...(input.mainCategoryId === undefined ? {} : { mainCategory: { connect: { id: input.mainCategoryId } } }),
-        ...(input.brandId === undefined ? {} : { brand: { connect: { id: input.brandId } } }),
+        ...(input.mainCategoryId === undefined ? {} : { mainCategory: input.mainCategoryId === null ? { disconnect: true } : { connect: { id: input.mainCategoryId } } }),
+        ...(input.brandId === undefined ? {} : { brand: input.brandId === null ? { disconnect: true } : { connect: { id: input.brandId } } }),
         isDigital: input.isDigital, price: input.price, compareAtPrice: input.compareAtPrice,
         specialOffer: input.specialOffer,
         specialOfferEnd: input.specialOfferEnd === undefined ? undefined : input.specialOfferEnd ? new Date(input.specialOfferEnd) : null,
         batchSize: input.batchSize, available: input.available, showPrice: input.showPrice,
+        costPerItem: input.costPerItem,
         hasVariants: input.hasVariants, stock: input.stock,
         stockType: input.stockType === undefined ? undefined : input.stockType.toUpperCase() as StockType,
         minOrderQuantity: input.minOrderQuantity, maxOrderQuantity: input.maxOrderQuantity,
