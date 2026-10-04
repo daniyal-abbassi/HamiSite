@@ -87,7 +87,7 @@ export function MobileDock() {
 
   return (
     <nav
-      className="fixed inset-x-3 bottom-3 z-40 mx-auto flex max-w-md items-center rounded-full border border-champagne/25 bg-ink-2 py-1.5 shadow-monolith md:hidden"
+      className="fixed inset-x-3 bottom-3 z-40 mx-auto flex max-w-md items-center rounded-full border border-champagne/25 bg-ink-2 py-1.5 shadow-monolith lg:hidden"
       aria-label="ناوبری سریع فروشگاه"
     >
       <LiquidSelection

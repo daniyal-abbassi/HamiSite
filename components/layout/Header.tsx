@@ -117,7 +117,7 @@ export function Header() {
         </Link>
 
         <PillNav
-          className="hidden md:block"
+          className="hidden shrink-0 lg:block"
           showLogo={false}
           logo=""
           items={navItems}

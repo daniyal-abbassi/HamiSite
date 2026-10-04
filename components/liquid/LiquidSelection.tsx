@@ -110,6 +110,8 @@ export type LiquidSelectionProps<Id extends string> = {
   rtl?: boolean;
   className?: string;
   itemClassName?: string;
+  /** Keep a compact navigation row on one line instead of wrapping labels. */
+  noWrap?: boolean;
 };
 
 /* The page's one in-flight marker (FR-033). Seven markers may REST at once; only
@@ -176,6 +178,7 @@ export function LiquidSelection<Id extends string>({
   rtl = true,
   className,
   itemClassName,
+  noWrap = false,
 }: LiquidSelectionProps<Id>) {
   const rowRef = useRef<HTMLDivElement | null>(null);
   const markerRef = useRef<HTMLSpanElement | null>(null);
@@ -487,6 +490,7 @@ export function LiquidSelection<Id extends string>({
     <div
       ref={rowRef}
       className={cn(styles.group, equalWidth && styles.equal, className)}
+      style={noWrap ? { flexWrap: "nowrap" } : undefined}
       role={groupRole}
       aria-label={label}
       onPointerDown={(event) => {

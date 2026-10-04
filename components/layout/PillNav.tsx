@@ -217,6 +217,7 @@ export function PillNav({
             announce="page"
             groupRole="menubar"
             itemRole="menuitem"
+            noWrap
             /* Resting inset, so the body reads as a thing inside the pill rather
                than a block the size of it (FR-065). No `label`: the `nav` above
                already names this region, and giving the menubar its own
