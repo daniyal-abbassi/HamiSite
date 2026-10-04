@@ -165,6 +165,12 @@
       "skillPath": "skills/interview-me/SKILL.md",
       "computedHash": "4229002dd862e6e037c8a01c3e31d9af097465c58b2c3611912edb2af005f303"
     },
+    "jevgrep": {
+      "source": "dzhng/jevgrep",
+      "sourceType": "github",
+      "skillPath": "skills/jevgrep/SKILL.md",
+      "computedHash": "7ed07871ff94d07cd6763b9b28142528eeaa55f79afd3642d8d5436b8abd55e5"
+    },
     "next-best-practices": {
       "source": "vercel-labs/next-skills",
       "sourceType": "autoskills-registry",

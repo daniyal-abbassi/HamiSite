@@ -113,3 +113,27 @@ When Jev materially influences a decision, record the compact form and nothing m
 ```
 
 No payloads, no state dumps, no key.
+
+## jevgrep — the same provider, used for retrieval instead of adjudication
+
+`jg` (https://github.com/dzhng/jevgrep, MIT) asks Jev what code *does* and returns the relevant files
+and verbatim excerpts. It is configured against the same `router.bynara.id/v1` + `jev` route as this
+client, so it inherits the provider's limits — which its defaults were not written for. Usage rules
+live in `AGENTS.md` / `CLAUDE.md`; this section records only what is specific to the patch.
+
+`jevgrep-compat.mjs` is idempotent, refuses to guess if the literals move, and keeps the untouched
+bundle at `index.js.orig`. Measured against this endpoint on 2026-10-01:
+
+| request shape | endpoint | stock `jg` | after patch |
+|---|---|---|---|
+| questions per request | accepts 20, rejects 21+ with HTTP 400 | up to 128 (navigation), 32 (candidates), 3 per declaration | 20, 20, 6 units |
+
+A 400 is the dangerous one: `jg`'s evaluator retries and splits only transient failures
+(408/429/5xx/transport), so an over-cap batch is neither — the work is lost and the search still
+prints a plausible file list, marked *locations only*, exiting 2 instead of 0. Before the patch a
+`components` search lost 9–12 batches and returned no source at all; after it the same search
+returned 32 KB with excerpts and exit 0.
+
+Two properties of this endpoint that are not in `jg`'s assumptions: the 20-question cap above, and a
+per-minute request ceiling that 429s at concurrency 2 (the default is 32). The 429 recovers by
+retrying, so it costs time rather than correctness — which is why `--concurrency 1` is slow but right.

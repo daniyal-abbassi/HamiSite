@@ -1,5 +1,8 @@
 ## Two apps in one repo — and two references
 
+The installed Zarinpal provider guide is at [`docs/zarinpal-payment.md`](docs/zarinpal-payment.md),
+with the approved payment feature scope at [`specs/017-zarinpal-payment/`](specs/017-zarinpal-payment/).
+
 - **Repo root** — Next.js 15.5.25 App Router + Prisma/PostgreSQL. The API surface
   (`app/api/**`) is healthy and complete; `npm run typecheck` passes clean.
   **The storefront frontend is being built in this same app** (App Router,
@@ -157,3 +160,33 @@ This protocol applies when ending a Beads implementation workflow. It is subordi
 - Do not commit or push without clear authority from the active profile or the current user request.
 - If a required sync or push is blocked, stop and report the exact command and error.
 <!-- END BEADS INTEGRATION -->
+
+## jevgrep (`jg`) — Jev-powered source retrieval
+
+`jg "How is the shop list filtered and sorted?" components` asks Jev what the code *does* and returns
+the relevant files plus verbatim excerpts, before you fall back to broad text search. Use it for
+behavior questions across unfamiliar files; use grep/file search for an exact symbol, string, or path.
+
+The binary is at `~/.npm-global/bin/jg` (user npm prefix, because `/usr` is not writable and no sudo
+is used). It is on `PATH` for interactive shells; otherwise call the absolute path. Provider config
+lives in `~/.config/jevgrep/credentials.json` — custom endpoint `https://router.bynara.id/v1`, model
+`jev`. `jg doctor` verifies it.
+
+Three rules that are not optional, each measured on 2026-10-01:
+
+1. **Pass `--concurrency 1`.** The plan returns HTTP 429 on a per-minute request cap at anything
+   higher, and a 429 that never recovers silently drops files from the result.
+2. **Scope the root to a folder — never the repo.** `jg` uploads real source content to
+   `router.bynara.id` as its mechanism. The standing Jev policy is minimum relevant context, so run
+   `jg files <root>` first to see what a search would read. Dependencies, hidden, binary and
+   credential-like files are excluded by default; that is a filter, not a guarantee.
+3. **The vendor bundle carries a local patch.** Our endpoint rejects any request with more than 20
+   questions (20 → 200, 21 → HTTP 400, verified). Stock `jg` builds up to 128 per request and 3
+   questions per declaration, so those batches die without retry — `jevgrep-compat.mjs` re-applies
+   the three batch-cap edits. **`npm install --global @dzhng/jevgrep@latest` erases them**, and the
+   installed skill tells agents to run exactly that when `jg` is missing. After any upgrade, or if a
+   search reports `discovery incomplete` with `Issue: "provider"` and files marked *locations only*,
+   run `node tools/jev/jevgrep-compat.mjs` and search again. A healthy search exits 0.
+
+When delegating discovery to a subagent, name `jg` and the scoped root in its instructions, and tell
+it `--concurrency 1`.

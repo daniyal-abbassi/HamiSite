@@ -10,6 +10,9 @@ The complete project instructions live in [`CLAUDE.md`](CLAUDE.md): database rul
 never reseed blindly), the dev-server stale-build trap, graphify, and the reference-only
 directories. Read it too.
 
+The Zarinpal provider guide is installed at [`docs/zarinpal-payment.md`](docs/zarinpal-payment.md).
+The approved feature scope and payment contracts are in [`specs/017-zarinpal-payment/`](specs/017-zarinpal-payment/).
+
 One rule survives the teardown, because it protects the owner rather than another agent:
 
 - **Never `git restore`, `git checkout --`, `git stash`, or `git add -A`.** The working tree can
@@ -95,3 +98,17 @@ bd prime                # Refresh Beads context
 
 **Architecture in one line:** issues live in a local Dolt DB; sync uses `refs/dolt/data` on your git remote; `.beads/issues.jsonl` is a passive export. See https://github.com/gastownhall/beads/blob/main/docs/core-concepts/sync-concepts.md for details and anti-patterns.
 <!-- END BEADS CODEX SETUP -->
+
+## jevgrep (`jg`)
+
+`jg "how does X work?" <folder>` asks Jev what code does and returns relevant files plus source
+excerpts — use it for behavior questions across unfamiliar files, grep for exact symbols. Binary at
+`~/.npm-global/bin/jg`, endpoint already configured (`jg doctor` checks it). Three rules:
+
+1. Always `--concurrency 1` — the plan 429s above that and lost files silently disappear.
+2. Scope the root to a folder, never the repo: `jg` uploads real source to `router.bynara.id`.
+   `jg files <root>` first. See the fuller note in `CLAUDE.md`.
+3. Our endpoint caps questions at 20 per request and stock `jg` sends up to 128, so the bundle is
+   locally patched. **After any `npm install --global @dzhng/jevgrep@latest`** — which the installed
+   skill tells you to run — re-apply it with `node tools/jev/jevgrep-compat.mjs`. Symptom of a missing
+   patch: `discovery incomplete`, `Issue: "provider"`, files marked *locations only*. Healthy = exit 0.
