@@ -154,18 +154,24 @@ describe("B2B credit reversal keys off persisted paymentTerm", () => {
   });
 
   it("a genuine CREDIT_60_DAYS order's creditUsed increment is reversed on cancellation", async () => {
-    const created = await (
-      await createOrder(
-        jsonRequest("http://localhost/api/orders", "POST", orderPayload({ paymentTerm: "CREDIT_60_DAYS" }), wholesaleCookie), ctx())
-    ).json();
+    const response = await createOrder(
+      jsonRequest("http://localhost/api/orders", "POST", orderPayload({ paymentTerm: "CREDIT_60_DAYS" }), wholesaleCookie), ctx());
+    expect(response.status).toBe(200);
+    const created = (await response.json()).data;
+
+    // Checkout allows an empty postal code and credit orders skip gateway initiation.
+    expect(created.paymentTerm).toBe("CREDIT_60_DAYS");
+    const persistedOrder = await prisma.order.findUniqueOrThrow({ where: { id: created.id } });
+    expect(persistedOrder.postalCode).toBeNull();
+    expect(await prisma.payment.count({ where: { orderId: created.id } })).toBe(0);
 
     const afterCreate = await prisma.user.findUniqueOrThrow({ where: { id: seed.wholesale.id } });
     expect(Number(afterCreate.creditUsed)).toBeGreaterThan(0);
     const totalAmount = Number(afterCreate.creditUsed);
 
     const res = await patchOrder(
-      jsonRequest(`http://localhost/api/orders/${created.data.id}`, "PATCH", { status: "CANCELED" }, adminCookie),
-      ctx({ id: String(created.data.id) }),
+      jsonRequest(`http://localhost/api/orders/${created.id}`, "PATCH", { status: "CANCELED" }, adminCookie),
+      ctx({ id: String(created.id) }),
     );
     expect(res.status).toBe(200);
 
