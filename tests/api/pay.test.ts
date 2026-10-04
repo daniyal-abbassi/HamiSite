@@ -1,6 +1,7 @@
 import { OrderStatus, PaymentStatus } from "@prisma/client";
 import { beforeEach, describe, expect, it } from "vitest";
 import { POST as createOrder } from "@/app/api/orders/route";
+import { GET as getOrder } from "@/app/api/orders/[id]/route";
 import { POST as pay } from "@/app/api/orders/[id]/pay/route";
 import { prisma } from "@/lib/prisma";
 import { ctx, getRequest, jsonRequest, loginAs } from "../helpers/request";
@@ -58,6 +59,48 @@ describe("POST /api/orders/[id]/pay", () => {
   it("404s for a nonexistent order", async () => {
     const res = await pay(getRequest("http://localhost/api/orders/999999/pay", retailCookie), ctx({ id: "999999" }));
     expect(res.status).toBe(404);
+  });
+
+  it("rejects gateway initiation for wholesale credit orders", async () => {
+    const order = (await (
+      await createOrder(
+        jsonRequest("http://localhost/api/orders", "POST", {
+          firstName: "Wholesale",
+          lastName: "Buyer",
+          phone: "+989120000000",
+          city: "Mashhad",
+          addressText: "456 Credit St",
+          paymentTerm: "CREDIT_60_DAYS",
+          items: [{ productId: seed.product.id, variantId: seed.variant.id, quantity: 1 }],
+        }, wholesaleCookie), ctx())
+    ).json()).data;
+
+    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, wholesaleCookie), ctx({ id: String(order.id) }));
+    expect(res.status).toBe(409);
+    expect(await prisma.payment.count({ where: { orderId: order.id } })).toBe(0);
+  });
+
+  it("keeps an abandoned gateway order accessible and retryable by its owner", async () => {
+    const order = await createRetailOrder();
+    const firstAttempt = await pay(
+      getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie),
+      ctx({ id: String(order.id) }),
+    );
+    expect(firstAttempt.status).toBe(200);
+
+    const reopened = await getOrder(
+      getRequest(`http://localhost/api/orders/${order.id}`, retailCookie),
+      ctx({ id: String(order.id) }),
+    );
+    expect(reopened.status).toBe(200);
+    expect((await reopened.json()).data.paymentStatus).toBe(PaymentStatus.INITIATED);
+
+    const retry = await pay(
+      getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie),
+      ctx({ id: String(order.id) }),
+    );
+    expect(retry.status).toBe(200);
+    expect(await prisma.payment.count({ where: { orderId: order.id } })).toBe(2);
   });
 
   it("persists the gateway authority on the Payment row", async () => {

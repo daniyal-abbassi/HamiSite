@@ -46,6 +46,25 @@ describe("address authorization", () => {
     expect(body.data[0].userId).toBe(seed.retail.id);
   });
 
+  it("lists the owner's default address first for checkout selection", async () => {
+    const first = await createRetailAddress();
+    const firstId = (await first.json()).data.id;
+    const second = await createAddress(
+      jsonRequest(
+        "http://localhost/api/addresses",
+        "POST",
+        { city: "Mashhad", address: "456 Default St", isDefault: true },
+        retailCookie,
+      ), ctx());
+    const secondId = (await second.json()).data.id;
+
+    const res = await listAddresses(getRequest("http://localhost/api/addresses", retailCookie), ctx());
+    const body = await res.json();
+    expect(body.data[0].id).toBe(secondId);
+    expect(body.data[0].isDefault).toBe(true);
+    expect(body.data.find((address: { id: number }) => address.id === firstId)?.isDefault).toBe(false);
+  });
+
   it("another user cannot GET/PATCH/DELETE this address by id", async () => {
     const created = await (await createRetailAddress()).json();
     const id = created.data.id;

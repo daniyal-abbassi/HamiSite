@@ -11,8 +11,8 @@ import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { ApiClientError, apiGet, apiPost } from "@/lib/api-client";
+import { checkoutAddressError } from "@/lib/checkout-validation";
 import { paymentTermLabels, shippingOptions, type ShippingOptionKey } from "@/lib/content/order";
-import { isValidIranianPostalCode } from "@/lib/validators";
 import { cn, formatToman } from "@/lib/utils";
 import type { Address, CouponValidation, OrderCreationResult, PaymentInitiation } from "@/types/store";
 
@@ -101,16 +101,7 @@ export function CheckoutClient() {
   const total = Math.max(0, subtotal - discount) + shippingOption.price;
 
   const addressError = useMemo(() => {
-    if (addressMode === "saved") return selectedAddressId === null ? "یک آدرس انتخاب کنید." : null;
-    if (newAddress.city.trim().length < 2) return "شهر را وارد کنید.";
-    if (newAddress.addressText.trim().length < 5) return "نشانی کامل را وارد کنید.";
-    if (newAddress.phone.trim().length < 5) return "شماره تماس را وارد کنید.";
-    // FR-064: the field is optional, so an empty one stays acceptable — but a
-    // partially-typed code that cannot be a postal code must not reach the server.
-    if (newAddress.postalCode.trim() && !isValidIranianPostalCode(newAddress.postalCode)) {
-      return "کد پستی باید ۱۰ رقم باشد.";
-    }
-    return null;
+    return checkoutAddressError(addressMode, selectedAddressId, newAddress);
   }, [addressMode, selectedAddressId, newAddress]);
 
   async function applyCoupon() {
