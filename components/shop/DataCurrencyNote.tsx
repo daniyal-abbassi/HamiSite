@@ -1,5 +1,3 @@
-import { catalogGeneratedAt } from "@/lib/catalog-db";
-
 /**
  * FR-055 — how current this information is.
  *
@@ -13,8 +11,7 @@ import { catalogGeneratedAt } from "@/lib/catalog-db";
  * demands and what makes it a Persian (Jalali) date with no hand-rolled calendar
  * arithmetic anywhere.
  */
-export async function DataCurrencyNote({ className = "" }: { className?: string }) {
-  const generatedAt = await catalogGeneratedAt();
+export function DataCurrencyNote({ generatedAt, className = "" }: { generatedAt: string | null; className?: string }) {
   if (!generatedAt) return null;
 
   let label: string;

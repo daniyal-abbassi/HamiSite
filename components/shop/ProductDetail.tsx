@@ -30,7 +30,7 @@ import { LiquidSelection } from "@/components/liquid/LiquidSelection";
  */
 import type { CatalogProduct } from "@/lib/catalog-db";
 
-type Props = { product: CatalogProduct };
+type Props = { product: CatalogProduct; generatedAt: string | null };
 
 /**
  * The number as text a shopper can take with them. FR-039: the contact action MUST
@@ -73,7 +73,7 @@ function CopyPhoneButton() {
  * (`lib/catalog.ts:179`), and a control whose only effect was to fire a request that
  * could not change anything is what FR-043 calls inoperable.
  */
-export function ProductDetail({ product }: Props) {
+export function ProductDetail({ product, generatedAt }: Props) {
   const router = useRouter();
   const { user } = useAuth();
   const { addItem } = useCart();
@@ -267,7 +267,7 @@ export function ProductDetail({ product }: Props) {
           </div>
 
           <div className="mt-6 rounded-2xl glass-smoked border border-champagne/25 p-6 shadow-card">
-            <DataCurrencyNote className="mb-3 text-[11px]" />
+            <DataCurrencyNote generatedAt={generatedAt} className="mb-3 text-[11px]" />
             {unitPrice !== null ? (
               <div className="flex flex-wrap items-baseline gap-3">
                 {compareAtPrice != null && compareAtPrice > unitPrice && (

@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { CatalogListing } from "@/components/shop/CatalogListing";
 import { brandLabel } from "@/lib/product-identity";
-import { listBrands, queryProducts } from "@/lib/catalog-db";
+import { catalogGeneratedAt, listBrands, queryProducts } from "@/lib/catalog-db";
 import { resolveSortKey } from "@/lib/content/shop";
 import { destinationDescription } from "@/lib/listing-view";
 
@@ -74,6 +74,7 @@ export default async function BrandPage({
       basePath={`/brands/${encodeURIComponent(brand.slug)}`}
       view={view}
       obtainableCount={obtainableCount}
+      generatedAt={await catalogGeneratedAt()}
     />
   );
 }

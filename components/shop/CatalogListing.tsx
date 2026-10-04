@@ -35,6 +35,7 @@ export function CatalogListing({
   basePath,
   view,
   obtainableCount,
+  generatedAt,
 }: {
   eyebrow: string;
   title: string;
@@ -49,6 +50,7 @@ export function CatalogListing({
   view: ListingView;
   /** How many of this destination's records can actually be sold today. */
   obtainableCount: number;
+  generatedAt: string | null;
 }) {
   const viewHref = (next: Partial<ListingView>) => listingViewHref(basePath, view, next);
   return (
@@ -80,7 +82,7 @@ export function CatalogListing({
             ? `${toFaDigits(total)} محصول`
             : `${toFaDigits(shownTotal)} محصول از ${toFaDigits(total)}`}
         </p>
-        <DataCurrencyNote className="mt-2 text-xs" />
+        <DataCurrencyNote generatedAt={generatedAt} className="mt-2 text-xs" />
       </header>
 
       <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2">

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { obtainableNowRail } from "@/lib/home-rails-db";
+import { catalogGeneratedAt } from "@/lib/catalog-db";
 import { ProductRail } from "@/components/shop/ProductRail";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
 import { type ProductCardData } from "@/components/shop/ProductCard";
@@ -16,7 +17,7 @@ import { toFaDigits } from "@/lib/utils";
  * the loudest possible way of claiming stock that is not there (FR-005).
  */
 export async function ObtainableNow() {
-  const { products, total } = await obtainableNowRail();
+  const [{ products, total }, generatedAt] = await Promise.all([obtainableNowRail(), catalogGeneratedAt()]);
   if (total === 0) return null;
 
   return (
@@ -32,7 +33,7 @@ export async function ObtainableNow() {
           <p className="mt-3 max-w-md text-sm leading-7 text-foreground/60">
             {toFaDigits(total)} محصول از فروشگاه که همین امروز می‌توانید به سبد اضافه کنید — ارزان‌ترین‌ها اول.
           </p>
-          <DataCurrencyNote className="mt-2 text-xs" />
+          <DataCurrencyNote generatedAt={generatedAt} className="mt-2 text-xs" />
         </div>
         <Link href="/shop?stock=purchasable" className="inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
           مشاهده همه <ArrowLeft className="size-4" />

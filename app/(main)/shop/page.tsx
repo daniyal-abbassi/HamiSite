@@ -3,6 +3,7 @@ import { Suspense } from "react";
 import { ShopBanner } from "@/components/shop/ShopBanner";
 import { ShopClient } from "@/components/shop/ShopClient";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
+import { catalogGeneratedAt } from "@/lib/catalog-db";
 import { buildShopView } from "@/lib/shop-query-db";
 import { shopCategoryTiles } from "@/lib/shop-category-tiles-db";
 import "@/components/shop/shop-luxury.css";
@@ -31,7 +32,11 @@ export default async function ShopPage({
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 }) {
-  const [view, tiles] = await Promise.all([buildShopView(await searchParams), shopCategoryTiles()]);
+  const [view, tiles, generatedAt] = await Promise.all([
+    buildShopView(await searchParams),
+    shopCategoryTiles(),
+    catalogGeneratedAt(),
+  ]);
 
   return (
     <div className="shop-luxury">
@@ -40,7 +45,7 @@ export default async function ShopPage({
         <div className="shop-wrap">
           {/* Kept for the client children that still read useSearchParams; the
               results themselves no longer wait on it. */}
-          <DataCurrencyNote className="shop-currency-note" />
+          <DataCurrencyNote generatedAt={generatedAt} className="shop-currency-note" />
           <Suspense fallback={null}>
             <ShopClient view={view} tiles={tiles} />
           </Suspense>
