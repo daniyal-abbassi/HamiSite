@@ -1,6 +1,6 @@
 # Implementation plan: Category Vitrine
 
-**Status:** approved direction, implementation plan. The owner chose option B in `spec.md`: dark, framed panels on the existing paper band. Beads is the task tracker; `tasks.md` indexes its issues.
+**Status:** implemented and accepted under [`owner-approval-2026-10-05.md`](owner-approval-2026-10-05.md). The owner chose option B in `spec.md`: dark, framed panels on the existing paper band. Beads is the task tracker; `tasks.md` indexes its issues.
 
 ## Outcome
 
@@ -10,8 +10,8 @@ Replace the current Feature 010 masonry category chapter with the nine-departmen
 
 - `CategoryHub` currently renders a server component wrapped by `CategoryArrival`, with a CSS masonry list and visible counts.
 - `lib/category-departments-db.ts` supplies department data; `lib/category-departments.ts` defines the static shape/derivation and existing tests.
-- Nine files are present under `public/images/categories/v3/`. Two are 1086×1448 PNGs; seven are 896×1200 JPEGs, below FR-080 and with different extensions from the drop-in convention.
-- The specified transparent cream mark `public/brand/hami-mark-cream-alpha.png` is absent. Do not fabricate the mark or silently ship an opaque/low-contrast substitute. Treat it as an asset gate unless the existing mark can be converted without changing its geometry and the measured rendered size is adequate.
+- Nine owner-approved files are present under `public/images/categories/v3/`. Their dimensions, formats, and measured luminance are retained in `asset-audit.md`; prior floors are waived for this set.
+- The specified transparent cream mark `public/brand/hami-mark-cream-alpha.png` is absent and accepted for this implementation. Do not fabricate a replacement.
 - `app/(main)/page.tsx` already renders `CategoryHub`; integration should preserve that position and avoid unrelated homepage changes.
 - Embla is already a project dependency. Do not add a second carousel library or capture vertical wheel/touch input.
 
@@ -28,8 +28,8 @@ Replace the current Feature 010 masonry category chapter with the nine-departmen
 
 1. **Contract and fallback:** remove count presentation and establish tests for the nine server-rendered links, names, destinations, and no-count output.
 2. **Carousel behavior:** add the vitrine strip and keyboard/touch/resize/reduced-motion behavior behind the server-rendered list; preserve vertical scrolling and no-JS usability.
-3. **Panels and frame:** install conforming assets, add the token-based frame/label/mark treatment, and collect per-image evidence. The cream mark is an explicit dependency.
-4. **Integration and verification:** confirm homepage position and LCP, test 360/390/1280 behavior, check keyboard and no-JS output, compare scroll height and layout shift, and update graphify.
+3. **Panels and frame:** apply the token-based frame/label treatment and collect per-image evidence. The owner approved the current assets and waived the cream mark requirement for this implementation.
+4. **Integration and verification:** confirm homepage position and LCP, test 360/390/1280 behavior, check keyboard and no-JS output, record scroll-height and layout-shift results, and update graphify. The former ±2% historical scroll-height target is waived for this redesign; see the owner amendment and verification report.
 
 ## Acceptance gates
 
@@ -40,4 +40,4 @@ Replace the current Feature 010 masonry category chapter with the nine-departmen
 
 ## Risks and open dependency
 
-The image files currently miss the specified dimensions/formats and the cream mark is missing. Image preparation may use only the supplied art without inventing content or changing product identity. If the mark cannot be faithfully derived from an existing transparent source, request the exact approved mark from the owner before calling the visual feature complete.
+The current images miss the former dimensions/format and luminance floors, and the cream mark is absent. The owner has approved these exceptions for this exact set; future asset replacements require a new review.
