@@ -155,6 +155,7 @@ export const DEPARTMENT_TOTAL = DEPARTMENT_SEED.length;
 export function categoryDepartments(): Department[] {
   const categories = listCategories();
   const kindTotals = countProductsByKind();
+  const subtreeCounts = categorySubtreeCounts();
 
   /*
    * Every failure mode here drops one panel and logs, rather than throwing.
@@ -181,7 +182,7 @@ export function categoryDepartments(): Department[] {
      * the doorway understates itself, which is the `موبایل`-holds-8 defect T056
      * merged the vocabularies to remove.
      */
-    const total = categorySubtreeCounts().get(category.id) ?? 0;
+    const total = subtreeCounts.get(category.id) ?? 0;
     if (total < 1) {
       console.warn(`categoryDepartments: "${seed.slug}" resolves but holds no products — panel skipped (FR-002 forbids an empty doorway)`);
       continue;

@@ -1,4 +1,4 @@
-import { Prisma, Role, StockType } from "@prisma/client";
+import { HistoryAction, Prisma, Role, StockType } from "@prisma/client";
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
@@ -17,7 +17,7 @@ const asVariant = (variant: { id: number; color: string | null; storage: string 
   productIdentifier: variant.productIdentifier, isDefault: variant.isDefault, options: variant.options,
 });
 
-export const POST = withAuth<{ id: string }>(async (request, { params }) => withErrorHandling(async () => {
+export const POST = withAuth<{ id: string }>(async (request, { params, user }) => withErrorHandling(async () => {
   const productId = idOf(params.id);
   const parsed = schema.safeParse(await request.json());
   if (!parsed.success) throw new ApiError(400, "Invalid request body", parsed.error.flatten());
@@ -40,6 +40,11 @@ export const POST = withAuth<{ id: string }>(async (request, { params }) => with
     await tx.product.update({ where: { id: productId }, data: {
       hasVariants: true, ...(input.stock === undefined ? {} : { stock: input.stock }),
       ...(input.stockType === undefined ? {} : { stockType: normalizedStock(input.stockType) }),
+    } });
+    await tx.productHistory.create({ data: {
+      productId, variantId: created.id, action: HistoryAction.CREATED, field: "variant",
+      newValue: { color: input.color ?? null, storage: input.storage ?? null, price: input.price, stock: created.stock },
+      changedById: user.id,
     } });
     return created;
   });

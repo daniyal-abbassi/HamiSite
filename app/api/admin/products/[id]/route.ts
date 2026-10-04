@@ -1,4 +1,4 @@
-import { Role, StockType } from "@prisma/client";
+import { HistoryAction, Prisma, Role, StockType } from "@prisma/client";
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
@@ -28,7 +28,7 @@ export const GET = withAuth<{ id: string }>(async (_request, { params }) => with
   return ok(product);
 }), { roles: [Role.ADMIN] });
 
-export const PATCH = withAuth<{ id: string }>(async (request, { params }) => withErrorHandling(async () => {
+export const PATCH = withAuth<{ id: string }>(async (request, { params, user }) => withErrorHandling(async () => {
   const id = parseId(params.id);
   const parsed = updateSchema.safeParse(await request.json());
   if (!parsed.success) throw new ApiError(400, "Invalid request body", parsed.error.flatten());
@@ -38,8 +38,8 @@ export const PATCH = withAuth<{ id: string }>(async (request, { params }) => wit
   if (input.mainCategoryId != null && !await prisma.category.findUnique({ where: { id: input.mainCategoryId }, select: { id: true } })) throw new ApiError(400, "Invalid category id");
   if (input.brandId != null && !await prisma.brand.findUnique({ where: { id: input.brandId }, select: { id: true } })) throw new ApiError(400, "Invalid brand id");
   try {
-    await prisma.$transaction(async (tx) => {
-      await tx.product.update({ where: { id }, data: {
+    const updated = await prisma.$transaction(async (tx) => {
+      const product = await tx.product.update({ where: { id }, data: {
         name: input.name, englishName: input.englishName, slug: input.slug,
         description: input.description, descriptionText: input.description,
         analysis: input.analysis,
@@ -53,7 +53,7 @@ export const PATCH = withAuth<{ id: string }>(async (request, { params }) => wit
         stockType: input.stockType === undefined ? undefined : input.stockType.toUpperCase() as StockType,
         minOrderQuantity: input.minOrderQuantity, maxOrderQuantity: input.maxOrderQuantity,
         guarantee: input.guarantee, seoTitle: input.seoTitle, seoDescription: input.seoDescription,
-      } });
+      }, select: { id: true, slug: true, price: true } });
       if (input.price !== undefined && current.variants.length) {
         const selected = current.variants.find((variant) => variant.isDefault) ?? current.variants[0];
         await tx.productVariant.update({ where: { id: selected.id }, data: {
@@ -61,8 +61,20 @@ export const PATCH = withAuth<{ id: string }>(async (request, { params }) => wit
           compareAtPrice: input.compareAtPrice === undefined ? undefined : input.compareAtPrice || null,
         } });
       }
+      for (const [field, newValue] of Object.entries(input)) {
+        const oldValue = (current as unknown as Record<string, unknown>)[field];
+        const serializedOldValue = oldValue instanceof Prisma.Decimal ? oldValue.toNumber()
+          : oldValue instanceof Date ? oldValue.toISOString() : oldValue;
+        await tx.productHistory.create({ data: {
+          productId: id, action: HistoryAction.UPDATED, field,
+          oldValue: serializedOldValue === undefined ? Prisma.JsonNull : serializedOldValue as Prisma.InputJsonValue,
+          newValue: newValue === undefined ? Prisma.JsonNull : newValue as Prisma.InputJsonValue,
+          changedById: user.id,
+        } });
+      }
+      return product;
     });
-    return ok({ id, slug: input.slug ?? current.slug }, { message: "Product updated" });
+    return ok({ ...updated, price: updated.price.toNumber() }, { message: "Product updated" });
   } catch (error) {
     if (error && typeof error === "object" && "code" in error && error.code === "P2002") throw new ApiError(409, "A product with this slug already exists");
     throw error;

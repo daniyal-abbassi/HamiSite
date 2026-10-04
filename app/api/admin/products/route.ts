@@ -1,5 +1,4 @@
-import { Role } from "@prisma/client";
-import { StockType } from "@prisma/client";
+import { HistoryAction, Role, StockType } from "@prisma/client";
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, parsePagination, withErrorHandling } from "@/lib/http";
@@ -26,7 +25,7 @@ export const GET = withAuth(async (request) => withErrorHandling(async () => {
   return ok(result.data, { page: pagination.page, pageSize: pagination.pageSize, total: result.total, hasNextPage: pagination.page * pagination.pageSize < result.total });
 }), { roles: [Role.ADMIN] });
 
-export const POST = withAuth(async (request) => withErrorHandling(async () => {
+export const POST = withAuth(async (request, { user }) => withErrorHandling(async () => {
   const parsed = productInput.safeParse(await request.json());
   if (!parsed.success) throw new ApiError(400, "Invalid request body", parsed.error.flatten());
   const input = parsed.data;
@@ -34,17 +33,24 @@ export const POST = withAuth(async (request) => withErrorHandling(async () => {
   if (input.brandId && !await prisma.brand.findUnique({ where: { id: input.brandId }, select: { id: true } })) throw new ApiError(400, "Invalid brand id");
   const state = (input.stockType ?? "CALL").toUpperCase() as StockType;
   try {
-    const created = await prisma.product.create({ data: {
-      name: input.name, englishName: input.englishName, slug: input.slug, description: input.description,
-      descriptionText: input.description, analysis: input.analysis, mainCategoryId: input.mainCategoryId,
-      brandId: input.brandId, isDigital: input.isDigital, price: input.price, compareAtPrice: input.compareAtPrice,
-      specialOffer: input.specialOffer, specialOfferEnd: input.specialOfferEnd ? new Date(input.specialOfferEnd) : undefined,
-      batchSize: input.batchSize, available: input.available ?? false, showPrice: input.showPrice ?? true,
-      stock: input.stock, stockType: state, minOrderQuantity: input.minOrderQuantity,
-      maxOrderQuantity: input.maxOrderQuantity, guarantee: input.guarantee, seoTitle: input.seoTitle,
-      seoDescription: input.seoDescription,
-    }, select: { id: true, slug: true } });
-    return ok(created, { message: "Product created" });
+    const created = await prisma.$transaction(async (tx) => {
+      const product = await tx.product.create({ data: {
+        name: input.name, englishName: input.englishName, slug: input.slug, description: input.description,
+        descriptionText: input.description, analysis: input.analysis, mainCategoryId: input.mainCategoryId,
+        brandId: input.brandId, isDigital: input.isDigital, price: input.price, compareAtPrice: input.compareAtPrice,
+        specialOffer: input.specialOffer, specialOfferEnd: input.specialOfferEnd ? new Date(input.specialOfferEnd) : undefined,
+        batchSize: input.batchSize, available: input.available ?? false, showPrice: input.showPrice ?? true,
+        stock: input.stock, stockType: state, minOrderQuantity: input.minOrderQuantity,
+        maxOrderQuantity: input.maxOrderQuantity, guarantee: input.guarantee, seoTitle: input.seoTitle,
+        seoDescription: input.seoDescription,
+      }, select: { id: true, slug: true, price: true } });
+      await tx.productHistory.create({ data: {
+        productId: product.id, action: HistoryAction.CREATED, field: "product",
+        newValue: { name: input.name, slug: product.slug, price: input.price }, changedById: user.id,
+      } });
+      return product;
+    });
+    return ok({ ...created, price: created.price.toNumber() }, { message: "Product created" });
   } catch (error) {
     if (error && typeof error === "object" && "code" in error && error.code === "P2002") throw new ApiError(409, `A product with slug "${input.slug}" already exists`);
     throw error;

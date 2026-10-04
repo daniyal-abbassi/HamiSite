@@ -509,17 +509,31 @@ export function descendantCategoryIds(id: number): Set<number> {
  */
 export function categorySubtreeCounts(): Map<number, number> {
   const raw = currentCatalog();
-  const out = new Map<number, number>();
-  for (const c of raw.categories) {
-    const ids = descendantCategoryIds(c.id);
-    out.set(
-      c.id,
-      raw.products.filter(
-        (p) => (p.category?.id != null && ids.has(p.category.id)) || (p.other_categories ?? []).some((x) => ids.has(x.id)),
-      ).length,
-    );
+  const parents = new Map(raw.categories.map((category) => [category.id, category.parent_id]));
+  const productsByCategory = new Map<number, Set<number>>();
+
+  // Walk from each product's assigned categories toward the roots once. Sets
+  // preserve the old behavior when a product is assigned to multiple nodes in
+  // the same subtree: it contributes only one count to each ancestor.
+  for (const product of raw.products) {
+    const assigned = new Set([
+      ...(product.category?.id == null ? [] : [product.category.id]),
+      ...(product.other_categories ?? []).map((category) => category.id),
+    ]);
+    for (const startId of assigned) {
+      let id: number | null | undefined = startId;
+      const seen = new Set<number>();
+      while (id != null && parents.has(id) && !seen.has(id)) {
+        seen.add(id);
+        const products = productsByCategory.get(id) ?? new Set<number>();
+        products.add(product.id);
+        productsByCategory.set(id, products);
+        id = parents.get(id);
+      }
+    }
   }
-  return out;
+
+  return new Map(raw.categories.map((category) => [category.id, productsByCategory.get(category.id)?.size ?? 0]));
 }
 
 export function listCategories() {
