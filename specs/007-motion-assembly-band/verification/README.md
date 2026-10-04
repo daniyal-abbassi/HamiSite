@@ -1,65 +1,31 @@
 # Band 007 verification harnesses
 
-The instruments behind `../spec.md`'s Measurable Outcomes. A number with no reproducible instrument behind it
-is a claim, not a measurement, and this feature's headline numbers — SC-001's length, SC-004's word parity,
-SC-008's set difference — are all of the kind a screen cannot be interrogated for by eye.
-
-Two harnesses live here, and **both are meant to fail until Phase 2 lands.** They are written red on purpose
-(T007/T008 in `../tasks.md`) so that the wiring is what turns them green, rather than the harness being edited
-to fit whatever the wiring happened to do. The third red test of that group, T006's ground unit test, is *not*
-in this directory: it edits `tests/unit/atmosphere-progression.test.ts`, which cannot be separated from the
-T014/T015/T016 anchor change and so moves inside `driver`'s commit rather than here.
+These instruments reflect [`../scope-amendment-no-pin.md`](../scope-amendment-no-pin.md). The pinned experiment
+and its red pin assertions are historical; current verification measures the composed band in normal flow.
 
 ```bash
 npm run dev &                        # then, once it answers:
 node specs/007-motion-assembly-band/verification/content-parity.mjs
-node specs/007-motion-assembly-band/verification/band-length.mjs
+node specs/007-motion-assembly-band/verification/no-pin-foundation.mjs
 ```
 
-- `content-parity.mjs` (T007) — SC-004 and SC-008. Loads `/` with scripting disabled and again with it
-  enabled, reads `../baseline/content-before.json`, and asserts that the served HTML's words equal the
-  settled DOM's words equal the band's word set, and that `band − content-before` is empty. Counting both
-  sides is the point: SC-004 says "the count matches the settled page exactly", which an RSC-only reading
-  cannot prove.
-- `band-length.mjs` (T008) — SC-001 and the pin. At 360px it reports the band section's height, the sticky
-  shell's height, `window.innerHeight`, `100svh` resolved, and whether the shell actually holds `top: 0`
-  across the pin window; it asserts length ≤ 2,400px **and** pin = true. Against today's page it fails on
-  both counts, which is the expected red.
+- `content-parity.mjs` — compares the served HTML and hydrated DOM. It checks SC-004 and reports SC-008 as
+  `UNAVAILABLE` while the missing historical source set remains unrecovered.
+- `no-pin-foundation.mjs` — measures height at 360/390/1280, section/anchor integrity, horizontal overflow,
+  forbidden sticky/spacer/timeline artifacts, no-JS headings and links, and reduced-motion heading visibility.
+- `band-length.mjs` remains a compatibility entry point for `no-pin-foundation.mjs`.
 
-Both accept `BASE_URL` (default `http://localhost:3000`) and `VIEWPORT_W` (default 360). `:3000` is the
-shared dev server — see `.agent-pair/README.md` before restarting it; if you need your own, say so on the
-board and point `BASE_URL` at it.
+Both scripts accept `BASE_URL` (default `http://localhost:3000`). The foundation harness also accepts `CHROME`
+(default `/snap/bin/chromium`). Check the existing server before starting another process.
 
-## The contract every harness here obeys
+## Harness dependencies and limitations
 
-Inherited verbatim from `specs/001-premium-rtl-storefront/verification/README.md`, because the alternatives
-each cost someone a bad measurement:
-
-- **Playwright comes from `/home/lain/tools/pixel-bridge-mcp/node_modules/playwright/index.mjs`** — the copy
-  that ships with pixel-bridge. This repo does not depend on Playwright, and a locally installed one drifts
-  from the browser build in `~/.cache/ms-playwright`.
-- **Chromium is passed explicitly as `executablePath`:**
-  `/home/lain/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome`. Without it, Playwright launches the
-  revision *its own* version expects, which on this machine is not the revision that exists on disk.
-- **PNG decoding happens inside the page**, via `img.decode()` + `canvas` + `getImageData`, rather than in
-  Node. It keeps the harnesses dependency-free, and the composited pixel is the only honest answer to "what
-  did a shopper see" once overlays and stacking contexts are involved.
-- **Redirect output to a file instead of piping through `head`.** A `SIGPIPE` kills a capture mid-run and
-  leaves images from one run sitting next to a manifest from another, which reads as a passing suite over a
-  corrupt baseline. `… > out.log 2>&1` rather than `… | head`.
-- **No frame-rate or fps claim from this machine.** Nothing here measures smoothness, and nothing written in
-  `../spec.md` should be quoted as one: the numbers this box produces are not a motion budget. What the band
-  is graded on is *sequence* (does state follow scroll), which `band-length.mjs` and the `sequence-state.mjs`
-  work measure without ever asserting a frame count.
-
-## Inputs these harnesses depend on, and their current state
-
-| Input | Written by | On disk? |
-|---|---|---|
-| `../baseline/content-before.json` | T005 | no — Phase 1 still open |
-| `../baseline/heading-before-*.png` | T004 | no — SC-002's control images |
-| `AssemblyBand` rendered at `/` | T012 | no — `app/(main)/page.tsx` still mounts the three sections |
-
-`content-parity.mjs` checks for the band **before** it reads the baseline file, so a run today fails with
-"no AssemblyBand on the page" rather than a stack trace about a missing JSON. That ordering is deliberate:
-the missing baseline is a Phase 1 fact, and it must not be the error that hides the Phase 2 one.
+- Playwright is loaded from `/home/lain/tools/pixel-bridge-mcp/node_modules/playwright/index.mjs`.
+- Chromium is passed explicitly as `executablePath`; the default is `/snap/bin/chromium`, overridable with
+  `CHROME`.
+- The browser foundation harness reads the declared ground-anchor lists from `lib/atmosphere/progression.ts`
+  and compares them with the current rendered page. `--negative-control` removes `#featured` from the page in
+  the browser context and succeeds only if the drift check detects the missing anchor; it does not edit source.
+- No frame-rate claim is made. The old pinned-sequence measurements are retained only as historical context.
+- The pre-change screenshots and `baseline/content-before.json` do not exist. SC-008's historic comparison is
+  reported as unavailable, never as a pass.

@@ -4,7 +4,7 @@
 
 **Created**: 2026-09-24
 
-**Status**: Draft — three open decisions marked below; the rest is ready for planning.
+**Status**: Active with accepted scope amendment — see [`scope-amendment-no-pin.md`](./scope-amendment-no-pin.md), dated 2026-10-04. That amendment is controlling wherever this historical draft describes a pinned track or scroll choreography.
 
 **Input**: User description: "labor agents: one to use this style: https://superdesign.dev/library/text-blur-animation — one to use this for squeezing below sections into one animation style UI: https://superdesign.dev/library/exploded-view-assembly — تجربه حضوری خرید را لمس کنید / چرا حامی همراه، اعتماد با واقعیت ساخته میشود / همراه شما از انتخاب تا تجربه. agents we have are: yourself - qoder CLI - freebuff (3)"
 

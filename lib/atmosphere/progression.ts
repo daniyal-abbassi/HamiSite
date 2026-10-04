@@ -57,7 +57,7 @@ export const HOMEPAGE_SECTIONS = [
 /**
  * Anchors that live **inside** a section instead of being one.
  *
- * `band-settled` is a `div` at the end of the assembly band's pinned track (feature 007), so the ground
+ * `band-settled` is a `div` at the end of the assembly band's normal-flow composition (feature 007), so the ground
  * can measure it — `getElementById` does not care about the tag — but the drift guard's DOM capture
  * queries `section` elements and will never see it. Without this exemption the guard reads 9 declared
  * anchors against 8 rendered sections and goes red on a page that is correct, which is the failure mode

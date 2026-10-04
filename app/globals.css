@@ -78,7 +78,9 @@
   --foreground: 240 236 233;    /* #F0ECE9 — Warm Platinum / Diamond White */
 
   --font-vazirmatn: "Estedad Variable", "Vazirmatn Variable", "Vazirmatn", "Tahoma", sans-serif;
-  --font-dm-mono: "DM Mono", ui-monospace, "Courier New", monospace;
+  /* DM Mono has Latin glyphs only. Keep it for Latin runs and fall back to
+     the site's Persian face before generic monospace for Persian text. */
+  --font-dm-mono: "DM Mono", var(--font-vazirmatn), ui-monospace, "Courier New", monospace;
 
   --card: 20 6 10;              /* #14060A — Smoked Obsidian Card */
   --card-foreground: 240 236 233;
@@ -130,6 +132,8 @@
   body {
     @apply bg-background text-foreground font-sans antialiased;
     overflow-x: hidden;
+    letter-spacing: 0;
+    line-height: 1.8;
   }
   /* Band 3 (T073): one canvas, one light.
      ------------------------------------------------------------------
@@ -334,7 +338,9 @@
 
   /* Eyebrow pill — Imperial Luxury */
   .eyebrow {
-    @apply inline-flex items-center gap-2 rounded-full text-[12px] tracking-[0.14em];
+    @apply inline-flex items-center gap-2 rounded-full text-[12px];
+    line-height: 1.6;
+    letter-spacing: 0;
     color: var(--champagne, #E5D3B3);
     border: 1px solid rgba(229, 211, 179, 0.25);
     background: rgba(229, 211, 179, 0.06);
@@ -457,7 +463,8 @@
   border-radius: 9999px;
   font-family: var(--font-dm-mono), monospace;
   font-size: 12px;
-  letter-spacing: 0.08em;
+  line-height: 1.6;
+  letter-spacing: 0;
   color: #E5D3B3;
   background: rgba(229, 211, 179, 0.06);
   border: 1px solid rgba(229, 211, 179, 0.22);

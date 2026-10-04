@@ -10,26 +10,20 @@
  * is a count, not a spot check, which is the difference between "100% holds" and "the three strings I looked at
  * hold".
  *
- * SC-008 is the other half: the band may re-arrange the page's back half, but it may not *claim* anything new.
- * Every string and href in the settled composition must already appear in the verified content list, so the
- * assertion is a set difference `band − content-before = ∅`, and the interesting output is what sits in that
- * difference rather than the boolean.
+ * SC-008's pre-change content set was not captured. This harness still checks SC-004 served/hydrated parity;
+ * if the historical set is absent, it reports SC-008 as UNAVAILABLE rather than inventing a baseline.
  *
  *   node specs/007-motion-assembly-band/verification/content-parity.mjs
  *   BASE_URL=http://localhost:3000 node …/content-parity.mjs
  *
- * Exit 0 when both hold, 1 when a contract is violated, 2 when the harness itself could not get an answer.
- * The distinction matters because the page is expected to fail this until T012 wires the band, and a broken
- * probe must never be reported as a broken storefront.
- *
- * Expected red today: "no AssemblyBand on the page". The band check runs BEFORE the baseline file is opened, so
- * the missing Phase 1 artefact cannot surface as the error and hide the Phase 2 one.
+ * Exit 0 when SC-004 holds and SC-008 has no baseline or passes, 1 when a checkable contract is violated,
+ * and 2 when the harness itself could not get an answer.
  */
 import { readFileSync, existsSync } from "node:fs";
 import { join } from "node:path";
 import { chromium } from "/home/lain/tools/pixel-bridge-mcp/node_modules/playwright/index.mjs";
 
-const EXE = "/home/lain/.cache/ms-playwright/chromium-1234/chrome-linux64/chrome";
+const EXE = process.env.CHROME ?? "/snap/bin/chromium";
 const BASE = process.env.BASE_URL ?? "http://localhost:3000";
 const VW = Number(process.env.VIEWPORT_W ?? 360);
 const BAND_SELECTOR = "section.assembly-band";
@@ -88,10 +82,7 @@ if (!bandPresent) {
   console.log(`band in settled DOM: 0  (${BAND_SELECTOR})`);
   console.log(`sections today:      ${today.join(", ")}`);
   await browser.close();
-  fail(
-    "no AssemblyBand on the page — T012 is open: app/(main)/page.tsx still mounts the three sections, so SC-004 " +
-      "and SC-008 have no band to measure.",
-  );
+  fail("SC-004 — the composed band is absent from the hydrated document, so served/hydrated parity cannot be measured.");
 }
 
 /**
@@ -102,8 +93,8 @@ if (!bandPresent) {
  * split on, because splitting on it would report one compound word as two and move the count without changing
  * anything a shopper can see.
  *
- * `baseline/content-before.json` (T005) has to be produced with this same rule, or SC-008 is subtracting two
- * different notions of "string"; the shape check below catches the obvious ways that goes wrong. The rule lives
+ * If a historical baseline is ever recovered, `baseline/content-before.json` must use this same rule or SC-008
+ * subtracts two different notions of "string"; the shape check below catches the obvious ways that goes wrong. The rule lives
  * inside this callback on purpose: Playwright serialises evaluate arguments, so a function defined out there
  * would arrive in the page as nothing at all.
  */
@@ -168,7 +159,9 @@ if (served.hrefs.join("|") !== settled.hrefs.join("|")) sc004.push("the link set
 if (!existsSync(BASELINE)) {
   console.log(`\nSC-004 (no-JS parity): ${sc004.length === 0 ? "PASS" : "FAIL"}`);
   for (const f of sc004) console.log(`  - ${f}`);
-  fail(`SC-008 — ${BASELINE.replace(`${process.cwd()}/`, "")} does not exist. T005 has not captured the before-set, so there is nothing to take a difference against.`);
+  console.log("SC-008 (historical source set difference): UNAVAILABLE — the pre-change content set was never captured; no substitute is fabricated.");
+  console.log(`\n${sc004.length === 0 ? "PASS" : "FAIL"} — SC-004 served==settled; SC-008 remains unavailable`);
+  process.exit(sc004.length === 0 ? 0 : 1);
 }
 
 let baseline;

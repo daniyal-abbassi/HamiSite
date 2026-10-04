@@ -11,7 +11,7 @@ function splitWords(node: React.ReactNode, ctx: { i: number }): React.ReactNode 
   return React.Children.map(node, (child) => {
     if (typeof child === "string") {
       return child.split(/(\s+)/).map((part, j) =>
-        /^\s+$/.test(part) ? (
+        part === "" || /^\s+$/.test(part) || !/[\p{L}\p{N}]/u.test(part) ? (
           part
         ) : (
           <span key={j} className="heading-arrival__word" style={{ transitionDelay: `${ctx.i++ * 45}ms` }}>
@@ -33,7 +33,8 @@ function splitWords(node: React.ReactNode, ctx: { i: number }): React.ReactNode 
  * SSR renders the heading fully visible; only after mount is an
  * out-of-view heading armed, and headings already in view never animate.
  * The settled DOM is the original tree plus classes, so the settled heading is
- * pixel-identical (SC-002). Reduced motion returns the children untouched.
+ * preserves the original text and joining. Historical before-state screenshots were not captured, so no
+ * pixel-identical comparison is claimed. Reduced motion returns the children untouched.
  */
 export function HeadingArrival({
   id,

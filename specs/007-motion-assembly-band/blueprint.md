@@ -4,6 +4,8 @@
 **Consumers**: owner (approval gate), `driver` (US2 assembly sequence), `qoder` (US1 heading arrival, after the structure exists).
 **Status of claims**: every statement about existing code cites `file:line`. Items marked *(inference)* are design reasoning, not read from code; unmarked code statements are read-facts.
 
+> **Scope amendment (2026-10-04):** This blueprint preserves the original pinned-assembly proposal as design history. The accepted execution scope is now the normal-flow, no-pin composed band in [`scope-amendment-no-pin.md`](./scope-amendment-no-pin.md), based on [`notes/band-geometry-measured.md`](./notes/band-geometry-measured.md). Do not implement the pin, track, spacer, or scroll-driven beats described below. The amendment controls every conflict; the heading arrival, content/accessibility contracts, and ground alignment remain in scope.
+
 ---
 
 ## 1. Content inventory — the contract (FR-004 / SC-008)

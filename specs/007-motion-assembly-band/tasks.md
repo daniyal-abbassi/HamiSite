@@ -4,6 +4,8 @@ description: "Task list for feature 007 — Motion Assembly Band"
 
 # Tasks: Motion Assembly Band (feature 007)
 
+> **Execution warning (2026-10-04):** The task phases below are the historical pinned-assembly plan and include obsolete multi-agent locks/handoffs. The controlling scope is [`scope-amendment-no-pin.md`](./scope-amendment-no-pin.md). Do not execute pin/track/timeline or coordination-board tasks. Beads is the live tracker; its descriptions and dependencies are being reconciled under issue `HamiSite-basic-structure-8sv.8`. Preserve the historical checkboxes as records until each is explicitly superseded or mapped to current evidence. The pre-change screenshot/content baseline is unavailable and must not be fabricated.
+
 **Input**: `specs/007-motion-assembly-band/spec.md` + `specs/007-motion-assembly-band/blueprint.md`
 
 **Prerequisites**:

@@ -127,7 +127,7 @@ export function AssemblyBand() {
             level={2}
             className="text-3xl font-black leading-[1.4] tracking-normal md:text-5xl md:leading-[1.35]"
           >
-            {finalConversionCopy.titleLead}،
+            {`${finalConversionCopy.titleLead}،`}
             <em className="block font-black not-italic text-aqua">{finalConversionCopy.titleTail}</em>
           </HeadingArrival>
           <p className="mx-auto mt-5 max-w-lg text-sm leading-8 text-foreground/65">{finalConversionCopy.subtitle}</p>
@@ -146,8 +146,7 @@ export function AssemblyBand() {
         </div>
       </div>
 
-      {/* Ground anchor for the `close` stage (blueprint §5): a div, never a second landmark, and outside any
-          pinned box because useAtmosphereGround measures anchors on mount and never on scroll. */}
+      {/* Ground anchor for the `close` stage: a div, never a second landmark. */}
       <div id="band-settled" />
     </section>
   );

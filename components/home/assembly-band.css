@@ -24,8 +24,8 @@
   }
 }
 
-/* The two actions that matter, in flow, at the end of the composition. Both are positionally fixed because
-   nothing here animates them (FR-018). */
+/* The primary actions stay in normal flow at the end of the composition. Dock clearance keeps them visible
+   and reachable on phones; the persistent dock also provides its own contact action. */
 .assembly-band__actions {
   display: flex;
   flex-wrap: wrap;
@@ -67,5 +67,12 @@
     opacity: 1;
     translate: none;
     filter: none;
+  }
+}
+
+@media print {
+  /* The composition is in normal flow; avoid carrying the screen wrap's stacking context to paper. */
+  .assembly-band {
+    position: static;
   }
 }

@@ -112,7 +112,7 @@ const config: Config = {
       },
       fontFamily: {
         sans: ["var(--font-vazirmatn)", "Tahoma", "sans-serif"],
-        mono: ["var(--font-dm-mono)", "monospace"],
+        mono: ["var(--font-dm-mono)", "var(--font-vazirmatn)", "monospace"],
       },
       boxShadow: {
         /* Layered ambient shadows — a hairline contact line, a mid falloff,
