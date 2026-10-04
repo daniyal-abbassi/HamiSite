@@ -132,9 +132,9 @@ chevrons must not silently remove the access.
 - **FR-069**: The section SHALL NOT use the 13° `rotateY` arc, the chevron pair, or the «۱ از ۹»
   `aria-live` readout.
 - **FR-070**: The category name SHALL be live Persian text in the DOM, never baked into the image.
-- **FR-071**: The Hami mark SHALL overlay each panel as a real image element from a transparent cream
-  asset. It SHALL NOT be produced by an image model — Persian script rendered by a generator comes out
-  as gibberish, and the wordmark plus tagline would be wrong on every panel.
+- **FR-071**: The current nine-panel implementation is approved without the transparent cream Hami mark,
+  as recorded in `owner-approval-2026-10-05.md`. No replacement mark is to be fabricated. Future panel
+  or mark changes require a new owner review.
 
 **Mobile-first behaviour**
 - **FR-072**: At 360px the section SHALL be a scroll-snap strip of ~66vw panels with a hard peek of the
@@ -157,17 +157,15 @@ chevrons must not silently remove the access.
 - **FR-079**: Server-rendered output without hydration SHALL be a plain list of nine working links.
 
 **Assets — measurable floors**
-- **FR-080**: Panels SHALL live at `public/images/categories/<kind>.png`, 3:4 portrait, at least
-  1086×1448, named by department kind.
-- **FR-081**: Every panel SHALL meet a measured legibility floor: mean luminance of the subject band
-  (5–60% of height) ≥ 25, with ≥ 10% of its pixels above luma 60. The first probe failed at 8.7 and
-  1.9% and was rejected; a beautiful panel nobody can see is a black rectangle.
+- **FR-080**: The current panels SHALL use the owner-approved assets documented in
+  `owner-approval-2026-10-05.md`. Their original PNG, dimensions, and 3:4 requirements are waived.
+- **FR-081**: Panel luminance SHALL be measured and recorded. The original numerical floor (mean ≥25
+  and ≥10% of subject-band pixels above luma 60) is waived for the approved current nine files.
 - **FR-082**: The overlaid label SHALL reach at least 4.5:1 against the image region directly behind it,
   measured, not assumed.
-- **FR-083**: No panel SHALL depict a recognisable brand's trade dress or contain invented text, logos,
-  watermarks, hands or people. Evidence for why this is a requirement and not a nicety: a prompt for "a
-  modern smartphone" returned an unmistakable iPhone — mute switch, two volume keys, pill speaker slit —
-  with no logo requested and none produced.
+- **FR-083**: The current nine panels are accepted as the owner-approved set recorded in
+  `owner-approval-2026-10-05.md`. This approval is limited to those files; future replacements require
+  review for recognisable brand identity, invented text, logos, watermarks, hands, or people.
 
 ### Key Entities
 
@@ -197,29 +195,37 @@ chevrons must not silently remove the access.
 
 - **SC-016**: At 360×800 all nine departments are reachable by horizontal swipe alone, and a vertical
   swipe over the section scrolls the page in 10 of 10 attempts.
-- **SC-017**: Every one of the nine panels passes FR-081's luminance floor, measured by script, not by
-  eye.
+- **SC-017**: Every panel's luminance is measured and recorded. The numerical floor is waived for the
+  owner-approved current nine files.
 - **SC-018**: Every panel's label passes FR-082 at 4.5:1 or better, measured against the actual pixels
   behind it.
 - **SC-019**: Zero product counts appear anywhere in the section at any viewport.
 - **SC-020**: A keyboard-only user reaches all nine departments in ≤ 8 arrow presses from either end and
   sees a focus indicator on every one.
-- **SC-021**: No panel contains a recognisable brand identity, invented text, or a watermark — reviewed
-  panel by panel.
+- **SC-021**: The current nine panels are accepted by the owner's 2026-10-05 approval. Any replacement
+  panel requires a new review.
 - **SC-022**: The page's LCP element is unchanged by this feature, and the strip adds no layout shift.
-- **SC-023**: Homepage scroll height at 360px is unchanged within ±2% — proof there is no pinning or
-  spacer.
+- **SC-023**: The measured scroll-height change from the previous masonry layout is accepted as part of
+  the owner-approved redesign. Evidence records before/after values; browser checks still verify no
+  pinned section or hydration spacer.
 
 ## Assumptions
 
-- The owner supplies the nine panel images and a transparent **cream** Hami mark at ≥ 600px
-  (`public/brand/hami-mark-cream-alpha.png`). The only transparent mark in the repo today is 131×240 and
-  oxblood, which is the same luminance as the panel ground and disappears on it.
+- The owner-approved current panels and missing cream mark are governed by the 2026-10-05 scope
+  amendment. Any replacement assets require a new owner review.
 - Feature 005's nine routes remain correct; this feature does not re-litigate eligibility.
 - `app/(main)/page.tsx` keeps rendering `<CategoryHub />` in its current position — the wiring is a
   REQUEST to `driver`, never a direct edit.
 - Research R1 stands: no Persian or Arabic RTL retail storefront does this. There is no precedent to
   cite, which is why the owner owns the decision explicitly.
+
+## Owner-approved amendment (2026-10-05)
+
+The owner approved the current nine-panel implementation and its documented visual assets. The asset
+format/dimension and luminance floors, the requirement for a cream mark, and the former ±2% historical
+scroll-height target are waived for this exact implementation. See
+[`owner-approval-2026-10-05.md`](owner-approval-2026-10-05.md) for scope and measured evidence. Other
+acceptance requirements remain unchanged.
 
 ## Work Split
 
