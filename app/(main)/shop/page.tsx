@@ -6,13 +6,14 @@ import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
 import { catalogGeneratedAt } from "@/lib/catalog-db";
 import { buildShopView } from "@/lib/shop-query-db";
 import { shopCategoryTiles } from "@/lib/shop-category-tiles-db";
+import { pageMetadata } from "@/lib/seo-metadata";
 import "@/components/shop/shop-luxury.css";
 
-export const metadata: Metadata = {
-/* The template in app/layout.tsx appends the brand: «فروشگاه | حامی همراه». */
+export const metadata: Metadata = pageMetadata({
   title: "فروشگاه",
-  description: "خرید موبایل، لوازم جانبی و محصولات دیجیتال از فروشگاه حامی همراه — آنلاین و حضوری.",
-};
+  description: "خرید موبایل، لوازم جانبی و محصولات دیجیتال از حامی همراه در مشهد؛ فهرست محصولات و دسته‌بندی‌های فروشگاه را ببینید و برای قیمت روز تماس بگیرید.",
+  path: "/shop",
+});
 
 /**
  * The listing, read from the catalog seam on the server.

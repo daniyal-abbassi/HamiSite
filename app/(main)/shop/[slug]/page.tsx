@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { ProductDetail } from "@/components/shop/ProductDetail";
 import { RelatedProducts } from "@/components/shop/RelatedProducts";
 import { catalogGeneratedAt, findProductBySlug } from "@/lib/catalog-db";
+import { pageMetadata } from "@/lib/seo-metadata";
 
 type Params = Promise<{ slug: string }>;
 
@@ -10,15 +11,16 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { slug } = await params;
   const product = await findProductBySlug(slug);
   if (!product) {
-    return { title: "محصول یافت نشد | حامی همراه" };
+    return { title: "محصول یافت نشد | حامی همراه", robots: { index: false, follow: false } };
   }
   const description =
-    product.description?.replace(/<[^>]+>/g, " ").trim().slice(0, 155) ||
-    "مشخصات، قیمت و وضعیت موجودی محصول از فروشگاه حامی همراه.";
-  return {
+    product.description?.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 155) ||
+    `مشخصات و وضعیت عرضه ${product.name} در فروشگاه حامی همراه مشهد؛ برای استعلام قیمت روز و راهنمای خرید با فروشگاه تماس بگیرید.`;
+  return pageMetadata({
     title: product.name,
     description,
-  };
+    path: `/shop/${encodeURIComponent(product.slug)}`,
+  });
 }
 
 export default async function ProductPage({ params }: { params: Params }) {

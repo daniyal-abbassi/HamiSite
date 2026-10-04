@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 export const metadata: Metadata = {
   title: "تسویه حساب",
   description: "تسویه حساب و ثبت نهایی سفارش در فروشگاه حامی همراه.",
+  robots: { index: false, follow: false },
 };
 
 export default function CheckoutPage() {

@@ -5,6 +5,7 @@ import { brandLabel } from "@/lib/product-identity";
 import { catalogGeneratedAt, listBrands, queryProducts } from "@/lib/catalog-db";
 import { resolveSortKey } from "@/lib/content/shop";
 import { destinationDescription } from "@/lib/listing-view";
+import { pageMetadata } from "@/lib/seo-metadata";
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -23,12 +24,13 @@ async function findBrand(slug: string) {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const brand = await findBrand(slug);
-  if (!brand) return { title: "برند یافت نشد | حامی همراه" };
+  if (!brand) return { title: "برند یافت نشد | حامی همراه", robots: { index: false, follow: false } };
   const name = brandLabel(brand.name);
-  return {
+  return pageMetadata({
     title: `محصولات ${name}`,
-    description: `${name} — فهرست محصولات این برند در فروشگاه حامی همراه، مشهد.`,
-  };
+    description: `محصولات ${name} در حامی همراه مشهد؛ مشخصات و وضعیت عرضه را ببینید و برای دریافت قیمت روز و راهنمای خرید با فروشگاه تماس بگیرید.`,
+    path: `/brands/${encodeURIComponent(brand.slug)}`,
+  });
 }
 
 /**

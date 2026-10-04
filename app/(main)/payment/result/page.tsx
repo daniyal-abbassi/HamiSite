@@ -9,6 +9,7 @@ import { prisma } from "@/lib/prisma";
 export const metadata: Metadata = {
   title: "نتیجه پرداخت",
   description: "وضعیت پرداخت سفارش در فروشگاه حامی همراه.",
+  robots: { index: false, follow: false },
 };
 
 const states = {
@@ -80,13 +81,13 @@ export default async function PaymentResultPage({
   const Icon = state.icon;
 
   return (
-    <main className="container flex min-h-[65vh] items-center justify-center py-16" dir="rtl">
+    <main className="container flex min-h-[65vh] items-center justify-center py-16">
       <section className="glass relative w-full max-w-xl overflow-hidden rounded-3xl border border-line p-8 text-center sm:p-12">
         <div className="pointer-events-none absolute inset-x-10 top-0 h-px bg-gradient-to-l from-transparent via-aqua/50 to-transparent" />
         <div className={`mx-auto grid size-16 place-items-center rounded-full border border-current/20 bg-foreground/5 ${state.tone}`}>
           <Icon className="size-7" strokeWidth={1.5} aria-hidden="true" />
         </div>
-        <p className="mt-7 text-xs font-bold tracking-wide text-aqua">{state.eyebrow}</p>
+        <p className="mt-7 text-xs font-bold text-aqua">{state.eyebrow}</p>
         <h1 className="mt-3 text-2xl font-black leading-relaxed sm:text-3xl">{state.title}</h1>
         <p className="mx-auto mt-4 max-w-md text-sm leading-8 text-muted-foreground">{state.description}</p>
         <div className="mt-8 flex flex-wrap justify-center gap-3 border-t border-line pt-7">

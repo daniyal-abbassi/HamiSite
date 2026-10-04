@@ -6,12 +6,14 @@ import { PartnerForm } from "@/components/partners/PartnerForm";
 import { Reveal } from "@/components/home/Reveal";
 import { partnerPageCopy } from "@/lib/content/partners";
 import { storeContact } from "@/lib/content/contact";
+import { pageMetadata } from "@/lib/seo-metadata";
 import "@/components/partners/partners.css";
 
-export const metadata: Metadata = {
+export const metadata: Metadata = pageMetadata({
   title: "همکاری عمده",
-  description: "آغاز همکاری با حامی همراه؛ ویژه فروشگاه‌ها و شرکت‌های فعال در بازار موبایل و لوازم جانبی. شرایط و مدارک را ببینید و درخواست همکاری ثبت کنید.",
-};
+  description: "آغاز همکاری عمده با حامی همراه در مشهد؛ ویژه فروشگاه‌ها و شرکت‌های فعال در بازار موبایل و لوازم جانبی. شرایط را ببینید و درخواست همکاری ثبت کنید.",
+  path: "/partners",
+});
 
 export default function PartnersPage() {
   return (

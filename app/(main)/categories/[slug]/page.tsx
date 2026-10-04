@@ -5,6 +5,7 @@ import { catalogGeneratedAt, categorySubtreeCounts, descendantCategoryIds, listC
 import { resolveSortKey } from "@/lib/content/shop";
 import { destinationDescription } from "@/lib/listing-view";
 import { normalizeSlug } from "@/lib/shop-filters";
+import { pageMetadata } from "@/lib/seo-metadata";
 
 type Params = Promise<{ slug: string }>;
 type SearchParams = Promise<Record<string, string | string[] | undefined>>;
@@ -24,11 +25,12 @@ async function findCategory(slug: string) {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const category = await findCategory(slug);
-  if (!category) return { title: "دسته یافت نشد | حامی همراه" };
-  return {
+  if (!category) return { title: "دسته یافت نشد | حامی همراه", robots: { index: false, follow: false } };
+  return pageMetadata({
     title: category.name,
-    description: `${category.name} — فهرست این دسته از فروشگاه حامی همراه، مشهد.`,
-  };
+    description: `خرید و بررسی ${category.name} از حامی همراه در مشهد؛ فهرست محصولات، مشخصات و وضعیت عرضه این دسته را ببینید و برای قیمت روز با فروشگاه تماس بگیرید.`,
+    path: `/categories/${encodeURIComponent(category.slug)}`,
+  });
 }
 
 /**

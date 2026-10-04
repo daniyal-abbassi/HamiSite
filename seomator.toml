@@ -1,0 +1,9 @@
+[crawler]
+max_pages = 50
+include = [ "/", "/shop", "/shop/**", "/categories/**", "/brands/**", "/partners" ]
+exclude = [ "/api/**", "/admin/**", "/cart/**", "/checkout/**", "/account/**", "/orders/**", "/order/**", "/payment/**", "/login", "/register", "*.pdf" ]
+allow_query_params = [ "category", "sort", "filter", "page" ]
+
+[project]
+name = "HamiSite-basic-structure"
+domains = [ ]

@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 export const metadata: Metadata = {
   title: "ورود",
   description: "ورود به حساب کاربری فروشگاه حامی همراه.",
+  robots: { index: false, follow: false },
 };
 
 /**

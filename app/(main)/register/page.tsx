@@ -6,6 +6,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 export const metadata: Metadata = {
   title: "ثبت‌نام",
   description: "ساخت حساب کاربری در فروشگاه حامی همراه — خرید خرد و عمده.",
+  robots: { index: false, follow: false },
 };
 
 /** See `login/page.tsx` — same fix, same grammar. */

@@ -6,6 +6,7 @@ import { AdminSidebar } from "@/components/admin/AdminSidebar";
 export const metadata: Metadata = {
   title: "پنل مدیریت",
   description: "مدیریت فروشگاه حامی همراه — سفارش‌ها، محصولات، کاربران.",
+  robots: { index: false, follow: false },
 };
 
 /** Route group /admin — its own shell (AuthProvider + role gate + sidebar),

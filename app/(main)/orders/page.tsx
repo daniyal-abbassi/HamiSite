@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 export const metadata: Metadata = {
   title: "سفارش‌های من",
   description: "تاریخچه سفارش‌های شما در فروشگاه حامی همراه.",
+  robots: { index: false, follow: false },
 };
 
 export default function OrdersPage() {

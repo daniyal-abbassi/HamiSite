@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { AccountClient } from "@/components/account/AccountClient";
 
-export const metadata: Metadata = { title: "حساب کاربری" };
+export const metadata: Metadata = { title: "حساب کاربری", robots: { index: false, follow: false } };
 
 export default function AccountPage() {
   return (

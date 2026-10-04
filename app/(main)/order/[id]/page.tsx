@@ -4,6 +4,7 @@ import { OrderDetailClient } from "@/components/order/OrderDetailClient";
 export const metadata: Metadata = {
   title: "جزئیات سفارش",
   description: "پیگیری سفارش در فروشگاه حامی همراه.",
+  robots: { index: false, follow: false },
 };
 
 export default async function OrderPage({ params }: { params: Promise<{ id: string }> }) {

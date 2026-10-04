@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { pageMetadata } from "@/lib/seo-metadata";
 import {
   ArrowLeft,
   ArrowUpLeft,
@@ -41,6 +42,12 @@ import "./home.css";
 
 /** The headline's cycling tail. Each has to complete «قیمت روزِ بازار، مستقیم از مشهد برای …». */
 const HERO_ROTATING_WORDS = ["موبایل", "لوازم جانبی", "ساعت هوشمند", "خرید عمده"] as const;
+
+export const metadata = pageMetadata({
+  title: "فروشگاه موبایل و لوازم جانبی در مشهد",
+  description: "خرید موبایل، ساعت هوشمند و لوازم جانبی از حامی همراه در مشهد؛ فروش حضوری و آنلاین، پشتیبانی خرید خرد و همکاری عمده با فروشگاه‌ها.",
+  path: "/",
+});
 
 
 const categoryIcons: Record<string, LucideIcon> = {

@@ -5,6 +5,7 @@ import { PageHeader } from "@/components/layout/PageHeader";
 export const metadata: Metadata = {
   title: "سبد خرید",
   description: "سبد خرید فروشگاه حامی همراه.",
+  robots: { index: false, follow: false },
 };
 
 export default function CartPage() {

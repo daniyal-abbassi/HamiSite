@@ -1,4 +1,6 @@
 import type { Metadata, Viewport } from "next";
+import { storeContact } from "@/lib/content/contact";
+import { SITE_NAME, SITE_ORIGIN, SOCIAL_IMAGE } from "@/lib/seo-metadata";
 import "./globals.css";
 
 /**
@@ -27,12 +29,32 @@ export const viewport: Viewport = {
 };
 
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_ORIGIN),
   title: {
     default: "حامی همراه | فروشگاه موبایل و اکسسوری",
     template: "%s | حامی همراه",
   },
   description:
-    "فروشگاه حامی همراه — عرضه موبایل، ساعت هوشمند و اکسسوری؛ پشتیبانی از خرید خرد و عمده (B2B).",
+    "خرید موبایل، ساعت هوشمند و لوازم جانبی از حامی همراه در مشهد؛ فروش حضوری و آنلاین، پشتیبانی خرید خرد و همکاری عمده با فروشگاه‌ها.",
+  openGraph: {
+    type: "website",
+    locale: "fa_IR",
+    siteName: SITE_NAME,
+    title: "حامی همراه | فروشگاه موبایل و اکسسوری",
+    description: "خرید موبایل، ساعت هوشمند و لوازم جانبی از حامی همراه در مشهد؛ فروش حضوری و آنلاین.",
+    images: [{ url: SOCIAL_IMAGE, width: 3000, height: 4000, alt: "فروشگاه حضوری حامی همراه در مشهد" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "حامی همراه | فروشگاه موبایل و اکسسوری",
+    description: "خرید موبایل، ساعت هوشمند و لوازم جانبی از حامی همراه در مشهد.",
+    images: [SOCIAL_IMAGE],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: { index: true, follow: true, "max-image-preview": "large", "max-snippet": -1, "max-video-preview": -1 },
+  },
 };
 
 /**
@@ -89,12 +111,44 @@ export const metadata: Metadata = {
  * `notes/parallel-agent-plan.md` §5.1).
  */
 export default function RootLayout({ children }: { children: React.ReactNode }) {
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Organization",
+        "@id": `${SITE_ORIGIN}/#organization`,
+        name: SITE_NAME,
+        url: SITE_ORIGIN,
+        logo: `${SITE_ORIGIN}/brand/hami-wordmark-fa.png`,
+        telephone: storeContact.phoneHref.replace("tel:", ""),
+        areaServed: { "@type": "City", name: "مشهد" },
+      },
+      {
+        "@type": "WebSite",
+        "@id": `${SITE_ORIGIN}/#website`,
+        url: SITE_ORIGIN,
+        name: SITE_NAME,
+        inLanguage: "fa-IR",
+        publisher: { "@id": `${SITE_ORIGIN}/#organization` },
+        potentialAction: {
+          "@type": "SearchAction",
+          target: { "@type": "EntryPoint", urlTemplate: `${SITE_ORIGIN}/shop?q={search_term_string}` },
+          "query-input": "required name=search_term_string",
+        },
+      },
+    ],
+  };
   return (
     /* Fonts are self-hosted (see globals.css @font-face) — the font variables
        live on :root there, so no next/font className is needed here. */
     <html lang="fa" dir="rtl">
-      <body>{children}</body>
+      <body>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+        />
+        {children}
+      </body>
     </html>
   );
 }
-
