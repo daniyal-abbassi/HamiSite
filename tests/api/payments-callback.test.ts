@@ -140,6 +140,17 @@ describe("callback authority binding", () => {
 
     const victimOrder = await prisma.order.findUniqueOrThrow({ where: { id: victim.order.id } });
     expect(victimOrder.paymentStatus).toBe(PaymentStatus.INITIATED);
+
+    // A rejected cross-order callback must not consume the authority. The legitimate
+    // callback can still settle the payment it belongs to afterwards.
+    const retry = await callback(
+      getRequest(`http://localhost/api/payments/callback?Authority=${attacker.authority}&Status=OK&orderId=${attacker.order.id}`),
+    );
+    expect(retry.status).toBe(302);
+    expect(retry.headers.get("location")).toContain("payment=success");
+
+    const attackerOrder = await prisma.order.findUniqueOrThrow({ where: { id: attacker.order.id } });
+    expect(attackerOrder.paymentStatus).toBe(PaymentStatus.COMPLETED);
   });
 
   it("resolves each stacked INITIATED payment independently by its own authority", async () => {
@@ -243,6 +254,36 @@ describe("callback idempotency", () => {
 
     const staleAttempt = await prisma.payment.findFirstOrThrow({ where: { authority: second.authority } });
     expect(staleAttempt.status).toBe(PaymentStatus.FAILED);
+  });
+
+  it("serializes concurrent success and failure callbacks for separate attempts", async () => {
+    const order = await createRetailOrder();
+    const successAttempt = await initiatePayment(order.id);
+    const failureAttempt = await initiatePayment(order.id);
+    const variantBefore = await prisma.productVariant.findUniqueOrThrow({ where: { id: seed.variant.id } });
+
+    const responses = await Promise.all([
+      callback(getRequest(`http://localhost/api/payments/callback?Authority=${successAttempt.authority}&Status=OK`)),
+      callback(getRequest(`http://localhost/api/payments/callback?Authority=${failureAttempt.authority}&Status=NOK`)),
+    ]);
+    expect(responses.map((response) => response.status)).toEqual([302, 302]);
+
+    const settledOrder = await prisma.order.findUniqueOrThrow({ where: { id: order.id } });
+    const payments = await prisma.payment.findMany({ where: { orderId: order.id } });
+    expect(payments.map((payment) => payment.status).sort()).toEqual([
+      PaymentStatus.COMPLETED,
+      PaymentStatus.FAILED,
+    ].sort());
+
+    const variantAfter = await prisma.productVariant.findUniqueOrThrow({ where: { id: seed.variant.id } });
+    if (settledOrder.paymentStatus === PaymentStatus.COMPLETED) {
+      expect(settledOrder.status).toBe(OrderStatus.PROCESSING);
+      expect(variantAfter.stock).toBe(variantBefore.stock);
+    } else {
+      expect(settledOrder.paymentStatus).toBe(PaymentStatus.FAILED);
+      expect(settledOrder.status).toBe(OrderStatus.FAILED);
+      expect(variantAfter.stock).toBe(variantBefore.stock + 1);
+    }
   });
 
   it("does not re-transition an order already FAILED by a sibling attempt when a later success arrives", async () => {
