@@ -1,5 +1,6 @@
 import { PaymentStatus } from "@prisma/client";
-import { ApiError, ok, withErrorHandling } from "@/lib/http";
+import { NextResponse } from "next/server";
+import { withErrorHandling } from "@/lib/http";
 import { applyOrderStatusTransition, TERMINAL_CANCEL_STATUSES } from "@/lib/orders";
 import { getPaymentGateway } from "@/lib/payment/gateway";
 import { prisma } from "@/lib/prisma";
@@ -10,49 +11,69 @@ import { toNumber } from "@/lib/serializers";
 /// applied twice, and is translated into an idempotent 200 response.
 class PaymentAlreadyProcessedError extends Error {}
 
+type Result = "success" | "failed" | "verify_failed" | "notfound" | "error";
+
+function resultRedirect(request: Request, result: Result, orderId?: number) {
+  const url = new URL("/payment/result", request.url);
+  url.searchParams.set("payment", result);
+  if (orderId) url.searchParams.set("orderId", String(orderId));
+  return NextResponse.redirect(url, 302);
+}
+
 export async function GET(request: Request) {
-  return withErrorHandling(async () => {
+  const response = await withErrorHandling(async () => {
     const { searchParams } = new URL(request.url);
     const authority = searchParams.get("Authority");
     const status = searchParams.get("Status");
     const orderIdParam = searchParams.get("orderId");
 
-    if (!authority || !status) {
-      throw new ApiError(400, "Missing Authority or Status");
-    }
+    if (!authority || !status) return resultRedirect(request, "error");
 
     // This route is necessarily unauthenticated (the gateway calls it), so the
     // ONLY trustworthy input is the gateway-issued authority. The Payment row
     // it maps to is the sole source of truth for which order gets settled — a
     // query-string orderId is attacker-controlled and is never trusted.
-    const payment = await prisma.payment.findFirst({
-      where: { authority, status: PaymentStatus.INITIATED },
+    const payment = await prisma.payment.findUnique({
+      where: { authority },
+      include: { order: { select: { paymentStatus: true } } },
     });
-    if (!payment) {
-      throw new ApiError(404, "No pending payment found for this authority");
-    }
+    if (!payment) return resultRedirect(request, "notfound");
 
     const orderId = payment.orderId;
 
     // Defense in depth: if the caller also supplied an orderId, it must agree
     // with the one bound to this authority.
-    if (orderIdParam !== null && Number(orderIdParam) !== orderId) {
-      throw new ApiError(400, "orderId does not match this payment");
+    if (orderIdParam !== null && Number(orderIdParam) !== orderId) return resultRedirect(request, "error");
+
+    if (payment.status !== PaymentStatus.INITIATED) {
+      return resultRedirect(request,
+        payment.status === PaymentStatus.COMPLETED
+          ? payment.order.paymentStatus === PaymentStatus.COMPLETED ? "success" : "error"
+          : "failed", orderId);
     }
 
     const amount = toNumber(payment.amount);
-    if (amount === null || !Number.isFinite(amount)) {
-      throw new ApiError(500, "Payment amount could not be resolved");
-    }
+    if (amount === null || !Number.isFinite(amount) || amount <= 0) return resultRedirect(request, "error", orderId);
 
-    const gateway = await getPaymentGateway();
-    const result = await gateway.verifyPayment({ authority, status, amount });
+    if (status !== "OK" && status !== "NOK") return resultRedirect(request, "error", orderId);
+
+    let result: { success: boolean; refId?: string };
+    if (status === "NOK") {
+      result = { success: false };
+    } else {
+      try {
+        const gateway = await getPaymentGateway();
+        result = await gateway.verifyPayment({ authority, status, amount });
+      } catch (error) {
+        console.error("Payment verification was inconclusive", error);
+        return resultRedirect(request, "error", orderId);
+      }
+    }
 
     const nextPaymentStatus = result.success ? PaymentStatus.COMPLETED : PaymentStatus.FAILED;
     const nextOrderStatus = result.success ? ("PROCESSING" as const) : ("FAILED" as const);
 
     let orderAlreadySettled = false;
-    let alreadySettledMessage = "Order is already settled";
 
     try {
       await prisma.$transaction(async (tx) => {
@@ -103,7 +124,6 @@ export async function GET(request: Request) {
         }
         if (TERMINAL_CANCEL_STATUSES.includes(current.status as (typeof TERMINAL_CANCEL_STATUSES)[number])) {
           orderAlreadySettled = true;
-          alreadySettledMessage = "Order was already resolved by another payment attempt";
           return;
         }
 
@@ -116,15 +136,22 @@ export async function GET(request: Request) {
       });
     } catch (error) {
       if (error instanceof PaymentAlreadyProcessedError) {
-        return ok({ orderId, success: result.success, alreadyProcessed: true }, { message: "Payment already processed" });
+        const resolved = await prisma.payment.findUniqueOrThrow({
+          where: { id: payment.id }, include: { order: { select: { paymentStatus: true } } },
+        });
+        return resultRedirect(request,
+          resolved.status === PaymentStatus.COMPLETED
+            ? resolved.order.paymentStatus === PaymentStatus.COMPLETED ? "success" : "error"
+            : "failed", orderId);
       }
       throw error;
     }
 
     if (orderAlreadySettled) {
-      return ok({ orderId, success: result.success, orderAlreadySettled: true }, { message: alreadySettledMessage });
+      return resultRedirect(request, result.success ? "error" : "failed", orderId);
     }
 
-    return ok({ orderId, success: result.success }, { message: result.success ? "Payment completed" : "Payment failed" });
+    return resultRedirect(request, result.success ? "success" : status === "NOK" ? "failed" : "verify_failed", orderId);
   });
+  return response.status >= 400 ? resultRedirect(request, "error") : response;
 }

@@ -71,6 +71,31 @@ describe("POST /api/orders/[id]/pay", () => {
     expect(authority).toBeTruthy();
   });
 
+  it("settles a zero-total cash order without requesting the gateway", async () => {
+    const order = await createRetailOrder();
+    await prisma.order.update({ where: { id: order.id }, data: { totalAmount: 0 } });
+
+    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie), ctx({ id: String(order.id) }));
+    expect(res.status).toBe(200);
+    expect((await res.json()).data).toEqual({ free: true, orderId: order.id });
+
+    const settled = await prisma.order.findUniqueOrThrow({ where: { id: order.id } });
+    expect(settled.paymentStatus).toBe(PaymentStatus.COMPLETED);
+    expect(settled.status).toBe(OrderStatus.PROCESSING);
+    const payment = await prisma.payment.findFirstOrThrow({ where: { orderId: order.id } });
+    expect(payment.status).toBe(PaymentStatus.COMPLETED);
+    expect(payment.authority).toBeNull();
+    expect(payment.amount.toNumber()).toBe(0);
+  });
+
+  it("rejects a negative stored total before contacting the gateway", async () => {
+    const order = await createRetailOrder();
+    await prisma.order.update({ where: { id: order.id }, data: { totalAmount: -1 } });
+    const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, retailCookie), ctx({ id: String(order.id) }));
+    expect(res.status).toBe(500);
+    expect(await prisma.payment.count({ where: { orderId: order.id } })).toBe(0);
+  });
+
   it("409s and creates no new Payment row when the order is already paid", async () => {
     const order = await createRetailOrder();
     await prisma.order.update({

@@ -1,5 +1,5 @@
 import { OrderStatus, PaymentStatus } from "@prisma/client";
-import { beforeEach, describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { POST as createOrder } from "@/app/api/orders/route";
 import { POST as pay } from "@/app/api/orders/[id]/pay/route";
 import { GET as callback } from "@/app/api/payments/callback/route";
@@ -60,7 +60,8 @@ describe("mock-confirm -> callback happy path", () => {
     expect(location).toContain("Status=OK");
 
     const callbackRes = await callback(getRequest(location));
-    expect(callbackRes.status).toBe(200);
+    expect(callbackRes.status).toBe(302);
+    expect(callbackRes.headers.get("location")).toContain("payment=success");
 
     const updatedOrder = await prisma.order.findUniqueOrThrow({ where: { id: order.id } });
     expect(updatedOrder.paymentStatus).toBe(PaymentStatus.COMPLETED);
@@ -79,7 +80,8 @@ describe("mock-confirm -> callback happy path", () => {
     expect(location).toContain("Status=NOK");
 
     const callbackRes = await callback(getRequest(location));
-    expect(callbackRes.status).toBe(200);
+    expect(callbackRes.status).toBe(302);
+    expect(callbackRes.headers.get("location")).toContain("payment=failed");
 
     const updatedOrder = await prisma.order.findUniqueOrThrow({ where: { id: order.id } });
     expect(updatedOrder.paymentStatus).toBe(PaymentStatus.FAILED);
@@ -92,14 +94,15 @@ describe("mock-confirm -> callback happy path", () => {
     expect(payment.status).toBe(PaymentStatus.FAILED);
   });
 
-  it("404s the callback for an unknown orderId", async () => {
+  it("shows the unknown-payment result for an unknown orderId", async () => {
     const res = await callback(getRequest("http://localhost/api/payments/callback?Authority=x&Status=OK&orderId=999999"));
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(302);
+    expect(res.headers.get("location")).toContain("payment=notfound");
   });
 });
 
 describe("callback authority binding", () => {
-  it("404s and leaves the order untouched when the Authority matches no Payment row", async () => {
+  it("shows the unknown-payment result and leaves the order untouched when Authority matches no Payment row", async () => {
     const { order } = await createAndInitiatePayment();
     const variantBefore = await prisma.productVariant.findUniqueOrThrow({ where: { id: seed.variant.id } });
 
@@ -108,7 +111,8 @@ describe("callback authority binding", () => {
         `http://localhost/api/payments/callback?Authority=fabricated-authority&Status=OK&orderId=${order.id}`,
       ),
     );
-    expect(res.status).toBe(404);
+    expect(res.status).toBe(302);
+    expect(res.headers.get("location")).toContain("payment=notfound");
 
     const untouched = await prisma.order.findUniqueOrThrow({ where: { id: order.id } });
     expect(untouched.paymentStatus).toBe(PaymentStatus.INITIATED);
@@ -131,7 +135,8 @@ describe("callback authority binding", () => {
         `http://localhost/api/payments/callback?Authority=${attacker.authority}&Status=OK&orderId=${victim.order.id}`,
       ),
     );
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(302);
+    expect(res.headers.get("location")).toContain("payment=error");
 
     const victimOrder = await prisma.order.findUniqueOrThrow({ where: { id: victim.order.id } });
     expect(victimOrder.paymentStatus).toBe(PaymentStatus.INITIATED);
@@ -151,7 +156,7 @@ describe("callback authority binding", () => {
     const res = await callback(
       getRequest(`http://localhost/api/payments/callback?Authority=${second.authority}&Status=OK`),
     );
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(302);
 
     const settled = await prisma.payment.findFirstOrThrow({ where: { authority: second.authority } });
     expect(settled.status).toBe(PaymentStatus.COMPLETED);
@@ -165,6 +170,24 @@ describe("callback authority binding", () => {
 });
 
 describe("callback idempotency", () => {
+  it("keeps a payment initiated when provider verification is inconclusive", async () => {
+    const { order, authority } = await createAndInitiatePayment();
+    vi.stubEnv("ZARINPAL_MERCHANT_ID", "sandbox-test-merchant");
+    const fetchMock = vi.fn().mockRejectedValue(new Error("provider unavailable"));
+    vi.stubGlobal("fetch", fetchMock);
+    try {
+      const res = await callback(getRequest(`http://localhost/api/payments/callback?Authority=${authority}&Status=OK`));
+      expect(res.status).toBe(302);
+      expect(res.headers.get("location")).toContain("payment=error");
+      expect(fetchMock).toHaveBeenCalledTimes(1);
+      expect((await prisma.payment.findFirstOrThrow({ where: { authority } })).status).toBe(PaymentStatus.INITIATED);
+      expect((await prisma.order.findUniqueOrThrow({ where: { id: order.id } })).paymentStatus).toBe(PaymentStatus.INITIATED);
+    } finally {
+      vi.unstubAllGlobals();
+      vi.unstubAllEnvs();
+    }
+  });
+
   it("does not double-apply when the same successful callback arrives twice", async () => {
     const { order, redirectUrl } = await createAndInitiatePayment();
     const variantBefore = await prisma.productVariant.findUniqueOrThrow({ where: { id: seed.variant.id } });
@@ -173,11 +196,11 @@ describe("callback idempotency", () => {
     const location = confirmRes.headers.get("location")!;
 
     const firstRes = await callback(getRequest(location));
-    expect(firstRes.status).toBe(200);
+    expect(firstRes.status).toBe(302);
 
     const secondRes = await callback(getRequest(location));
-    // The payment is no longer INITIATED, so nothing resolves by that authority.
-    expect(secondRes.status).toBe(404);
+    expect(secondRes.status).toBe(302);
+    expect(secondRes.headers.get("location")).toContain("payment=success");
 
     const updatedOrder = await prisma.order.findUniqueOrThrow({ where: { id: order.id } });
     expect(updatedOrder.paymentStatus).toBe(PaymentStatus.COMPLETED);
@@ -201,7 +224,7 @@ describe("callback idempotency", () => {
     const okRes = await callback(
       getRequest(`http://localhost/api/payments/callback?Authority=${first.authority}&Status=OK`),
     );
-    expect(okRes.status).toBe(200);
+    expect(okRes.status).toBe(302);
 
     const variantAfterSuccess = await prisma.productVariant.findUniqueOrThrow({ where: { id: seed.variant.id } });
 
@@ -209,7 +232,7 @@ describe("callback idempotency", () => {
     const failRes = await callback(
       getRequest(`http://localhost/api/payments/callback?Authority=${second.authority}&Status=NOK`),
     );
-    expect(failRes.status).toBe(200);
+    expect(failRes.status).toBe(302);
 
     const updatedOrder = await prisma.order.findUniqueOrThrow({ where: { id: order.id } });
     expect(updatedOrder.paymentStatus).toBe(PaymentStatus.COMPLETED);
@@ -233,7 +256,7 @@ describe("callback idempotency", () => {
     const failRes = await callback(
       getRequest(`http://localhost/api/payments/callback?Authority=${first.authority}&Status=NOK`),
     );
-    expect(failRes.status).toBe(200);
+    expect(failRes.status).toBe(302);
 
     const failedOrder = await prisma.order.findUniqueOrThrow({ where: { id: order.id } });
     expect(failedOrder.status).toBe(OrderStatus.FAILED);
@@ -245,8 +268,8 @@ describe("callback idempotency", () => {
     const okRes = await callback(
       getRequest(`http://localhost/api/payments/callback?Authority=${second.authority}&Status=OK`),
     );
-    expect(okRes.status).toBe(200);
-    expect((await okRes.json()).data.orderAlreadySettled).toBe(true);
+    expect(okRes.status).toBe(302);
+    expect(okRes.headers.get("location")).toContain("payment=error");
 
     const finalOrder = await prisma.order.findUniqueOrThrow({ where: { id: order.id } });
     expect(finalOrder.status).toBe(OrderStatus.FAILED);

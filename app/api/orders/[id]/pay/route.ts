@@ -1,8 +1,8 @@
 import { randomBytes } from "node:crypto";
-import { PaymentStatus } from "@prisma/client";
+import { B2BPaymentTerm, PaymentStatus } from "@prisma/client";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
-import { TERMINAL_CANCEL_STATUSES } from "@/lib/orders";
+import { applyOrderStatusTransition, TERMINAL_CANCEL_STATUSES } from "@/lib/orders";
 import { getPaymentGateway } from "@/lib/payment/gateway";
 import { prisma } from "@/lib/prisma";
 import { toNumber } from "@/lib/serializers";
@@ -18,7 +18,17 @@ function parseId(raw: string) {
 function resolveBaseUrl() {
   const configured = process.env.APP_BASE_URL;
   if (configured) {
-    return configured;
+    let url: URL;
+    try {
+      url = new URL(configured);
+    } catch {
+      throw new ApiError(500, "APP_BASE_URL is invalid");
+    }
+    if (process.env.NODE_ENV === "production" &&
+        (url.protocol !== "https:" || !url.hostname || ["localhost", "127.0.0.1", "::1"].includes(url.hostname))) {
+      throw new ApiError(500, "APP_BASE_URL must be a public HTTPS origin in production");
+    }
+    return url.origin;
   }
   if (process.env.NODE_ENV === "production") {
     throw new ApiError(500, "APP_BASE_URL is not configured");
@@ -37,6 +47,9 @@ export const POST = withAuth<{ id: string }>(async (_request, { user, params }) 
     if (order.userId !== user.id) {
       throw new ApiError(403, "You do not have access to this order");
     }
+    if (order.paymentTerm !== B2BPaymentTerm.CASH) {
+      throw new ApiError(409, "Credit orders do not use gateway payment");
+    }
 
     // An order that is already settled, or already closed/reversed, must never
     // start a fresh payment attempt: a later failure callback on that new
@@ -49,6 +62,37 @@ export const POST = withAuth<{ id: string }>(async (_request, { user, params }) 
     const amount = toNumber(order.totalAmount);
     if (amount === null || amount === undefined || !Number.isFinite(amount)) {
       throw new ApiError(500, "Order total amount could not be resolved");
+    }
+    if (amount < 0) throw new ApiError(500, "Order total amount is invalid");
+
+    if (amount === 0) {
+      await prisma.$transaction(async (tx) => {
+        await tx.$queryRaw`SELECT id FROM "orders" WHERE id = ${orderId} FOR UPDATE`;
+        const current = await tx.order.findUniqueOrThrow({
+          where: { id: orderId },
+          include: {
+            items: { select: { variantId: true, quantity: true, variant: { select: { stockType: true } } } },
+            user: { select: { id: true, role: true } },
+          },
+        });
+        if (current.paymentStatus === PaymentStatus.COMPLETED ||
+            TERMINAL_CANCEL_STATUSES.includes(current.status as (typeof TERMINAL_CANCEL_STATUSES)[number])) {
+          throw new ApiError(409, "Order is already paid or in a terminal state");
+        }
+        await tx.payment.create({
+          data: {
+            orderId,
+            userId: user.id,
+            transactionNumber: `${current.orderNumber}-${randomBytes(4).toString("hex")}`,
+            amount: 0,
+            method: "zero-total",
+            status: PaymentStatus.COMPLETED,
+          },
+        });
+        await applyOrderStatusTransition(tx, current, "PROCESSING");
+        await tx.order.update({ where: { id: orderId }, data: { status: "PROCESSING", paymentStatus: PaymentStatus.COMPLETED } });
+      });
+      return ok({ free: true, orderId }, { message: "Order settled without payment" });
     }
 
     const callbackUrl = new URL("/api/payments/callback", resolveBaseUrl()).toString();

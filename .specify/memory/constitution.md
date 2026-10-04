@@ -3,6 +3,16 @@
 Sync Impact Report
 ==================
 
+Version change: 1.3.0 → 1.4.0
+
+Primary change:
+- Principle III: the owner approved the Zarinpal cash checkout path on 2026-10-04.
+  Authenticated cash payment initiation, provider verification, and transactional
+  order settlement are now in scope. Post-purchase fulfillment remains deferred.
+  MINOR because this expands the existing scope without removing a principle.
+
+---
+
 Version change: 1.2.0 → 1.3.0
 
 Primary change:
@@ -95,8 +105,11 @@ the database and preserve current API and DTO behavior where possible.
   same-origin API paths and response envelopes MUST remain compatible for browser clients.
 * Account/profile and admin actions MUST use existing authorization and persisted records;
   the interface MUST report only confirmed changes.
-* The shopper cart-to-payment and post-purchase journey is deferred to a separate feature.
-  This exclusion does not block existing admin order management.
+* The authenticated cash-order payment path is approved under
+  `specs/017-zarinpal-payment`: initiate Zarinpal payments from persisted order
+  totals, verify the provider result server-side, and settle orders transactionally.
+  Wholesale credit continues through its existing path. Post-purchase fulfillment
+  remains deferred. This boundary does not block existing admin order management.
 * The admin back office (v1.2.0) was reopened by owner instruction on 2026-10-01; this
   revision further approves the catalog and API/database integration required by
   `specs/016-commerce-integration`.
@@ -237,4 +250,4 @@ build traps, database safety, tooling. It is subordinate to this document, and a
 visual authority it claims (including describing `docs/inspires/` as a brand-design
 source of truth) is superseded by Principle IV.
 
-**Version**: 1.3.0 | **Ratified**: 2026-09-20 | **Last Amended**: 2026-10-04
+**Version**: 1.4.0 | **Ratified**: 2026-09-20 | **Last Amended**: 2026-10-04

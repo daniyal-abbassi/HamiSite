@@ -185,7 +185,11 @@ export function CheckoutClient() {
       }
       try {
         const payment = await apiPost<PaymentInitiation>(`/api/orders/${order.id}/pay`);
-        window.location.href = payment.redirectUrl;
+        if (payment.free) {
+          router.push(`/payment/result?payment=success&orderId=${payment.orderId}`);
+        } else {
+          window.location.href = payment.redirectUrl;
+        }
       } catch {
         // Order exists — never strand the user; the order page has a pay button.
         router.push(`/order/${order.id}`);
@@ -443,11 +447,8 @@ export function CheckoutClient() {
               ))}
             </div>
           ) : (
-            /* The spec is explicit that no payment capability is confirmed for
-               this business, so nothing may promise one. The form itself is
-               frozen backend work and stays exactly as it is. */
             <p className="text-[13px] text-muted-foreground">
-              پرداخت آنلاین در این فروشگاه فعال نیست؛ زمان و شیوهٔ پرداخت پس از تماس با فروشگاه مشخص می‌شود.
+              پس از ثبت سفارش، برای پرداخت آنلاین به درگاه زرین‌پال منتقل می‌شوید.
             </p>
           )}
           <div className="mt-4">

@@ -63,7 +63,11 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
     setError(null);
     try {
       const payment = await apiPost<PaymentInitiation>(`/api/orders/${orderId}/pay`);
-      window.location.href = payment.redirectUrl;
+      if (payment.free) {
+        router.push(`/payment/result?payment=success&orderId=${payment.orderId}`);
+      } else {
+        window.location.href = payment.redirectUrl;
+      }
     } catch (cause) {
       if (cause instanceof ApiClientError && cause.code === "AUTH_REQUIRED") {
         router.replace(`/login?next=${encodeURIComponent(`/order/${orderId}`)}`);
