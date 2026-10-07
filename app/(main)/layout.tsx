@@ -3,6 +3,7 @@ import { Footer } from "@/components/layout/Footer";
 import { MobileDock } from "@/components/layout/MobileDock";
 import { PageGround } from "@/components/atmosphere/PageGround";
 import { ScrollSmooth } from "@/components/atmosphere/ScrollSmooth";
+import { MainContent } from "@/components/layout/MainContent";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { CartProvider } from "@/components/providers/CartProvider";
 export default function MainLayout({ children }: { children: React.ReactNode }) {
@@ -28,7 +29,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
           {/* The credentials marquee used to sit here and carried the padding
               that cleared the fixed header island. With it gone that clearance
               moves onto <main>, or the first section slides under the nav. */}
-          <main className="flex-1 pt-24 md:pt-28 relative z-10">{children}</main>
+          <MainContent>{children}</MainContent>
           <Footer />
           {/* Mobile primary navigation. Lives here, not in a page, so the whole
               buying path has it — it previously rendered only on the home page. */}

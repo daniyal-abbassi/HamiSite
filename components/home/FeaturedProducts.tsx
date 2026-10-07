@@ -1,193 +1,143 @@
 "use client";
 
-import { useState, type KeyboardEvent } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
-import { featuredTabs, type FeaturedTabKey } from "@/lib/content/home";
-import type { RailProduct } from "@/lib/home-rails-db";
+import { ArrowLeft, ArrowRight, Heart } from "lucide-react";
 import { Reveal } from "@/components/home/Reveal";
-import { LiquidSelection } from "@/components/liquid/LiquidSelection";
 import { type ProductCardData } from "@/components/shop/ProductCard";
-import { ProductRail } from "@/components/shop/ProductRail";
+import { ProductCard } from "@/components/shop/ProductCard";
+import type { RailProduct } from "@/lib/home-rails-db";
+import { toFaDigits } from "@/lib/utils";
 
-/** One tab and the records already resolved for it, from the seam on the server. */
-export type FeaturedRailTab = { key: FeaturedTabKey; label: string; products: RailProduct[] };
+const CARD_STEP = 292;
 
-/** Both tabs control this one region; see the panel for why it is not duplicated per tab. */
-const PANEL_ID = "featured-panel";
+function pageStep(element: HTMLDivElement) {
+  return element.clientWidth < 768 ? CARD_STEP : Math.max(CARD_STEP, element.clientWidth - CARD_STEP);
+}
 
-/*
- * Both rails arrive already resolved. This section used to fetch `/api/products`
- * on mount and again on every tab change, so the served homepage held no products
- * at all — the round-trip Constitution III forbids for browsing. What is left here
- * is the tab, which is genuinely client state.
- *
- * The default tab deliberately does not duplicate NewArrivals, which shows the
- * bare six-record feed two sections below: «جدیدترین‌ها» here means newest *special
- * offers*, a curation rather than a second copy of the feed.
- */
-export function FeaturedProducts({ tabs }: { tabs: FeaturedRailTab[] }) {
-  const [tab, setTab] = useState<FeaturedTabKey>(tabs[0]?.key ?? "newest");
-  const active = tabs.find((t) => t.key === tab) ?? tabs[0];
-  const products = active?.products ?? [];
+export function FeaturedProducts({ products }: { products: RailProduct[] }) {
+  const [wishlist, setWishlist] = useState<Set<number>>(() => new Set());
+  const [selectedVariantIds, setSelectedVariantIds] = useState<Record<number, number>>({});
+  const [page, setPage] = useState(0);
+  const [pages, setPages] = useState(1);
+  const scroller = useRef<HTMLDivElement>(null);
 
-  /**
-   * Arrow keys move the selection, and selection follows focus.
-   *
-   * **`ArrowLeft` advances, `ArrowRight` goes back.** This document is RTL, so reading forward runs to
-   * the left; the physical mapping would be a bug, not a preference. It is the same rule feature 005
-   * ships for the categories carousel (FR-028, contract K2) — two RTL surfaces on one page disagreeing
-   * about which arrow means "next" is the worse outcome, whatever the manuals say.
-   *
-   * Selection moves with focus rather than waiting for Enter. The rails are already resolved on the
-   * server, so there is no fetch to defer and no reason to make a keyboard user press twice for what a
-   * pointer user gets in one click.
-   *
-   * Focus is taken by `getElementById` rather than a ref array: the tab elements are rendered by
-   * `LiquidSelection`, which keeps its own refs and exposes none, but the surface does hand it the
-   * `id` through `attrs` — so the handle is the same stable `featured-tab-<key>` the panel is labelled
-   * by, and nothing reaches into another component's DOM to find it.
-   */
-  const onTabListKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    const count = featuredTabs.length;
-    const at = featuredTabs.findIndex((t) => t.key === tab);
-    const current = at === -1 ? 0 : at;
-    const moveTo = (index: number) => {
-      const next = ((index % count) + count) % count;
-      const target = featuredTabs[next];
-      if (!target) return;
-      setTab(target.key);
-      // Focus has to land on the tab that is now selected, or the roving tabindex and what the shopper
-      // is pressing disagree and the next arrow acts on a different tab than the one highlighted.
-      document.getElementById(`featured-tab-${target.key}`)?.focus();
-    };
-    switch (event.key) {
-      case "ArrowLeft":
-        event.preventDefault();
-        moveTo(current + 1);
-        return;
-      case "ArrowRight":
-        event.preventDefault();
-        moveTo(current - 1);
-        return;
-      case "Home":
-        event.preventDefault();
-        moveTo(0);
-        return;
-      case "End":
-        event.preventDefault();
-        moveTo(count - 1);
-        return;
-      default:
-      // Enter and Space activate the focused tab natively; nothing to intercept.
-    }
+  const measure = useCallback(() => {
+    const element = scroller.current;
+    if (!element) return;
+    const max = element.scrollWidth - element.clientWidth;
+    const step = pageStep(element);
+    const count = max > 10 ? Math.ceil(max / step) + 1 : 1;
+    setPages(count);
+    setPage(max > 10 ? Math.min(count - 1, Math.round(element.scrollLeft / step)) : 0);
+  }, []);
+
+  useEffect(() => {
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [measure, products]);
+
+  const toggleWish = (id: number) => {
+    setWishlist((current) => {
+      const next = new Set(current);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      return next;
+    });
   };
 
+  const selectVariant = (productId: number, variantId: number) => {
+    setSelectedVariantIds((current) => ({ ...current, [productId]: variantId }));
+  };
+
+  const scrollToPage = (index: number) => {
+    if (!scroller.current) return;
+    scroller.current.scrollTo({ left: index * pageStep(scroller.current), behavior: "smooth" });
+  };
+
+  const nextPage = () => scrollToPage(page >= pages - 1 ? 0 : page + 1);
+
   return (
-    <section id="featured" className="wrap py-16 md:py-20" aria-labelledby="featured-title">
-      <div className="container">
+    <section id="featured" className="featured-products" aria-labelledby="featured-title">
+      <div className="featured-products__inner">
+        <div className="featured-products__flourish" aria-hidden="true">
+          <p>کیفیت، اعتبار، همراهی همیشگی</p>
+          <svg viewBox="0 0 320 64" fill="none">
+            <path d="M8 30 C 80 50 240 50 312 22" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
+            <path d="M52 40 C 120 52 200 52 268 38" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity=".45" />
+            <path d="M160 20c-3.2-6.4-13-5.2-13 2.2 0 6 13 13 13 13s13-7 13-13c0-7.4-9.8-8.6-13-2.2z" fill="currentColor" />
+            <circle cx="26" cy="33" r="2.2" fill="currentColor" opacity=".8" />
+            <circle cx="296" cy="27" r="2.2" fill="currentColor" opacity=".8" />
+          </svg>
+        </div>
+
         <Reveal>
-          <div className="flex flex-wrap items-end justify-between gap-6">
-            <div>
-              <span className="eyebrow"><i /> ویترین منتخب</span>
-              <h2 id="featured-title" className="mt-4 text-3xl font-black tracking-normal md:text-4xl">
-                محصولات <span className="emphasis">منتخب.</span>
-              </h2>
-              <p className="mt-3 max-w-md text-sm leading-7 text-muted-foreground">
-                انتخابی از محبوب‌ترین و تازه‌ترین محصولات حامی همراه
-              </p>
+          <header className="featured-products__header">
+            <div className="featured-products__heading">
+              <h2 id="featured-title" className="featured-products__title">جدیدترین محصولات</h2>
             </div>
-            <Link href="/shop" className="inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
-              مشاهده همه محصولات <ArrowLeft className="size-4" />
-            </Link>
-          </div>
+          </header>
         </Reveal>
-      </div>
 
-      {/* The field runs wider than the text column above it, so the tray reads
-          as a surface the goods are laid on rather than another content box.
-          `max-w` + padding rather than negative margins: a negative margin wide
-          enough to matter overflows the viewport at exactly the width where the
-          container stops growing, which is the horizontal-scrollbar trap this
-          hero has already hit twice. */}
-      <Reveal delay={80} className="mx-auto mt-10 w-full max-w-[1560px] px-3 sm:px-4">
-        <div className="tray-field">
-          <div className="flex justify-center sm:justify-start pb-6">
+        <Reveal delay={80} className="featured-products__catalogue">
+          <div className="featured-products__carousel-wrap">
             <div
-              className="inline-flex items-center p-1 rounded-full border border-champagne/25 bg-ink shadow-card"
-              /* The tablist role and its name moved onto the port's own group below;
-                 this wrapper only catches the arrow keys, which bubble up from the
-                 tab buttons wherever they are rendered. */
-              onKeyDown={onTabListKeyDown}
+              ref={scroller}
+              onScroll={(event) => setPage(Math.round(event.currentTarget.scrollLeft / pageStep(event.currentTarget)))}
+              dir="ltr"
+              className="featured-products__carousel"
+              aria-label="جدیدترین محصولات حامی همراه"
             >
-              {/*
-               * T030: the marker replaces the `layoutId="featured-tab-fill"` span that used to
-               * slide between these two buttons. That block is deleted rather than left beside
-               * the marker — two travelling indicators on one surface is the failure FR-040
-               * exists to prevent, and it is the same substitution T029 made in the header.
-               *
-               * The three attributes the port cannot infer come through `attrs`: the `id` the
-               * panel below is labelled by, the roving `tabIndex`, and `aria-controls`. The port
-               * spreads `attrs` BEFORE its own aria block, so this cannot reach `role` or
-               * `aria-selected` — those stay the port's decisions (FR-047).
-               */}
-              <LiquidSelection
-                items={featuredTabs.map((t) => ({
-                  id: t.key,
-                  label: t.label,
-                  attrs: {
-                    id: `featured-tab-${t.key}`,
-                    // Roving tabindex: the tablist is one stop on the page, and where it lands is the
-                    // selected tab. Two stops that both answer to Tab would make the pair a set of
-                    // buttons wearing a tablist's clothes, which is what T095 was about.
-                    tabIndex: tab === t.key ? 0 : -1,
-                    "aria-controls": PANEL_ID,
-                  },
-                }))}
-                value={tab}
-                onChange={setTab}
-                groupRole="tablist"
-                itemRole="tab"
-                announce="selected"
-                label="فیلتر محصولات منتخب"
-                /* Inset 2, not 0: the old fill was `absolute inset-0`, and a body that fills a
-                   36px slot edge to edge is a block rather than the same object the bar uses. */
-                markerInset={2}
-                itemClassName="rounded-full px-5 py-2 text-xs md:text-sm font-bold"
-              />
+              {products.map((product, index) => (
+                <ProductCard
+                  key={product.id}
+                  product={product as ProductCardData}
+                  index={index}
+                  variant="museum"
+                  frame="bleed"
+                  sourceStyle
+                  wished={wishlist.has(product.id)}
+                  onWish={toggleWish}
+                  selectedVariantId={selectedVariantIds[product.id]}
+                  onVariantChange={(variantId) => selectVariant(product.id, variantId)}
+                />
+              ))}
+              {products.length === 0 && (
+                <div className="featured-products__empty" dir="rtl" role="status">
+                  <Heart aria-hidden="true" />
+                  <p>در حال حاضر محصولی برای نمایش نیست.</p>
+                </div>
+              )}
             </div>
-          </div>
-
-          {/* One panel, not two. Both tabs control the same region and only one has content at a
-              time, so `aria-controls` can point at a node that always exists — a tab whose panel is
-              absent is the same broken reference as one with no id. The panel is labelled by the
-              selected tab rather than by a string that could drift from it, and it is itself
-              focusable so a keyboard user can step from the tablist into the rail. */}
-          <div
-            id={PANEL_ID}
-            role="tabpanel"
-            aria-labelledby={`featured-tab-${active?.key ?? featuredTabs[0]?.key ?? "newest"}`}
-            tabIndex={0}
-            className="rounded-2xl outline-offset-4 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[var(--aqua)]"
-          >
-            {products.length === 0 && (
-              <div className="rounded-2xl border border-line bg-ink-3/80 p-8 text-center text-foreground" role="status">
-                <b className="block font-extrabold">محصولی برای نمایش در این انتخاب وجود ندارد.</b>
-                <p className="mt-2 text-sm text-muted-foreground">محصولات جدید به‌زودی به این بخش اضافه می‌شوند.</p>
-                <Link href="/shop" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
-                  مشاهده همه محصولات <ArrowLeft className="size-3.5" />
-                </Link>
-              </div>
-            )}
 
             {products.length > 0 && (
-              <div>
-                <ProductRail products={products as unknown as ProductCardData[]} label={active?.label ?? "محصولات"} />
-              </div>
+              <button type="button" className="featured-products__next" onClick={nextPage} aria-label="محصولات بعدی">
+                <ArrowRight aria-hidden="true" />
+              </button>
             )}
           </div>
+
+          {pages > 1 && (
+            <div className="featured-products__pagination" aria-label="صفحه‌های محصولات">
+              {Array.from({ length: pages }).map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  aria-label={`صفحه ${toFaDigits(index + 1)}`}
+                  aria-current={page === index ? "page" : undefined}
+                  className={page === index ? "is-active" : undefined}
+                  onClick={() => scrollToPage(index)}
+                />
+              ))}
+            </div>
+          )}
+        </Reveal>
+
+        <div className="featured-products__footer-cta">
+          <Link href="/shop" className="featured-products__all">مشاهده فروشگاه <ArrowLeft aria-hidden="true" /></Link>
         </div>
-      </Reveal>
+      </div>
     </section>
   );
 }

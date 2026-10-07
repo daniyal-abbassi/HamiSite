@@ -1,6 +1,7 @@
 import type React from "react";
 import Image from "next/image";
 import Link from "next/link";
+import { ArrowRight, Heart, Star } from "lucide-react";
 import hamiWordmark from "@/public/brand/hami-wordmark-fa.png";
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
 import { PLACEHOLDER_ALT, PLACEHOLDER_LABEL, isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
@@ -11,6 +12,7 @@ import {
   isPurchasable,
   priceState,
   splitProductName,
+  unitPriceOf,
 } from "@/lib/product-identity";
 import { storeWarranty } from "@/lib/content/verified-facts";
 import { cn, formatToman, toFaDigits } from "@/lib/utils";
@@ -88,6 +90,19 @@ export type ProductCardData = {
    * rather than fail loudly.
    */
   available?: boolean;
+  specialOffer?: boolean;
+  variantColors?: string[];
+  variants?: Array<{
+    id: number;
+    color?: string | null;
+    storage?: string | null;
+    price: number | null;
+    compareAtPrice?: number | null;
+    stock?: number | null;
+    stockType?: string | null;
+    isDefault?: boolean;
+    imageUrl?: string | null;
+  }>;
 };
 
 const stockLabels: Record<string, string> = {
@@ -102,6 +117,11 @@ export function ProductCard({
   index,
   variant = "obsidian",
   frame = "bleed",
+  sourceStyle = false,
+  wished = false,
+  onWish,
+  selectedVariantId,
+  onVariantChange,
 }: {
   product: ProductCardData;
   /** Position in its grid, used only to stagger the entrance. */
@@ -109,27 +129,98 @@ export function ProductCard({
   /** Defaults to the shipping look: obsidian, full-bleed. */
   variant?: CardVariant;
   frame?: CardFrame;
+  /** Matches the owner-supplied SHOP SECTION product card art direction. */
+  sourceStyle?: boolean;
+  wished?: boolean;
+  onWish?: (id: number) => void;
+  selectedVariantId?: number;
+  onVariantChange?: (variantId: number) => void;
 }) {
   const onDark = DARK_GROUND[variant];
   const accent = brandAccent(product.brand?.name, onDark ? "dark" : "light");
   const { label, model, specs } = splitProductName(product.name);
-  const state = priceState(product.displayPrice, product.compareAtPrice);
-  const off = discountPercent(product.displayPrice, product.compareAtPrice);
+  const activeVariant = product.variants?.find((variant) => variant.id === selectedVariantId)
+    ?? product.variants?.find((variant) => variant.isDefault)
+    ?? product.variants?.[0]
+    ?? null;
+  const displayPrice = activeVariant ? unitPriceOf(activeVariant.price, product.displayPrice) ?? 0 : product.displayPrice;
+  const compareAtPrice = activeVariant ? activeVariant.compareAtPrice : product.compareAtPrice;
+  const state = priceState(displayPrice, compareAtPrice);
+  const off = discountPercent(displayPrice, compareAtPrice);
   /* The shelf label is not the merchant's answer. Sixteen records read
      «موجود محدود» while `purchasable` says they cannot be sold, and every one of
      them carried a live cart control. */
-  const buyable = isPurchasable(product);
+  const activeStockType = activeVariant?.stockType ?? product.stockType;
+  const buyable = activeVariant
+    ? isPurchasable({ available: product.available, stockType: activeStockType })
+      && !(activeStockType === "limited" && (activeVariant.stock ?? 0) <= 0)
+    : isPurchasable(product);
   // The dot and its colour track the *label*, which is a different question.
-  const outOfStock = product.stockType === "out_of_stock";
-  const productImage = resolveProductImage(product);
+  const outOfStock = activeStockType === "out_of_stock"
+    || (activeStockType === "limited" && activeVariant != null && (activeVariant.stock ?? 0) <= 0);
+  const variantImage = activeVariant?.imageUrl;
+  // Variant images can come from the merchant's HTTPS catalog as well as the
+  // local mirror. next.config.mjs explicitly allows that catalog host.
+  const productImage = variantImage ?? resolveProductImage(product);
   const noImage = isPlaceholderImage(productImage);
   const href = `/shop/${product.slug}`;
+  const englishModel = (product.englishName || model || "")
+    .replace(/\s+\d+\s*\/\s*\d+.*$/i, "")
+    .replace(/\s+(?:vietnam|global|سامسونگ).*$/i, "")
+    .trim();
+  const title = sourceStyle
+    ? (/^(?:A\d{2}|S\d{1,2}|Z\s?(?:flip|fold)|buds)/i.test(englishModel) && !/^galaxy/i.test(englishModel)
+      ? `Galaxy ${englishModel}`
+      : englishModel || label)
+    : label;
+
+  const colorValue = (name: string) => {
+    const normalized = name.trim().toLowerCase();
+    if (/^#[0-9a-f]{3,8}$/i.test(normalized)) return normalized;
+    const colors: Record<string, string> = {
+      "مشکی": "#292526", "سفید": "#f7f5f2", "نقره‌ای": "#b9bdc3", "نقره ای": "#b9bdc3",
+      "خاکستری": "#8d9298", "طوسی": "#8d9298", "آبی": "#566b82", "سرمه‌ای": "#303c58",
+      "سرمه ای": "#303c58", "صورتی": "#dfabb8", "بنفش": "#8376c8", "سبز": "#617660",
+      "کرم": "#d7c6ae", "طلایی": "#b99a58", black: "#292526", white: "#f7f5f2",
+      graphite: "#494c50", gray: "#8d9298", grey: "#8d9298", blue: "#566b82", pink: "#dfabb8",
+      violet: "#8376c8", purple: "#8376c8", green: "#617660", cream: "#d7c6ae",
+    };
+    const direct = colors[name.trim()] ?? colors[normalized];
+    if (direct) return direct;
+    return Object.entries(colors).find(([label]) => normalized.includes(label))?.[1] ?? "#a9a4a4";
+  };
 
   return (
     <article
       style={index != null ? ({ "--card-index": index } as React.CSSProperties) : undefined}
-      className={cn("lux-card product-card group/card", `card-${variant}`, `frame-${frame}`)}
+      className={cn(
+        "lux-card product-card group/card",
+        `card-${variant}`,
+        `frame-${frame}`,
+        sourceStyle && "featured-source-card",
+        sourceStyle && product.specialOffer && "featured-source-card--special",
+      )}
     >
+      {sourceStyle && off != null ? (
+        <span className="featured-source-card__badge featured-source-card__badge--discount">
+          {toFaDigits(off)}٪ تخفیف
+        </span>
+      ) : sourceStyle && product.specialOffer ? (
+        <span className="featured-source-card__badge">
+          <Star aria-hidden="true" fill="currentColor" /> پیشنهاد ویژه
+        </span>
+      ) : null}
+      {sourceStyle && onWish && (
+        <button
+          type="button"
+          aria-label={wished ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
+          aria-pressed={wished}
+          onClick={() => onWish(product.id)}
+          className={cn("featured-source-card__wish", wished && "is-wished")}
+        >
+          <Heart aria-hidden="true" fill={wished ? "currentColor" : "none"} />
+        </button>
+      )}
       <Link href={href} className="lux-stage block" aria-label={product.name}>
         <Image
           src={productImage}
@@ -141,6 +232,9 @@ export function ProductCard({
              measured 1920px served for a 684px need on a 390px phone. */
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 33vw, 390px"
         />
+        {sourceStyle && outOfStock && (
+          <span className="featured-source-card__unavailable"><span>ناموجود</span></span>
+        )}
       </Link>
 
       {/* FR-001: an absent product photograph is stated, not papered over by a
@@ -154,12 +248,12 @@ export function ProductCard({
       <div className="lux-body">
         {/* Brand and model, together and quiet — they identify, they do not
             announce. */}
-        <div className="flex items-baseline justify-between gap-3">
+        <div className={cn("flex items-baseline justify-between gap-3", sourceStyle && "featured-source-card__brand")}>
           <span
             className="font-mono text-xs font-bold tracking-normal"
             style={{ color: accent }}
           >
-            {brandLabel(product.brand?.name)}
+            {sourceStyle && product.brand?.name === "سامسونگ" ? "SAMSUNG" : brandLabel(product.brand?.name)}
           </span>
           {model && (
             <span
@@ -178,10 +272,39 @@ export function ProductCard({
                the *hit area* to 44+ without repainting anything (WCAG 2.5.8).
                The overlap lands on the non-interactive spec line below. */
             className="relative line-clamp-2 font-bold leading-7 after:absolute after:inset-x-[-8px] after:inset-y-[-8px] after:content-['']"
+            dir={sourceStyle ? "ltr" : undefined}
           >
-            {label}
+            {title}
           </Link>
         </h3>
+
+        {sourceStyle && onVariantChange && product.variants && product.variants.some((item) => item.color) && (
+          <div className="featured-source-card__swatches" role="group" aria-label="انتخاب رنگ">
+            {[...new Set(product.variants.flatMap((item) => item.color ? [item.color] : []))].map((color) => {
+              const colorVariant = product.variants?.find((item) => item.color === color && item.storage === activeVariant?.storage)
+                ?? product.variants?.find((item) => item.color === color);
+              if (!colorVariant) return null;
+              return (
+                <button
+                  key={color}
+                  type="button"
+                  title={color}
+                  aria-label={`رنگ ${color}`}
+                  aria-pressed={activeVariant?.color === color}
+                  onPointerDown={(event) => {
+                    event.stopPropagation();
+                    onVariantChange(colorVariant.id);
+                  }}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    onVariantChange(colorVariant.id);
+                  }}
+                  style={{ backgroundColor: colorValue(color) }}
+                />
+              );
+            })}
+          </div>
+        )}
 
         {specs && (
           <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{specs}</p>
@@ -190,7 +313,7 @@ export function ProductCard({
         {/* Everything below is the transaction, held to the bottom so cards in a
             row align on their prices however long the names run. */}
         <div className="mt-auto pt-5">
-          <div className="lux-stock flex items-center justify-between gap-2 text-xs font-bold tracking-normal">
+          <div className={cn("lux-stock flex items-center justify-between gap-2 text-xs font-bold tracking-normal", sourceStyle && "featured-source-card__stock")}>
             <div className="flex items-center gap-2">
               <span
                 className="inline-flex items-center gap-1.5"
@@ -201,7 +324,7 @@ export function ProductCard({
                   style={{ background: "currentColor" }}
                   aria-hidden="true"
                 />
-                {stockLabels[product.stockType ?? ""] ?? "—"}
+                  {stockLabels[activeStockType ?? ""] ?? "—"}
               </span>
               {off != null && (
                 <>
@@ -224,7 +347,7 @@ export function ProductCard({
               card this row stacks (see the mobile block in globals.css), because
               a 44px button beside the price leaves too little room for a
               nine-figure toman figure and the price wraps to three lines. */}
-          <div className="lux-buy mt-2 flex items-end justify-between gap-3">
+          <div className={cn("lux-buy mt-2 flex items-end justify-between gap-3", sourceStyle && "featured-source-card__actions")}>
             <div className="min-w-0">
               {state === "sale" && product.compareAtPrice != null && (
                 <del className="block text-xs leading-4 text-muted-foreground">
@@ -240,22 +363,34 @@ export function ProductCard({
                   className="block text-[26px] font-black leading-9 tracking-normal tabular-nums"
                   style={{ color: "var(--lux-price)" }}
                 >
-                  {formatToman(product.displayPrice)}
+                  {formatToman(displayPrice)}
                 </strong>
               )}
             </div>
 
             <AddToCartButton
               productId={product.id}
+              variantId={activeVariant?.id}
               disabled={!buyable || state === "unavailable"}
-              iconOnly
-              className="size-11 shrink-0 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
+              iconOnly={!sourceStyle}
+              label={sourceStyle ? "افزودن به سبد" : undefined}
+              cartIcon={sourceStyle}
+              className={cn(
+                sourceStyle
+                  ? "featured-source-card__cart"
+                  : "size-11 shrink-0 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95",
+              )}
               style={{
                 background: onDark ? "rgba(229, 211, 179, 0.08)" : "rgb(var(--foreground) / 0.06)",
-                color: "#E5D3B3",
+                color: onDark ? "#E5D3B3" : "#640211",
                 boxShadow: "inset 0 0 0 1px var(--lux-rule)",
               }}
             />
+            {sourceStyle && (
+              <Link href={href} className="featured-source-card__detail" aria-label={`مشاهده ${product.name}`}>
+                <ArrowRight aria-hidden="true" />
+              </Link>
+            )}
           </div>
         </div>
       </div>

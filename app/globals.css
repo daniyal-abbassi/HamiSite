@@ -374,11 +374,8 @@
 
 @layer components {
 
-  /* T069: `.shiny-edge` — an 8s infinite conic-gradient gold rim with three glow
-     shadows and a dot texture — is deleted, along with its `@property --edge-angle`
-     registration and `edge-spin` keyframes. Its two users (the hero's secondary CTA
-     and the header's) now take `.cta-quiet`, which is the same affordance stated
-     without motion: a champagne hairline on the canvas, and a lift on hover.
+  /* T069 removed the old multi-shadow `.shiny-edge`. The collaboration links now
+     share a gold metallic surface and moving gold beam, with reduced-motion support below.
      T074: `.text-stroke` goes with it — the footer wordmark it styled was hidden from
      assistive technology and carried no information (FR-005). */
   .cta-quiet {
@@ -392,6 +389,49 @@
     border-color: rgba(229, 211, 179, 0.75);
     background: rgba(229, 211, 179, 0.08);
   }
+
+  .lightbeam-cta {
+    isolation: isolate;
+    overflow: hidden;
+    border: 2px solid transparent;
+    --collab-cta-sheen: rgba(255, 249, 220, 0.46);
+    --collab-cta-surface: linear-gradient(118deg, #f5df91 0%, #c7972c 24%, #ffefb4 48%, #b58020 73%, #f2d779 100%);
+    background:
+      radial-gradient(ellipse at 22% 0%, var(--collab-cta-sheen), transparent 58%) padding-box,
+      var(--collab-cta-surface) padding-box,
+      conic-gradient(
+        from var(--collab-beam-angle),
+        transparent 0%,
+        #d4af37 42%,
+        #fff3c2 49%,
+        #ffd970 54%,
+        transparent 62%,
+        transparent 100%
+      ) border-box;
+    color: #300710;
+    box-shadow: 0 0 0.9rem rgba(212, 175, 55, 0.26), 0 0.65rem 1.5rem -0.55rem rgba(212, 175, 55, 0.45);
+    animation: collab-beam-spin 2.8s linear infinite;
+  }
+
+  .lightbeam-cta:hover {
+    --collab-cta-sheen: rgba(255, 253, 238, 0.72);
+    --collab-cta-surface: linear-gradient(118deg, #ffedaa 0%, #d3a63e 24%, #fff5cf 48%, #bf8b2b 73%, #f8e59b 100%);
+    box-shadow: 0 0 1.1rem rgba(212, 175, 55, 0.42), 0 0.65rem 1.5rem -0.55rem rgba(212, 175, 55, 0.72);
+  }
+}
+
+@property --collab-beam-angle {
+  syntax: "<angle>";
+  initial-value: 0deg;
+  inherits: false;
+}
+
+@keyframes collab-beam-spin {
+  to { --collab-beam-angle: 360deg; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lightbeam-cta { animation: none; }
 }
 
 /* The rotating headline word. Enters from below and settles — deliberately not

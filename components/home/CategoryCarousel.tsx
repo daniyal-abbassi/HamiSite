@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import useEmblaCarousel from "embla-carousel-react";
 import type { EmblaCarouselType } from "embla-carousel";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { boundCarouselSnap, carouselKeyboardTarget, clampCarouselIndex, MAX_FLICK_TRAVEL } from "@/lib/category-carousel";
 import "./category-carousel.css";
 
@@ -24,7 +25,7 @@ function EmblaViewport({ children, onApiReady }: { children: ReactNode; onApiRea
     return () => onApiReady(null);
   }, [api, onApiReady]);
 
-  return <div className="cat-carousel__viewport" ref={viewportRef}>{children}</div>;
+  return <div id="categories-carousel-viewport" className="cat-carousel__viewport" ref={viewportRef}>{children}</div>;
 }
 
 export function CategoryCarousel({ children }: { children: ReactNode }) {
@@ -32,10 +33,30 @@ export function CategoryCarousel({ children }: { children: ReactNode }) {
   const [live, setLive] = useState(false);
   const [activeIndex, setActiveIndex] = useState(rememberedIndex);
   const [api, setApi] = useState<EmblaCarouselType | null>(null);
+  const [canScrollPrev, setCanScrollPrev] = useState(false);
+  const [canScrollNext, setCanScrollNext] = useState(false);
   const countRef = useRef(0);
   const programmaticTargetRef = useRef<number | null>(null);
 
   const onApiReady = useCallback((nextApi: EmblaCarouselType | null) => setApi(nextApi), []);
+
+  useEffect(() => {
+    if (!api) {
+      setCanScrollPrev(false);
+      setCanScrollNext(false);
+      return;
+    }
+
+    const syncControls = () => {
+      setCanScrollPrev(api.canScrollPrev());
+      setCanScrollNext(api.canScrollNext());
+    };
+    syncControls();
+    api.on("select", syncControls).on("reInit", syncControls);
+    return () => {
+      api.off("select", syncControls).off("reInit", syncControls);
+    };
+  }, [api]);
 
   useEffect(() => {
     const root = rootRef.current;
@@ -132,7 +153,29 @@ export function CategoryCarousel({ children }: { children: ReactNode }) {
       aria-label="دسته‌بندی محصولات"
       onKeyDown={onKeyDown}
     >
-      {live ? <EmblaViewport onApiReady={onApiReady}>{children}</EmblaViewport> : <div className="cat-carousel__viewport">{children}</div>}
+      <div className="cat-carousel__controls" dir="ltr" role="group" aria-label="هدایت دسته‌بندی‌ها">
+        <button
+          className="cat-carousel__control"
+          type="button"
+          aria-label="دسته‌های بعدی"
+          aria-controls="categories-carousel-viewport"
+          disabled={!canScrollNext}
+          onClick={() => api?.scrollNext()}
+        >
+          <ChevronLeft aria-hidden="true" />
+        </button>
+        <button
+          className="cat-carousel__control"
+          type="button"
+          aria-label="دسته‌های قبلی"
+          aria-controls="categories-carousel-viewport"
+          disabled={!canScrollPrev}
+          onClick={() => api?.scrollPrev()}
+        >
+          <ChevronRight aria-hidden="true" />
+        </button>
+      </div>
+      {live ? <EmblaViewport onApiReady={onApiReady}>{children}</EmblaViewport> : <div id="categories-carousel-viewport" className="cat-carousel__viewport">{children}</div>}
     </div>
   );
 }

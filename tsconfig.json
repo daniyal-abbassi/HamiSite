@@ -20,5 +20,5 @@
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", ".next/types/**/*.ts"],
-  "exclude": ["node_modules", "docs/inspires", "premium-3d-mobile-commerce"]
+  "exclude": ["node_modules", "docs/inspires", "premium-3d-mobile-commerce", "assets/NEW-STYLE/SHOP SECTION/pixel-perfect-design-implementation", "assets/NEW-STYLE/محصولات تخفیف دار"]
 }

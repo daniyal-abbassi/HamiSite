@@ -14,7 +14,7 @@ export function B2bSection() {
   return (
     <section
       id="b2b"
-      className="py-16 md:py-20"
+      className="home-section-ground home-section-ground--dark py-16 md:py-20"
       aria-labelledby="b2b-title"
     >
       <div className="container">

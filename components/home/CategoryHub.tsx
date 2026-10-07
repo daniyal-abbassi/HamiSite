@@ -21,7 +21,7 @@ export async function CategoryHub() {
   const departments = await categoryVitrinePanels();
 
   return (
-    <section id="categories" className="category-catalogue band-paper wrap container" aria-labelledby="categories-title">
+    <section id="categories" className="home-section-ground home-section-ground--paper category-catalogue band-paper wrap container" aria-labelledby="categories-title">
       <div className="category-catalogue__head">
         <div>
           <span className="category-kicker">دسته‌بندی محصولات</span>
@@ -58,7 +58,7 @@ export async function CategoryHub() {
                     src={department.image}
                     alt=""
                     fill
-                    sizes="(min-width: 1280px) min(20vw, 280px), (min-width: 768px) 29vw, 66vw"
+                    sizes="(min-width: 1280px) min(20vw, 280px), (min-width: 768px) 29vw, min(48vw, 220px)"
                     className="cat-card__image"
                     unoptimized
                   />

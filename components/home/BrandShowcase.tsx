@@ -17,7 +17,7 @@ import { brandProductCounts } from "@/lib/brand-counts-db";
 export async function BrandShowcase() {
   const counts = await brandProductCounts();
   return (
-    <section id="brands" className="wrap relative overflow-hidden pt-0 pb-14" aria-labelledby="brands-title">
+    <section id="brands" className="home-section-ground home-section-ground--dark wrap relative overflow-hidden pt-0 pb-14" aria-labelledby="brands-title">
       {/* T070 deleted `ModernWhiteWave` — a stock page-builder divider with four
           gradients, an SVG blur filter and dashed specular crests, and the element
           least belonging to this brand world. T071 removed the 96×96 champagne blob

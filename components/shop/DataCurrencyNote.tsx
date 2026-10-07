@@ -11,7 +11,7 @@
  * demands and what makes it a Persian (Jalali) date with no hand-rolled calendar
  * arithmetic anywhere.
  */
-export function DataCurrencyNote({ generatedAt, className = "" }: { generatedAt: string | null; className?: string }) {
+export function DataCurrencyNote({ generatedAt, className = "", dateOnly = false }: { generatedAt: string | null; className?: string; dateOnly?: boolean }) {
   if (!generatedAt) return null;
 
   let label: string;
@@ -25,7 +25,7 @@ export function DataCurrencyNote({ generatedAt, className = "" }: { generatedAt:
   return (
     <p className={className}>
       <span className="text-muted-foreground">
-        قیمت‌ها و وضعیت موجودی از فهرست فروشگاه، به تاریخ{" "}
+        {!dateOnly && <>قیمت‌ها و وضعیت موجودی از فهرست فروشگاه، به تاریخ{" "}</>}
         <time dateTime={generatedAt}>{label}</time>
       </span>
     </p>

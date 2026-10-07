@@ -1,5 +1,54 @@
 .cat-carousel {
+  position: relative;
   min-width: 0;
+}
+
+.cat-carousel__controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-block-end: 0.75rem;
+}
+
+.cat-carousel__control {
+  display: inline-grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border: 1px solid rgb(100 2 17 / 18%);
+  border-radius: 999px;
+  background: #fffaf3;
+  color: #640211;
+  box-shadow: 0 6px 18px rgb(17 4 8 / 12%);
+  cursor: pointer;
+  transition: background-color 180ms ease, color 180ms ease, border-color 180ms ease, transform 180ms ease, opacity 180ms ease;
+}
+
+.cat-carousel__control svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.cat-carousel__control:disabled {
+  opacity: 0.38;
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.cat-carousel__control:focus-visible {
+  outline: 3px solid #640211;
+  outline-offset: 3px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .cat-carousel__control:not(:disabled):hover {
+    transform: translateY(-2px);
+    border-color: #640211;
+    background: #640211;
+    color: #fffaf3;
+  }
 }
 
 .cat-carousel__viewport {
@@ -31,7 +80,7 @@
 }
 
 .cat-slide {
-  flex: 0 0 66vw;
+  flex: 0 0 min(48vw, 220px);
   min-width: 0;
   scroll-snap-align: start;
 }
@@ -41,7 +90,7 @@
   display: block;
   isolation: isolate;
   overflow: hidden;
-  aspect-ratio: 3 / 4;
+  aspect-ratio: 4 / 5;
   border: 1px solid var(--line);
   border-radius: 12px;
   color: rgb(var(--paper-ink));
@@ -105,7 +154,9 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cat-card, .cat-card__art img { transition: none; }
+  .cat-carousel__control,
+  .cat-card,
+  .cat-card__art img { transition: none; }
 }
 
 @media (forced-colors: active) {

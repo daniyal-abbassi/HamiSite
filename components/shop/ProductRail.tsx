@@ -1,4 +1,5 @@
-import { ProductCard, type ProductCardData } from "@/components/shop/ProductCard";
+import { ProductCard, type CardFrame, type CardVariant, type ProductCardData } from "@/components/shop/ProductCard";
+import { cn } from "@/lib/utils";
 
 /**
  * A set of product cards: a swipeable rail on a phone, the responsive grid from
@@ -37,17 +38,27 @@ import { ProductCard, type ProductCardData } from "@/components/shop/ProductCard
 export function ProductRail({
   products,
   label,
+  cardVariant,
+  cardFrame,
+  className,
 }: {
   products: ProductCardData[];
   /** Names the scrollable region, e.g. «جدیدترین محصولات». */
   label: string;
+  /** Optional visual treatment for sections with a distinct art direction. */
+  cardVariant?: CardVariant;
+  cardFrame?: CardFrame;
+  className?: string;
 }) {
   return (
     <div
       role="region"
       aria-label={label}
       tabIndex={0}
-      className="product-rail flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--aqua)] sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:pb-0 lg:grid-cols-3 2xl:grid-cols-4"
+      className={cn(
+        "product-rail flex snap-x snap-mandatory gap-4 overflow-x-auto pb-3 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--aqua)] sm:grid sm:grid-cols-2 sm:gap-5 sm:overflow-visible sm:pb-0 lg:grid-cols-3 2xl:grid-cols-4",
+        className,
+      )}
     >
       {products.map((product, i) => (
         // 45% shows two cards plus a sliver of the third. One card at 82% was
@@ -57,7 +68,7 @@ export function ProductRail({
         // like. `shrink-0` is what stops flex from squeezing every card into
         // one screen width, which is the usual way this pattern fails silently.
         <div key={product.id} className="w-[45%] shrink-0 snap-start sm:w-auto">
-          <ProductCard product={product} index={i} />
+          <ProductCard product={product} index={i} variant={cardVariant} frame={cardFrame} />
         </div>
       ))}
     </div>

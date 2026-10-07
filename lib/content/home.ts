@@ -199,11 +199,6 @@ export const featuredOnlineService = {
   href: categoryLinks.services,
 } as const;
 
-export const onlineServiceFaqs = [
-  { question: "Apple ID چیست؟", answer: "حسابی برای استفاده از برخی سرویس‌های Apple است؛ جزئیات موردنیاز پیش از ثبت درخواست شفاف می‌شود." },
-  { question: "برای دریافت خدمت چه اطلاعاتی لازم است؟", answer: "پیش از شروع، اطلاعات لازم متناسب با درخواست شما روشن و با شما هماهنگ می‌شود." },
-  { question: "خدمت چگونه پیگیری می‌شود؟", answer: "مسیر انجام خدمت و روش پیگیری، پیش از آغاز درخواست به‌صورت شفاف مشخص می‌شود." },
-] as const;
 export const storeExperiencePoints = [
   { index: "۰۱", title: "مشاهده و انتخاب", description: "محصول را ببینید، مقایسه کنید و انتخاب کنید." },
   { index: "۰۲", title: "مشاوره تخصصی", description: "پیش از خرید، انتخاب مناسب خودتان را پیدا کنید." },

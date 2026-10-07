@@ -37,7 +37,7 @@ const pointIcons = [Smartphone, Headphones, ShieldCheck];
  */
 export function AssemblyBand() {
   return (
-    <section id="store-experience" className="wrap assembly-band" aria-labelledby="store-experience-title">
+    <section id="store-experience" className="home-section-ground home-section-ground--dark wrap assembly-band" aria-labelledby="store-experience-title">
       <div className="container px-4 py-16 md:py-24">
         {/* Statement 1 — the physical shop. */}
         <div className="text-center">

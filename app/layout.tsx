@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { storeContact } from "@/lib/content/contact";
 import { SITE_NAME, SITE_ORIGIN, SOCIAL_IMAGE } from "@/lib/seo-metadata";
+import { AgentationToolbar } from "@/components/dev/AgentationToolbar";
 import "./globals.css";
 
 /**
@@ -148,6 +149,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
         />
         {children}
+        <AgentationToolbar />
       </body>
     </html>
   );

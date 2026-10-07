@@ -11,6 +11,8 @@ import { cn } from "@/lib/utils";
 
 type Props = {
   productId: number;
+  /** Add the exact selected catalog variant when a product has choices. */
+  variantId?: number;
   /** When the product can't be purchased right now, render a disabled ghost. */
   disabled?: boolean;
   /**
@@ -20,6 +22,8 @@ type Props = {
    * to a screen reader.
    */
   iconOnly?: boolean;
+  label?: string;
+  cartIcon?: boolean;
   className?: string;
   /** Inline styles, for card variants that theme the control per ground. */
   style?: React.CSSProperties;
@@ -45,7 +49,7 @@ const FAILURE_COPY: Record<string, string> = {
 };
 
 /** Quick add-to-cart island for the (server) ProductCard — adds one unit of the
- * product (no variant; the API resolves the product price) and opens the drawer.
+ * product or its explicitly selected variant and opens the drawer.
  * A 401 redirects to login, preserving the current page as `next`.
  *
  * Every other failure is **said**. The comment this replaced claimed the drawer
@@ -55,7 +59,7 @@ const FAILURE_COPY: Record<string, string> = {
  * the state did not, and the page gave no reason. So a failed add now says why in
  * Persian, in the button's own footprint, and returns to idle.
  */
-export function AddToCartButton({ productId, disabled = false, iconOnly = false, className, style }: Props) {
+export function AddToCartButton({ productId, variantId, disabled = false, iconOnly = false, label = "افزودن", cartIcon = false, className, style }: Props) {
   const router = useRouter();
   const pathname = usePathname();
   const { addItem } = useCart();
@@ -80,7 +84,7 @@ export function AddToCartButton({ productId, disabled = false, iconOnly = false,
   async function handleClick() {
     setState("loading");
     try {
-      await addItem(productId);
+      await addItem(productId, variantId);
       setState("done");
       window.setTimeout(() => setState("idle"), 1600);
     } catch (cause) {
@@ -131,9 +135,9 @@ export function AddToCartButton({ productId, disabled = false, iconOnly = false,
             ) : state === "done" ? (
               <Check className="size-4 text-emerald-400" />
             ) : (
-              <Plus className="size-4 text-aqua" />
+              cartIcon ? <ShoppingCart className="size-4" /> : <Plus className="size-4 text-aqua" />
             )}
-            {failed ? "موفق نشد" : state === "done" ? "افزوده شد" : "افزودن"}
+            {failed ? "موفق نشد" : state === "done" ? "افزوده شد" : label}
           </>
         )}
       </Button>
