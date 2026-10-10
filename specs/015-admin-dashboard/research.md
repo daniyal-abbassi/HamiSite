@@ -95,6 +95,12 @@ route is wrapped in `withAuth(handler, {roles:[Role.ADMIN]})` (`lib/auth.ts:192-
 leaks is structure and Persian labels, not customer data. The owner chose "handle later, focus on frontend"
 on 2026-10-01, so it is recorded here and in `quickstart.md` as a standing risk, not silently ignored.
 
+**Follow-up (2026-10-08).** The owner approved server-side route protection during the admin evaluation.
+`middleware.ts` validates the session cookie, expiry, account activity, and ADMIN role before the App Router
+renders the admin shell or its RSC payload. Missing or expired sessions redirect to login; active non-admin
+users return to the storefront. Admin API routes keep their independent role checks. The redundant
+client-only `AdminGate` was removed so it no longer delays dashboard data reads.
+
 **Alternative considered.** *Add the server gate as part of the redesign.* Rejected because it was declined;
 the cheapest version is a 12-line `middleware.ts` on the `/admin` prefix, which is noted as a one-step
 follow-up rather than smuggled into a frontend task.

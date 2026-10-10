@@ -3,6 +3,7 @@ import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
+import { revalidateHomepage } from "@/lib/revalidate-homepage";
 
 const schema = z.object({
   name: z.string().trim().min(1), slug: z.string().trim().min(1), imageUrl: z.string().optional(),
@@ -26,6 +27,7 @@ export const POST = withAuth(async (request) => withErrorHandling(async () => {
   if (!parsed.success) throw new ApiError(400, "Invalid request body", parsed.error.flatten());
   try {
     const brand = await prisma.brand.create({ data: parsed.data, include: withCount });
+    revalidateHomepage();
     return ok(toRow(brand), { message: "Brand created" });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") throw new ApiError(409, "A brand with this name or slug already exists");

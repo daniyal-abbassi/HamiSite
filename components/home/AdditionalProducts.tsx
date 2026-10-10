@@ -6,10 +6,9 @@ import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import type { RailProduct } from "@/lib/home-rails-db";
 import { ProductCard, type ProductCardData } from "@/components/shop/ProductCard";
-import { formatToman } from "@/lib/utils";
 import { Reveal } from "@/components/home/Reveal";
 
-type NewArrivalProduct = RailProduct;
+type AdditionalProduct = RailProduct;
 
 /*
  * Fed from the seam on the server. `products` used to be null until an
@@ -18,7 +17,7 @@ type NewArrivalProduct = RailProduct;
  * it — the rail now renders exactly what the server handed it, or the empty state
  * if that was nothing.
  */
-export function NewArrivals({ products: initialProducts }: { products: NewArrivalProduct[] }) {
+export function AdditionalProducts({ products }: { products: AdditionalProduct[] }) {
   const [emblaRef, emblaApi] = useEmblaCarousel({ align: "start", direction: "rtl", containScroll: "trimSnaps" });
   const [canPrev, setCanPrev] = useState(false);
   const [canNext, setCanNext] = useState(false);
@@ -39,16 +38,16 @@ export function NewArrivals({ products: initialProducts }: { products: NewArriva
   }, [emblaApi, onSelect]);
 
   return (
-    <section id="new-arrivals" className="home-section-ground home-section-ground--paper band-paper wrap container py-16 md:py-20" aria-labelledby="new-arrivals-title">
+    <section id="new-arrivals" className="home-section-ground home-section-ground--paper band-paper wrap container py-16 md:py-20" aria-labelledby="additional-products-title">
       <Reveal>
         <div className="flex flex-wrap items-end justify-between gap-6">
           <div>
-            <span className="eyebrow"><i /> تازه‌ها</span>
-            <h2 id="new-arrivals-title" className="mt-4 text-3xl font-black tracking-normal md:text-4xl">
-              تازه <span className="emphasis">رسیده‌اند.</span>
+            <span className="eyebrow"><i /> فروشگاه حامی همراه</span>
+            <h2 id="additional-products-title" className="mt-4 text-3xl font-black tracking-normal md:text-4xl">
+              از <span className="emphasis">دیگر محصولات</span> حامی همراه
             </h2>
             <p className="mt-3 max-w-md text-sm leading-7 text-foreground/60">
-              جدیدترین محصولاتی که به مجموعه حامی همراه اضافه شده‌اند.
+              بخش دیگری از فهرست محصولات حامی همراه.
             </p>
           </div>
           <div className="flex items-center gap-3">
@@ -62,7 +61,7 @@ export function NewArrivals({ products: initialProducts }: { products: NewArriva
               <button
                 type="button"
                 onClick={() => emblaApi?.scrollPrev()}
-                aria-label="نمایش محصولات جدید قبلی"
+                aria-label="نمایش محصولات قبلی"
                 disabled={!emblaApi || !canPrev}
                 className="grid size-11 place-items-center rounded-full border border-aqua/50 text-aqua transition-colors hover:bg-aqua/10 disabled:opacity-40"
               >
@@ -71,7 +70,7 @@ export function NewArrivals({ products: initialProducts }: { products: NewArriva
               <button
                 type="button"
                 onClick={() => emblaApi?.scrollNext()}
-                aria-label="نمایش محصولات جدید بعدی"
+                aria-label="نمایش محصولات بعدی"
                 disabled={!emblaApi || !canNext}
                 className="grid size-11 place-items-center rounded-full border border-aqua/50 text-aqua transition-colors hover:bg-aqua/10 disabled:opacity-40"
               >
@@ -83,28 +82,28 @@ export function NewArrivals({ products: initialProducts }: { products: NewArriva
       </Reveal>
 
       <Reveal delay={80}>
-        <NewArrivalsRail products={initialProducts} emblaRef={emblaRef} />
+        <AdditionalProductsRail products={products} emblaRef={emblaRef} />
       </Reveal>
     </section>
   );
 }
 
 type RailProps = {
-  products: NewArrivalProduct[];
+  products: AdditionalProduct[];
   emblaRef: (node: HTMLElement | null) => void;
 };
 
-function NewArrivalsRail({ products, emblaRef }: RailProps) {
+function AdditionalProductsRail({ products, emblaRef }: RailProps) {
   return (
-    <div ref={emblaRef} className="mt-10 overflow-hidden" aria-label="ریل محصولات تازه‌وارد" aria-roledescription="carousel">
+    <div ref={emblaRef} className="mt-10 overflow-hidden" aria-label="محصولات بیشتر فروشگاه" aria-roledescription="carousel">
       <div className="flex touch-pan-y gap-5">
         {products.length === 0 && (
           <div className="w-full glass rounded-2xl p-8 text-center" role="status">
-            <b className="block font-extrabold">چیز تازه‌ای برای نمایش نداریم.</b>
-            <p className="mt-2 text-sm text-foreground/60">اما موجودی فروشگاه همچنان در حال به‌روزرسانی است.</p>
+            <b className="block font-extrabold">محصول بیشتری برای نمایش نیست.</b>
+            <p className="mt-2 text-sm text-foreground/60">برای دیدن همهٔ محصولات، فروشگاه را ببینید.</p>
           </div>
         )}
-        {products.map((product) => <ArrivalCard key={product.id} product={product} />)}
+        {products.map((product) => <AdditionalProductCard key={product.id} product={product} />)}
       </div>
     </div>
   );
@@ -112,11 +111,15 @@ function NewArrivalsRail({ products, emblaRef }: RailProps) {
 
 /** The rail's slide is only a width; the card itself is the shared one, so a
  *  product looks identical here and in the shop grid. */
-function ArrivalCard({ product }: { product: NewArrivalProduct }) {
+function AdditionalProductCard({ product }: { product: AdditionalProduct }) {
   return (
     <div className="min-w-0 flex-[0_0_45%] sm:flex-[0_0_46%] lg:flex-[0_0_32%]">
       {/* Use a lighter card variant here to improve contrast against the dark background */}
-      <ProductCard product={product satisfies ProductCardData} variant="museum" />
+      <ProductCard
+        product={product satisfies ProductCardData}
+        variant="museum"
+        imageSizes="(max-width: 639px) 42vw, (max-width: 1023px) 44vw, 30vw"
+      />
     </div>
   );
 }

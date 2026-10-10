@@ -1,6 +1,5 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@import "tailwindcss";
+@config "../tailwind.config.ts";
 
 /**
  * HAMI brand tokens v2 — "Two Chapters" (flat wine canvas + paper trust

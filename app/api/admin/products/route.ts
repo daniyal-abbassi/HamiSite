@@ -4,6 +4,7 @@ import { withAuth } from "@/lib/auth";
 import { ApiError, ok, parsePagination, withErrorHandling } from "@/lib/http";
 import { queryProducts } from "@/lib/catalog-db";
 import { prisma } from "@/lib/prisma";
+import { revalidateHomepage } from "@/lib/revalidate-homepage";
 
 const productInput = z.object({
   name: z.string().trim().min(1), englishName: z.string().optional(), slug: z.string().trim().min(1),
@@ -16,13 +17,20 @@ const productInput = z.object({
   stockType: z.enum(["UNLIMITED", "LIMITED", "OUT_OF_STOCK", "CALL", "unlimited", "limited", "out_of_stock", "call"]).optional(),
   minOrderQuantity: z.number().int().positive().optional(), maxOrderQuantity: z.number().int().positive().optional(),
   guarantee: z.string().optional(), seoTitle: z.string().optional(), seoDescription: z.string().optional(),
+  specs: z.array(z.object({ name: z.string().trim().min(1), value: z.string().trim().min(1) })).optional(),
+  images: z.array(z.object({
+    url: z.string().url(),
+    altText: z.string().optional(),
+    isDefault: z.boolean().optional(),
+    order: z.number().int().optional(),
+  })).optional(),
 });
 
 export const GET = withAuth(async (request) => withErrorHandling(async () => {
   const { searchParams } = new URL(request.url);
   const pagination = parsePagination(searchParams);
   const q = searchParams.get("q") ?? undefined;
-  const result = await queryProducts({ q, page: pagination.page, pageSize: pagination.pageSize, includeVariants: true });
+  const result = await queryProducts({ q, page: pagination.page, pageSize: pagination.pageSize, includeVariants: false });
   return ok(result.data, { page: pagination.page, pageSize: pagination.pageSize, total: result.total, hasNextPage: pagination.page * pagination.pageSize < result.total });
 }), { roles: [Role.ADMIN] });
 
@@ -45,6 +53,15 @@ export const POST = withAuth(async (request, { user }) => withErrorHandling(asyn
         stock: input.stock, stockType: state, minOrderQuantity: input.minOrderQuantity,
         maxOrderQuantity: input.maxOrderQuantity, guarantee: input.guarantee, seoTitle: input.seoTitle,
         seoDescription: input.seoDescription,
+        specs: input.specs ? input.specs : undefined,
+        images: input.images && input.images.length > 0 ? {
+          create: input.images.map((img, idx) => ({
+            url: img.url,
+            altText: img.altText ?? input.name,
+            isDefault: img.isDefault ?? idx === 0,
+            order: img.order ?? idx,
+          })),
+        } : undefined,
       }, select: { id: true, slug: true, price: true } });
       await tx.productHistory.create({ data: {
         productId: product.id, action: HistoryAction.CREATED, field: "product",
@@ -52,6 +69,7 @@ export const POST = withAuth(async (request, { user }) => withErrorHandling(asyn
       } });
       return product;
     });
+    revalidateHomepage();
     return ok({ ...created, price: created.price.toNumber() }, { message: "Product created" });
   } catch (error) {
     if (error && typeof error === "object" && "code" in error && error.code === "P2002") throw new ApiError(409, `A product with slug "${input.slug}" already exists`);

@@ -1,6 +1,11 @@
+import path from "node:path";
+import { fileURLToPath } from "node:url";
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Keep tracing rooted at this app when a parent workspace also has a lockfile.
+  outputFileTracingRoot: path.dirname(fileURLToPath(import.meta.url)),
   // Keep metadata in <head> for SEO and social crawlers that do not execute
   // streamed body content. Browser requests still use Next.js metadata streaming.
   htmlLimitedBots: /bot|crawler|spider/i,
@@ -18,6 +23,16 @@ const nextConfig = {
         protocol: "https",
         hostname: "hamihamrah-shop.com",
         pathname: "/shop-resources/**",
+      },
+      {
+        protocol: "https",
+        hostname: "dkstatics-public.digikala.com",
+        pathname: "/**",
+      },
+      {
+        protocol: "https",
+        hostname: "*.digikala.com",
+        pathname: "/**",
       },
     ],
   },

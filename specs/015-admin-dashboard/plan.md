@@ -87,14 +87,15 @@ specs/015-admin-dashboard/
 ### Source Code (repository root)
 
 ```text
-app/(admin)/layout.tsx              → REPLACED: the frame (AuthProvider + AdminGate + shell + main)
+app/(admin)/layout.tsx              → REPLACED: the frame (AuthProvider + shell + main)
+middleware.ts                       → ADDED: Node.js admin session/role gate before page and RSC rendering
 app/(admin)/admin/page.tsx          → unchanged route, new section composition
 app/(admin)/admin/{orders,products,users,categories,brands,coupons}/**  → untouched; inherit the frame
 
 components/admin/
 ├── AdminSidebar.tsx                → REPLACED: desktop rail + mobile thumb nav, one nav model
 ├── AdminPageHeader.tsx             → REPLACED: title, basis line, one primary action
-├── AdminGate.tsx                   → untouched (client gate; server gating is out of scope by owner decision)
+├── AdminGate.tsx                   → removed after server middleware became the pre-render access gate
 ├── dashboard/
 │   ├── DashboardClient.tsx         → REPLACED: composes sections, no data logic of its own
 │   └── sections/                   → NEW: ActionNeeded · Takings · StockRisk · NewestOrders

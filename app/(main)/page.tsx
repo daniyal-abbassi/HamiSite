@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { pageMetadata } from "@/lib/seo-metadata";
 import {
   ArrowLeft,
@@ -12,8 +13,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { trustFacts } from "@/lib/content/verified-facts";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
-import { discountedProductsRail, featuredLatestRail, newArrivalsRail } from "@/lib/home-rails-db";
-import { NewArrivals } from "@/components/home/NewArrivals";
+import { additionalProductsRail, discountedProductsRail, homepageProductsRail } from "@/lib/home-rails-db";
+import { AdditionalProducts } from "@/components/home/AdditionalProducts";
 import { DiscountedProducts } from "@/components/home/DiscountedProducts";
 import { ObtainableNow } from "@/components/home/ObtainableNow";
 import { AssemblyBand } from "@/components/home/AssemblyBand";
@@ -22,6 +23,8 @@ import { MobileQuickRoutes } from "@/components/home/MobileQuickRoutes";
 import { CategoryHub } from "@/components/home/CategoryHub";
 import { B2bSection } from "@/components/home/B2bSection";
 import { OnlineServices } from "@/components/home/OnlineServices";
+import { Suspense } from "react";
+import { HomeRailSkeleton } from "@/components/home/HomeRailSkeleton";
 import "./home.css";
 
 export const metadata = pageMetadata({
@@ -30,6 +33,9 @@ export const metadata = pageMetadata({
   path: "/",
 });
 
+// Keep the homepage fast and statically served while refreshing catalogue-backed
+// sections shortly after an import or an inventory change.
+export const revalidate = 60;
 
 const trustFactIcons: Record<(typeof trustFacts)[number]["key"], LucideIcon> = {
   history: BadgeCheck,
@@ -48,6 +54,22 @@ const trustFactShortLabels: Record<(typeof trustFacts)[number]["key"], string> =
 function Hero() {
   return (
     <section id="top" className="band-paper homepage-hero" aria-labelledby="hero-title" data-ground="paper">
+      <picture className="homepage-hero__art" aria-hidden="true">
+        <source
+          media="(max-width: 1023px)"
+          srcSet="/images/hero/home-mobile-640.webp 640w, /images/hero/home-mobile-960.webp 941w"
+          sizes="100vw"
+        />
+        <Image
+          src="/images/hero/home-desktop.webp"
+          alt=""
+          fill
+          loading="eager"
+          fetchPriority="high"
+          sizes="100vw"
+          className="homepage-hero__image"
+        />
+      </picture>
       <div className="wrap container homepage-hero__inner">
         <div className="homepage-hero__scene" aria-hidden="true" />
 
@@ -58,12 +80,12 @@ function Hero() {
           </span>
 
           <h1 id="hero-title" className="homepage-hero__title">
-            <span className="homepage-hero__title-line">قیمت روز بازار مستقیم از</span>
-            <span className="homepage-hero__title-emphasis">مشهد برای ساعت هوشمند</span>
+            <span className="homepage-hero__title-line">موبایل و لوازم جانبی</span>
+            <span className="homepage-hero__title-emphasis">برای هر روز شما.</span>
           </h1>
 
           <p className="homepage-hero__description">
-            برای یک دستگاه یا خرید عمده، موجودی و قیمت روز را کارشناس فروشگاه تلفنی اعلام می‌کند.
+            برای خرید تکی یا همکاری عمده، قیمت روز و موجودی را از کارشناس فروش حامی همراه بپرسید.
           </p>
 
           <nav className="homepage-hero__actions" aria-label="مسیرهای اصلی">
@@ -98,24 +120,32 @@ function Hero() {
   );
 }
 
-export default async function HomePage() {
-  /*
-   * Read from the catalog seam on the server. Both product rails used to fetch
-   * `/api/products` after hydration, which left the served homepage holding no
-   * products at all — Constitution III says browsing must not need a round-trip,
-   * and `quickstart.md` §3 checks it with curl rather than by trust.
-   */
-  const [latestProducts, arrivals, discountedProducts] = await Promise.all([
-    featuredLatestRail(),
-    newArrivalsRail(),
-    discountedProductsRail(),
-  ]);
+async function FeaturedProductsSection() {
+  const products = await homepageProductsRail();
+  return <FeaturedProducts products={products} />;
+}
 
+async function DiscountedProductsSection() {
+  const products = await discountedProductsRail();
+  if (products.length === 0) return null;
+  return <DiscountedProducts products={products} />;
+}
+
+async function AdditionalProductsSection() {
+  const products = await additionalProductsRail();
+  return <AdditionalProducts products={products} />;
+}
+
+export default function HomePage() {
   return (
     <>
       <Hero />
-      <FeaturedProducts products={latestProducts} />
-      {discountedProducts.length > 0 && <DiscountedProducts products={discountedProducts} />}
+      <Suspense fallback={<HomeRailSkeleton />}>
+        <FeaturedProductsSection />
+      </Suspense>
+      <Suspense fallback={null}>
+        <DiscountedProductsSection />
+      </Suspense>
       {/* Mobile only (`md:hidden`), and a shop entry rather than an interruption:
           a row of route chips straight into the catalogue. */}
       <MobileQuickRoutes />
@@ -123,17 +153,11 @@ export default async function HomePage() {
       <ObtainableNow />
       <CategoryHub />
       <BrandShowcase />
-      {/* CampaignBanner removed (distill): it sold no offer, product, or
-          urgency — generic ad copy plus the logo in the page's most expensive
-          slot. Restore it only when there is a real campaign to carry. */}
-      <NewArrivals products={arrivals} />
+      <Suspense fallback={<HomeRailSkeleton />}>
+        <AdditionalProductsSection />
+      </Suspense>
       <OnlineServices />
       <B2bSection />
-      {/* Feature 007: the store-experience, trust and closing sections are one composed band. The pin
-          that was specified for it was measured and removed (notes/band-geometry-measured.md): the
-          sticky shell left 54.6px of travel against a 1,600px animation range, so the scrub never advanced
-          and the phone number sat at document y≈2229 — off screen, not immovable. Static is 2,184px at 360
-          against the 2,961px it replaces, so the shortening criterion is met without the mechanism. */}
       <AssemblyBand />
     </>
   );

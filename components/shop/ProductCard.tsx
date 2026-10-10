@@ -1,7 +1,8 @@
 import type React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, Heart, Star } from "lucide-react";
+import { ArrowRight, BadgePercent, Heart, Star } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import hamiWordmark from "@/public/brand/hami-wordmark-fa.png";
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
 import { PLACEHOLDER_ALT, PLACEHOLDER_LABEL, isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
@@ -122,6 +123,7 @@ export function ProductCard({
   onWish,
   selectedVariantId,
   onVariantChange,
+  imageSizes,
 }: {
   product: ProductCardData;
   /** Position in its grid, used only to stagger the entrance. */
@@ -135,6 +137,7 @@ export function ProductCard({
   onWish?: (id: number) => void;
   selectedVariantId?: number;
   onVariantChange?: (variantId: number) => void;
+  imageSizes?: string;
 }) {
   const onDark = DARK_GROUND[variant];
   const accent = brandAccent(product.brand?.name, onDark ? "dark" : "light");
@@ -202,13 +205,23 @@ export function ProductCard({
       )}
     >
       {sourceStyle && off != null ? (
-        <span className="featured-source-card__badge featured-source-card__badge--discount">
+        <Badge
+          tone="danger"
+          size="sm"
+          icon={<BadgePercent aria-hidden="true" />}
+          className="featured-source-card__badge featured-source-card__badge--discount"
+        >
           {toFaDigits(off)}٪ تخفیف
-        </span>
+        </Badge>
       ) : sourceStyle && product.specialOffer ? (
-        <span className="featured-source-card__badge">
-          <Star aria-hidden="true" fill="currentColor" /> پیشنهاد ویژه
-        </span>
+        <Badge
+          tone="warning"
+          size="sm"
+          icon={<Star aria-hidden="true" fill="currentColor" />}
+          className="featured-source-card__badge"
+        >
+          پیشنهاد ویژه
+        </Badge>
       ) : null}
       {sourceStyle && onWish && (
         <button
@@ -227,10 +240,7 @@ export function ProductCard({
           alt={isPlaceholderImage(productImage) ? PLACEHOLDER_ALT : product.name}
           width={720}
           height={720}
-          /* Mirrors the grid this card sits in: 1 column, then 2, 3, 4. Without
-             this the browser assumes 100vw and picks the largest candidate —
-             measured 1920px served for a 684px need on a 390px phone. */
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 33vw, 390px"
+          sizes={imageSizes ?? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 33vw, 390px"}
         />
         {sourceStyle && outOfStock && (
           <span className="featured-source-card__unavailable"><span>ناموجود</span></span>

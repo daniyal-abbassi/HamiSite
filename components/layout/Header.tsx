@@ -11,6 +11,8 @@ import { PillNav, type PillNavItem } from "@/components/layout/PillNav";
 import SmoothDropdown from "@/components/smooth-dropdown";
 import hamiWordmark from "@/public/brand/قسمت-فارسی-لوگو-زمینه-سفید.png";
 import { cn } from "@/lib/utils";
+import { nextHeaderScrollState, type HeaderScrollState } from "./header-scroll";
+import "./header-glass.css";
 
 const navItems: PillNavItem[] = [
   { href: "/", label: "خانه" },
@@ -27,7 +29,7 @@ const navItems: PillNavItem[] = [
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [visible, setVisible] = useState(true);
-  const lastScrollY = useRef(0);
+  const scrollState = useRef<HeaderScrollState>({ lastY: 0, travel: 0, visible: true });
 
   useEffect(() => {
     /* One rAF per burst of scroll events instead of one handler per event:
@@ -45,25 +47,16 @@ export function Header() {
         // Scrolled past initial hero threshold
         setScrolled(currentScrollY > 20);
 
-        // Smart auto-hide: hide on scroll down to leave reading view completely clean;
-        // reveal on scroll up for quick navigation; always reveal near the very top.
-        if (currentScrollY <= 40) {
-          setVisible(true);
-        } else if (currentScrollY > lastScrollY.current + 6) {
-          // Scrolling down
-          setVisible(false);
-        } else if (currentScrollY < lastScrollY.current - 6) {
-          // Scrolling up
-          setVisible(true);
-        }
-
-        lastScrollY.current = currentScrollY;
+        // Accumulate small movements so a slow gesture can still change direction.
+        scrollState.current = nextHeaderScrollState(scrollState.current, currentScrollY);
+        setVisible(scrollState.current.visible);
       });
     };
 
     // Restored scroll (a reload or back-forward navigation) can land mid-page;
     // without this the floating pill rendered over deep content until the
     // first scroll event — exactly the «header floating over sections» capture.
+    scrollState.current = { lastY: window.scrollY, travel: 0, visible: true };
     setScrolled(window.scrollY > 20);
 
     window.addEventListener("scroll", handleScroll, { passive: true });
@@ -76,20 +69,13 @@ export function Header() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-all duration-300 ease-out",
+        "site-header-glass fixed inset-x-0 top-0 z-50",
         visible ? "translate-y-0" : "-translate-y-full",
-        scrolled
-          ? "border-b border-champagne/20 bg-[linear-gradient(115deg,#641027_0%,#4b0718_48%,#300710_100%)] py-2.5 px-4 shadow-monolith"
-          : "bg-transparent px-4 pt-4 md:pt-6"
+        scrolled && "site-header-glass--scrolled"
       )}
     >
       <nav
-        className={cn(
-          "mx-auto flex max-w-6xl items-center gap-2 transition-all duration-300 md:gap-3",
-          scrolled
-            ? "px-1 py-0"
-            : "rounded-full border border-champagne/30 bg-[linear-gradient(115deg,#641027_0%,#4b0718_48%,#300710_100%)] px-3 py-2 shadow-monolith"
-        )}
+        className="header-glass-surface header-glass-surface--pill mx-auto flex max-w-6xl items-center gap-1 rounded-full md:gap-3"
       >
         {/*
          * T082: the identity is the shop's own supplied wordmark, not a redrawn
@@ -126,7 +112,7 @@ export function Header() {
 
         {/* Compact utilities take only the space their controls need, leaving
             the brand and navigation clear at phone and desktop widths. */}
-        <div className="ms-auto flex min-w-0 flex-1 items-center gap-2 md:flex-none">
+        <div className="ms-auto flex min-w-0 shrink-0 items-center gap-1 md:gap-2">
           <DiscoverButton />
 
           {/*

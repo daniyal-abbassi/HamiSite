@@ -316,7 +316,8 @@ have.
 3. **The back office is open to anyone right now at the HTML level.** No `middleware.ts` exists;
    `AdminGate` redirects on the client, so the admin page structure and labels are served to any visitor
    before the redirect. Fixing it means adding server-side gating — that touches auth, so I am asking, not
-   assuming.
+   assuming. **Resolved 2026-10-08:** the owner approved a Node.js middleware check before admin route
+   rendering; see the follow-up in `research.md` R5.
 
 ## Decisions I made so this can move (recorded, not silent)
 

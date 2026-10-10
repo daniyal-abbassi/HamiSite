@@ -6,6 +6,7 @@ import { ApiError, ok, parsePagination, withErrorHandling } from "@/lib/http";
 import { orderListInclude, serializeOrderSummary } from "@/lib/orders";
 import { ensureB2BTermAllowed, normalizePaymentTerm, resolveMatchingTier } from "@/lib/pricing";
 import { prisma } from "@/lib/prisma";
+import { revalidateHomepage } from "@/lib/revalidate-homepage";
 import { serializeDate, toNumber } from "@/lib/serializers";
 
 const createOrderSchema = z.object({
@@ -331,6 +332,7 @@ export const POST = withAuth(async (request, { user }) => {
       return created;
     });
 
+    revalidateHomepage();
     return ok(
       {
         id: order.id,

@@ -9,9 +9,8 @@ const catalogImageMirror = mirroredImages as Record<string, string>;
  * The homepage's two product rails, read from the seam on the server.
  *
  * Both read from the server-side catalog seam so browsing does not need a client
- * round-trip. The featured home shelf explicitly requests the globally newest
- * products and includes their serialized variants; the separate NewArrivals rail
- * retains its own buyability-oriented feed and presentation contract.
+ * round-trip. The main shelf requests twelve products; the continuation rail
+ * uses the same catalog ordering without repeating those first twelve.
  */
 
 export type RailProduct = {
@@ -42,8 +41,8 @@ export type RailProduct = {
   }>;
 };
 
-/** The globally newest live catalog products for the homepage featured shelf. */
-export async function featuredLatestRail(): Promise<RailProduct[]> {
+/** The twelve most recently added live catalog products for the homepage shelf. */
+export async function homepageProductsRail(): Promise<RailProduct[]> {
   const result = await queryProducts({
     sort: "newest",
     includeVariants: true,
@@ -160,18 +159,10 @@ export async function featuredSpecialRail(): Promise<RailProduct[]> {
 }
 
 /**
- * The bare six-record feed the «تازه‌ها» section has always shown.
- *
- * It is **not** a recency query, and this function deliberately does not pretend
- * otherwise: `serializeProduct` emits no `updatedAt`, so there is nothing to sort
- * on this side of the seam, and the default order leads with purchasable items.
- * The section heading is therefore inaccurate today — `audits/05` records it, and
- * T050 in band 2 owns the comparator that makes it true. Fixing the label by
- * inventing a date field here would be the same class of error this band exists to
- * remove.
+ * Six more products after the twelve shown in the main homepage shelf.
  */
-export async function newArrivalsRail(): Promise<RailProduct[]> {
-  return (await queryProducts({ includeVariants: false, page: 1, pageSize: 6 }))
+export async function additionalProductsRail(): Promise<RailProduct[]> {
+  return (await queryProducts({ sort: "newest", includeVariants: false, page: 3, pageSize: 6 }))
     .data as unknown as RailProduct[];
 }
 

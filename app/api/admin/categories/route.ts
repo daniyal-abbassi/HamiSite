@@ -3,6 +3,7 @@ import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
+import { revalidateHomepage } from "@/lib/revalidate-homepage";
 
 const schema = z.object({
   name: z.string().trim().min(1), slug: z.string().trim().min(1), description: z.string().optional(),
@@ -42,6 +43,7 @@ export const POST = withAuth(async (request) => withErrorHandling(async () => {
       seoTitle: input.seoTitle, seoDescription: input.seoDescription, available: input.available,
       categoriesMenuShow: input.categoriesMenuShow, topMenuSeparateShow: input.topMenuSeparateShow, order: input.order,
     } });
+    revalidateHomepage();
     return ok(toRow(created), { message: "Category created" });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") throw new ApiError(409, "Category slug already exists");

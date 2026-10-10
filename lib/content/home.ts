@@ -13,13 +13,6 @@ import { toFaDigits } from "@/lib/utils";
    `partnerMarks`, and these five strings — a restatement of the trust claims with no
    source of their own — were asserted by nothing and rendered by nothing. */
 
-export const featuredTabs = [
-  { key: "newest", label: "جدیدترین‌ها", badge: "NEW" },
-  { key: "special", label: "پیشنهاد ویژه", badge: "SPECIAL OFFER" },
-] as const;
-
-export type FeaturedTabKey = (typeof featuredTabs)[number]["key"];
-
 export const trustFeatures = [
   { key: "store", title: "فروش حضوری", description: "تجربه خرید حضوری از فروشگاه حامی همراه" },
   { key: "wholesale", title: "پخش عمده", description: "تأمین عمده برای همکاران" },
@@ -171,10 +164,10 @@ export const brandSlugByName: Readonly<Record<string, string>> = Object.fromEntr
 );
 
 export const b2bFeatures = [
-  { title: "قیمت همکاری", description: "Pricing مخصوص همکاران" },
-  { title: "موجودی به‌روز", description: "اطلاع از موجودی پیش از سفارش" },
-  { title: "تنوع کالا", description: "موبایل و لوازم جانبی در یک مجموعه" },
-  { title: "سفارش آسان", description: "فرآیند ساده و سریع سفارش" },
+  { title: "قیمت همکاری", description: "قیمت روز را از کارشناس فروش دریافت کنید." },
+  { title: "استعلام موجودی", description: "پیش از ثبت سفارش، وضعیت کالا را بررسی کنید." },
+  { title: "تنوع کالا", description: "موبایل و لوازم جانبی از برندهای گوناگون." },
+  { title: "ثبت سفارش", description: "پس از تأیید درخواست همکاری، سفارش ثبت می‌شود." },
 ] as const;
 
 export const b2bWorkflow = [

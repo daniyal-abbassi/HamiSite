@@ -2,10 +2,11 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { motion } from "motion/react";
-import { Grid2X2, Search, X } from "lucide-react";
+import { Menu, Search, X } from "lucide-react";
 import { brandHref, brandSlugByName } from "@/lib/content/home";
+import { GlassMenu, type GlassMenuItem } from "@/components/ui/liquid-glass";
 
 const TABS = [
   {
@@ -35,40 +36,29 @@ const TABS = [
 ] as const;
 
 const spring = { type: "spring" as const, damping: 24, stiffness: 260, mass: 0.9 };
+const mobileItems: GlassMenuItem[] = TABS.map(({ id, label }) => ({ id, label }));
 
 /** Animated one-row search and category toolbar for the navbar. */
 export default function DiscoverButton() {
   const pathname = usePathname();
+  const router = useRouter();
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["id"]>(TABS[0].id);
   const [isSearching, setIsSearching] = useState(false);
-  const [mobileCategoriesOpen, setMobileCategoriesOpen] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
-  const rootRef = useRef<HTMLDivElement>(null);
   const routeTab = TABS.find((tab) => pathname === tab.href || pathname.startsWith(`${tab.href}/`));
 
   useEffect(() => {
     if (isSearching) inputRef.current?.focus();
-    if (!isSearching && !mobileCategoriesOpen) return;
-
-    const closeOnOutsideClick = (event: PointerEvent) => {
-      if (!rootRef.current?.contains(event.target as Node)) setMobileCategoriesOpen(false);
-    };
+    if (!isSearching) return;
     const closeOnEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        setIsSearching(false);
-        setMobileCategoriesOpen(false);
-      }
+      if (event.key === "Escape") setIsSearching(false);
     };
-    document.addEventListener("pointerdown", closeOnOutsideClick);
     document.addEventListener("keydown", closeOnEscape);
-    return () => {
-      document.removeEventListener("pointerdown", closeOnOutsideClick);
-      document.removeEventListener("keydown", closeOnEscape);
-    };
-  }, [isSearching, mobileCategoriesOpen]);
+    return () => document.removeEventListener("keydown", closeOnEscape);
+  }, [isSearching]);
 
   return (
-    <div ref={rootRef} className="relative flex h-10 w-max max-w-full shrink items-center gap-1.5 md:h-9" dir="rtl">
+    <div className="relative flex h-10 w-max max-w-full shrink items-center gap-1.5 md:h-9" dir="rtl">
       <motion.form
         layout
         action="/shop"
@@ -179,45 +169,29 @@ export default function DiscoverButton() {
       </motion.div>
 
       <div className="relative sm:hidden">
-        <button
-          type="button"
-          aria-label={isSearching ? "بستن جست‌وجو" : "دسته‌بندی‌های گوشی"}
-          aria-expanded={isSearching ? undefined : mobileCategoriesOpen}
-          aria-controls="mobile-discover-categories"
-          onClick={() => {
-            if (isSearching) setIsSearching(false);
-            else setMobileCategoriesOpen((open) => !open);
-          }}
-          className="grid size-10 place-items-center rounded-full border border-champagne/25 bg-ink/70 text-champagne shadow-[0_5px_18px_rgba(0,0,0,.2)]"
-        >
-          {isSearching ? <X className="size-5" aria-hidden="true" /> : <Grid2X2 className="size-[18px]" aria-hidden="true" />}
-        </button>
-
-        {!isSearching && mobileCategoriesOpen && (
-          <motion.div
-            id="mobile-discover-categories"
-            role="region"
-            aria-label="دسته‌بندی گوشی‌ها"
-            initial={{ opacity: 0, y: 6, scale: 0.98 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            className="absolute end-0 top-full z-[70] mt-2 w-52 rounded-2xl border border-champagne/20 bg-[linear-gradient(145deg,#260b12_0%,#14060a_72%)] p-2 shadow-[0_20px_60px_rgba(0,0,0,.55)]"
+        {isSearching ? (
+          <button
+            type="button"
+            aria-label="بستن جست‌وجو"
+            onClick={() => setIsSearching(false)}
+            className="grid size-10 place-items-center rounded-full border border-champagne/25 bg-ink/70 text-champagne shadow-[0_5px_18px_rgba(0,0,0,.2)]"
           >
-            {TABS.map((tab) => {
-              return (
-                <Link
-                  key={tab.id}
-                  href={tab.href}
-                  onClick={() => {
-                    setActiveTab(tab.id);
-                    setMobileCategoriesOpen(false);
-                  }}
-                  className="flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-semibold text-foreground/90 transition hover:bg-champagne/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/60"
-                >
-                  {tab.label}
-                </Link>
-              );
-            })}
-          </motion.div>
+            <X className="size-5" aria-hidden="true" />
+          </button>
+        ) : (
+          <GlassMenu
+            items={mobileItems}
+            label="دسته‌بندی‌های گوشی"
+            triggerIcon={<Menu className="size-5" strokeWidth={1.8} />}
+            expandDirection="down"
+            transparency={0.72}
+            onSelect={(id) => {
+              const tab = TABS.find((item) => item.id === id);
+              if (!tab) return;
+              setActiveTab(tab.id);
+              window.setTimeout(() => router.push(tab.href), 350);
+            }}
+          />
         )}
       </div>
     </div>

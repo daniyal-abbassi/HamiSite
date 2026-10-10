@@ -6,14 +6,10 @@ import { formatFaDate } from "@/lib/content/order";
 import { formatToman, toFaDigits } from "@/lib/utils";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { useSection } from "../useSection";
-import { needsAction, windowLabel, type SummaryData } from "./derive";
+import { useDashboardSummary } from "../DashboardSummaryProvider";
+import { needsAction, windowLabel } from "./derive";
 import { SectionEmpty, SectionSkeleton, SectionUnreadable } from "@/components/admin/states/SectionState";
 import type { OrderSummary } from "@/types/store";
-
-type NeedsActionData = {
-  summary: SummaryData;
-  pending: OrderSummary[];
-};
 
 /**
  * Needs action — the count from `reports/summary.byStatus` over PENDING + PROCESSING +
@@ -23,19 +19,14 @@ type NeedsActionData = {
  * detail route in the same tab.
  */
 export function NeedsActionSection() {
-  const { state, data, onRetry } = useSection<NeedsActionData>(
-    async () => {
-      const [summary, pending] = await Promise.all([
-        apiGet<SummaryData>("/api/admin/reports/summary"),
-        apiGet<OrderSummary[]>("/api/admin/orders?status=PENDING&pageSize=6"),
-      ]);
-      return { summary, pending };
-    },
-    (d) => needsAction(d.summary.byStatus) === 0 && d.pending.length === 0,
+  const summary = useDashboardSummary();
+  const pending = useSection<OrderSummary[]>(
+    () => apiGet<OrderSummary[]>("/api/admin/orders?status=PENDING&pageSize=6"),
+    (orders) => orders.length === 0,
   );
 
-  if (state === "loading") return <SectionSkeleton className="h-64" />;
-  if (state === "empty") {
+  if (summary.state === "loading" && pending.state === "loading") return <SectionSkeleton className="h-64" />;
+  if (summary.state === "empty" && pending.state === "empty") {
     return (
       <SectionEmpty
         title="سفارشی نیازمند اقدام نیست"
@@ -43,10 +34,8 @@ export function NeedsActionSection() {
       />
     );
   }
-  if (state === "unreadable") return <SectionUnreadable onRetry={onRetry} />;
-
-  const basis = windowLabel(data.summary.periodDays);
-  const count = needsAction(data.summary.byStatus);
+  const basis = summary.state === "real" ? windowLabel(summary.data.periodDays) : null;
+  const count = summary.state === "real" ? needsAction(summary.data.byStatus) : null;
 
   return (
     <section className="rounded-2xl border border-[#e3dbd2] bg-white p-5 shadow-[0_4px_16px_rgba(47,35,30,0.05)]">
@@ -54,19 +43,29 @@ export function NeedsActionSection() {
         <div className="min-w-0">
           <h2 className="text-sm font-black text-foreground">سفارش‌های نیازمند اقدام</h2>
           <p className="mt-1 text-xs leading-5 text-muted-foreground">
-            {basis} · در انتظار، در حال پردازش و ارسال‌شده
+            {basis ? `${basis} · ` : ""}در انتظار، در حال پردازش و ارسال‌شده
           </p>
         </div>
-        <span className="shrink-0 text-3xl font-black text-champagne">{toFaDigits(count)}</span>
+        {count === null ? <span className="shrink-0 text-3xl font-black text-muted-foreground">—</span> : <span className="shrink-0 text-3xl font-black text-champagne">{toFaDigits(count)}</span>}
       </div>
+      {summary.state === "loading" && <SectionSkeleton className="my-3 h-10" />}
+      {summary.state === "empty" && <p className="mt-2 text-xs text-muted-foreground">در این بازه سفارشی ثبت نشده است.</p>}
+      {summary.state === "unreadable" && (
+        <div className="mt-2 flex flex-wrap items-center justify-between gap-2 rounded-xl border border-destructive/30 bg-destructive/5 px-3 py-2 text-xs text-destructive" role="alert">
+          <span>خواندن شمار سفارش‌ها ناموفق بود.</span>
+          <button type="button" onClick={summary.onRetry} className="min-h-10 font-bold underline underline-offset-4">تلاش دوباره</button>
+        </div>
+      )}
       <div className="my-4 border-t border-[#e9e2db]" />
 
-      {data.pending.length === 0 ? (
+      {pending.state === "loading" ? <SectionSkeleton className="h-36" /> : null}
+      {pending.state === "unreadable" ? <SectionUnreadable onRetry={pending.onRetry} /> : null}
+      {pending.state === "empty" ? (
         <p className="py-6 text-center text-[13px] text-muted-foreground">سفارش در انتظاری وجود ندارد.</p>
-      ) : (
+      ) : pending.state === "real" ? (
         <ul className="divide-y divide-[#eee8e2]">
           <li className="px-2 py-2 text-[11px] font-bold text-muted-foreground">جدیدترین سفارش‌های در انتظار</li>
-          {data.pending.map((order) => (
+          {pending.data.map((order) => (
             <li key={order.id}>
               <Link
                 href={`/admin/orders/${order.id}`}
@@ -88,7 +87,7 @@ export function NeedsActionSection() {
             </li>
           ))}
         </ul>
-      )}
+      ) : null}
     </section>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { ImagePlus, LoaderCircle, Star, Trash2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiPatch } from "@/lib/api-client";
@@ -14,6 +15,7 @@ export function CatalogImageManager({
   ownerId,
   images = [],
   imageUrl,
+  referencedImageCounts = {},
   onImagesChange,
   onImageUrlChange,
 }: {
@@ -21,6 +23,7 @@ export function CatalogImageManager({
   ownerId: number | null;
   images?: CatalogImage[];
   imageUrl?: string | null;
+  referencedImageCounts?: Record<number, number>;
   onImagesChange?: (images: CatalogImage[]) => void;
   onImageUrlChange?: (url: string | null) => void;
 }) {
@@ -58,6 +61,8 @@ export function CatalogImageManager({
 
   async function mutate(action: "primary" | "remove", image: CatalogImage) {
     if (ownerId == null) return;
+    const variantCount = entity === "product" ? referencedImageCounts[image.id] ?? 0 : 0;
+    if (action === "remove" && variantCount > 0 && !window.confirm(`این تصویر برای ${variantCount.toLocaleString("fa-IR")} واریانت انتخاب شده است. با حذف آن، تصویر اختصاصی این واریانت‌ها نیز پاک می‌شود. ادامه می‌دهید؟`)) return;
     setBusyUrl(image.url);
     setError(null);
     try {
@@ -102,8 +107,11 @@ export function CatalogImageManager({
           {currentImages.map((image) => (
             <div key={image.url} className="overflow-hidden rounded-xl border border-line bg-ink-2/70">
               <div className="grid aspect-square place-items-center bg-black/15 p-3">
-                {/* User managed catalogue images are same-origin and intentionally bypass remote image optimization. */}
-                <img src={image.url} alt={image.altText ?? `تصویر ${singular}`} className="max-h-full max-w-full object-contain" />
+                {image.url.startsWith("/") ? (
+                  <Image src={image.url} alt={image.altText ?? `تصویر ${singular}`} width={320} height={320} sizes="(min-width: 1024px) 20vw, 45vw" className="max-h-full max-w-full object-contain" />
+                ) : (
+                  <img src={image.url} alt={image.altText ?? `تصویر ${singular}`} className="max-h-full max-w-full object-contain" />
+                )}
               </div>
               <div className="flex items-center justify-between gap-1 px-2 py-2">
                 {image.isDefault ? <span className="inline-flex items-center gap-1 text-[10px] font-bold text-aqua"><Star className="size-3 fill-current" /> اصلی</span> : <Button type="button" variant="ghost" size="sm" className="h-7 px-2 text-[10px]" disabled={busyUrl !== null} onClick={() => void mutate("primary", image)}><Star className="size-3" /> اصلی‌کردن</Button>}

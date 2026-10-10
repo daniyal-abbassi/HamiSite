@@ -11,12 +11,22 @@ import {
   LayoutDashboard,
   LayoutGrid,
   LogOut,
+  Menu,
   Package,
   Store,
   Users,
   X,
 } from "lucide-react";
 import { useAuth } from "@/components/providers/AuthProvider";
+import { useModalDialog } from "@/components/ui/useModalDialog";
+import {
+  CurveDrawer,
+  CurveDrawerClose,
+  CurveDrawerContent,
+  CurveDrawerHeader,
+  CurveDrawerTitle,
+  CurveDrawerTrigger,
+} from "@/components/curve-drawer-primitives";
 import { cn } from "@/lib/utils";
 
 /** The one nav model. The desktop rail maps all of it, the phone maps `RAIL_HREFS`
@@ -127,77 +137,18 @@ function DestinationSheet({
   onClose: () => void;
   pathname: string;
 }) {
-  const panelRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    if (!open) return;
-
-    const html = document.documentElement;
-    const previousOverflow = html.style.overflow;
-    html.style.overflow = "hidden";
-
-    // The page behind a modal must stop being reachable, by pointer or by Tab.
-    // `layout.tsx` tags the content column `#main` for exactly this.
-    const background = document.getElementById("main");
-    background?.setAttribute("inert", "");
-
-    const panel = panelRef.current;
-    const focusablesIn = () =>
-      Array.from(panel?.querySelectorAll<HTMLElement>("a[href], button:not([disabled])") ?? []);
-    focusablesIn()[0]?.focus();
-
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
-        onClose();
-        return;
-      }
-      if (event.key !== "Tab") return;
-
-      const focusables = focusablesIn();
-      const first = focusables[0];
-      const last = focusables[focusables.length - 1];
-      if (!first || !last) return;
-
-      // Anything that has escaped the panel comes back to it; a browser-back or a
-      // programmatic focus change can leave focus on the page underneath.
-      if (!panel?.contains(document.activeElement)) {
-        event.preventDefault();
-        first.focus();
-        return;
-      }
-
-      if (event.shiftKey && document.activeElement === first) {
-        event.preventDefault();
-        last.focus();
-      } else if (!event.shiftKey && document.activeElement === last) {
-        event.preventDefault();
-        first.focus();
-      }
-    };
-
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      window.removeEventListener("keydown", onKeyDown);
-      html.style.overflow = previousOverflow;
-      background?.removeAttribute("inert");
-    };
-  }, [open, onClose]);
+  const { dialogRef, backdropProps } = useModalDialog(open, onClose);
 
   if (!open) return null;
 
   return (
-    <div className="fixed inset-0 z-50 lg:hidden">
-      <button
-        type="button"
-        aria-label="بستن فهرست بخش‌ها"
-        onClick={onClose}
-        className="absolute inset-0 h-full w-full cursor-default bg-ink/85"
-      />
+    <dialog
+      ref={dialogRef}
+      aria-labelledby="admin-sheet-title"
+      {...backdropProps}
+      className="fixed inset-0 m-0 h-dvh w-screen max-h-none max-w-none overflow-hidden border-0 bg-transparent p-0 text-foreground backdrop:bg-ink/85 lg:hidden"
+    >
       <div
-        ref={panelRef}
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="admin-sheet-title"
         className={cn(
           "absolute inset-x-0 bottom-0 max-h-[75dvh] overflow-y-auto overscroll-contain rounded-t-2xl border-t border-line bg-ink-2 pb-[calc(1rem+env(safe-area-inset-bottom))] shadow-deep",
           "animate-in slide-in-from-bottom-5 fade-in-0 duration-normal",
@@ -213,6 +164,7 @@ function DestinationSheet({
             type="button"
             onClick={onClose}
             aria-label="بستن"
+            autoFocus
             className="grid size-11 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors duration-fast hover:bg-foreground/5 hover:text-foreground"
           >
             <X className="size-5" />
@@ -244,7 +196,7 @@ function DestinationSheet({
           مشاهده فروشگاه
         </Link>
       </div>
-    </div>
+    </dialog>
   );
 }
 
@@ -277,26 +229,103 @@ export function AdminSidebar() {
   const onRailSection = RAIL_ITEMS.some((destination) => isCurrent(pathname, destination.href));
   const currentSection = DESTINATIONS.find((destination) => isCurrent(pathname, destination.href));
 
+  const [drawerOpen, setDrawerOpen] = useState(false);
+
   return (
     <>
-      {/* ---- Phone: top bar, so خروج is never pushed off the edge again ---- */}
-      <div className="sticky top-0 z-30 flex h-14 items-center gap-2.5 border-b border-line bg-ink-2 px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] lg:hidden">
-        <span
-          aria-hidden="true"
-          className="grid size-8 shrink-0 place-items-center rounded-md bg-champagne/10 text-[13px] font-black text-champagne"
-        >
-          ح
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block truncate text-[13px] font-black leading-5">حامی همراه</span>
-          <span className="block truncate text-xs leading-4 text-muted-foreground">
-            {currentSection?.label ?? "پنل مدیریت"}
-          </span>
-        </span>
+      {/* ---- Phone: top bar with curve drawer hamburger menu ---- */}
+      <div className="sticky top-0 z-30 flex h-14 items-center justify-between gap-2.5 border-b border-line bg-ink-2 px-[max(1rem,env(safe-area-inset-left),env(safe-area-inset-right))] lg:hidden">
+        <div className="flex items-center gap-2 min-w-0">
+          <CurveDrawer direction="right" open={drawerOpen} onOpenChange={setDrawerOpen} handleOnly>
+            <CurveDrawerTrigger asChild>
+              <button
+                type="button"
+                aria-label="باز کردن منوی مدیریت"
+                className="grid size-10 shrink-0 place-items-center rounded-lg border border-line bg-ink-2/80 text-foreground transition-colors hover:bg-foreground/5 active:scale-95"
+              >
+                <Menu className="size-5" />
+              </button>
+            </CurveDrawerTrigger>
+            <CurveDrawerContent curveSide="right" className="bg-ink-2 text-foreground">
+              <CurveDrawerHeader className="flex-row items-center justify-between gap-3 border-b border-line px-4 py-3">
+                <div className="flex items-center gap-2.5 min-w-0">
+                  <span
+                    aria-hidden="true"
+                    className="grid size-8 shrink-0 place-items-center rounded-md bg-champagne/10 text-xs font-black text-champagne"
+                  >
+                    ح
+                  </span>
+                  <div className="min-w-0">
+                    <CurveDrawerTitle className="text-sm font-black text-foreground">
+                      منوی مدیریت
+                    </CurveDrawerTitle>
+                    <span className="block truncate text-[11px] text-muted-foreground">
+                      دسترسی سریع به تمام بخش‌ها
+                    </span>
+                  </div>
+                </div>
+                <CurveDrawerClose asChild>
+                  <button
+                    type="button"
+                    aria-label="بستن منو"
+                    className="grid size-9 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+                  >
+                    <X className="size-5" />
+                  </button>
+                </CurveDrawerClose>
+              </CurveDrawerHeader>
+
+              <nav aria-label="تمام بخش‌های مدیریت" className="flex-1 overflow-y-auto p-3">
+                <ul className="space-y-1">
+                  {DESTINATIONS.map((destination) => (
+                    <NavRow
+                      key={destination.href}
+                      destination={destination}
+                      pathname={pathname}
+                      variant="sheet"
+                      onActivate={() => setDrawerOpen(false)}
+                    />
+                  ))}
+                </ul>
+
+                <div className="my-3 h-px bg-line" />
+
+                <Link
+                  href="/"
+                  onClick={() => setDrawerOpen(false)}
+                  className={cn(ROW_BASE, "min-h-12 px-4", ROW_QUIET)}
+                >
+                  <Store className="size-5 shrink-0" />
+                  <span>مشاهده فروشگاه</span>
+                </Link>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    setDrawerOpen(false);
+                    void logout();
+                  }}
+                  className={cn(ROW_BASE, "mt-1 w-full min-h-12 px-4", ROW_DESTRUCTIVE)}
+                >
+                  <LogOut className="size-5 shrink-0" />
+                  <span>خروج از حساب</span>
+                </button>
+              </nav>
+            </CurveDrawerContent>
+          </CurveDrawer>
+
+          <div className="min-w-0">
+            <span className="block truncate text-[13px] font-black leading-5">حامی همراه</span>
+            <span className="block truncate text-xs leading-4 text-muted-foreground">
+              {currentSection?.label ?? "پنل مدیریت"}
+            </span>
+          </div>
+        </div>
+
         <button
           type="button"
           onClick={() => void logout()}
-          className="flex min-h-11 shrink-0 items-center gap-1.5 rounded-md px-2 text-[13px] font-bold text-destructive transition-colors duration-fast hover:bg-destructive/10"
+          className="flex min-h-10 shrink-0 items-center gap-1.5 rounded-md px-2.5 text-xs font-bold text-destructive transition-colors duration-fast hover:bg-destructive/10"
         >
           <LogOut className="size-4 shrink-0" />
           خروج

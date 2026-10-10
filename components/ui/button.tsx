@@ -13,7 +13,7 @@ const buttonVariants = cva(
      *
      * It used to come only from `:where(a, button, …):focus-visible` in `app/globals.css`. `:where()` has
      * zero specificity, so any `outline-*` utility on a single button — or any component rule like
-     * `.cat-panel:focus-visible` — silently took the focus indicator away, and the control looked
+     * the category tile's focus-visible rule — silently took the focus indicator away, and the control looked
      * untargetable to the one user who needs to see it. Declaring it on the primitive makes the ring the
      * default rather than the leftover.
      *

@@ -1,0 +1,100 @@
+.header-glass-surface {
+  position: relative;
+  isolation: isolate;
+}
+
+.header-glass-surface::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    115deg,
+    rgb(100 16 39 / 60%),
+    rgb(75 7 24 / 54%) 48%,
+    rgb(48 7 16 / 63%)
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  content: "";
+  pointer-events: none;
+  transition: opacity 280ms ease;
+}
+
+.header-glass-surface--pill {
+  border: 1px solid rgb(229 211 179 / 36%);
+  box-shadow: 0 12px 34px -18px rgb(27 0 8 / 75%), inset 0 1px rgb(255 255 255 / 12%);
+}
+
+.site-header-glass {
+  isolation: isolate;
+  padding: 16px 16px 0;
+  transition: translate 340ms cubic-bezier(0.22, 1, 0.36, 1), padding 280ms ease;
+  will-change: translate;
+}
+
+.site-header-glass::before {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  background: linear-gradient(
+    115deg,
+    rgb(100 16 39 / 74%),
+    rgb(75 7 24 / 68%) 48%,
+    rgb(48 7 16 / 76%)
+  );
+  -webkit-backdrop-filter: blur(20px) saturate(140%);
+  backdrop-filter: blur(20px) saturate(140%);
+  box-shadow: 0 14px 36px -20px rgb(27 0 8 / 70%);
+  content: "";
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 280ms ease;
+}
+
+.site-header-glass > nav {
+  padding: 8px 12px;
+  transition: padding 280ms ease, border-color 280ms ease, box-shadow 280ms ease;
+}
+
+.site-header-glass--scrolled {
+  padding: 10px 16px;
+}
+
+.site-header-glass--scrolled::before {
+  opacity: 1;
+}
+
+.site-header-glass--scrolled > nav {
+  padding: 0 4px;
+  border-color: transparent;
+  box-shadow: none;
+}
+
+.site-header-glass--scrolled > nav::before {
+  opacity: 0;
+}
+
+@media (min-width: 768px) {
+  .site-header-glass:not(.site-header-glass--scrolled) {
+    padding-top: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .site-header-glass,
+  .site-header-glass::before,
+  .site-header-glass > nav,
+  .site-header-glass > nav::before {
+    transition-duration: 0.01ms;
+  }
+}
+
+@media (prefers-reduced-transparency: reduce) {
+  .header-glass-surface::before,
+  .site-header-glass::before {
+    background: #350713;
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+}

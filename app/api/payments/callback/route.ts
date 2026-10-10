@@ -4,6 +4,7 @@ import { withErrorHandling } from "@/lib/http";
 import { applyOrderStatusTransition, TERMINAL_CANCEL_STATUSES } from "@/lib/orders";
 import { getPaymentGateway } from "@/lib/payment/gateway";
 import { prisma } from "@/lib/prisma";
+import { revalidateHomepage } from "@/lib/revalidate-homepage";
 import { toNumber } from "@/lib/serializers";
 
 /// Thrown inside the settlement transaction when another concurrent callback
@@ -134,6 +135,8 @@ export async function GET(request: Request) {
           data: { paymentStatus: nextPaymentStatus, status: nextOrderStatus },
         });
       });
+
+      revalidateHomepage();
     } catch (error) {
       if (error instanceof PaymentAlreadyProcessedError) {
         const resolved = await prisma.payment.findUniqueOrThrow({

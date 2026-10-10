@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { ArrowLeft, BadgePercent, Check, Crown, ShoppingCart, Sparkles, Zap } from "lucide-react";
+import { Badge } from "@/components/ui/badge";
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
 import type { DiscountRailProduct, RailProduct } from "@/lib/home-rails-db";
 import { isPurchasable } from "@/lib/product-identity";
@@ -118,8 +119,9 @@ function VariantSwatches({
             aria-pressed={active?.color === color}
             disabled={!canBuy}
             onClick={() => onSelect(variant.id)}
-            style={{ backgroundColor: swatchColor(color) }}
-          />
+          >
+            <span className="deal-swatches__color" style={{ backgroundColor: swatchColor(color) }} aria-hidden="true" />
+          </button>
         );
       })}
     </div>
@@ -159,10 +161,14 @@ function ProductDeal({
         <Link href={href} className="deal-featured__media" aria-label={`مشاهده ${product.name}`}>
           {image ? <Image src={image} alt={product.name} fill sizes={sizes} className="deal-featured__image" /> : null}
           <span className="deal-featured__shade" aria-hidden="true" />
-          <span className="deal-featured__badge">
-            <Crown aria-hidden="true" fill="currentColor" />
+          <Badge
+            tone="warning"
+            size="md"
+            icon={<Crown aria-hidden="true" fill="currentColor" />}
+            className="deal-featured__badge"
+          >
             پیشنهاد شگفت‌انگیز
-          </span>
+          </Badge>
           <span className="deal-featured__caption">
             <strong dir="auto">{name}</strong>
             {subline && <span>{subline}</span>}
@@ -182,9 +188,14 @@ function ProductDeal({
               <strong>{formatToman(price)}</strong>
             </div>
             {rate != null && (
-              <span className="deal-featured__percent">
-                {discountCopy(rate)} <BadgePercent aria-hidden="true" />
-              </span>
+              <Badge
+                tone="danger"
+                size="md"
+                icon={<BadgePercent aria-hidden="true" />}
+                className="deal-featured__percent"
+              >
+                {discountCopy(rate)}
+              </Badge>
             )}
           </div>
           <AddToCartButton
@@ -205,7 +216,16 @@ function ProductDeal({
       <Link href={href} className="deal-card__media" aria-label={`مشاهده ${product.name}`}>
         {image ? <Image src={image} alt={product.name} fill sizes={sizes} className="deal-card__image" /> : null}
         <span className="deal-card__shade" aria-hidden="true" />
-        {rate != null && <span className="deal-card__percent">{discountCopy(rate)}</span>}
+        {rate != null && (
+          <Badge
+            tone="danger"
+            size="sm"
+            icon={<BadgePercent aria-hidden="true" />}
+            className="deal-card__percent"
+          >
+            {discountCopy(rate)}
+          </Badge>
+        )}
       </Link>
       <div className="deal-card__body">
         <div className="deal-card__intro">

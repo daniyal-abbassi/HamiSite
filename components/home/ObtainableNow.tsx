@@ -6,15 +6,7 @@ import { ProductRail } from "@/components/shop/ProductRail";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
 import { type ProductCardData } from "@/components/shop/ProductCard";
 
-/**
- * The one shelf on the site whose heading is an availability claim, so it lists only
- * what the merchant's own `purchasable` flag and a real price agree on — see
- * `obtainableNowRail()`. Every other rail on this page says «منتخب» or «تازه‌ها» over
- * stock the shop cannot sell; that is the difference between decoration and a shop.
- *
- * Renders nothing when the answer is nothing. A heading over an empty frame would be
- * the loudest possible way of claiming stock that is not there (FR-005).
- */
+/** Show this shelf only for products the merchant marks orderable with a usable price. */
 export async function ObtainableNow() {
   const [{ products, total }, generatedAt] = await Promise.all([obtainableNowRail(), catalogGeneratedAt()]);
   if (total === 0) return null;
@@ -27,7 +19,7 @@ export async function ObtainableNow() {
             <i /> حامی همراه
           </span>
           <h2 id="obtainable-now-title" className="mt-4 text-2xl font-black tracking-normal md:text-4xl">
-            پرفروش‌ترین محصولات
+            محصولات قابل سفارش
           </h2>
           <DataCurrencyNote generatedAt={generatedAt} dateOnly className="mt-2 text-xs" />
         </div>
@@ -37,7 +29,7 @@ export async function ObtainableNow() {
       </div>
 
       <div className="mt-8">
-        <ProductRail products={products as unknown as ProductCardData[]} label="پرفروش‌ترین محصولات" />
+        <ProductRail products={products as unknown as ProductCardData[]} label="محصولات قابل سفارش" />
       </div>
     </section>
   );

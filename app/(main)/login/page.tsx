@@ -23,7 +23,7 @@ export default function LoginPage() {
         eyebrow="حساب کاربری"
         title="ورود به"
         accent="حامی همراه."
-        description="برای دیدن سفارش‌های ثبت‌شده و پیگیری وضعیت آن‌ها وارد حساب خود شوید."
+        description="برای ادامه خرید یا پیگیری سفارش‌های ثبت‌شده وارد حساب خود شوید."
       />
       <div className="flex justify-center">
         {/* useSearchParams inside LoginForm requires a Suspense boundary */}

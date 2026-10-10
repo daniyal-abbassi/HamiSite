@@ -31,6 +31,7 @@ export type ShopProduct = {
   displayPrice: number;
   compareAtPrice: number | null;
   stockType: string;
+  images?: Array<{ url: string; isDefault: boolean; order: number }>;
   /**
    * `p.stock.purchasable` in the export — the merchant's own word on whether they
    * can sell it today. `stockType` says how the shelf looks; this says whether a

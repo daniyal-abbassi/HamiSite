@@ -10,6 +10,7 @@ import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { ApiClientError, apiPost } from "@/lib/api-client";
+import { safeNextPath } from "@/lib/safe-next-path";
 import { isValidIranianMobile } from "@/lib/validators";
 import { cn } from "@/lib/utils";
 import type { PublicUser } from "@/types/auth";
@@ -73,7 +74,7 @@ export function RegisterForm() {
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
-  const nextPath = searchParams.get("next") ?? "/";
+  const nextPath = safeNextPath(searchParams.get("next"));
 
   function setField(field: keyof Values) {
     return (event: React.ChangeEvent<HTMLInputElement>) =>

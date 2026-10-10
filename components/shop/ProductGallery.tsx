@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import { Sparkles } from "lucide-react";
 import { PLACEHOLDER_ALT, PLACEHOLDER_LABEL, isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
@@ -19,20 +19,25 @@ import type { CatalogProduct } from "@/lib/catalog-db";
  * locally-mirrored photograph and a view that fails to load is dropped from the
  * set rather than left as a broken frame: the counter and the strip describe what
  * actually arrived. Remote views measured 5.8–7.5s each, and routing them through
- * the image optimizer made them fail more often still, so they are `unoptimized`.
+ * the image optimizer made them fail more often still, so only remote views bypass it.
  */
-export function ProductGallery({ product }: { product: CatalogProduct }) {
+export function ProductGallery({ product, variantImageUrl }: { product: CatalogProduct; variantImageUrl?: string | null }) {
   const productImage = resolveProductImage(product);
   const noImage = isPlaceholderImage(productImage);
   const [viewIndex, setViewIndex] = useState(0);
   const [failedViews, setFailedViews] = useState<string[]>([]);
 
+  useEffect(() => {
+    setViewIndex(0);
+  }, [variantImageUrl]);
+
   const views = useMemo(() => {
+    const firstView = variantImageUrl || productImage;
     const others = product.images
       .map((image) => image.url)
-      .filter((url) => typeof url === "string" && url !== productImage);
-    return [productImage, ...others];
-  }, [product, productImage]);
+      .filter((url) => typeof url === "string" && url !== firstView);
+    return [firstView, ...others];
+  }, [product, productImage, variantImageUrl]);
 
   const shownViews = views.filter((url) => !failedViews.includes(url));
   const current = Math.min(viewIndex, Math.max(0, shownViews.length - 1));
@@ -65,7 +70,7 @@ export function ProductGallery({ product }: { product: CatalogProduct }) {
             sizes="(min-width: 1024px) 40vw, 90vw"
             className="object-contain p-8 transition-transform duration-700 hover:scale-105"
             priority
-            unoptimized={activeView !== productImage}
+            unoptimized={!activeView.startsWith("/")}
             onError={() => {
               if (activeView === productImage) return;
               setFailedViews((previous) => (previous.includes(activeView) ? previous : [...previous, activeView]));
@@ -95,7 +100,7 @@ export function ProductGallery({ product }: { product: CatalogProduct }) {
             items={shownViews.map((url, index) => ({
               id: url,
               label: (
-                <Image src={url} alt="" fill sizes="64px" className="object-contain p-1" unoptimized={url !== productImage} />
+                <Image src={url} alt="" fill sizes="64px" className="object-contain p-1" unoptimized={!url.startsWith("/")} />
               ),
               // The accessible name is passed as `name` because the label is an image:
               // the component only sets `aria-label` for a non-string label, and the

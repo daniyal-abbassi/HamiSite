@@ -25,11 +25,13 @@ export type AdminProductListItem = {
   basePrice: number;
   compareAtPrice: number | null;
   displayPrice: number;
-  variants: AdminVariantListItem[];
+  variantCount: number;
 };
 
 export type AdminVariantListItem = {
   id: number;
+  imageId: number | null;
+  imageUrl: string | null;
   color: string | null;
   storage: string | null;
   guarantee: string | null;
@@ -82,8 +84,11 @@ export type AdminProductDetail = {
   seoDescription: string | null;
   brand: { id: number; name: string; slug: string } | null;
   mainCategory: { id: number; name: string; slug: string } | null;
+  specs?: { name: string; value: string }[];
   images: { id: number; url: string; altText: string | null; isDefault: boolean; order: number }[];
   variants: AdminVariantListItem[];
+  prevProduct?: { id: number; slug: string; name: string } | null;
+  nextProduct?: { id: number; slug: string; name: string } | null;
 };
 
 // ---------------------------------------------------------------------------
@@ -154,9 +159,11 @@ export type CreateProductInput = {
   guarantee?: string;
   seoTitle?: string;
   seoDescription?: string;
+  specs?: { name: string; value: string }[];
+  images?: { url: string; altText?: string; isDefault?: boolean; order?: number }[];
 };
 
-export type UpdateProductInput = Omit<Partial<CreateProductInput>, "mainCategoryId" | "brandId" | "compareAtPrice" | "costPerItem" | "minOrderQuantity" | "maxOrderQuantity" | "englishName" | "description" | "analysis" | "guarantee" | "seoTitle" | "seoDescription"> & {
+export type UpdateProductInput = Omit<Partial<CreateProductInput>, "mainCategoryId" | "brandId" | "compareAtPrice" | "costPerItem" | "minOrderQuantity" | "maxOrderQuantity" | "englishName" | "description" | "analysis" | "guarantee" | "seoTitle" | "seoDescription" | "specs"> & {
   mainCategoryId?: number | null;
   brandId?: number | null;
   compareAtPrice?: number | null;
@@ -169,6 +176,7 @@ export type UpdateProductInput = Omit<Partial<CreateProductInput>, "mainCategory
   guarantee?: string | null;
   seoTitle?: string | null;
   seoDescription?: string | null;
+  specs?: { name: string; value: string }[] | null;
 };
 
 export type CreateVariantInput = {
@@ -182,7 +190,7 @@ export type CreateVariantInput = {
   barcode?: string;
   productIdentifier?: string;
   isDefault?: boolean;
-  imageId?: number;
+  imageId?: number | null;
 };
 
 export type CreateCouponInput = {

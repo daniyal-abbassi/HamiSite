@@ -7,11 +7,8 @@ import { queryProducts } from "@/lib/catalog";
  * round-trip Constitution III forbids for browsing, and the reason the served
  * homepage contained no products at all.
  *
- * Note what is *not* changed here: the queries are the ones the client issued, so
- * the rails show exactly what they showed before, including the defect that
- * `sort: "newest"` and `sort: "special"` have no comparators and so return the
- * default order (T050 fixes that in band 2, and the homepage's «تازه‌ها» label is
- * only honest once it does).
+ * The main homepage shelf and its continuation share the catalog's stable
+ * creation-time ordering without repeating products.
  */
 
 export type RailProduct = {
@@ -40,18 +37,10 @@ export function featuredSpecialRail(): RailProduct[] {
 }
 
 /**
- * The bare six-record feed the «تازه‌ها» section has always shown.
- *
- * It is **not** a recency query, and this function deliberately does not pretend
- * otherwise: `serializeProduct` emits no `updatedAt`, so there is nothing to sort
- * on this side of the seam, and the default order leads with purchasable items.
- * The section heading is therefore inaccurate today — `audits/05` records it, and
- * T050 in band 2 owns the comparator that makes it true. Fixing the label by
- * inventing a date field here would be the same class of error this band exists to
- * remove.
+ * Six more products after the twelve already shown in the main homepage shelf.
  */
-export function newArrivalsRail(): RailProduct[] {
-  return queryProducts({ includeVariants: false, page: 1, pageSize: 6 })
+export function additionalProductsRail(): RailProduct[] {
+  return queryProducts({ sort: "newest", includeVariants: false, page: 3, pageSize: 6 })
     .data as unknown as RailProduct[];
 }
 

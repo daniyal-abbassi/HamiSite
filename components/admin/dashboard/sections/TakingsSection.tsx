@@ -1,9 +1,8 @@
 "use client";
 
-import { apiGet } from "@/lib/api-client";
 import { formatToman } from "@/lib/utils";
-import { useSection } from "../useSection";
-import { avgPaidOrder, paidRevenue, windowLabel, type SummaryData } from "./derive";
+import { useDashboardSummary } from "../DashboardSummaryProvider";
+import { avgPaidOrder, paidRevenue, windowLabel } from "./derive";
 import { SectionEmpty, SectionSkeleton, SectionUnreadable } from "@/components/admin/states/SectionState";
 
 /**
@@ -13,10 +12,7 @@ import { SectionEmpty, SectionSkeleton, SectionUnreadable } from "@/components/a
  * own `periodDays`, never a hardcoded «۳۰».
  */
 export function TakingsSection() {
-  const { state, data, onRetry } = useSection<SummaryData>(
-    () => apiGet<SummaryData>("/api/admin/reports/summary"),
-    (summary) => summary.byStatus.length === 0,
-  );
+  const { state, data, onRetry } = useDashboardSummary();
 
   if (state === "loading") return <SectionSkeleton className="h-28" />;
   if (state === "empty") {

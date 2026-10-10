@@ -127,7 +127,7 @@ behaviour is untouched, no per-page edit was needed (FR-008).
   measurement exists
 - [ ] T039 Put the side-by-side to the owner: storefront screenshot and dashboard screenshot at 360px, for the SC-008 "does it look like Hami, not a template" judgement — that call is theirs, not mine (Constitution IV)
 - [ ] T040 Sweep the admin surface for dead code the audit already flagged: `components/admin/coupons/CouponsAdminClient.tsx` is imported nowhere (`specs/CODEBASE-AUDIT-2026-09-28.md:29`) — move it aside or wire it, do not leave it rotting silently
-- [ ] T041 Record the deferred server-side gate as a standing risk with its one-step fix (a `middleware.ts` on the `/admin` prefix; there is none anywhere today, `AdminGate.tsx:15-33` redirects client-side after the HTML is served) — owner chose "handle later" on 2026-10-01, so it is written down, not forgotten (`research.md` R5)
+- [x] T041 Record and resolve the deferred server-side gate — owner approved the change on 2026-10-08; `middleware.ts` now checks session expiry, account activity, and ADMIN role before page/RSC rendering, while API routes retain their own role checks (`research.md` R5 follow-up)
 - [x] ~~T042 Release every lock this feature took~~ — **moot, closed 2026-10-04**: the owner retired the
   multi-agent layer. `.agent-pair/` (board, locks, heartbeats, inboxes) and `tools/dispatch/` are deleted;
   every lock this feature held went with the directory. Nothing to release, nowhere to post it.

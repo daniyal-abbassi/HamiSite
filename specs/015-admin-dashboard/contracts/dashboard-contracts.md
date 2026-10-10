@@ -63,7 +63,8 @@ The four sections and their sources:
 3. At 360px: no horizontal document overflow, and the primary navigation is reachable without scrolling the
    page.
 4. The frame renders `children` inside a content column that pages may not need to re-wrap.
-5. `AdminGate` and `AuthProvider` behave exactly as before — this feature changes no auth logic (R5).
+5. `middleware.ts` validates admin access before page/RSC rendering. `AuthProvider` remains responsible for
+   client identity and logout; every `/api/admin/*` route keeps its own role check (R5 follow-up).
 
 ## C4 — Token contract
 

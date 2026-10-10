@@ -38,8 +38,7 @@ import {
 
 /**
  * Module scope, not component state: a remount resets state and the arrival would replay. FR-009 says once per
- * visit, and the same reasoning made `CategoryCarousel` keep its remembered index out here before it was
- * deleted.
+ * visit, so this flag lives here rather than in component state.
  */
 let hasPlayed = false;
 

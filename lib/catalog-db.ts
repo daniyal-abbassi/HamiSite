@@ -21,7 +21,7 @@ function stockLabel(value: StockType): string {
   return value.toLowerCase();
 }
 
-function serializeProduct(product: ProductRecord, includeVariants: boolean) {
+function serializeProduct(product: ProductRecord, includeVariants: boolean, includeAdminFields = false) {
   const defaultVariant = product.variants.find((variant) => variant.isDefault) ?? product.variants[0];
   const basePrice = asNumber(product.price) ?? 0;
   const price = basePrice > 0 ? basePrice : asNumber(defaultVariant?.price) ?? 0;
@@ -41,6 +41,7 @@ function serializeProduct(product: ProductRecord, includeVariants: boolean) {
     const variantCompareAt = asNumber(variant.compareAtPrice);
     return {
       id: variant.id,
+      ...(includeAdminFields ? { imageId: variant.imageId } : {}),
       color: variant.color ?? (typeof options["رنگ"] === "string" ? options["رنگ"] : null),
       storage: variant.storage ?? (typeof options["حافظه"] === "string" ? options["حافظه"] : null),
       options: Object.entries(options).filter((entry): entry is [string, string] => typeof entry[1] === "string").map(([label, value]) => ({ label, value })),
@@ -49,8 +50,7 @@ function serializeProduct(product: ProductRecord, includeVariants: boolean) {
       compareAtPrice: variantCompareAt != null && variantCompareAt > variantPrice ? variantCompareAt : null,
       stock: variant.stock,
       stockType: stockLabel(variant.stockType),
-      barcode: variant.barcode,
-      productIdentifier: variant.productIdentifier,
+      ...(includeAdminFields ? { barcode: variant.barcode, productIdentifier: variant.productIdentifier } : {}),
       isDefault: variant.isDefault,
       imageUrl: variant.image?.url ?? null,
       unitPrice: variantPrice,
@@ -96,7 +96,8 @@ function serializeProduct(product: ProductRecord, includeVariants: boolean) {
     compareAtPrice: compareAt != null && compareAt > price ? compareAt : null,
     displayPrice: price,
     price,
-    costPerItem: asNumber(product.costPerItem),
+    variantCount: product.variants.length,
+    ...(includeAdminFields ? { costPerItem: asNumber(product.costPerItem) } : {}),
     createdAt: product.createdAt.toISOString(),
     updatedAt: product.updatedAt.toISOString(),
     variants,
@@ -126,14 +127,14 @@ function prismaStockType(value: string): StockType | undefined {
   return match;
 }
 
-function productPrice(record: ProductRecord): number {
+function productPrice(record: { price: Prisma.Decimal; variants: { isDefault: boolean; price: Prisma.Decimal }[] }): number {
   const price = asNumber(record.price) ?? 0;
   if (price > 0) return price;
   const defaultVariant = record.variants.find((variant) => variant.isDefault) ?? record.variants[0];
   return asNumber(defaultVariant?.price) ?? 0;
 }
 
-export async function queryProducts(input: CatalogQuery) {
+export async function queryProducts(input: CatalogQuery, { includeAdminFields = false }: { includeAdminFields?: boolean } = {}) {
   const where: Prisma.ProductWhereInput = {};
   if (input.brandId != null) where.brandId = input.brandId;
   if (input.purchasableOnly) where.available = true;
@@ -153,38 +154,68 @@ export async function queryProducts(input: CatalogQuery) {
     where.AND = [{ OR: [{ mainCategoryId: { in: [...ids] } }, { otherCategories: { some: { id: { in: [...ids] } } } }] }];
   }
 
-  // Persian search normalization includes ZWNJ and Arabic/Persian letter folding;
-  // fetch only the already-filtered catalog candidates, then apply that same rule.
-  let records = await prisma.product.findMany({ where, include: productRelations });
-  if (input.q) {
-    records = records.filter((product) => [product.name, product.englishName, product.slug]
-      .some((value) => value && persianIncludes(value, input.q!)));
+  const start = Math.max(0, (input.page - 1) * input.pageSize);
+  const needsPrice = input.minPrice != null || input.maxPrice != null || input.sort === "price-asc" || input.sort === "price-desc";
+  const orderBy: Prisma.ProductOrderByWithRelationInput[] = input.sort === "newest"
+    ? [{ createdAt: "desc" }, { id: "desc" }]
+    : input.sort === "special"
+      ? [{ specialOffer: "desc" }, { updatedAt: "desc" }, { id: "asc" }]
+      : [{ available: "desc" }, { specialOffer: "desc" }, { updatedAt: "desc" }, { id: "asc" }];
+
+  if (!input.q && !needsPrice) {
+    const [total, records] = await Promise.all([
+      prisma.product.count({ where }),
+      prisma.product.findMany({ where, include: productRelations, orderBy, skip: start, take: input.pageSize }),
+    ]);
+    return { data: records.map((record) => serializeProduct(record, input.includeVariants ?? true, includeAdminFields)), total };
   }
+
+  // Folded Persian search and variant-derived prices cannot be expressed by the
+  // current product columns. Scan only scalar candidates, then hydrate one page.
+  const candidates = await prisma.product.findMany({
+    where,
+    select: {
+      id: true, name: true, englishName: true, slug: true, price: true,
+      available: true, specialOffer: true, createdAt: true, updatedAt: true,
+      variants: needsPrice ? { select: { price: true, isDefault: true }, orderBy: [{ isDefault: "desc" }, { id: "asc" }] } : false,
+    },
+    orderBy: { id: "asc" },
+  });
+  let filtered = candidates.filter((product) => !input.q || [product.name, product.englishName, product.slug]
+    .some((value) => value && persianIncludes(value, input.q!)));
   if (input.minPrice != null || input.maxPrice != null) {
-    records = records.filter((product) => {
+    filtered = filtered.filter((product) => {
       const price = productPrice(product);
       return price > 0 && (input.minPrice == null || price >= input.minPrice) && (input.maxPrice == null || price <= input.maxPrice);
     });
   }
 
-  const compareRecency = (a: ProductRecord, b: ProductRecord) => b.updatedAt.getTime() - a.updatedAt.getTime();
-  if (input.sort === "newest") records.sort(compareRecency);
-  else if (input.sort === "special") records.sort((a, b) => Number(b.specialOffer) - Number(a.specialOffer) || compareRecency(a, b));
+  const compareRecency = (a: typeof filtered[number], b: typeof filtered[number]) => b.updatedAt.getTime() - a.updatedAt.getTime();
+  const compareCreatedAt = (a: typeof filtered[number], b: typeof filtered[number]) =>
+    b.createdAt.getTime() - a.createdAt.getTime() || b.id - a.id;
+  if (input.sort === "newest") filtered.sort(compareCreatedAt);
+  else if (input.sort === "special") filtered.sort((a, b) => Number(b.specialOffer) - Number(a.specialOffer) || compareRecency(a, b));
   else if (input.sort === "price-asc" || input.sort === "price-desc") {
     const direction = input.sort === "price-asc" ? 1 : -1;
-    records.sort((a, b) => {
+    filtered.sort((a, b) => {
       const pa = productPrice(a), pb = productPrice(b);
       if (pa <= 0 && pb > 0) return 1;
       if (pb <= 0 && pa > 0) return -1;
       return (pa - pb) * direction;
     });
   } else {
-    records.sort((a, b) => Number(b.available) - Number(a.available) || Number(b.specialOffer) - Number(a.specialOffer) || compareRecency(a, b));
+    filtered.sort((a, b) => Number(b.available) - Number(a.available) || Number(b.specialOffer) - Number(a.specialOffer) || compareRecency(a, b));
   }
 
-  const total = records.length;
-  const start = Math.max(0, (input.page - 1) * input.pageSize);
-  return { data: records.slice(start, start + input.pageSize).map((record) => serializeProduct(record, input.includeVariants ?? true)), total };
+  const total = filtered.length;
+  const ids = filtered.slice(start, start + input.pageSize).map((product) => product.id);
+  if (ids.length === 0) return { data: [], total };
+  const records = await prisma.product.findMany({ where: { id: { in: ids } }, include: productRelations });
+  const byId = new Map(records.map((record) => [record.id, record]));
+  return { data: ids.flatMap((id) => {
+    const record = byId.get(id);
+    return record ? [serializeProduct(record, input.includeVariants ?? true, includeAdminFields)] : [];
+  }), total };
 }
 
 /** Provenance remains in PostgreSQL so the UI can state the source snapshot's age honestly. */
@@ -193,10 +224,10 @@ export async function catalogGeneratedAt(): Promise<string | null> {
   return row?.sourceGeneratedAt?.toISOString() ?? null;
 }
 
-export async function findProductBySlug(slug: string) {
+export async function findProductBySlug(slug: string, { includeAdminFields = false }: { includeAdminFields?: boolean } = {}) {
   const decoded = decodeURIComponent(slug);
   const product = await prisma.product.findUnique({ where: { slug: decoded }, include: productRelations });
-  return product ? serializeProduct(product, true) : null;
+  return product ? serializeProduct(product, true, includeAdminFields) : null;
 }
 
 export async function findProductSlugById(id: number) {

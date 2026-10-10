@@ -29,22 +29,23 @@ export function useSection<T>(
   fetcherRef.current = fetcher;
   const isEmptyRef = useRef(isEmpty);
   isEmptyRef.current = isEmpty;
+  const requestVersion = useRef(0);
 
   const load = useCallback(() => {
-    let cancelled = false;
+    const request = ++requestVersion.current;
     setReduced({ state: "loading", data: null, error: null });
     fetcherRef.current()
       .then((data) => {
-        if (cancelled) return;
+        if (request !== requestVersion.current) return;
         setReduced(reduceReadState<T>({ kind: "success", data }, isEmptyRef.current));
       })
       .catch((error: unknown) => {
-        if (cancelled) return;
+        if (request !== requestVersion.current) return;
         const message = error instanceof Error ? error.message : "unknown";
         setReduced(reduceReadState<T>({ kind: "failure", message }, isEmptyRef.current));
       });
     return () => {
-      cancelled = true;
+      if (request === requestVersion.current) requestVersion.current += 1;
     };
   }, []);
 

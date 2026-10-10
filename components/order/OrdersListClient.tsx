@@ -6,9 +6,10 @@ import { useRouter } from "next/navigation";
 import { ArrowLeft, PackageOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { OrderStatusBadge, PaymentStatusBadge } from "@/components/order/StatusBadge";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { ApiClientError, apiGet, apiGetWithMeta } from "@/lib/api-client";
-import { formatFaDate, orderStatusLabels, orderStatusTone, paymentStatusLabels, paymentStatusTones } from "@/lib/content/order";
+import { formatFaDate } from "@/lib/content/order";
 import { formatToman, toFaDigits } from "@/lib/utils";
 import type { OrderSummary } from "@/types/store";
 
@@ -103,12 +104,8 @@ export function OrdersListClient() {
               <span className="mt-1 block text-xs text-muted-foreground">{formatFaDate(order.createdAt)}</span>
             </span>
             <span className="flex flex-wrap items-center gap-2 text-xs">
-              <span className={`rounded-full border border-line bg-foreground/5 px-3 py-1 font-bold ${orderStatusTone(order.status)}`}>
-                {orderStatusLabels[order.status] ?? order.status}
-              </span>
-              <span className={`rounded-full border border-line bg-foreground/5 px-3 py-1 font-bold ${paymentStatusTones[order.paymentStatus] ?? "text-muted-foreground"}`}>
-                {paymentStatusLabels[order.paymentStatus] ?? order.paymentStatus}
-              </span>
+              <OrderStatusBadge status={order.status} />
+              <PaymentStatusBadge status={order.paymentStatus} />
               <strong className="font-mono text-sm text-foreground">{formatToman(order.totals.totalAmount)}</strong>
               <ArrowLeft className="size-4 text-aqua" />
             </span>

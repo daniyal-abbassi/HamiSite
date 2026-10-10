@@ -1,9 +1,10 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { SlidersHorizontal, X } from "lucide-react";
 import { FilterSidebar } from "@/components/shop/FilterSidebar";
+import { useModalDialog } from "@/components/ui/useModalDialog";
 import type { ShopBrand } from "./types";
 import type { CategoryFacet } from "@/lib/shop-query-db";
 
@@ -52,31 +53,12 @@ export function FilterSheet({
 }) {
   const [open, setOpen] = useState(false);
   const searchParams = useSearchParams();
-  const panelRef = useRef<HTMLDivElement>(null);
-  const triggerRef = useRef<HTMLButtonElement>(null);
+  const { dialogRef, backdropProps } = useModalDialog(open, () => setOpen(false));
 
   const appliedCount = FILTER_KEYS.filter((k) => {
     const v = searchParams.get(k);
     return v != null && v !== "";
   }).length;
-
-  // Escape to close, and focus moves into the panel on open. Focus returns to
-  // the trigger on close so a keyboard user is not dumped at the top of the page.
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
-    };
-    document.addEventListener("keydown", onKey);
-    const previous = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    panelRef.current?.focus();
-    return () => {
-      document.removeEventListener("keydown", onKey);
-      document.body.style.overflow = previous;
-      triggerRef.current?.focus();
-    };
-  }, [open]);
 
   return (
     <>
@@ -85,12 +67,10 @@ export function FilterSheet({
         <FilterSidebar categoryFacets={categoryFacets} brands={brands} />
       </div>
 
-      {/* Mobile trigger. Sticky so it stays reachable however far the shopper
-          has scrolled into the results — a filter control at the top of a long
-          list is a filter control nobody uses. */}
-      <div className="shop-mobile-filter-trigger sticky top-[5.5rem] z-30 -mx-1 mb-2 flex justify-start px-1 lg:hidden">
+      {/* Keep the trigger in normal flow: a sticky control covered product
+          imagery while shoppers scrolled through the two-column catalog. */}
+      <div className="shop-mobile-filter-trigger -mx-1 mb-2 flex justify-start px-1 lg:hidden">
         <button
-          ref={triggerRef}
           type="button"
           onClick={() => setOpen(true)}
           aria-haspopup="dialog"
@@ -108,25 +88,17 @@ export function FilterSheet({
       </div>
 
       {open && (
-        <div className="fixed inset-0 z-[60] lg:hidden" role="dialog" aria-modal="true" aria-label="فیلتر محصولات">
-          <button
-            type="button"
-            aria-label="بستن فیلترها"
-            onClick={() => setOpen(false)}
-            className="absolute inset-0 h-full w-full bg-ink/70 backdrop-blur-sm"
-          />
+        <dialog
+          ref={dialogRef}
+          aria-label="فیلتر محصولات"
+          {...backdropProps}
+          className="fixed inset-0 m-0 h-dvh w-screen max-h-none max-w-none overflow-hidden border-0 bg-transparent p-0 backdrop:bg-ink/70 backdrop:backdrop-blur-sm lg:hidden"
+        >
           {/* 88vh, not 100vh: leaving the top of the page visible is what makes
               this read as a sheet over the results rather than a new page, and
               it gives a second, larger dismiss target. */}
           <div
-            ref={panelRef}
-            tabIndex={-1}
-            /* `outline-none` applies to this container only. It is a
-               programmatic focus target that exists to move a screen reader
-               into the dialog, not a control anyone tabs to — painting the
-               focus ring around a 743px panel is noise, not an affordance. The
-               controls inside keep their rings, which is where the rule bites. */
-            className="shop-filter-panel absolute inset-x-0 bottom-0 flex max-h-[88vh] flex-col rounded-t-3xl border-t border-line bg-ink-2 shadow-deep outline-none"
+            className="shop-filter-panel absolute inset-x-0 bottom-0 flex max-h-[88vh] flex-col rounded-t-3xl border-t border-line bg-ink-2 shadow-deep"
           >
             <div className="flex shrink-0 items-center justify-between border-b border-line px-4 py-3">
               <b className="text-base font-black">فیلترها</b>
@@ -134,6 +106,7 @@ export function FilterSheet({
                 type="button"
                 onClick={() => setOpen(false)}
                 aria-label="بستن"
+                autoFocus
                 className="grid size-11 place-items-center rounded-full text-foreground/70 hover:bg-foreground/10 hover:text-foreground"
               >
                 <X className="size-5" aria-hidden="true" />
@@ -155,7 +128,7 @@ export function FilterSheet({
               </button>
             </div>
           </div>
-        </div>
+        </dialog>
       )}
     </>
   );

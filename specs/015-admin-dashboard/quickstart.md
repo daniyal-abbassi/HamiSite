@@ -15,30 +15,29 @@ server up for the whole measurement pass and never start a second one on `:3000`
 
 ## Sign in as an admin
 
-`/admin` is gated. The seeded dev admin's username and password are printed by the seed script itself at
-`prisma/seed.ts:338` (values at `prisma/seed.ts:45-51`). Log in through the app's login form; the gate sends
-a guest to `/login?next=/admin` and a non-admin to `/`.
+`/admin` is server-gated. The seeded dev admin's username and password are printed by the seed script itself at
+`prisma/seed.ts:338` (values at `prisma/seed.ts:45-51`). Log in through the app's login form; a missing or
+expired session redirects to `/login?next=%2Fadmin`, and an active non-admin is sent to `/` before the shell
+renders.
 
 Do not paste those credentials into any file, note, board post or report. Reference them by line number.
 
-**Standing risk, owner-deferred 2026-10-01:** there is no `middleware.ts` in this repo. The gate runs in the
-browser (`components/admin/AdminGate.tsx:15-33`), so an unauthenticated request still receives the admin
-shell's HTML before being redirected. The data behind it is protected — every `/api/admin/*` route is wrapped
-in `withAuth(..., { roles: [Role.ADMIN] })` (`lib/auth.ts:192-228`) — so what leaks is structure and labels,
-not customer data. A server-side gate on the `/admin` prefix is the one-step fix and is deliberately not in
-this feature. See `research.md` R5.
+`middleware.ts` validates the cookie hash, session expiry, account activity, and ADMIN role before any admin
+route or RSC payload renders. Admin API routes keep their independent role checks through
+`withAuth(..., { roles: [Role.ADMIN] })` (`lib/auth.ts:192-228`). See the approved follow-up in
+`research.md` R5.
 
 ## Commands
 
 ```bash
 npm run typecheck           # tsc --noEmit — must be clean
 npm run test:unit           # the ONLY test command. `npm test` / bare `npx vitest` truncate 19 live tables
-npm run lint
+npm run build               # run only when no Next.js server is serving the shared .next directory
 ```
 
 ## Manual pass
 
-1. `/admin` at **360 × 640** — the rail, the four sections, no horizontal overflow, nothing requiring a
+1. `/admin` at **360 × 640** — the rail, five data cards, no horizontal overflow, nothing requiring a
    scroll up to navigate.
 2. `/admin` at **1280 × 800** — same content, desktop rail.
 3. `/admin/orders`, `/admin/products`, `/admin/users`, `/admin/categories`, `/admin/brands`,

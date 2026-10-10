@@ -4,6 +4,7 @@ import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { findProductBySlug, findProductSlugById } from "@/lib/catalog-db";
 import { prisma } from "@/lib/prisma";
+import { revalidateHomepage } from "@/lib/revalidate-homepage";
 
 const updateSchema = z.object({
   name: z.string().trim().min(1), englishName: z.string().nullable(), slug: z.string().trim().min(1), description: z.string().nullable(), analysis: z.string().nullable(),
@@ -13,6 +14,7 @@ const updateSchema = z.object({
   stockType: z.enum(["UNLIMITED", "LIMITED", "OUT_OF_STOCK", "CALL", "unlimited", "limited", "out_of_stock", "call"]),
   minOrderQuantity: z.number().int().positive().nullable(), maxOrderQuantity: z.number().int().positive().nullable(), guarantee: z.string().nullable(),
   seoTitle: z.string().nullable(), seoDescription: z.string().nullable(),
+  specs: z.array(z.object({ name: z.string().trim().min(1), value: z.string().trim().min(1) })).nullable().optional(),
 }).partial().refine((data) => Object.keys(data).length > 0, { message: "At least one field must be provided" });
 
 function parseId(raw: string) {
@@ -22,10 +24,29 @@ function parseId(raw: string) {
 }
 
 export const GET = withAuth<{ id: string }>(async (_request, { params }) => withErrorHandling(async () => {
-  const slug = await findProductSlugById(parseId(params.id));
-  const product = slug ? await findProductBySlug(slug) : null;
+  const currentId = parseId(params.id);
+  const slug = await findProductSlugById(currentId);
+  const product = slug ? await findProductBySlug(slug, { includeAdminFields: true }) : null;
   if (!product) throw new ApiError(404, "Product not found");
-  return ok(product);
+
+  const [prevProduct, nextProduct] = await Promise.all([
+    prisma.product.findFirst({
+      where: { id: { lt: currentId } },
+      orderBy: { id: "desc" },
+      select: { id: true, slug: true, name: true },
+    }),
+    prisma.product.findFirst({
+      where: { id: { gt: currentId } },
+      orderBy: { id: "asc" },
+      select: { id: true, slug: true, name: true },
+    }),
+  ]);
+
+  return ok({
+    ...product,
+    prevProduct,
+    nextProduct,
+  });
 }), { roles: [Role.ADMIN] });
 
 export const PATCH = withAuth<{ id: string }>(async (request, { params, user }) => withErrorHandling(async () => {
@@ -54,6 +75,7 @@ export const PATCH = withAuth<{ id: string }>(async (request, { params, user }) 
         stockType: input.stockType === undefined ? undefined : input.stockType.toUpperCase() as StockType,
         minOrderQuantity: input.minOrderQuantity, maxOrderQuantity: input.maxOrderQuantity,
         guarantee: input.guarantee, seoTitle: input.seoTitle, seoDescription: input.seoDescription,
+        ...(input.specs === undefined ? {} : { specs: input.specs === null ? Prisma.DbNull : input.specs }),
       }, select: { id: true, slug: true, price: true } });
       if (input.price !== undefined && current.variants.length) {
         const selected = current.variants.find((variant) => variant.isDefault) ?? current.variants[0];
@@ -75,6 +97,7 @@ export const PATCH = withAuth<{ id: string }>(async (request, { params, user }) 
       }
       return product;
     });
+    revalidateHomepage();
     return ok({ ...updated, price: updated.price.toNumber() }, { message: "Product updated" });
   } catch (error) {
     if (error && typeof error === "object" && "code" in error && error.code === "P2002") throw new ApiError(409, "A product with this slug already exists");
@@ -93,5 +116,6 @@ export const DELETE = withAuth<{ id: string }>(async (_request, { params }) => w
     }
     throw error;
   }
+  revalidateHomepage();
   return ok({ id }, { message: "Product deleted" });
 }), { roles: [Role.ADMIN] });

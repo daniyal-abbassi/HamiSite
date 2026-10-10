@@ -10,6 +10,7 @@ import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { ApiClientError, apiPost } from "@/lib/api-client";
+import { safeNextPath } from "@/lib/safe-next-path";
 import type { PublicUser } from "@/types/auth";
 
 type FieldErrors = Record<string, string>;
@@ -38,7 +39,8 @@ export function LoginForm() {
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
 
-  const nextPath = searchParams.get("next") ?? "/";
+  const nextPath = safeNextPath(searchParams.get("next"));
+  const returningToProduct = nextPath.startsWith("/shop/");
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
@@ -66,7 +68,9 @@ export function LoginForm() {
       </div>
       <h1 className="mt-3 text-xl font-black">خوش آمدید</h1>
       <p className="mt-1.5 text-[13px] leading-6 text-muted-foreground">
-        با نام کاربری یا شماره موبایل وارد شوید.
+        {returningToProduct
+          ? "برای ادامه خرید، وارد حساب خود شوید. پس از ورود به همین صفحه برمی‌گردید تا افزودن به سبد را انتخاب کنید."
+          : "با نام کاربری یا شماره موبایل وارد شوید."}
       </p>
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>

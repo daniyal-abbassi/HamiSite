@@ -75,7 +75,7 @@ export function FeaturedProducts({ products }: { products: RailProduct[] }) {
         <Reveal>
           <header className="featured-products__header">
             <div className="featured-products__heading">
-              <h2 id="featured-title" className="featured-products__title">جدیدترین محصولات</h2>
+              <h2 id="featured-title" className="featured-products__title">محصولات حامی همراه</h2>
             </div>
           </header>
         </Reveal>
@@ -87,7 +87,7 @@ export function FeaturedProducts({ products }: { products: RailProduct[] }) {
               onScroll={(event) => setPage(Math.round(event.currentTarget.scrollLeft / pageStep(event.currentTarget)))}
               dir="ltr"
               className="featured-products__carousel"
-              aria-label="جدیدترین محصولات حامی همراه"
+              aria-label="فهرست محصولات حامی همراه"
             >
               {products.map((product, index) => (
                 <ProductCard
@@ -101,6 +101,7 @@ export function FeaturedProducts({ products }: { products: RailProduct[] }) {
                   onWish={toggleWish}
                   selectedVariantId={selectedVariantIds[product.id]}
                   onVariantChange={(variantId) => selectVariant(product.id, variantId)}
+                  imageSizes="292px"
                 />
               ))}
               {products.length === 0 && (

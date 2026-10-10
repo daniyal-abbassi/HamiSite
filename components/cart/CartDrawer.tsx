@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect } from "react";
 import Link from "next/link";
 import { ShoppingBag, X } from "lucide-react";
 import { CartLine } from "@/components/cart/CartLine";
-import { Button } from "@/components/ui/button";
+import { buttonVariants } from "@/components/ui/button";
+import { useModalDialog } from "@/components/ui/useModalDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
@@ -16,30 +16,17 @@ import { formatToman } from "@/lib/utils";
 export function CartDrawer() {
   const { status } = useAuth();
   const { cart, loading, hasCart, drawerOpen, closeDrawer, updateItem, removeItem } = useCart();
-
-  // Scroll lock + Escape-to-close while the drawer is open.
-  useEffect(() => {
-    if (!drawerOpen) return;
-    document.body.style.overflow = "hidden";
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === "Escape") closeDrawer();
-    };
-    window.addEventListener("keydown", onKeyDown);
-    return () => {
-      document.body.style.overflow = "";
-      window.removeEventListener("keydown", onKeyDown);
-    };
-  }, [drawerOpen, closeDrawer]);
+  const { dialogRef, backdropProps } = useModalDialog(drawerOpen, closeDrawer);
 
   if (!drawerOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50" role="dialog" aria-modal="true" aria-label="سبد خرید">
-      <div
-        className="absolute inset-0 animate-fade-in bg-ink/80 backdrop-blur-sm"
-        onClick={closeDrawer}
-        aria-hidden="true"
-      />
+    <dialog
+      ref={dialogRef}
+      aria-label="سبد خرید"
+      {...backdropProps}
+      className="fixed inset-0 m-0 h-dvh w-screen max-h-none max-w-none overflow-hidden border-0 bg-transparent p-0 text-foreground backdrop:bg-ink/80 backdrop:backdrop-blur-sm"
+    >
       <aside className="glass absolute inset-y-3 end-3 flex w-96 max-w-[92vw] animate-slide-in-start flex-col rounded-2xl p-5 text-foreground shadow-deep">
         <div className="flex items-center justify-between">
           <span className="flex items-center gap-2 text-base font-black">
@@ -50,6 +37,7 @@ export function CartDrawer() {
             type="button"
             onClick={closeDrawer}
             aria-label="بستن سبد خرید"
+            autoFocus
             className="grid size-11 place-items-center rounded-full transition-colors duration-fast hover:bg-foreground/10"
           >
             <X className="size-5" />
@@ -77,18 +65,16 @@ export function CartDrawer() {
             <p className="text-sm leading-7 text-muted-foreground">
               برای مشاهده سبد خرید ابتدا وارد حساب خود شوید.
             </p>
-            <Link href="/login" onClick={closeDrawer}>
-              <Button size="sm">ورود به حساب</Button>
+            <Link href="/login" onClick={closeDrawer} className={buttonVariants({ size: "sm" })}>
+              ورود به حساب
             </Link>
           </div>
         ) : !cart || cart.items.length === 0 ? (
           <div className="flex flex-1 flex-col items-center justify-center gap-4 text-center">
             <ShoppingBag className="size-10 text-aqua/60" />
             <p className="text-sm text-muted-foreground">سبد خرید شما خالی است.</p>
-            <Link href="/shop" onClick={closeDrawer}>
-              <Button size="sm" variant="oxblood">
-                رفتن به فروشگاه
-              </Button>
+            <Link href="/shop" onClick={closeDrawer} className={buttonVariants({ size: "sm", variant: "oxblood" })}>
+              رفتن به فروشگاه
             </Link>
           </div>
         ) : (
@@ -112,18 +98,16 @@ export function CartDrawer() {
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-2.5">
-              <Link href="/cart" onClick={closeDrawer}>
-                <Button variant="ghost" className="w-full">
-                  مشاهده سبد
-                </Button>
+              <Link href="/cart" onClick={closeDrawer} className={buttonVariants({ variant: "ghost", className: "w-full" })}>
+                مشاهده سبد
               </Link>
-              <Link href="/checkout" onClick={closeDrawer}>
-                <Button className="w-full">تسویه حساب</Button>
+              <Link href="/checkout" onClick={closeDrawer} className={buttonVariants({ className: "w-full" })}>
+                تسویه حساب
               </Link>
             </div>
           </>
         )}
       </aside>
-    </div>
+    </dialog>
   );
 }

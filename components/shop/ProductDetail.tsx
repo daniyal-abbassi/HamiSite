@@ -242,7 +242,7 @@ export function ProductDetail({ product, generatedAt }: Props) {
       </nav>
 
       <div className="grid gap-10 lg:grid-cols-2">
-        <ProductGallery product={product} />
+        <ProductGallery product={product} variantImageUrl={selectedVariant?.imageUrl ?? null} />
 
         {/* Buy box */}
         <div>

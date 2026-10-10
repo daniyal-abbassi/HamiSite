@@ -49,6 +49,7 @@ type RawProduct = {
   compare_at_price?: number | null;
   special_offer?: boolean;
   special_offer_end?: string | null;
+  created_at?: string | null;
   stock?: { state?: string; available?: boolean; purchasable?: boolean; quantity?: number | null; min_order_quantity?: number | null; max_order_quantity?: number | null } | null;
   primary_image?: string | null;
   images?: RawImage[] | null;
@@ -213,6 +214,7 @@ function serializeProduct(p: RawProduct, includeVariants: boolean) {
     seoDescription: p.seo?.description ?? null,
     specialOffer: Boolean(p.special_offer),
     specialOfferEnd: p.special_offer_end ?? null,
+    createdAt: p.created_at ?? null,
     available: p.stock?.purchasable ?? false,
     stock: p.stock?.quantity ?? 0,
     stockType: stockTypeOf(p),
@@ -323,9 +325,12 @@ export function queryProducts(input: CatalogQuery) {
      * FR-024 asked for a newest ordering and none existed: `newest` fell through
      * to the default block and returned the same list as no sort at all, while the
      * select still offered it and the homepage labelled a section «تازه‌ها».
-     * `updated_at` is the only recency signal the export carries.
+     * `created_at` records when this product entered the catalog; editing an
+     * existing product must not make it appear to be a new arrival.
      */
-    sorted.sort((a, b) => (b.updated_at ?? "").localeCompare(a.updated_at ?? ""));
+    sorted.sort((a, b) =>
+      (b.created_at ?? b.updated_at ?? "").localeCompare(a.created_at ?? a.updated_at ?? "") || b.id - a.id,
+    );
   } else if (input.sort === "special") {
     // Offers first, then recency within them — see the same gap above.
     sorted.sort((a, b) => {

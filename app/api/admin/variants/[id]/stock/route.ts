@@ -3,6 +3,7 @@ import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
+import { revalidateHomepage } from "@/lib/revalidate-homepage";
 
 const schema = z.object({ stock: z.number().int().min(0), reason: z.string().trim().min(1) });
 export const PATCH = withAuth<{ id: string }>(async (request, { params, user }) => withErrorHandling(async () => {
@@ -21,5 +22,6 @@ export const PATCH = withAuth<{ id: string }>(async (request, { params, user }) 
     } });
     return updated;
   });
+  revalidateHomepage();
   return ok({ ...variant, price: variant.price.toNumber(), compareAtPrice: variant.compareAtPrice?.toNumber() ?? null }, { message: "Stock updated" });
 }), { roles: [Role.ADMIN] });

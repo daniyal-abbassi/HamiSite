@@ -1,11 +1,13 @@
 import { HistoryAction } from "@prisma/client";
 import { beforeEach, describe, expect, it } from "vitest";
 import { POST as createProduct } from "@/app/api/admin/products/route";
+import { GET as getAdminProducts } from "@/app/api/admin/products/route";
 import { GET as getAdminProduct } from "@/app/api/admin/products/[id]/route";
 import { DELETE as deleteProduct, PATCH as patchProduct } from "@/app/api/admin/products/[id]/route";
 import { POST as createVariant } from "@/app/api/admin/products/[id]/variants/route";
 import { DELETE as deleteVariant, PATCH as patchVariant } from "@/app/api/admin/products/[id]/variants/[variantId]/route";
 import { PATCH as adjustStock } from "@/app/api/admin/variants/[id]/stock/route";
+import { GET as getPublicProducts } from "@/app/api/products/route";
 import { prisma } from "@/lib/prisma";
 import { ctx, jsonRequest, loginAs } from "../helpers/request";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
@@ -25,6 +27,49 @@ function payload(overrides: Record<string, unknown> = {}) {
 }
 
 describe("admin products", () => {
+  it("keeps cost and variant identifiers out of public catalog responses", async () => {
+    const variantImage = await prisma.productImage.create({
+      data: { productId: seed.product.id, url: "/api/catalog-images/public-variant.webp", altText: "Variant view", order: 0 },
+    });
+    await prisma.product.update({ where: { id: seed.product.id }, data: { costPerItem: 250_000 } });
+    await prisma.productVariant.update({
+      where: { id: seed.variant.id },
+      data: { barcode: "private-barcode", productIdentifier: "private-identifier", imageId: variantImage.id },
+    });
+
+    const publicRes = await getPublicProducts(new Request("http://localhost/api/products?page=1&pageSize=50"));
+    const publicBody = await publicRes.json();
+    const publicProduct = publicBody.data.find((product: { id: number }) => product.id === seed.product.id);
+    expect(publicProduct).toBeDefined();
+    expect(publicProduct).not.toHaveProperty("costPerItem");
+    const publicVariant = publicProduct.variants.find((variant: { id: number }) => variant.id === seed.variant.id);
+    expect(publicVariant.imageUrl).toBe(variantImage.url);
+    expect(publicVariant).not.toHaveProperty("barcode");
+    expect(publicVariant).not.toHaveProperty("productIdentifier");
+    expect(publicVariant).not.toHaveProperty("imageId");
+
+    const adminRes = await getAdminProducts(
+      jsonRequest("http://localhost/api/admin/products?page=1&pageSize=50", "GET", undefined, adminCookie),
+      ctx(),
+    );
+    const adminBody = await adminRes.json();
+    expect(adminRes.status).toBe(200);
+    const adminListProduct = adminBody.data.find((product: { id: number }) => product.id === seed.product.id);
+    expect(adminListProduct.variantCount).toBe(1);
+
+    const adminDetailRes = await getAdminProduct(
+      jsonRequest(`http://localhost/api/admin/products/${seed.product.id}`, "GET", undefined, adminCookie),
+      ctx({ id: String(seed.product.id) }),
+    );
+    const adminProduct = (await adminDetailRes.json()).data;
+    expect(adminProduct.costPerItem).toBe(250_000);
+    const adminVariant = adminProduct.variants.find((variant: { id: number }) => variant.id === seed.variant.id);
+    expect(adminVariant.barcode).toBe("private-barcode");
+    expect(adminVariant.productIdentifier).toBe("private-identifier");
+    expect(adminVariant).toHaveProperty("imageId", variantImage.id);
+    expect(adminVariant.imageUrl).toBe(variantImage.url);
+  });
+
   it("403s for a non-admin", async () => {
     const res = await createProduct(jsonRequest("http://localhost/api/admin/products", "POST", payload(), retailCookie), ctx());
     expect(res.status).toBe(403);
@@ -150,6 +195,91 @@ describe("admin variants", () => {
 
     const history = await prisma.productHistory.findMany({ where: { variantId: body.data.id } });
     expect(history).toHaveLength(1);
+  });
+
+  it("persists a product-owned variant photo and allows it to be cleared", async () => {
+    const image = await prisma.productImage.create({
+      data: { productId: seed.product.id, url: "/api/catalog-images/variant-photo.webp", altText: "Red variant", isDefault: true, order: 0 },
+    });
+    const alternateImage = await prisma.productImage.create({
+      data: { productId: seed.product.id, url: "/api/catalog-images/variant-photo-alt.webp", altText: "Alternate red variant", order: 1 },
+    });
+    const createRes = await createVariant(
+      jsonRequest(
+        `http://localhost/api/admin/products/${seed.product.id}/variants`,
+        "POST",
+        { color: "red", price: 1000, imageId: image.id },
+        adminCookie,
+      ),
+      ctx({ id: String(seed.product.id) }),
+    );
+    expect(createRes.status).toBe(200);
+    const created = await createRes.json();
+    expect(created.data.imageId).toBe(image.id);
+    expect(created.data.imageUrl).toBe(image.url);
+    expect((await prisma.productVariant.findUniqueOrThrow({ where: { id: created.data.id } })).imageId).toBe(image.id);
+    expect((await prisma.productImage.findUniqueOrThrow({ where: { id: image.id } })).isDefault).toBe(true);
+
+    const replaceRes = await patchVariant(
+      jsonRequest(
+        `http://localhost/api/admin/products/${seed.product.id}/variants/${created.data.id}`,
+        "PATCH",
+        { imageId: alternateImage.id },
+        adminCookie,
+      ),
+      ctx({ id: String(seed.product.id), variantId: String(created.data.id) }),
+    );
+    expect(replaceRes.status).toBe(200);
+    expect((await prisma.productVariant.findUniqueOrThrow({ where: { id: created.data.id } })).imageId).toBe(alternateImage.id);
+    expect((await prisma.productImage.findUniqueOrThrow({ where: { id: image.id } })).isDefault).toBe(true);
+    const photoHistory = await prisma.productHistory.findMany({
+      where: { variantId: created.data.id, field: "imageId", action: HistoryAction.UPDATED },
+    });
+    expect(photoHistory).toHaveLength(1);
+    expect(photoHistory[0].changedById).toBe(seed.admin.id);
+
+    const clearRes = await patchVariant(
+      jsonRequest(
+        `http://localhost/api/admin/products/${seed.product.id}/variants/${created.data.id}`,
+        "PATCH",
+        { imageId: null },
+        adminCookie,
+      ),
+      ctx({ id: String(seed.product.id), variantId: String(created.data.id) }),
+    );
+    expect(clearRes.status).toBe(200);
+    expect((await prisma.productVariant.findUniqueOrThrow({ where: { id: created.data.id } })).imageId).toBeNull();
+  });
+
+  it("rejects assigning an image owned by another product", async () => {
+    const otherProductRes = await createProduct(
+      jsonRequest("http://localhost/api/admin/products", "POST", payload({ slug: "variant-photo-owner" }), adminCookie), ctx());
+    const otherProduct = await otherProductRes.json();
+    const foreignImage = await prisma.productImage.create({
+      data: { productId: otherProduct.data.id, url: "/api/catalog-images/foreign-variant-photo.webp", altText: "Foreign", order: 0 },
+    });
+
+    const res = await createVariant(
+      jsonRequest(
+        `http://localhost/api/admin/products/${seed.product.id}/variants`,
+        "POST",
+        { color: "blue", price: 1000, imageId: foreignImage.id },
+        adminCookie,
+      ),
+      ctx({ id: String(seed.product.id) }),
+    );
+    expect(res.status).toBe(400);
+
+    const patchRes = await patchVariant(
+      jsonRequest(
+        `http://localhost/api/admin/products/${seed.product.id}/variants/${seed.variant.id}`,
+        "PATCH",
+        { imageId: foreignImage.id },
+        adminCookie,
+      ),
+      ctx({ id: String(seed.product.id), variantId: String(seed.variant.id) }),
+    );
+    expect(patchRes.status).toBe(400);
   });
 
   it("404s creating a variant under a nonexistent product", async () => {

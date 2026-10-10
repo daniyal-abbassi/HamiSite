@@ -5,6 +5,7 @@ import { Prisma, Role } from "@prisma/client";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
+import { revalidateHomepage } from "@/lib/revalidate-homepage";
 import { z } from "zod";
 
 const MAX_BYTES = 8 * 1024 * 1024;
@@ -59,6 +60,7 @@ export const POST = withAuth(async (request) => withErrorHandling(async () => {
       catch (error) { if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") throw new ApiError(404, "برند پیدا نشد."); throw error; }
       result = { url };
     }
+    revalidateHomepage();
     return ok(result, { message: "تصویر بارگذاری شد." });
   } catch (error) {
     await rm(filePath, { force: true });
@@ -103,5 +105,6 @@ export const PATCH = withAuth(async (request) => withErrorHandling(async () => {
   inUse = Boolean(await prisma.productImage.count({ where: { url } })) ||
     Boolean(await prisma.category.count({ where: { imageUrl: url } })) || Boolean(await prisma.brand.count({ where: { imageUrl: url } }));
   if (!inUse && filename) await rm(path.join(MEDIA_DIR, filename), { force: true });
+  revalidateHomepage();
   return ok({ removed: !inUse }, { message: "تصویر به‌روزرسانی شد." });
 }), { roles: [Role.ADMIN] });

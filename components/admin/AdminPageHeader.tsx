@@ -22,8 +22,6 @@ export function AdminPageHeader({
     <header className="mb-6 flex flex-col gap-4 lg:mb-8 lg:flex-row lg:items-end lg:justify-between lg:gap-6">
       <div className="min-w-0">
         <div className="flex items-center gap-2.5 text-xs font-bold text-muted-foreground">
-          <span className="tabular-nums">{index}</span>
-          <span aria-hidden="true" className="h-px w-6 bg-champagne/40" />
           <span className="truncate">{eyebrow}</span>
         </div>
         <h1 className="mt-3 text-2xl font-black lg:text-3xl">{title}</h1>

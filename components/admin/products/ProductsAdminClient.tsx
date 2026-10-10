@@ -1,16 +1,19 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Pencil, Plus, Search } from "lucide-react";
+import { DownloadCloud, Pencil, Plus, Search } from "lucide-react";
 import { Pagination } from "@/components/admin/ui/Pagination";
 import { StatusBadge } from "@/components/admin/StatusBadge";
+import { DigikalaImportModal } from "@/components/admin/products/DigikalaImportModal";
+import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
-import { apiGetWithMeta } from "@/lib/api-client";
+import { apiGet, apiGetWithMeta } from "@/lib/api-client";
+import { productDisplayName, type ProductSuggestion } from "@/lib/admin-product-suggestions";
 import { resolveProductImage } from "@/lib/product-images";
 import { formatToman } from "@/lib/utils";
 import type { AdminProductListItem } from "@/types/admin";
@@ -22,51 +25,173 @@ export function ProductsAdminClient() {
   const [products, setProducts] = useState<AdminProductListItem[] | null>(null);
   const [page, setPage] = useState(1);
   const [query, setQuery] = useState("");
+  const [submittedQuery, setSubmittedQuery] = useState("");
+  const [suggestions, setSuggestions] = useState<ProductSuggestion[]>([]);
+  const [suggestionsOpen, setSuggestionsOpen] = useState(false);
+  const [suggestionsLoading, setSuggestionsLoading] = useState(false);
+  const [activeSuggestion, setActiveSuggestion] = useState(-1);
   const [meta, setMeta] = useState<{ total: number; hasNextPage: boolean } | null>(null);
   const [failed, setFailed] = useState(false);
+  const [importModalOpen, setImportModalOpen] = useState(false);
+  const requestVersion = useRef(0);
+  const searchRef = useRef<HTMLDivElement>(null);
 
   const load = useCallback(async (targetPage: number, q: string) => {
+    const version = ++requestVersion.current;
     setProducts(null);
     setFailed(false);
     try {
       const params = new URLSearchParams({ page: String(targetPage), pageSize: String(PAGE_SIZE) });
       if (q.trim()) params.set("q", q.trim());
-      const { data, meta: responseMeta } = await apiGetWithMeta<AdminProductListItem[]>(`/api/products?${params.toString()}`);
+      const { data, meta: responseMeta } = await apiGetWithMeta<AdminProductListItem[]>(`/api/admin/products?${params.toString()}`);
+      if (version !== requestVersion.current) return;
       setProducts(data);
       setMeta({
         total: Number(responseMeta?.total) || 0,
         hasNextPage: Boolean(responseMeta?.hasNextPage),
       });
     } catch {
+      if (version !== requestVersion.current) return;
       setFailed(true);
     }
   }, []);
 
   useEffect(() => {
-    void load(page, query);
-  }, [load, page, query]);
+    void load(page, submittedQuery);
+    return () => {
+      requestVersion.current += 1;
+    };
+  }, [load, page, submittedQuery]);
+
+  useEffect(() => {
+    const term = query.trim();
+    if (!suggestionsOpen || !term) return;
+    const controller = new AbortController();
+    const timer = window.setTimeout(() => {
+      void apiGet<ProductSuggestion[]>(
+        `/api/admin/products/suggest?q=${encodeURIComponent(term)}`,
+        { signal: controller.signal, cache: "no-store" },
+      ).then((results) => {
+        if (controller.signal.aborted) return;
+        setSuggestions(results);
+        setActiveSuggestion(results.length ? 0 : -1);
+        setSuggestionsLoading(false);
+      }).catch(() => {
+        if (controller.signal.aborted) return;
+        setSuggestions([]);
+        setActiveSuggestion(-1);
+        setSuggestionsLoading(false);
+      });
+    }, 120);
+    return () => {
+      window.clearTimeout(timer);
+      controller.abort();
+    };
+  }, [query, suggestionsOpen]);
+
+  useEffect(() => {
+    if (!suggestionsOpen) return;
+    const closeOnOutsideClick = (event: PointerEvent) => {
+      if (!searchRef.current?.contains(event.target as Node)) setSuggestionsOpen(false);
+    };
+    document.addEventListener("pointerdown", closeOnOutsideClick);
+    return () => document.removeEventListener("pointerdown", closeOnOutsideClick);
+  }, [suggestionsOpen]);
+
+  const selectSuggestion = (product: ProductSuggestion) => {
+    setSuggestionsOpen(false);
+    router.push(`/admin/products/${product.id}?slug=${encodeURIComponent(product.slug)}`);
+  };
 
   return (
     <div>
       <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
         <form
           role="search"
-          className="flex items-center gap-2"
+          className="flex w-full items-center gap-2 sm:w-auto"
           onSubmit={(event) => {
             event.preventDefault();
-            setPage(1);
-            void load(1, query);
+            setSuggestionsOpen(false);
+            const nextQuery = query.trim();
+            if (page !== 1) setPage(1);
+            if (page === 1 && nextQuery === submittedQuery) void load(1, nextQuery);
+            else setSubmittedQuery(nextQuery);
           }}
         >
-          <div className="relative">
+          <div ref={searchRef} className="relative min-w-0 flex-1 sm:flex-none">
             <Search className="pointer-events-none absolute end-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground/60" />
             <Input
               value={query}
-              onChange={(event) => setQuery(event.target.value)}
+              onChange={(event) => {
+                const next = event.target.value;
+                setQuery(next);
+                setSuggestions([]);
+                setActiveSuggestion(-1);
+                setSuggestionsLoading(Boolean(next.trim()));
+                setSuggestionsOpen(Boolean(next.trim()));
+              }}
+              onFocus={() => {
+                if (query.trim()) {
+                  setSuggestionsLoading(true);
+                  setSuggestionsOpen(true);
+                }
+              }}
+              onKeyDown={(event) => {
+                if (event.key === "Escape") {
+                  setSuggestionsOpen(false);
+                  return;
+                }
+                if (!suggestionsOpen || !suggestions.length) return;
+                if (event.key === "ArrowDown") {
+                  event.preventDefault();
+                  setActiveSuggestion((index) => (index + 1) % suggestions.length);
+                } else if (event.key === "ArrowUp") {
+                  event.preventDefault();
+                  setActiveSuggestion((index) => (index - 1 + suggestions.length) % suggestions.length);
+                } else if (event.key === "Enter" && activeSuggestion >= 0) {
+                  event.preventDefault();
+                  selectSuggestion(suggestions[activeSuggestion]);
+                }
+              }}
               placeholder="جست‌وجوی نام یا slug…"
               aria-label="جست‌وجوی محصول"
-              className="w-64 pe-9"
+              role="combobox"
+              aria-autocomplete="list"
+              aria-expanded={suggestionsOpen}
+              aria-controls={suggestionsOpen ? "admin-product-suggestions" : undefined}
+              aria-activedescendant={suggestionsOpen && activeSuggestion >= 0 ? `admin-product-suggestion-${suggestions[activeSuggestion]?.id}` : undefined}
+              className="w-full pe-9 sm:w-64"
             />
+            {suggestionsOpen && query.trim() && (
+              <div
+                id="admin-product-suggestions"
+                role="listbox"
+                aria-label="محصولات پیدا شده"
+                aria-busy={suggestionsLoading}
+                className="absolute start-0 top-full z-40 mt-2 w-[min(90vw,22rem)] overflow-hidden rounded-xl border border-line bg-ink-2 p-1 shadow-2xl"
+              >
+                {suggestionsLoading ? (
+                  <p className="px-3 py-2 text-xs text-muted-foreground" role="status">در حال جست‌وجو…</p>
+                ) : suggestions.length ? suggestions.map((product, index) => (
+                  <button
+                    key={product.id}
+                    id={`admin-product-suggestion-${product.id}`}
+                    type="button"
+                    role="option"
+                    aria-selected={index === activeSuggestion}
+                    onMouseEnter={() => setActiveSuggestion(index)}
+                    onClick={() => selectSuggestion(product)}
+                    className="block w-full truncate rounded-lg px-3 py-2.5 text-start text-sm hover:bg-foreground/10 aria-selected:bg-foreground/10"
+                    dir={product.englishName?.trim() ? "ltr" : "auto"}
+                    title={productDisplayName(product)}
+                  >
+                    {productDisplayName(product)}
+                  </button>
+                )) : (
+                  <p className="px-3 py-2 text-xs text-muted-foreground" role="status">محصولی پیدا نشد.</p>
+                )}
+              </div>
+            )}
           </div>
           <Button type="submit" size="sm" variant="ghost">
             جست‌وجو
@@ -74,6 +199,15 @@ export function ProductsAdminClient() {
         </form>
         <div className="flex items-center gap-3">
           {meta && <span className="font-mono text-[11px] text-muted-foreground/70">{meta.total.toLocaleString("fa-IR")} محصول</span>}
+          <Button
+            size="sm"
+            variant="outline"
+            className="gap-1.5 border-primary/30 hover:border-primary/60 text-xs"
+            onClick={() => setImportModalOpen(true)}
+          >
+            <DownloadCloud className="size-4 text-primary" />
+            وارد کردن از دیجی‌کالا
+          </Button>
           <Button size="sm" onClick={() => router.push("/admin/products/new")}>
             <Plus className="size-4" />
             محصول جدید
@@ -81,12 +215,20 @@ export function ProductsAdminClient() {
         </div>
       </div>
 
+      <DigikalaImportModal
+        open={importModalOpen}
+        onClose={() => setImportModalOpen(false)}
+      />
+
       {failed ? (
-        <div className="rounded-2xl border border-destructive/40 bg-destructive/10 p-10 text-center text-sm text-destructive">
-          در بارگذاری محصولات خطایی رخ داد.
+        <div role="alert" className="rounded-2xl border border-destructive/40 bg-destructive/10 p-10 text-center text-sm text-destructive">
+          <p>در بارگذاری محصولات خطایی رخ داد.</p>
+          <Button type="button" size="sm" variant="ghost" className="mt-3" onClick={() => void load(page, submittedQuery)}>
+            تلاش دوباره
+          </Button>
         </div>
       ) : !products ? (
-        <div className="space-y-2.5">
+        <div className="space-y-2.5" aria-busy="true" aria-label="در حال بارگذاری محصولات">
           {Array.from({ length: 8 }).map((_, i) => (
             <Skeleton key={i} className="h-14 rounded-xl" />
           ))}
@@ -98,13 +240,12 @@ export function ProductsAdminClient() {
       ) : (
         <>
           <div className="overflow-x-auto rounded-2xl border border-line bg-ink/20">
-            <table className="w-full min-w-[860px] text-sm">
+            <table className="w-full min-w-[760px] text-sm">
               <thead>
                 <tr className="border-b border-line bg-ink-2/60 font-mono text-[10px] font-bold tracking-[0.1em] text-muted-foreground/80">
                   <th className="px-4 py-3 text-start">محصول</th>
                   <th className="hidden px-4 py-3 text-start lg:table-cell">برند</th>
                   <th className="hidden px-4 py-3 text-start md:table-cell">دسته</th>
-                  <th className="px-4 py-3 text-start">وضعیت</th>
                   <th className="px-4 py-3 text-end">قیمت</th>
                   <th className="hidden px-4 py-3 text-end sm:table-cell">تخفیف‌دار</th>
                   <th className="px-4 py-3 text-end">عملیات</th>
@@ -127,17 +268,18 @@ export function ProductsAdminClient() {
                         <div className="min-w-0">
                           <Link
                             href={`/admin/products/${product.id}?slug=${encodeURIComponent(product.slug)}`}
-                            title={product.name}
-                            className="block max-w-full truncate font-bold leading-6 hover:text-aqua"
+                            title={productDisplayName(product)}
+                            dir={product.englishName?.trim() ? "ltr" : "auto"}
+                            className="block max-w-full truncate text-start font-bold leading-6 hover:text-aqua"
                           >
-                            {product.name}
+                            {productDisplayName(product)}
                           </Link>
-                          {product.englishName && (
-                            <span className="block max-w-full truncate text-[11px] text-foreground/75" dir="ltr" title={product.englishName}>
-                              {product.englishName}
-                            </span>
-                          )}
-                          <span className="block truncate font-mono text-[10px] text-muted-foreground/70">{product.slug}</span>
+                          <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                            <StatusBadge value={product.stockType} kind="stock" />
+                            <Badge tone={product.variantCount > 0 ? "info" : "neutral"} size="sm">
+                              {product.variantCount.toLocaleString("fa-IR")} واریانت
+                            </Badge>
+                          </div>
                         </div>
                       </div>
                     </td>
@@ -150,14 +292,6 @@ export function ProductsAdminClient() {
                       <span className="block truncate" title={product.mainCategory?.name ?? undefined}>
                       {product.mainCategory?.name ?? "—"}
                       </span>
-                    </td>
-                    <td className="px-4 py-3">
-                      <StatusBadge value={product.stockType} kind="stock" />
-                      {product.variants.length > 0 && (
-                        <span className="ms-1.5 font-mono text-[10px] text-muted-foreground/60">
-                          {product.variants.length.toLocaleString("fa-IR")} واریانت
-                        </span>
-                      )}
                     </td>
                     <td className="px-4 py-3 text-end font-mono text-[13px] font-bold text-foreground">
                       {formatToman(product.displayPrice)}
@@ -172,7 +306,7 @@ export function ProductsAdminClient() {
                     <td className="px-4 py-3 text-end">
                       <Link
                         href={`/admin/products/${product.id}?slug=${encodeURIComponent(product.slug)}`}
-                        aria-label={`ویرایش ${product.name}${product.englishName ? `، ${product.englishName}` : ""}`}
+                        aria-label={`ویرایش ${productDisplayName(product)}`}
                         className="inline-flex items-center gap-1 text-[12px] font-bold text-aqua hover:underline"
                       >
                         <Pencil className="size-3.5" />

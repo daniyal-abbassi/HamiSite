@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
  * which the rail becomes a grid, the snap behaviour, the keyboard affordance —
  * is inside, so the two call sites cannot drift apart. That is the whole reason
  * this is a module rather than a copied block of classes: the same rail is
- * needed by FeaturedProducts and NewArrivals, and a third caller is likely.
+ * needed by FeaturedProducts and AdditionalProducts, and a third caller is likely.
  *
  * ## The keyboard affordance is not optional
  *
@@ -43,7 +43,7 @@ export function ProductRail({
   className,
 }: {
   products: ProductCardData[];
-  /** Names the scrollable region, e.g. «جدیدترین محصولات». */
+  /** Names the scrollable region, e.g. «محصولات قابل سفارش». */
   label: string;
   /** Optional visual treatment for sections with a distinct art direction. */
   cardVariant?: CardVariant;
@@ -68,7 +68,13 @@ export function ProductRail({
         // like. `shrink-0` is what stops flex from squeezing every card into
         // one screen width, which is the usual way this pattern fails silently.
         <div key={product.id} className="w-[45%] shrink-0 snap-start sm:w-auto">
-          <ProductCard product={product} index={i} variant={cardVariant} frame={cardFrame} />
+          <ProductCard
+            product={product}
+            index={i}
+            variant={cardVariant}
+            frame={cardFrame}
+            imageSizes="(max-width: 639px) 42vw, (max-width: 1023px) 46vw, (max-width: 1535px) 30vw, 23vw"
+          />
         </div>
       ))}
     </div>

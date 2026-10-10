@@ -6,22 +6,15 @@ import { useRouter } from "next/navigation";
 import { CreditCard, MapPin, PackageCheck, RotateCcw, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { OrderStatusBadge, PaymentStatusBadge } from "@/components/order/StatusBadge";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { ApiClientError, apiGet, apiPost } from "@/lib/api-client";
-import { formatFaDate, formatFaDateTime, orderStatusLabels, orderStatusTone, paymentStatusLabels, paymentStatusTones } from "@/lib/content/order";
+import { formatFaDate, formatFaDateTime } from "@/lib/content/order";
 import { formatToman, toFaDigits } from "@/lib/utils";
 import type { OrderDetail, PaymentInitiation } from "@/types/store";
 
 const TERMINAL_STATUSES = ["CANCELED", "FAILED", "REVERSED"];
-
-function Badge({ label, tone }: { label: string; tone: string }) {
-  return (
-    <span className={`inline-flex items-center gap-1.5 rounded-full border border-line bg-foreground/5 px-3 py-1 text-xs font-bold ${tone}`}>
-      {label}
-    </span>
-  );
-}
 
 export function OrderDetailClient({ orderId }: { orderId: string }) {
   const router = useRouter();
@@ -121,11 +114,8 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
             <p className="mt-1 text-xs text-muted-foreground">ثبت‌شده در {formatFaDateTime(order.createdAt)}</p>
           </div>
           <div className="flex flex-wrap items-center gap-2">
-            <Badge label={orderStatusLabels[order.status] ?? order.status} tone={orderStatusTone(order.status)} />
-            <Badge
-              label={paymentStatusLabels[order.paymentStatus] ?? order.paymentStatus}
-              tone={paymentStatusTones[order.paymentStatus] ?? "text-muted-foreground"}
-            />
+            <OrderStatusBadge status={order.status} size="md" />
+            <PaymentStatusBadge status={order.paymentStatus} size="md" />
           </div>
         </div>
 
@@ -241,9 +231,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
                   </span>
                   <span className="text-end">
                     <strong className="block font-mono">{formatToman(payment.amount)}</strong>
-                    <span className={`text-xs font-bold ${paymentStatusTones[payment.status] ?? "text-muted-foreground"}`}>
-                      {paymentStatusLabels[payment.status] ?? payment.status}
-                    </span>
+                    <PaymentStatusBadge status={payment.status} />
                   </span>
                 </li>
               ))}

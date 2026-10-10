@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, RotateCcw } from "lucide-react";
 import { Pagination } from "@/components/admin/ui/Pagination";
@@ -8,7 +8,7 @@ import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Select } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { apiGetWithMeta } from "@/lib/api-client";
-import { formatFaDate } from "@/lib/content/order";
+import { formatFaDate, orderStatusLabels } from "@/lib/content/order";
 import { formatToman } from "@/lib/utils";
 import type { OrderSummary } from "@/types/store";
 
@@ -21,26 +21,33 @@ export function OrdersAdminClient() {
   const [status, setStatus] = useState<string>("");
   const [meta, setMeta] = useState<{ total: number; hasNextPage: boolean } | null>(null);
   const [failed, setFailed] = useState(false);
+  const requestVersion = useRef(0);
 
   const load = useCallback(async (targetPage: number, targetStatus: string) => {
+    const request = ++requestVersion.current;
     setOrders(null);
+    setMeta(null);
     setFailed(false);
     try {
       const params = new URLSearchParams({ page: String(targetPage), pageSize: String(PAGE_SIZE) });
       if (targetStatus) params.set("status", targetStatus);
       const { data, meta: responseMeta } = await apiGetWithMeta<OrderSummary[]>(`/api/admin/orders?${params.toString()}`);
+      if (request !== requestVersion.current) return;
       setOrders(data);
       setMeta({
         total: Number(responseMeta?.total) || 0,
         hasNextPage: Boolean(responseMeta?.hasNextPage),
       });
     } catch {
-      setFailed(true);
+      if (request === requestVersion.current) setFailed(true);
     }
   }, []);
 
   useEffect(() => {
     void load(page, status);
+    return () => {
+      requestVersion.current += 1;
+    };
   }, [load, page, status]);
 
   return (
@@ -58,7 +65,7 @@ export function OrdersAdminClient() {
           <option value="">همه وضعیت‌ها</option>
           {ORDER_STATUSES.map((value) => (
             <option key={value} value={value}>
-              {value}
+              {orderStatusLabels[value] ?? value}
             </option>
           ))}
         </Select>
@@ -73,7 +80,7 @@ export function OrdersAdminClient() {
           </button>
         </div>
       ) : !orders ? (
-        <div className="space-y-2.5">
+        <div className="space-y-2.5" aria-busy="true" aria-label="در حال بارگذاری سفارش‌ها">
           {Array.from({ length: 6 }).map((_, i) => (
             <Skeleton key={i} className="h-16 rounded-xl" />
           ))}
@@ -84,17 +91,17 @@ export function OrdersAdminClient() {
         </div>
       ) : (
         <>
-          <div className="overflow-hidden rounded-2xl border border-line">
-            <table className="w-full text-sm">
+          <div role="region" aria-label="فهرست سفارش‌ها" tabIndex={0} className="overflow-x-auto rounded-2xl border border-line focus-visible:outline focus-visible:outline-2 focus-visible:outline-champagne">
+            <table aria-label="سفارش‌های فروشگاه" className="w-full min-w-[600px] text-sm">
               <thead>
                 <tr className="border-b border-line bg-ink-2/60 font-mono text-[10px] font-bold tracking-[0.1em] text-muted-foreground/80">
-                  <th className="px-4 py-3 text-start">شماره</th>
-                  <th className="px-4 py-3 text-start">مشتری</th>
-                  <th className="hidden px-4 py-3 text-start md:table-cell">تاریخ</th>
-                  <th className="hidden px-4 py-3 text-start lg:table-cell">اقلام</th>
-                  <th className="px-4 py-3 text-start">وضعیت</th>
-                  <th className="px-4 py-3 text-start">پرداخت</th>
-                  <th className="px-4 py-3 text-end">مبلغ</th>
+                  <th scope="col" className="px-4 py-3 text-start">شماره</th>
+                  <th scope="col" className="px-4 py-3 text-start">مشتری</th>
+                  <th scope="col" className="hidden px-4 py-3 text-start md:table-cell">تاریخ</th>
+                  <th scope="col" className="hidden px-4 py-3 text-start lg:table-cell">اقلام</th>
+                  <th scope="col" className="px-4 py-3 text-start">وضعیت</th>
+                  <th scope="col" className="px-4 py-3 text-start">پرداخت</th>
+                  <th scope="col" className="px-4 py-3 text-end">مبلغ</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-line/70">

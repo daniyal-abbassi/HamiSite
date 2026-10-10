@@ -26,7 +26,7 @@ const champagneScale = {
 } as const;
 
 const config: Config = {
-  darkMode: ["class"],
+  darkMode: "class",
   content: [
     "./app/**/*.{ts,tsx}",
     "./components/**/*.{ts,tsx}",

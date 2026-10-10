@@ -4,6 +4,7 @@ import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { applyOrderStatusTransition, orderListInclude, serializeOrderSummary } from "@/lib/orders";
 import { prisma } from "@/lib/prisma";
+import { revalidateHomepage } from "@/lib/revalidate-homepage";
 
 const updateOrderSchema = z
   .object({
@@ -98,6 +99,7 @@ export const PATCH = withAuth<{ id: string }>(
         });
       });
 
+      revalidateHomepage();
       return ok(serializeOrderSummary(updated), { message: "Order updated" });
     });
   },

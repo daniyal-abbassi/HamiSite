@@ -249,23 +249,14 @@
   background: linear-gradient(0deg, rgb(25 2 8 / 96%), rgb(43 4 14 / 32%) 50%, rgb(43 4 14 / 8%));
   pointer-events: none;
 }
-.deal-featured__badge {
+.deal-featured__media > .deal-featured__badge {
   position: absolute;
   top: 1rem;
   right: 1rem;
-  display: inline-flex;
-  align-items: center;
-  gap: .4rem;
-  border: 1px solid rgb(248 236 201 / 52%);
-  border-radius: 999px;
-  background: linear-gradient(110deg, #bf8f32, #f0dca3 52%, #d4ab51);
-  padding: .45rem .75rem;
-  color: #2b040e;
-  font-size: .68rem;
-  font-weight: 900;
+  background-color: rgb(43 4 14 / 82%);
+  backdrop-filter: blur(8px);
   box-shadow: 0 8px 24px rgb(20 2 7 / 36%);
 }
-.deal-featured__badge svg { width: .9rem; height: .9rem; }
 .deal-featured__caption { position: absolute; right: 1.1rem; bottom: 1.05rem; left: 1.1rem; display: grid; gap: .25rem; }
 .deal-featured__caption strong { color: #fffaf3; font-size: clamp(1.1rem, 2vw, 1.55rem); font-weight: 900; line-height: 1.5; }
 .deal-featured__caption span { color: rgb(251 247 240 / 69%); font-size: .75rem; }
@@ -276,19 +267,25 @@
 .deal-swatches { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; margin-block: .1rem .85rem; }
 .deal-swatches button {
   position: relative;
-  width: 1.15rem;
-  height: 1.15rem;
-  border: 2px solid rgb(255 250 243 / 72%);
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+  flex: 0 0 2.75rem;
+  place-items: center;
+  border: 0;
   border-radius: 50%;
   padding: 0;
   cursor: pointer;
-  box-shadow: 0 0 0 1px rgb(0 0 0 / 28%);
+  background: transparent;
 }
-.deal-swatches button[aria-pressed="true"] { outline: 2px solid #f0dca3; outline-offset: 2px; }
+.deal-swatches__color { display: block; width: 1.15rem; height: 1.15rem; border: 2px solid rgb(255 250 243 / 72%); border-radius: 50%; box-shadow: 0 0 0 1px rgb(0 0 0 / 28%); }
+.deal-swatches button[aria-pressed="true"] .deal-swatches__color { outline: 2px solid #f0dca3; outline-offset: 2px; }
 .deal-swatches button:disabled { cursor: not-allowed; opacity: .34; }
-.deal-swatches button:disabled::after { position: absolute; inset: 50% -2px auto; height: 1px; background: #fff; content: ""; transform: rotate(-45deg); }
+.deal-swatches button:disabled::after { position: absolute; top: 50%; left: 50%; width: 1.4rem; height: 1px; background: #fff; content: ""; transform: translate(-50%, -50%) rotate(-45deg); }
 .deal-swatches--compact { gap: .33rem; margin-block: .45rem; }
-.deal-swatches--compact button { width: .9rem; height: .9rem; }
+.deal-swatches--compact .deal-swatches__color { width: .9rem; height: .9rem; }
 .deal-meter { margin-block: .55rem .1rem; }
 .deal-meter__labels { display: flex; align-items: center; justify-content: space-between; gap: .5rem; color: rgb(251 247 240 / 48%); font-size: .62rem; }
 .deal-meter__labels strong { color: #f0dca3; font-size: .68rem; }
@@ -298,19 +295,7 @@
 .deal-featured__prices, .deal-card__prices { display: grid; gap: .12rem; min-width: 0; }
 .deal-featured__prices del, .deal-card__prices del { color: rgb(251 247 240 / 40%); font-size: .72rem; text-decoration-thickness: 1px; }
 .deal-featured__prices strong { color: #fffaf3; font-size: clamp(1.1rem, 2vw, 1.45rem); font-weight: 900; }
-.deal-featured__percent, .deal-card__percent {
-  display: inline-flex;
-  align-items: center;
-  gap: .25rem;
-  border: 1px solid rgb(229 198 124 / 20%);
-  border-radius: 12px;
-  background: linear-gradient(160deg, rgb(156 33 56 / 80%), rgb(90 12 34 / 92%));
-  padding: .4rem .55rem;
-  color: #fffaf3;
-  font-size: .77rem;
-  font-weight: 900;
-}
-.deal-featured__percent svg { width: .9rem; height: .9rem; }
+.deal-featured__percent { color: #ffd2da; }
 .deal-featured__cart {
   display: flex;
   width: 100%;
@@ -334,7 +319,13 @@
 .deal-card:hover { transform: translateY(-4px); border-color: rgb(212 171 81 / 50%); box-shadow: 0 24px 45px -24px rgb(212 171 81 / 45%); }
 .deal-card__media { position: relative; display: block; flex: 0 0 46%; min-width: 0; overflow: hidden; background: #fff; }
 .deal-card__shade { background: transparent; }
-.deal-card__percent { position: absolute; top: .65rem; left: .65rem; border-radius: 10px; padding: .3rem .45rem; font-size: .68rem; }
+.deal-card__media > .deal-card__percent {
+  position: absolute;
+  top: .65rem;
+  left: .65rem;
+  color: #760c25;
+  background-color: rgb(255 255 255 / 92%);
+}
 .deal-card__body { display: flex; min-width: 0; flex: 1; flex-direction: column; justify-content: space-between; padding: .8rem; }
 .deal-card__intro { min-width: 0; }
 .deal-card__title-row { display: flex; align-items: flex-start; justify-content: space-between; gap: .35rem; }
@@ -1474,18 +1465,10 @@
   border-radius: 8px;
 }
 
-/* Pressed feedback for the hand-rolled pills on this page. `Button` carries
-   `active:translate-y-px` from its own primitive, but these are raw <button> and
-   <a> elements styled inline, and a press on them was indistinguishable from a
-   hover. One shared treatment rather than per-component edits. The selectors are
-   the markup as it is: NewArrivals' rail arrows are `rounded-full` buttons, and the
-   featured tabs are the only `[role="tab"]` on the page. (The categories carousel's
-   nav buttons were in this list until feature 010 deleted the component; the masonry
-   tiles carry their own press state, so the list has no categories entry.) */
+/* Pressed feedback for the hand-rolled pills on this page. */
 #new-arrivals button[class*="rounded-full"]:active,
 #accessories a[class*="rounded-full"]:active,
-#online-services a[class*="rounded-full"]:active,
-#featured [role="tab"]:active {
+#online-services a[class*="rounded-full"]:active {
   transform: scale(0.97);
 }
 
@@ -1499,7 +1482,7 @@
   background-color: #4a0012;
   /* The generated artwork makes oxblood the canvas; the ivory showroom curves stay
      at the perimeter so the transition from the bright Hero still has a brand cue. */
-  background-image: url("/store/featured-products-burgundy.png");
+  background-image: url("/store/featured-products-burgundy.webp");
   background-position: center;
   background-size: cover;
 }
@@ -1674,40 +1657,26 @@
   box-shadow: none;
 }
 .featured-products .featured-source-card .lux-stage img { object-fit: contain; padding: 0; }
-.featured-source-card__badge {
+.featured-source-card > .featured-source-card__badge {
   position: absolute;
   z-index: 2;
   top: 12px;
   left: 14px;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  min-height: 28px;
-  padding: 0.25rem 0.7rem;
-  border-radius: 999px;
-  background: linear-gradient(110deg, #86182f, #5a0c22);
-  color: #fbf7f0;
-  font-size: 0.67rem;
-  font-weight: 800;
+  color: #805008;
+  background-color: rgb(255 255 255 / 94%);
+  box-shadow: 0 2px 8px rgb(45 0 12 / 15%);
 }
-.featured-source-card__badge--discount {
-  min-height: 22px;
-  padding: 0.16rem 0.5rem;
-  background: #760c25;
-  box-shadow: 0 2px 8px rgb(45 0 12 / 24%);
-  font-size: 0.61rem;
-}
-.featured-source-card__badge svg { width: 13px; height: 13px; }
+.featured-source-card > .featured-source-card__badge--discount { color: #760c25; }
 .featured-source-card__wish {
   position: absolute;
   z-index: 3;
   top: 10px;
   right: 10px;
   display: grid;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   place-items: center;
-  border: 0;
+  border: 1px solid rgb(90 12 34 / 18%);
   border-radius: 50%;
   background: rgb(255 255 255 / 58%);
   color: #5a0c22;
@@ -1716,6 +1685,7 @@
 }
 .featured-source-card__wish:hover { transform: scale(1.08); background: #fff; }
 .featured-source-card__wish.is-wished { background: #6f1128; color: #fbf7f0; }
+.featured-source-card__wish:focus-visible { outline: 2px solid #6f1128; outline-offset: 2px; }
 .featured-source-card__wish svg { width: 18px; height: 18px; }
 .featured-source-card__unavailable {
   position: absolute;
@@ -1821,6 +1791,29 @@
   .featured-products__footer-cta { margin-top: 1.5rem; }
   .featured-products .featured-source-card { width: 262px; flex-basis: 262px; }
   .featured-products__next { display: none; }
+  .featured-products__pagination { align-items: center; gap: 0; }
+  .featured-products__pagination button {
+    display: grid;
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    min-height: 44px;
+    flex: 0 0 44px;
+    place-items: center;
+    padding: 0;
+    border-radius: 50%;
+    background: transparent;
+  }
+  .featured-products__pagination button::before {
+    width: 8px;
+    height: 8px;
+    border-radius: 99px;
+    background: rgb(255 241 223 / 54%);
+    content: "";
+    transition: width 200ms ease, background-color 200ms ease;
+  }
+  .featured-products__pagination button.is-active { width: 44px; background: transparent; }
+  .featured-products__pagination button.is-active::before { width: 28px; background: #efd5ad; }
   .featured-products::after { height: 5rem; }
 }
 @media (prefers-reduced-motion: reduce) {
@@ -1847,12 +1840,17 @@
   margin-block-start: 0;
   padding-block-start: 6rem;
   background-color: var(--paper, #f4f1ea);
-  background-image: url("../../assets/NEW-STYLE/RAW-DESKTOP-BG.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
   scroll-margin-block-start: 6rem;
 }
+.homepage-hero__art,
+.homepage-hero__image {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.homepage-hero__art { z-index: -1; }
+.homepage-hero__image { object-fit: cover; object-position: center; }
 .homepage-hero::after {
   position: absolute;
   z-index: 0;
@@ -2061,11 +2059,15 @@
 @media (max-width: 1023px) {
   .homepage-hero {
     min-block-size: max(calc(100vw * 1.778), calc(38vw + 34rem));
-    background-image:
-      linear-gradient(to bottom, transparent 0%, transparent 34%, rgba(244, 241, 234, 0.56) 51%, rgba(244, 241, 234, 0.94) 70%, #f4f1ea 100%),
-      url("../../assets/NEW-STYLE/RAW-MOBILE-DISPLAY-BG.png");
-    background-position: center top;
-    background-size: 100% 100%, 100% auto;
+  }
+  .homepage-hero__image { object-position: center top; }
+  .homepage-hero::before {
+    position: absolute;
+    z-index: 0;
+    inset: 0;
+    background: linear-gradient(to bottom, transparent 0%, transparent 34%, rgba(244, 241, 234, 0.56) 51%, rgba(244, 241, 234, 0.94) 70%, #f4f1ea 100%);
+    content: "";
+    pointer-events: none;
   }
 
   .homepage-hero__inner {

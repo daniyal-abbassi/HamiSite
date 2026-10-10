@@ -1,49 +1,36 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { ChevronLeft, ChevronRight, LayoutGrid, List, PackageSearch, X } from "lucide-react";
-import { Skeleton } from "@/components/ui/skeleton";
-import { LiquidSelection } from "@/components/liquid/LiquidSelection";
-import { cn, toFaDigits } from "@/lib/utils";
-import { sortOptions } from "@/lib/content/shop";
+import { PackageSearch } from "lucide-react";
+import { toFaDigits } from "@/lib/utils";
 import { ProductCard, type CardVariant } from "./ProductCard";
 import { ProductListRow } from "./ProductListRow";
+import { ShopResultControls } from "./ShopResultControls";
 import type { ShopMeta, ShopProduct } from "./types";
+
+type SearchParams = Record<string, string | string[] | undefined>;
 
 type ShopResultsProps = {
   cardVariant?: CardVariant;
   products: ShopProduct[] | null;
   meta: ShopMeta | null;
-  /** No longer set by the listing: the products arrive rendered from the
-     server, so there is no client fetch left that could fail. Optional so the
-     the error branch that used to sit here is deleted: since band 1 the listing is
-     rendered on the server, so a failed read is the route's error boundary, not a
-     prop — and the «تلاش دوباره» it rendered linked back to the page it was on. */
   activeSort: string;
-  /**
-   * Filters currently applied, already labelled. FR-026 requires them "visible as
-   * removable controls" — and below `lg` the filter panel is a closed sheet, so
-   * without this row a phone shopper can neither see nor lift what is narrowing
-   * their results. `audits/02` measured zero elements outside `<aside>` carrying
-   * the active label at 360px.
-   */
   activeFilters?: { key: string; label: string }[];
-  /**
-   * A brand or category slug that matched nothing in the catalogue. Distinct from an
-   * empty result set on purpose: "we don't carry that" and "nothing matches your
-   * filters" are different facts, and conflating them is how a broken link survives.
-   */
   unknownFilter?: string | null;
+  searchParams: SearchParams;
 };
 
-function pageWindow(page: number, totalPages: number): number[] {
-  const size = 5;
-  let start = Math.max(1, page - Math.floor(size / 2));
-  const end = Math.min(totalPages, start + size - 1);
-  start = Math.max(1, end - size + 1);
-  return Array.from({ length: end - start + 1 }, (_, index) => start + index);
+function first(value: string | string[] | undefined): string | undefined {
+  return Array.isArray(value) ? value[0] : value;
+}
+
+function hrefWith(params: SearchParams, key: string, value?: string): string {
+  const query = new URLSearchParams();
+  for (const [name, raw] of Object.entries(params)) {
+    if (name === key || name === "page") continue;
+    for (const item of Array.isArray(raw) ? raw : raw == null ? [] : [raw]) query.append(name, item);
+  }
+  if (value) query.set(key, value);
+  const serialized = query.toString();
+  return serialized ? `/shop?${serialized}` : "/shop";
 }
 
 export function ShopResults({
@@ -53,223 +40,84 @@ export function ShopResults({
   activeSort,
   unknownFilter = null,
   activeFilters = [],
+  searchParams,
 }: ShopResultsProps) {
-  const router = useRouter();
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
-  const [listView, setListView] = useState(false);
-
   const totalPages = meta ? Math.max(1, Math.ceil(meta.total / meta.pageSize)) : 1;
   const page = meta?.page ?? 1;
-
-  function goToPage(target: number) {
-    const params = new URLSearchParams(searchParams.toString());
-    if (target <= 1) params.delete("page");
-    else params.set("page", String(target));
-    const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname);
-  }
-
-  function changeSort(value: string) {
-    const params = new URLSearchParams(searchParams.toString());
-    if (value) params.set("sort", value);
-    else params.delete("sort");
-    params.delete("page");
-    const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
-  }
-
-  function removeFilter(key: string) {
-    const params = new URLSearchParams(searchParams.toString());
-    params.delete(key);
-    params.delete("page");
-    const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
-  }
-
-  function clearAllFilters() {
-    router.push(pathname, { scroll: false });
-  }
+  const listView = first(searchParams.view) === "list";
 
   return (
     <div className="shop-results min-w-0 flex-1">
       {activeFilters.length > 0 && (
         <div className="mb-3 flex flex-wrap items-center gap-2" role="group" aria-label="فیلترهای فعال">
           {activeFilters.map((filter) => (
-            <button
+            <Link
               key={`${filter.key}-${filter.label}`}
-              type="button"
-              onClick={() => removeFilter(filter.key)}
-              className="inline-flex items-center gap-1.5 rounded-full border border-champagne/30 bg-champagne/10 px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-champagne/60"
+              href={hrefWith(searchParams, filter.key)}
+              className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-champagne/30 bg-champagne/10 px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-champagne/60"
             >
-              {filter.label}
-              <X className="size-3.5" aria-hidden="true" />
+              {filter.label}<span aria-hidden="true">×</span>
               <span className="sr-only">حذف فیلتر {filter.label}</span>
-            </button>
+            </Link>
           ))}
-          <button
-            type="button"
-            onClick={clearAllFilters}
-            className="text-xs font-bold text-aqua underline-offset-4 hover:underline"
-          >
+          <Link href="/shop" className="inline-flex min-h-11 items-center text-xs font-bold text-aqua underline-offset-4 hover:underline">
             حذف همه فیلترها
-          </button>
+          </Link>
         </div>
       )}
 
-      {/* Toolbar */}
       <div className="shop-results-toolbar flex flex-wrap items-center justify-between gap-3 rounded-xl glass px-4 py-3">
         <p className="text-xs text-foreground/60" aria-live="polite">
           {unknownFilter ? "—" : products === null ? "در حال بارگذاری…" : `${toFaDigits(meta?.total ?? products.length)} محصول`}
         </p>
-        <div className="flex items-center gap-2">
-          <label className="sr-only" htmlFor="shop-sort">مرتب‌سازی</label>
-          <select
-            id="shop-sort"
-            value={activeSort}
-            onChange={(event) => changeSort(event.target.value)}
-            className="h-11 rounded-xl border border-input bg-background/40 px-3 py-0 text-xs font-bold md:h-9"
-          >
-            <option value="">مرتب‌سازی: پیش‌فرض</option>
-            {sortOptions.map((option) => (
-              <option key={option.key} value={option.key}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-          <div className="flex overflow-hidden rounded-xl border border-line" role="group" aria-label="نوع نمایش">
-            <button
-              type="button"
-              aria-pressed={!listView}
-              aria-label="نمایش شبکه‌ای"
-              onClick={() => setListView(false)}
-              className={cn(
-                "grid size-11 place-items-center",
-                !listView ? "bg-aqua/15 text-aqua" : "text-foreground/50 hover:text-foreground",
-              )}
-            >
-              <LayoutGrid className="size-4" />
-            </button>
-            <button
-              type="button"
-              aria-pressed={listView}
-              aria-label="نمایش فهرستی"
-              onClick={() => setListView(true)}
-              className={cn(
-                "grid size-11 place-items-center border-s border-line",
-                listView ? "bg-aqua/15 text-aqua" : "text-foreground/50 hover:text-foreground",
-              )}
-            >
-              <List className="size-4" />
-            </button>
-          </div>
-        </div>
+        <ShopResultControls activeSort={activeSort} listView={listView} />
       </div>
 
-      {/* Unrecognised brand or category — never an unfiltered catalogue */}
       {unknownFilter && (
         <div className="mt-6 rounded-xl glass p-12 text-center" role="status">
           <PackageSearch className="mx-auto size-10 text-aqua/60" aria-hidden="true" />
           <b className="mt-4 block font-extrabold">«{unknownFilter}» در برندها یا دسته‌بندی‌های ما پیدا نشد.</b>
           <p className="mt-2 text-sm text-foreground/60">این پیوند ممکن است قدیمی باشد؛ فهرست کامل محصولات را ببینید.</p>
-          <Link href="/shop" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
-            مشاهده همه محصولات
-          </Link>
+          <Link href="/shop" className="mt-5 inline-flex min-h-11 items-center text-xs font-bold text-aqua hover:underline">مشاهده همه محصولات</Link>
         </div>
       )}
 
-      {/* Error */}
       {!unknownFilter && products === null && (
-        <div className={cn("mt-6", listView ? "space-y-4" : "grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-2 2xl:grid-cols-3")} aria-busy="true">
-          {Array.from({ length: 6 }).map((_, index) => (
-            <div key={index} className="space-y-3">
-              <Skeleton className="aspect-square w-full" />
-              <Skeleton className="h-3 w-1/3" />
-              <Skeleton className="h-4 w-3/4" />
-            </div>
-          ))}
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-5" aria-busy="true">
+          {Array.from({ length: 6 }, (_, index) => <div key={index} className="aspect-square animate-pulse rounded-xl bg-foreground/5" />)}
         </div>
       )}
 
-      {/* Empty */}
       {!unknownFilter && products !== null && products.length === 0 && (
         <div className="mt-6 rounded-xl glass p-12 text-center" role="status">
           <PackageSearch className="mx-auto size-10 text-aqua/60" aria-hidden="true" />
           <b className="mt-4 block font-extrabold">محصولی با این فیلترها پیدا نشد.</b>
           <p className="mt-2 text-sm text-foreground/60">محدوده قیمت را تغییر دهید یا فیلترها را حذف کنید.</p>
-          <Link href="/shop" className="mt-5 inline-flex items-center gap-1 text-xs font-bold text-aqua hover:underline">
-            حذف همه فیلترها
-          </Link>
+          <Link href="/shop" className="mt-5 inline-flex min-h-11 items-center text-xs font-bold text-aqua hover:underline">حذف همه فیلترها</Link>
         </div>
       )}
 
-      {/* Results + pagination */}
-      {!unknownFilter && products !== null && products.length > 0 && (
+      {!unknownFilter && products && products.length > 0 && (
         <>
           {listView ? (
-            <div className="shop-product-list mt-6 space-y-4">
-              {products.map((product) => (
-                <ProductListRow key={product.id} product={product} />
-              ))}
-            </div>
+            <div className="shop-product-list mt-6 space-y-4">{products.map((product) => <ProductListRow key={product.id} product={product} />)}</div>
           ) : (
-            /* Two-up on mobile, matching the home rails. This was the last
-               place still handing a phone one full-width card per row — on the
-               page whose entire job is browsing a 189-product catalogue, which
-               is where it hurt most. The compact card rules in the mobile block
-               of globals.css apply here unchanged, so the two surfaces cannot
-               drift apart. */
             <div className="shop-product-grid mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-2 2xl:grid-cols-3">
               {products.map((product) => (
-                <ProductCard key={product.id} product={product} variant={cardVariant} frame="plinth" />
+                <ProductCard key={product.id} product={product} variant={cardVariant} frame="plinth" imageSizes="(max-width: 767px) calc((100vw - 44px) / 2), (max-width: 1023px) calc((100vw - 68px) / 2), (max-width: 1535px) calc((100vw - 356px) / 2), 350px" />
               ))}
             </div>
           )}
 
           {totalPages > 1 && (
             <nav className="shop-pagination mt-10 flex items-center justify-center gap-1.5" aria-label="صفحه‌بندی محصولات">
-              <button
-                type="button"
-                disabled={page <= 1}
-                onClick={() => goToPage(page - 1)}
-                aria-label="صفحه قبل"
-                className="grid size-11 place-items-center rounded-xl border border-line text-foreground/70 transition-colors hover:border-aqua/50 disabled:opacity-30"
-              >
-                <ChevronRight className="size-4" />
-              </button>
-              {/*
-                The page numbers are the marker's group; the two chevrons stay outside it,
-                because they are not answers to "which page am I on" — they are the control
-                that moves the page, and a marker resting on a stepper would claim a
-                destination that does not exist.
-
-                `announce="page"` is load-bearing: these are buttons, so the component's
-                default would be `aria-pressed`, and today's markup says `aria-current="page"`.
-                The active number's aqua fill is dropped for the same reason the dock's
-                per-tab background was: the marker is the one indication (FR-040), and a
-                tinted button would paint over the body that is supposed to be seen.
-              */}
-              <LiquidSelection
-                className="!gap-1.5 !flex-nowrap !min-w-0"
-                itemClassName="grid size-11 place-items-center !rounded-xl border border-line text-xs font-bold hover:border-aqua/50"
-                value={String(page)}
-                announce="page"
-                markerInset={6}
-                onChange={(id) => goToPage(Number(id))}
-                items={pageWindow(page, totalPages).map((target) => ({
-                  id: String(target),
-                  label: toFaDigits(target),
-                }))}
-              />
-              <button
-                type="button"
-                disabled={page >= totalPages}
-                onClick={() => goToPage(page + 1)}
-                aria-label="صفحه بعد"
-                className="grid size-11 place-items-center rounded-xl border border-line text-foreground/70 transition-colors hover:border-aqua/50 disabled:opacity-30"
-              >
-                <ChevronLeft className="size-4" />
-              </button>
+              {page > 1 && <Link href={hrefWith(searchParams, "page", String(page - 1))} aria-label="صفحه قبل" className="grid size-11 place-items-center rounded-xl border border-line">›</Link>}
+              {Array.from({ length: Math.min(5, totalPages) }, (_, index) => {
+                const start = Math.max(1, Math.min(page - 2, totalPages - 4));
+                const target = start + index;
+                return <Link key={target} href={hrefWith(searchParams, "page", String(target))} aria-current={target === page ? "page" : undefined} className={`grid size-11 place-items-center rounded-xl border border-line text-xs font-bold ${target === page ? "bg-aqua/15 text-aqua" : ""}`}>{toFaDigits(target)}</Link>;
+              })}
+              {page < totalPages && <Link href={hrefWith(searchParams, "page", String(page + 1))} aria-label="صفحه بعد" className="grid size-11 place-items-center rounded-xl border border-line">‹</Link>}
             </nav>
           )}
         </>

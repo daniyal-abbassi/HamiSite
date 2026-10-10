@@ -1,9 +1,8 @@
 "use client";
 
-import { apiGet } from "@/lib/api-client";
 import { toFaDigits } from "@/lib/utils";
-import { useSection } from "../useSection";
-import { windowLabel, type SummaryData } from "./derive";
+import { useDashboardSummary } from "../DashboardSummaryProvider";
+import { windowLabel } from "./derive";
 import { SectionEmpty, SectionSkeleton, SectionUnreadable } from "@/components/admin/states/SectionState";
 
 /**
@@ -12,10 +11,7 @@ import { SectionEmpty, SectionSkeleton, SectionUnreadable } from "@/components/a
  * data-model.md:55).
  */
 export function OrderVolumeSection() {
-  const { state, data, onRetry } = useSection<SummaryData>(
-    () => apiGet<SummaryData>("/api/admin/reports/summary"),
-    (summary) => summary.byStatus.length === 0,
-  );
+  const { state, data, onRetry } = useDashboardSummary();
 
   if (state === "loading") return <SectionSkeleton className="h-28" />;
   if (state === "empty") {

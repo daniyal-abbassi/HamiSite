@@ -2,9 +2,12 @@ import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 import { Role, User } from "@prisma/client";
 import { toNumber } from "@/lib/serializers";
-import { randomBytes, createHash } from "node:crypto";
+import { randomBytes } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { ApiError, withErrorHandling } from "@/lib/http";
+import { SESSION_COOKIE_NAME, hashSessionToken } from "@/lib/session-token";
+
+export { SESSION_COOKIE_NAME, hashSessionToken } from "@/lib/session-token";
 
 const SALT_ROUNDS = 10;
 
@@ -25,15 +28,10 @@ export async function verifyPassword(password: string, passwordHash: string) {
   return bcrypt.compare(password, passwordHash);
 }
 
-export const SESSION_COOKIE_NAME = "session_token";
 export const SESSION_TTL_MS = 30 * 24 * 60 * 60 * 1000;
 
 export function generateSessionToken() {
   return randomBytes(32).toString("hex");
-}
-
-export function hashSessionToken(token: string) {
-  return createHash("sha256").update(token).digest("hex");
 }
 
 /**

@@ -19,6 +19,7 @@ The source changes to PostgreSQL/Prisma. Existing public consumers keep the curr
 - Public; no authentication required.
 - Query keys: `q`, `brandId`, `categoryId`, `stockType`, `specialOffer`, `minPrice`, `maxPrice`, `sort`, `page`, `pageSize`, `includeVariants`.
 - Returns the current public product DTO and pagination metadata (`page`, `pageSize`, `total`, `hasNextPage`).
+- Public product DTOs omit procurement and fulfillment identifiers (`costPerItem`, variant `barcode`, `productIdentifier`, and internal `imageId`). Those fields are available only from role-protected admin catalog routes.
 - Search retains Persian normalization. Filters and counts operate on database IDs and category subtree/brand semantics consistent with destination pages.
 
 ### `GET /api/products/[slug]`

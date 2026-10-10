@@ -3,6 +3,7 @@ import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
+import { revalidateHomepage } from "@/lib/revalidate-homepage";
 
 const schema = z.object({
   name: z.string().trim().min(1), slug: z.string().trim().min(1), description: z.string(), parentId: z.number().int().positive().nullable(),
@@ -44,6 +45,7 @@ export const PATCH = withAuth<{ id: string }>(async (request, { params }) => wit
       order: input.order,
       ...(input.parentId === undefined ? {} : { level: input.parentId == null ? 0 : (await prisma.category.findUniqueOrThrow({ where: { id: input.parentId }, select: { level: true } })).level + 1 }),
     } });
+    revalidateHomepage();
     return ok(updated, { message: "Category updated" });
   } catch (error) {
     if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") throw new ApiError(409, "Category slug already exists");
@@ -64,5 +66,6 @@ export const DELETE = withAuth<{ id: string }>(async (_request, { params }) => w
   if (childCount) throw new ApiError(409, "Cannot delete a category with child categories");
   if (mainCount || secondaryCount) throw new ApiError(409, "Cannot delete a category used by products");
   await prisma.category.delete({ where: { id } });
+  revalidateHomepage();
   return ok({ id }, { message: "Category deleted" });
 }), { roles: [Role.ADMIN] });
