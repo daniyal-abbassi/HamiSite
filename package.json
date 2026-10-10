@@ -55,6 +55,7 @@
     "@types/bcryptjs": "^2.4.6",
     "@types/node": "^20.14.9",
     "@types/react": "19.2.18",
+    "@types/telegram-web-app": "^10.1.0",
     "agentation": "^3.1.2",
     "autoprefixer": "^10.5.4",
     "dotenv": "^17.4.2",

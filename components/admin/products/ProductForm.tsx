@@ -349,7 +349,7 @@ export function ProductForm({ mode, productId }: { mode: "new" | "edit"; product
   }
 
   return (
-    <div className="space-y-6 rounded-3xl bg-white p-4 sm:p-6 shadow-xl border border-zinc-200/80">
+    <div className="space-y-6">
       {error && (
         <p role="alert" className="rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
           {error}
@@ -692,7 +692,7 @@ export function ProductForm({ mode, productId }: { mode: "new" | "edit"; product
       </div>
 
       {mode === "edit" && (
-        <p className="text-[11px] leading-5 text-zinc-600">
+        <p className="text-[11px] leading-5 text-muted-foreground/60">
           هزینه تمام‌شده و وضعیت نمایش قیمت در کاتالوگ عمومی ثبت نشده‌اند؛ اگر آن‌ها را تغییر ندهید، مقدار ذخیره‌شده دست‌نخورده می‌ماند.
         </p>
       )}

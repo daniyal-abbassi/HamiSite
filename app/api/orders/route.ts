@@ -8,6 +8,7 @@ import { ensureB2BTermAllowed, normalizePaymentTerm, resolveMatchingTier } from 
 import { prisma } from "@/lib/prisma";
 import { revalidateHomepage } from "@/lib/revalidate-homepage";
 import { serializeDate, toNumber } from "@/lib/serializers";
+import { notifyAdminsNewOrder } from "@/lib/telegram-bot";
 
 const createOrderSchema = z.object({
   agentId: z.number().int().positive().optional(),
@@ -333,6 +334,18 @@ export const POST = withAuth(async (request, { user }) => {
     });
 
     revalidateHomepage();
+
+    // Trigger Telegram bot push alert to admins
+    notifyAdminsNewOrder({
+      id: order.id,
+      orderNumber: order.orderNumber,
+      customerName: `${input.firstName} ${input.lastName}`.trim(),
+      phone: input.phone,
+      totalAmount,
+      itemCount: order.items.length,
+      city: input.city,
+    }).catch((err) => console.warn("Failed to dispatch Telegram order alert:", err));
+
     return ok(
       {
         id: order.id,

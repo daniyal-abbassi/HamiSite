@@ -6,6 +6,7 @@ import { getPaymentGateway } from "@/lib/payment/gateway";
 import { prisma } from "@/lib/prisma";
 import { revalidateHomepage } from "@/lib/revalidate-homepage";
 import { toNumber } from "@/lib/serializers";
+import { notifyAdminsNewOrder } from "@/lib/telegram-bot";
 
 /// Thrown inside the settlement transaction when another concurrent callback
 /// already claimed this Payment row. Rolls the transaction back so nothing is
@@ -75,6 +76,7 @@ export async function GET(request: Request) {
     const nextOrderStatus = result.success ? ("PROCESSING" as const) : ("FAILED" as const);
 
     let orderAlreadySettled = false;
+    let settledOrder: any = null;
 
     try {
       await prisma.$transaction(async (tx) => {
@@ -134,9 +136,23 @@ export async function GET(request: Request) {
           where: { id: orderId },
           data: { paymentStatus: nextPaymentStatus, status: nextOrderStatus },
         });
+
+        settledOrder = current;
       });
 
       revalidateHomepage();
+
+      if (result.success && !orderAlreadySettled && settledOrder) {
+        notifyAdminsNewOrder({
+          id: settledOrder.id,
+          orderNumber: settledOrder.orderNumber,
+          customerName: `${settledOrder.firstName} ${settledOrder.lastName}`.trim(),
+          phone: settledOrder.phone,
+          totalAmount: Number(settledOrder.totalAmount),
+          itemCount: settledOrder.items.length,
+          city: settledOrder.city,
+        }).catch((err) => console.warn("Failed to dispatch Telegram order alert:", err));
+      }
     } catch (error) {
       if (error instanceof PaymentAlreadyProcessedError) {
         const resolved = await prisma.payment.findUniqueOrThrow({
