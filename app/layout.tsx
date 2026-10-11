@@ -142,7 +142,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     /* Fonts are self-hosted (see globals.css @font-face) — the font variables
        live on :root there, so no next/font className is needed here. */
-    <html lang="fa" dir="rtl">
+    <html lang="fa" dir="rtl" suppressHydrationWarning>
       <body>
         <script
           type="application/ld+json"
