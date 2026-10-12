@@ -32,11 +32,19 @@ const createOrderSchema = z.object({
 
   items: z
     .array(
-      z.object({
-        productId: z.number().int().positive(),
-        variantId: z.number().int().positive().optional(),
-        quantity: z.number().int().positive(),
-      }),
+      z
+        .object({
+          productId: z.number().int().positive().optional(),
+          variantId: z.number().int().positive().optional(),
+          bundleId: z.number().int().positive().optional(),
+          quantity: z.number().int().positive(),
+        })
+        .refine(
+          (i) =>
+            (i.productId !== undefined && i.productId > 0) ||
+            (i.bundleId !== undefined && i.bundleId > 0),
+          { message: "Either productId or bundleId must be provided" }
+        )
     )
     .min(1),
 });
@@ -115,10 +123,30 @@ export const POST = withAuth(async (request, { user }) => {
       }
     }
 
-    const productIds = [...new Set(input.items.map((i) => i.productId))];
-    const variantIds = [...new Set(input.items.map((i) => i.variantId).filter((v): v is number => Boolean(v)))];
+    const bundleIds = [
+      ...new Set(input.items.map((i) => i.bundleId).filter((b): b is number => Boolean(b))),
+    ];
 
-    const [products, variants] = await Promise.all([
+    if (bundleIds.length > 0) {
+      if (user.role !== Role.WHOLESALE && user.role !== Role.AGENT && user.role !== Role.ADMIN) {
+        throw new ApiError(403, "سبدهای همکار تنها برای همکاران عمده و نمایندگان قابل سفارش است");
+      }
+      if (paymentTerm !== B2BPaymentTerm.CASH) {
+        throw new ApiError(
+          400,
+          "خرید سبدهای تخفیف‌دار همکار فقط به‌صورت نقدی و پرداخت آنی امکان‌پذیر است"
+        );
+      }
+    }
+
+    const productIds = [
+      ...new Set(input.items.map((i) => i.productId).filter((p): p is number => Boolean(p))),
+    ];
+    const variantIds = [
+      ...new Set(input.items.map((i) => i.variantId).filter((v): v is number => Boolean(v))),
+    ];
+
+    const [products, variants, bundles] = await Promise.all([
       prisma.product.findMany({
         where: { id: { in: productIds } },
         select: { id: true, name: true, price: true, brandId: true, mainCategoryId: true },
@@ -146,15 +174,82 @@ export const POST = withAuth(async (request, { user }) => {
           },
         },
       }),
+      bundleIds.length > 0
+        ? prisma.partnerBundle.findMany({
+            where: { id: { in: bundleIds } },
+            include: {
+              items: {
+                include: {
+                  product: { select: { id: true, name: true, stock: true, stockType: true } },
+                  variant: { select: { id: true, stock: true, stockType: true } },
+                },
+              },
+            },
+          })
+        : Promise.resolve([]),
     ]);
 
     const productById = new Map(products.map((p) => [p.id, p]));
     const variantById = new Map(variants.map((v) => [v.id, v]));
+    const bundleById = new Map(bundles.map((b) => [b.id, b]));
 
     let subtotal = 0;
 
     const preparedItems = input.items.map((item) => {
-      const product = productById.get(item.productId);
+      // 1. Bundle Item
+      if (item.bundleId) {
+        const bundle = bundleById.get(item.bundleId);
+        if (!bundle || !bundle.isActive) {
+          throw new ApiError(404, `سبد همکار ${item.bundleId} یافت نشد یا غیرفعال است`);
+        }
+
+        // Quota check
+        if (item.quantity > bundle.stock) {
+          throw new ApiError(
+            409,
+            `سهمیه باقی‌مانده سبد «${bundle.title}» کافی نیست (موجودی: ${bundle.stock})`
+          );
+        }
+
+        // Constituent base stock check
+        for (const line of bundle.items) {
+          const requiredPhysical = line.quantity * item.quantity;
+          const availableStock = line.variant ? line.variant.stock : line.product.stock;
+          const stockType = line.variant ? line.variant.stockType : line.product.stockType;
+
+          if (stockType === StockType.OUT_OF_STOCK || stockType === StockType.CALL) {
+            throw new ApiError(409, `کالای «${line.product.name}» در سبد «${bundle.title}» ناموجود است`);
+          }
+
+          if (stockType === StockType.LIMITED && requiredPhysical > availableStock) {
+            throw new ApiError(
+              409,
+              `موجودی انبار برای کالای «${line.product.name}» جهت خرید ${item.quantity} عدد سبد کافی نیست`
+            );
+          }
+        }
+
+        const unitPrice = toNumber(bundle.price) ?? 0;
+        const lineTotal = unitPrice * item.quantity;
+        subtotal += lineTotal;
+
+        return {
+          productId: null,
+          variantId: null,
+          bundleId: bundle.id,
+          quantity: item.quantity,
+          productName: bundle.title,
+          variantName: null,
+          price: unitPrice,
+          compareAtPrice: toNumber(bundle.compareAtPrice) ?? null,
+          discountAmount: 0,
+          lineTotal,
+          priceTierId: null,
+        };
+      }
+
+      // 2. Standard Product Item
+      const product = productById.get(item.productId!);
       if (!product) throw new ApiError(404, `Product ${item.productId} not found`);
 
       let unitPrice = toNumber(product.price) ?? 0;
@@ -190,6 +285,7 @@ export const POST = withAuth(async (request, { user }) => {
       return {
         productId: product.id,
         variantId: item.variantId ?? null,
+        bundleId: null,
         quantity: item.quantity,
         productName,
         variantName,
@@ -288,6 +384,7 @@ export const POST = withAuth(async (request, { user }) => {
             create: preparedItems.map((line) => ({
               productId: line.productId,
               variantId: line.variantId,
+              bundleId: line.bundleId ?? null,
               productName: line.productName,
               variantName: line.variantName,
               quantity: line.quantity,
@@ -313,6 +410,31 @@ export const POST = withAuth(async (request, { user }) => {
               where: { id: line.variantId },
               data: { stock: { decrement: line.quantity } },
             });
+          }
+        } else if (line.bundleId) {
+          const bundle = bundleById.get(line.bundleId);
+          if (bundle) {
+            // 1. Decrement bundle quota
+            await tx.partnerBundle.update({
+              where: { id: line.bundleId },
+              data: { stock: { decrement: line.quantity } },
+            });
+
+            // 2. Decrement constituent products' warehouse stock
+            for (const c of bundle.items) {
+              const decrementUnits = c.quantity * line.quantity;
+              if (c.variantId && c.variant?.stockType === StockType.LIMITED) {
+                await tx.productVariant.update({
+                  where: { id: c.variantId },
+                  data: { stock: { decrement: decrementUnits } },
+                });
+              } else if (c.product?.stockType === StockType.LIMITED) {
+                await tx.product.update({
+                  where: { id: c.productId },
+                  data: { stock: { decrement: decrementUnits } },
+                });
+              }
+            }
           }
         }
       }

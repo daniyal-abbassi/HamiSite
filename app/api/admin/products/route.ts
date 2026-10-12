@@ -30,7 +30,8 @@ export const GET = withAuth(async (request) => withErrorHandling(async () => {
   const { searchParams } = new URL(request.url);
   const pagination = parsePagination(searchParams);
   const q = searchParams.get("q") ?? undefined;
-  const result = await queryProducts({ q, page: pagination.page, pageSize: pagination.pageSize, includeVariants: false });
+  const includeVariants = searchParams.get("includeVariants") === "true";
+  const result = await queryProducts({ q, page: pagination.page, pageSize: pagination.pageSize, includeVariants });
   return ok(result.data, { page: pagination.page, pageSize: pagination.pageSize, total: result.total, hasNextPage: pagination.page * pagination.pageSize < result.total });
 }), { roles: [Role.ADMIN] });
 

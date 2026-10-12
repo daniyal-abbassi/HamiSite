@@ -392,6 +392,7 @@
   .lightbeam-cta {
     isolation: isolate;
     overflow: hidden;
+    border-radius: 9999px;
     border: 2px solid transparent;
     --collab-cta-sheen: rgba(255, 249, 220, 0.46);
     --collab-cta-surface: linear-gradient(118deg, #f5df91 0%, #c7972c 24%, #ffefb4 48%, #b58020 73%, #f2d779 100%);
@@ -415,6 +416,7 @@
   .lightbeam-cta:hover {
     --collab-cta-sheen: rgba(255, 253, 238, 0.72);
     --collab-cta-surface: linear-gradient(118deg, #ffedaa 0%, #d3a63e 24%, #fff5cf 48%, #bf8b2b 73%, #f8e59b 100%);
+    color: #300710;
     box-shadow: 0 0 1.1rem rgba(212, 175, 55, 0.42), 0 0.65rem 1.5rem -0.55rem rgba(212, 175, 55, 0.72);
   }
 }

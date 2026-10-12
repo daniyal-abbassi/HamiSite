@@ -76,6 +76,15 @@ export function UserMenu() {
             >
               حساب کاربری
             </Link>
+            {(user.role === "WHOLESALE" || user.role === "AGENT" || user.role === "ADMIN") && (
+              <Link
+                href="/partners/bundles"
+                onClick={() => setMobileOpen(false)}
+                className="block rounded-xl px-3 py-2 text-sm text-amber-300 font-bold hover:bg-white/10"
+              >
+                سبدهای همکار
+              </Link>
+            )}
             <button
               type="button"
               onClick={() => {
@@ -89,7 +98,15 @@ export function UserMenu() {
           </div>
         )}
       </div>
-      <div className="hidden items-center gap-0.5 sm:flex">
+      <div className="hidden items-center gap-1.5 sm:flex">
+        {(user.role === "WHOLESALE" || user.role === "AGENT" || user.role === "ADMIN") && (
+          <Link
+            href="/partners/bundles"
+            className="rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-300 hover:bg-amber-500/20 transition-colors"
+          >
+            سبدهای همکار
+          </Link>
+        )}
         <Link
           href="/account"
           title={`حساب کاربری: ${displayName}`}

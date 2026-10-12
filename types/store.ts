@@ -11,10 +11,24 @@
 
 export type CartItemImage = { url: string; altText: string | null };
 
+export type CartBundleLineItem = {
+  productId: number;
+  productName: string;
+  variantId: number | null;
+  variantName: string | null;
+  quantity: number;
+  totalQuantity: number;
+};
+
 export type CartItem = {
   id: number;
-  productId: number;
+  productId: number | null;
   variantId: number | null;
+  bundleId?: number | null;
+  isBundle?: boolean;
+  bundleTitle?: string | null;
+  bundleSlug?: string | null;
+  bundleItems?: CartBundleLineItem[];
   quantity: number;
   unitPrice: number;
   currentUnitPrice: number;
@@ -27,7 +41,7 @@ export type CartItem = {
     available: boolean;
     stockType: string;
     image: CartItemImage | null;
-  };
+  } | null;
   variant: {
     id: number;
     color: string | null;

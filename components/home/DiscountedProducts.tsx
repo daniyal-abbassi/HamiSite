@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, BadgePercent, Check, Crown, ShoppingCart, Sparkles, Zap } from "lucide-react";
+import { ArrowLeft, BadgePercent, Check, Crown, ShoppingCart, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
 import type { DiscountRailProduct, RailProduct } from "@/lib/home-rails-db";
@@ -262,7 +262,6 @@ export function DiscountedProducts({ products }: { products: DiscountRailProduct
   if (!featured) return null;
 
   const scale = Math.max(0, ...products.map((product) => bestReduction(product) ?? 0));
-  const bestPercent = Math.round((bestReduction(featured) ?? 0) * 100);
 
   return (
     <section id="discounted" className="discounted-products" aria-labelledby="discounted-title">
@@ -288,14 +287,6 @@ export function DiscountedProducts({ products }: { products: DiscountRailProduct
               <h2 id="discounted-title"><span>محصولات تخفیف‌دار</span></h2>
               <p>قیمت ویژه برای انتخابی از محصولات متنوع حامی همراه.</p>
               <div className="discounted-products__rule" aria-hidden="true" />
-            </div>
-
-            <div className="discounted-products__summary" aria-label="خلاصه پیشنهادهای تخفیف‌دار">
-              <p><Zap aria-hidden="true" /> وضعیت تخفیف‌ها</p>
-              <div className="discounted-products__summary-items">
-                <div><strong>{toFaDigits(bestPercent)}٪</strong><span>بیشترین تخفیف</span></div>
-                <div><strong>{toFaDigits(products.length)}</strong><span>محصول قابل خرید</span></div>
-              </div>
             </div>
           </header>
 

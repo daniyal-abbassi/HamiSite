@@ -112,7 +112,7 @@ export function CheckoutClient() {
       const result = await apiPost<CouponValidation>("/api/coupons/validate", {
         code: couponInput.trim(),
         subtotal,
-        productIds: cart.items.map((item) => item.productId),
+        productIds: cart.items.map((item) => item.productId).filter((id): id is number => typeof id === "number"),
       });
       setCoupon(result);
       setCouponMessage(
@@ -156,7 +156,8 @@ export function CheckoutClient() {
       ...(coupon?.valid && coupon.coupon?.code ? { couponCode: coupon.coupon.code } : {}),
       ...(note.trim() !== "" ? { customerNote: note.trim() } : {}),
       items: cart.items.map((item) => ({
-        productId: item.productId,
+        bundleId: item.bundleId ?? undefined,
+        productId: item.productId ?? undefined,
         variantId: item.variantId ?? undefined,
         quantity: item.quantity,
       })),
@@ -462,10 +463,14 @@ export function CheckoutClient() {
           {cart.items.map((item) => (
             <li key={item.id} className="flex items-start justify-between gap-2 text-[12px]">
               <span className="min-w-0">
-                <span className="block truncate font-bold">{item.product.name}</span>
+                <span className="block truncate font-bold">
+                  {item.isBundle ? `سبد: ${item.bundleTitle}` : item.product?.name ?? "کالا"}
+                </span>
                 <span className="font-mono text-xs text-muted-foreground">
-                  {[item.variant?.storage, item.variant?.color].filter(Boolean).join(" — ") || "—"} ×{" "}
-                  {item.quantity.toLocaleString("fa-IR")}
+                  {item.isBundle
+                    ? `${item.bundleItems?.length ?? 0} قلم کالا`
+                    : [item.variant?.storage, item.variant?.color].filter(Boolean).join(" — ") || "—"}{" "}
+                  × {item.quantity.toLocaleString("fa-IR")}
                 </span>
               </span>
               <span className="shrink-0 font-mono text-muted-foreground">{formatToman(item.lineTotal)}</span>

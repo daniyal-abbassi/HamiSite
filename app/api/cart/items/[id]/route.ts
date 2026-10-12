@@ -1,6 +1,7 @@
 import { StockType } from "@prisma/client";
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
+import { checkBundleAvailability, bundleInclude } from "@/lib/bundles";
 import { loadCartByUserId, serializeCart } from "@/lib/cart";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
@@ -24,6 +25,9 @@ async function loadItemWithStock(id: number, ownerId: number) {
       cart: { select: { userId: true } },
       product: { select: { id: true, stock: true, stockType: true } },
       variant: { select: { id: true, stock: true, stockType: true } },
+      bundle: {
+        include: bundleInclude(),
+      },
     },
   });
 
@@ -47,15 +51,33 @@ export const PATCH = withAuth<{ id: string }>(async (request, { user, params }) 
     const item = await loadItemWithStock(id, user.id);
     const { quantity } = parsed.data;
 
-    const stockType = item.variant?.stockType ?? item.product.stockType;
-    const stock = item.variant?.stock ?? item.product.stock;
+    if (item.bundleId && item.bundle) {
+      if (!item.bundle.isActive) {
+        throw new ApiError(409, "Bundle is no longer active");
+      }
+      const bundleLines = item.bundle.items.map((line) => ({
+        quantity: line.quantity,
+        stock: line.variant ? line.variant.stock : line.product.stock,
+        stockType: line.variant ? line.variant.stockType : line.product.stockType,
+      }));
+      const availability = checkBundleAvailability(item.bundle.stock, bundleLines);
+      if (!availability.isAvailable || quantity > availability.maxPurchasableUnits) {
+        throw new ApiError(409, "Insufficient bundle stock", {
+          available: availability.maxPurchasableUnits,
+          requested: quantity,
+        });
+      }
+    } else if (item.product) {
+      const stockType = item.variant?.stockType ?? item.product.stockType;
+      const stock = item.variant?.stock ?? item.product.stock;
 
-    if (stockType === StockType.OUT_OF_STOCK) {
-      throw new ApiError(409, "Product is out of stock");
-    }
+      if (stockType === StockType.OUT_OF_STOCK) {
+        throw new ApiError(409, "Product is out of stock");
+      }
 
-    if (stockType === StockType.LIMITED && quantity > stock) {
-      throw new ApiError(409, "Insufficient stock", { available: stock, requested: quantity });
+      if (stockType === StockType.LIMITED && quantity > stock) {
+        throw new ApiError(409, "Insufficient stock", { available: stock, requested: quantity });
+      }
     }
 
     await prisma.cartItem.update({ where: { id }, data: { quantity } });

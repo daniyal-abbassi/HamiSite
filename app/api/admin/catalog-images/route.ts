@@ -10,7 +10,7 @@ import { z } from "zod";
 
 const MAX_BYTES = 8 * 1024 * 1024;
 const MEDIA_DIR = path.resolve(process.env.CATALOG_MEDIA_DIR || path.join(process.cwd(), "data/uploads/catalog-images"));
-type Entity = "product" | "category" | "brand";
+type Entity = "product" | "category" | "brand" | "bundle";
 
 function extensionFor(type: string, bytes: Buffer): string | null {
   if (type === "image/jpeg" && bytes[0] === 0xff && bytes[1] === 0xd8 && bytes[2] === 0xff) return ".jpg";
@@ -24,11 +24,13 @@ export const POST = withAuth(async (request) => withErrorHandling(async () => {
   const form = await request.formData();
   const file = form.get("file");
   const entity = form.get("entity");
-  const id = Number(form.get("id"));
+  const rawId = form.get("id");
+  const id = rawId ? Number(rawId) : null;
   const role = form.get("role");
   if (!(file instanceof File) || file.size === 0) throw new ApiError(400, "یک تصویر انتخاب کنید.");
   if (file.size > MAX_BYTES) throw new ApiError(400, "حداکثر حجم تصویر ۸ مگابایت است.");
-  if (!(entity === "product" || entity === "category" || entity === "brand") || !Number.isInteger(id) || id <= 0) throw new ApiError(400, "شناسه مقصد تصویر معتبر نیست.");
+  if (!(entity === "product" || entity === "category" || entity === "brand" || entity === "bundle")) throw new ApiError(400, "نوع مقصد تصویر معتبر نیست.");
+  if (entity !== "bundle" && (!Number.isInteger(id) || (id !== null && id <= 0))) throw new ApiError(400, "شناسه مقصد تصویر معتبر نیست.");
   if (entity === "product" && role !== "primary" && role !== "gallery") throw new ApiError(400, "نوع تصویر محصول معتبر نیست.");
   const bytes = Buffer.from(await file.arrayBuffer());
   const extension = extensionFor(file.type, bytes);
@@ -42,6 +44,7 @@ export const POST = withAuth(async (request) => withErrorHandling(async () => {
   try {
     let result: { url: string; images?: Array<{ id: number; url: string; alt: string | null; is_default: boolean; order: number }> };
     if (entity === "product") {
+      if (!id) throw new ApiError(400, "شناسه محصول الزامی است.");
       const product = await prisma.product.findUnique({ where: { id }, select: { id: true, name: true } });
       if (!product) throw new ApiError(404, "محصول پیدا نشد.");
       const images = await prisma.$transaction(async (tx) => {
@@ -52,12 +55,21 @@ export const POST = withAuth(async (request) => withErrorHandling(async () => {
       });
       result = { url, images: images.map((image) => ({ id: image.id, url: image.url, alt: image.altText, is_default: image.isDefault, order: image.order })) };
     } else if (entity === "category") {
+      if (!id) throw new ApiError(400, "شناسه دسته الزامی است.");
       try { await prisma.category.update({ where: { id }, data: { imageUrl: url } }); }
       catch (error) { if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") throw new ApiError(404, "دسته پیدا نشد."); throw error; }
       result = { url };
-    } else {
+    } else if (entity === "brand") {
+      if (!id) throw new ApiError(400, "شناسه برند الزامی است.");
       try { await prisma.brand.update({ where: { id }, data: { imageUrl: url } }); }
       catch (error) { if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") throw new ApiError(404, "برند پیدا نشد."); throw error; }
+      result = { url };
+    } else {
+      // bundle
+      if (id && Number.isInteger(id) && id > 0) {
+        try { await prisma.partnerBundle.update({ where: { id }, data: { imageUrl: url } }); }
+        catch (error) { if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2025") throw new ApiError(404, "سبد پیدا نشد."); throw error; }
+      }
       result = { url };
     }
     revalidateHomepage();
@@ -68,7 +80,7 @@ export const POST = withAuth(async (request) => withErrorHandling(async () => {
   }
 }), { roles: [Role.ADMIN] });
 
-const imageAction = z.object({ entity: z.enum(["product", "category", "brand"]), id: z.number().int().positive(), action: z.enum(["primary", "remove"]), url: z.string().min(1) });
+const imageAction = z.object({ entity: z.enum(["product", "category", "brand", "bundle"]), id: z.number().int().positive(), action: z.enum(["primary", "remove"]), url: z.string().min(1) });
 
 export const PATCH = withAuth(async (request) => withErrorHandling(async () => {
   const parsed = imageAction.safeParse(await request.json());
@@ -98,12 +110,18 @@ export const PATCH = withAuth(async (request) => withErrorHandling(async () => {
   } else if (entity === "category") {
     const updated = await prisma.category.updateMany({ where: { id, imageUrl: url }, data: { imageUrl: null, imageAlt: null } });
     if (!updated.count) throw new ApiError(404, "تصویر پیدا نشد.");
-  } else {
+  } else if (entity === "brand") {
     const updated = await prisma.brand.updateMany({ where: { id, imageUrl: url }, data: { imageUrl: null, imageAlt: null } });
+    if (!updated.count) throw new ApiError(404, "تصویر پیدا نشد.");
+  } else {
+    // bundle
+    const updated = await prisma.partnerBundle.updateMany({ where: { id, imageUrl: url }, data: { imageUrl: null } });
     if (!updated.count) throw new ApiError(404, "تصویر پیدا نشد.");
   }
   inUse = Boolean(await prisma.productImage.count({ where: { url } })) ||
-    Boolean(await prisma.category.count({ where: { imageUrl: url } })) || Boolean(await prisma.brand.count({ where: { imageUrl: url } }));
+    Boolean(await prisma.category.count({ where: { imageUrl: url } })) ||
+    Boolean(await prisma.brand.count({ where: { imageUrl: url } })) ||
+    Boolean(await prisma.partnerBundle.count({ where: { imageUrl: url } }));
   if (!inUse && filename) await rm(path.join(MEDIA_DIR, filename), { force: true });
   revalidateHomepage();
   return ok({ removed: !inUse }, { message: "تصویر به‌روزرسانی شد." });

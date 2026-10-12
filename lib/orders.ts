@@ -8,6 +8,7 @@ export function orderListInclude() {
         id: true,
         productId: true,
         variantId: true,
+        bundleId: true,
         productName: true,
         variantName: true,
         quantity: true,
@@ -58,6 +59,7 @@ export function serializeOrderSummary(order: ListedOrder) {
       id: item.id,
       productId: item.productId,
       variantId: item.variantId,
+      bundleId: item.bundleId,
       productName: item.productName,
       variantName: item.variantName,
       quantity: item.quantity,
@@ -88,7 +90,13 @@ export async function applyOrderStatusTransition(
     status: OrderStatus;
     paymentTerm: B2BPaymentTerm;
     totalAmount: Prisma.Decimal;
-    items: { variantId: number | null; quantity: number; variant: { stockType: StockType } | null }[];
+    items: {
+      productId?: number | null;
+      variantId?: number | null;
+      bundleId?: number | null;
+      quantity: number;
+      variant?: { stockType: StockType } | null;
+    }[];
     user: { id: number; role: Role };
   },
   nextStatus: OrderStatus,
@@ -101,11 +109,51 @@ export async function applyOrderStatusTransition(
 
   if (shouldRestock) {
     for (const item of order.items) {
+      // 1. Regular Product/Variant Restock
       if (item.variantId && item.variant?.stockType === StockType.LIMITED) {
         await tx.productVariant.update({
           where: { id: item.variantId },
           data: { stock: { increment: item.quantity } },
         });
+      }
+
+      // 2. Partner Bundle Restock
+      if (item.bundleId) {
+        // Restore bundle quota
+        await tx.partnerBundle.update({
+          where: { id: item.bundleId },
+          data: { stock: { increment: item.quantity } },
+        });
+
+        // Restore constituent products' physical stock
+        const bundle = await tx.partnerBundle.findUnique({
+          where: { id: item.bundleId },
+          include: {
+            items: {
+              include: {
+                product: { select: { id: true, stockType: true } },
+                variant: { select: { id: true, stockType: true } },
+              },
+            },
+          },
+        });
+
+        if (bundle) {
+          for (const line of bundle.items) {
+            const restockUnits = line.quantity * item.quantity;
+            if (line.variantId && line.variant?.stockType === StockType.LIMITED) {
+              await tx.productVariant.update({
+                where: { id: line.variantId },
+                data: { stock: { increment: restockUnits } },
+              });
+            } else if (line.product?.stockType === StockType.LIMITED) {
+              await tx.product.update({
+                where: { id: line.productId },
+                data: { stock: { increment: restockUnits } },
+              });
+            }
+          }
+        }
       }
     }
   }

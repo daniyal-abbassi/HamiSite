@@ -41,6 +41,7 @@ const DESTINATIONS = [
   { href: "/admin/categories", label: "دسته‌بندی‌ها", short: "دسته", icon: FolderTree },
   { href: "/admin/brands", label: "برندها", short: "برند", icon: Building2 },
   { href: "/admin/coupons", label: "کوپن‌ها", short: "کوپن", icon: BadgePercent },
+  { href: "/admin/bundles", label: "سبدهای همکار", short: "سبدها", icon: Store },
 ];
 
 /** The four sections an operator visits daily. Everything else is configuration and

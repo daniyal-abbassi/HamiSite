@@ -48,3 +48,5 @@ export function serializeAdminVariant(variant: ProductVariant) {
     compareAtPrice: toNumber(variant.compareAtPrice),
   };
 }
+
+export { toFaDigits as toPersianDigits } from "@/lib/utils";

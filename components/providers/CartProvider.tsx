@@ -17,6 +17,7 @@ type CartContextValue = {
   closeDrawer: () => void;
   refresh: () => Promise<void>;
   addItem: (productId: number, variantId?: number, quantity?: number) => Promise<void>;
+  addBundle: (bundleId: number, quantity?: number) => Promise<void>;
   updateItem: (itemId: number, quantity: number) => Promise<void>;
   removeItem: (itemId: number) => Promise<void>;
   clear: () => Promise<void>;
@@ -59,6 +60,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     setDrawerOpen(true);
   }, []);
 
+  const addBundle = useCallback(async (bundleId: number, quantity = 1) => {
+    const updated = await apiPost<Cart>("/api/cart/items", { bundleId, quantity });
+    setCart(updated);
+    setDrawerOpen(true);
+  }, []);
+
   const updateItem = useCallback(async (itemId: number, quantity: number) => {
     setCart(await apiPatch<Cart>(`/api/cart/items/${itemId}`, { quantity }));
   }, []);
@@ -82,11 +89,12 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       closeDrawer: () => setDrawerOpen(false),
       refresh,
       addItem,
+      addBundle,
       updateItem,
       removeItem,
       clear,
     }),
-    [cart, loading, status, drawerOpen, refresh, addItem, updateItem, removeItem, clear],
+    [cart, loading, status, drawerOpen, refresh, addItem, addBundle, updateItem, removeItem, clear],
   );
 
   return (

@@ -75,7 +75,7 @@ export function Header() {
       )}
     >
       <nav
-        className="header-glass-surface header-glass-surface--pill mx-auto flex max-w-6xl items-center gap-1 rounded-full md:gap-3"
+        className="header-glass-surface header-glass-surface--pill mx-auto flex max-w-6xl items-center gap-1 rounded-full pe-1.5 md:pe-2 md:gap-3"
       >
         {/*
          * T082: the identity is the shop's own supplied wordmark, not a redrawn
@@ -144,10 +144,10 @@ export function Header() {
            */}
           <Link
             href="/partners"
-            className="cta-quiet lightbeam-cta hidden h-12 items-center gap-2 px-8 text-[15px] font-bold transition-transform hover:-translate-y-0.5 active:scale-95 xl:inline-flex"
+            className="lightbeam-cta hidden h-9 md:h-10 items-center gap-1.5 rounded-full px-5 text-xs md:text-sm font-bold text-[#300710] transition-transform hover:-translate-y-0.5 active:scale-95 xl:inline-flex shrink-0"
           >
             شروع همکاری
-            <ArrowLeft className="size-4" />
+            <ArrowLeft className="size-3.5 md:size-4" />
           </Link>
         </div>
       </nav>
