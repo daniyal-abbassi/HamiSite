@@ -5,6 +5,7 @@ import { categoryLinks } from "@/lib/content/home";
 import { storeContact } from "@/lib/content/contact";
 import { storeWarranty } from "@/lib/content/verified-facts";
 import hamiMark from "@/public/brand/hami-mark.png";
+import { DesignSystemPicker } from "@/components/common/DesignSystemPicker";
 
 const footerGroups = [
   {
@@ -127,9 +128,12 @@ export function Footer() {
           purchased with ink the page does not have. The section now ends on the legal
           line, and the brand mark at the top of this footer is the identity. */}
       <div className="border-t border-line">
-        <div className="container flex flex-col items-center justify-between gap-2 py-5 text-[12.5px] text-muted-foreground/45 sm:flex-row">
+        <div className="container flex flex-col items-center justify-between gap-4 py-5 text-[12.5px] text-muted-foreground/45 sm:flex-row">
           <p className="m-0">© ۱۴۰۵ حامی همراه — تمامی حقوق محفوظ است.</p>
-          <p className="m-0">مشهد</p>
+          <div className="flex items-center gap-3">
+            <DesignSystemPicker />
+            <p className="m-0">مشهد</p>
+          </div>
         </div>
       </div>
     </footer>

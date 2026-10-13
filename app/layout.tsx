@@ -111,7 +111,19 @@ export const metadata: Metadata = {
  * measured. A check that passes both with and without the fix is not a check (see
  * `notes/parallel-agent-plan.md` §5.1).
  */
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+import { cookies } from "next/headers";
+import { DesignSystemBootstrap } from "@/components/common/DesignSystemBootstrap";
+import {
+  DESIGN_SYSTEM_COOKIE_NAME,
+  getDesignSystemClass,
+  resolveDesignSystem,
+} from "@/lib/design-system";
+
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const cookieStore = await cookies();
+  const dsCookieValue = cookieStore.get(DESIGN_SYSTEM_COOKIE_NAME)?.value;
+  const initialStyleClass = getDesignSystemClass(dsCookieValue);
+
   const structuredData = {
     "@context": "https://schema.org",
     "@graph": [
@@ -143,7 +155,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     /* Fonts are self-hosted (see globals.css @font-face) — the font variables
        live on :root there, so no next/font className is needed here. */
     <html lang="fa" dir="rtl" suppressHydrationWarning>
-      <body>
+      <body className={initialStyleClass}>
+        <DesignSystemBootstrap />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}

@@ -152,6 +152,99 @@
     background-attachment: scroll;
   }
 
+  /* Multi Design System Scoped Root Classes */
+  /* 1. style-nova (Default: Luxury Obsidian & Champagne) */
+  body.style-nova {
+    --background: 11 2 4;          /* #0B0204 */
+    --foreground: 240 236 233;    /* #F0ECE9 */
+    --card: 20 6 10;              /* #14060A */
+    --card-foreground: 240 236 233;
+    --popover: 30 10 16;          /* #1E0A10 */
+    --popover-foreground: 240 236 233;
+    --primary: 229 211 179;       /* #E5D3B3 Champagne */
+    --primary-foreground: 45 4 8; /* #2D0408 */
+    --secondary: 61 2 11;         /* #3D020B */
+    --secondary-foreground: 240 236 233;
+    --muted: 30 10 16;
+    --muted-foreground: 169 158 156;
+    --accent: 100 2 17;           /* #640211 */
+    --accent-foreground: 244 234 219;
+    --border: 229 211 179;
+    --aqua: #E5D3B3;
+    --champagne: #E5D3B3;
+    --radius: 16px;
+    background-color: #0B0204;
+    background-image: linear-gradient(180deg, #100306 0%, #0B0204 42%, #0A0205 100%);
+  }
+
+  /* 2. style-vega (Comfort: Warm high-legibility light / platinum) */
+  body.style-vega {
+    --background: 247 245 242;     /* #F7F5F2 Warm Sand/Platinum */
+    --foreground: 28 25 23;        /* #1C1917 Stone-900 */
+    --card: 255 255 255;           /* Pure Clean White */
+    --card-foreground: 28 25 23;
+    --popover: 255 255 255;
+    --popover-foreground: 28 25 23;
+    --primary: 217 119 6;          /* Amber-600 Warm Accent */
+    --primary-foreground: 255 255 255;
+    --secondary: 242 237 230;      /* Warm muted stone */
+    --secondary-foreground: 28 25 23;
+    --muted: 242 237 230;
+    --muted-foreground: 120 113 108; /* Stone-500 */
+    --accent: 254 243 199;         /* Amber-100 */
+    --accent-foreground: 146 64 14;  /* Amber-800 */
+    --border: 214 207 197;
+    --aqua: #D97706;
+    --champagne: #D97706;
+    --radius: 12px;
+    background-color: #F7F5F2;
+    background-image: linear-gradient(180deg, #FAF8F5 0%, #F7F5F2 50%, #F2EFE9 100%);
+  }
+
+  /* When html is dark mode with style-vega */
+  html.dark body.style-vega {
+    --background: 24 24 27;        /* Zinc-900 */
+    --foreground: 244 244 245;    /* Zinc-100 */
+    --card: 39 39 42;             /* Zinc-800 */
+    --card-foreground: 244 244 245;
+    --popover: 39 39 42;
+    --popover-foreground: 244 244 245;
+    --primary: 245 158 11;        /* Amber-500 */
+    --primary-foreground: 24 24 27;
+    --secondary: 63 63 70;
+    --secondary-foreground: 244 244 245;
+    --muted: 63 63 70;
+    --muted-foreground: 161 161 170;
+    --border: 63 63 70;
+    --aqua: #F5580B;
+    background-color: #18181B;
+    background-image: none;
+  }
+
+  /* 3. style-glass (Fluid Glassmorphic Obsidian & Crystal Cyan) */
+  body.style-glass {
+    --background: 8 12 20;         /* #080C14 Deep Midnight Obsidian */
+    --foreground: 241 245 249;    /* Slate-100 */
+    --card: 15 23 42;             /* Slate-900 with backdrop-blur */
+    --card-foreground: 241 245 249;
+    --popover: 15 23 42;
+    --popover-foreground: 241 245 249;
+    --primary: 56 189 248;        /* Sky-400 Crystal Cyan */
+    --primary-foreground: 8 12 20;
+    --secondary: 30 41 59;        /* Slate-800 */
+    --secondary-foreground: 241 245 249;
+    --muted: 30 41 59;
+    --muted-foreground: 148 163 184;
+    --accent: 14 165 233;         /* Sky-500 */
+    --accent-foreground: 255 255 255;
+    --border: 56 189 248;
+    --aqua: #38BDF8;
+    --champagne: #38BDF8;
+    --radius: 20px;
+    background-color: #080C14;
+    background-image: radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 60%), linear-gradient(180deg, #0B111E 0%, #080C14 100%);
+  }
+
   ::selection {
     background: rgba(214, 207, 203, 0.30);
     color: #fff;
