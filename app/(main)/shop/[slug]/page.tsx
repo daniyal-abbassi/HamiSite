@@ -4,6 +4,7 @@ import { ProductDetail } from "@/components/shop/ProductDetail";
 import { RelatedProducts } from "@/components/shop/RelatedProducts";
 import { catalogGeneratedAt, findProductBySlug } from "@/lib/catalog-db";
 import { pageMetadata } from "@/lib/seo-metadata";
+import { buildProductJsonLd, buildBreadcrumbJsonLd } from "@/lib/persian-seo";
 
 type Params = Promise<{ slug: string }>;
 
@@ -35,10 +36,46 @@ export default async function ProductPage({ params }: { params: Params }) {
   const product = await findProductBySlug(slug);
   if (!product) notFound();
   const generatedAt = await catalogGeneratedAt();
+
+  const productSchema = buildProductJsonLd({
+    name: product.name,
+    description:
+      product.descriptionText ||
+      product.description?.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim() ||
+      product.name,
+    slug: product.slug,
+    images: product.images?.map((img) => img.url).filter(Boolean),
+    price: product.price,
+    currency: "IRT",
+    inStock: Boolean(product.available),
+    brandName: product.brand?.name,
+    sku: String(product.id),
+    categoryName: product.mainCategory?.name,
+  });
+
+  const breadcrumbSchema = buildBreadcrumbJsonLd([
+    { name: "خانه", path: "/" },
+    { name: "فروشگاه", path: "/shop" },
+    ...(product.mainCategory
+      ? [{ name: product.mainCategory.name, path: `/categories/${encodeURIComponent(product.mainCategory.slug)}` }]
+      : []),
+    { name: product.name, path: `/shop/${encodeURIComponent(product.slug)}` },
+  ]);
+
+  const structuredData = {
+    "@context": "https://schema.org",
+    "@graph": [productSchema, breadcrumbSchema],
+  };
+
   return (
     <div className="container py-10">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+      />
       <ProductDetail product={product} generatedAt={generatedAt} />
       <RelatedProducts productId={product.id} />
     </div>
   );
 }
+

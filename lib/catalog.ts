@@ -1,6 +1,7 @@
 import mirroredImages from "@/data/catalog-images.json";
 import { persianIncludes } from "@/lib/persian";
 import { readCatalogSync } from "@/lib/catalog-store";
+import { sanitizePersianSlug } from "@/lib/persian-seo";
 
 /**
  * Legacy fixture adapter retained for the synchronous unit fixtures in `tests/unit/`.
@@ -79,12 +80,7 @@ function currentCatalog(): RawCatalog {
  * categories, which have none.
  */
 function slugify(input: string): string {
-  return input
-    .trim()
-    .replace(/\s*\|\s*/g, "-")
-    .replace(/\s+/g, "-")
-    .replace(/[^\p{L}\p{N}-]/gu, "")
-    .toLowerCase();
+  return sanitizePersianSlug(input);
 }
 
 /**

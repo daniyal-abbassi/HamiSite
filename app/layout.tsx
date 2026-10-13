@@ -155,7 +155,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     /* Fonts are self-hosted (see globals.css @font-face) — the font variables
        live on :root there, so no next/font className is needed here. */
-    <html lang="fa" dir="rtl" suppressHydrationWarning>
+    <html lang="fa" dir="rtl" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className={initialStyleClass}>
         <DesignSystemBootstrap />
         <script
