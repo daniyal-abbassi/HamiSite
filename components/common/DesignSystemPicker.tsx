@@ -24,7 +24,7 @@ export function DesignSystemPicker() {
             type="button"
             onClick={() => setStyle(item.id)}
             aria-pressed={isActive}
-            className={`rounded-full px-2.5 py-1 transition-colors ${
+            className={`rounded-full px-2.5 py-1 text-xs font-medium transition-[transform,opacity,background-color,color] duration-100 ease-out active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary ${
               isActive
                 ? "bg-primary text-primary-foreground font-semibold shadow-xs"
                 : "text-muted-foreground hover:text-foreground hover:bg-white/5"

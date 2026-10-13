@@ -198,7 +198,7 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
     // The label is the link or button; its ::after stretches over the whole
     // pill so all of it is clickable, while the remove button sits above.
     const actionClass =
-      "flex min-w-0 cursor-pointer outline-none after:absolute after:inset-0 after:rounded-full";
+      "flex min-w-0 cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-primary focus-visible:rounded-full after:absolute after:inset-0 after:rounded-full";
     // leading-normal: with leading-none, truncate's overflow clips the
     // descenders of g, p and y. The pill's height comes from h-* anyway.
     const label = (

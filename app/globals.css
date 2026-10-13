@@ -119,6 +119,16 @@
   --line: rgba(229, 211, 179, 0.12);
   --signal: #E4573F;
   --page-ground: 11 2 4;
+
+  /* Interaction Design Timing & Easing Tokens */
+  --duration-instant: 100ms;
+  --duration-fast: 150ms;
+  --duration-normal: 250ms;
+  --duration-smooth: 350ms;
+
+  --ease-enter: cubic-bezier(0, 0, 0.2, 1);
+  --ease-exit: cubic-bezier(0.4, 0, 1, 1);
+  --ease-natural: cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @layer base {
@@ -250,12 +260,12 @@
     color: #fff;
   }
   /* aqua focus ring — brand accessibility signature */
-  :where(a, button, input, select, textarea):focus-visible {
+  :where(a, button, input, select, textarea, [role="button"]):focus-visible {
     outline: 2px solid var(--aqua);
     outline-offset: 3px;
   }
 
-  :where(a, button, input, select, textarea, [tabindex]):focus {
+  :where(a, button, input, select, textarea, [role="button"], [tabindex]):focus {
     scroll-margin-top: calc(var(--header-height, 4rem) + 1.5rem);
     scroll-margin-bottom: calc(var(--dock-height, 5rem) + 1.5rem);
   }

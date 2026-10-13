@@ -13,7 +13,7 @@ export function CartButton() {
       type="button"
       onClick={openDrawer}
       aria-label={itemCount > 0 ? `سبد خرید، ${itemCount.toLocaleString("fa-IR")} کالا` : "سبد خرید"}
-      className="relative grid size-11 shrink-0 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+      className="relative grid size-11 shrink-0 place-items-center rounded-full text-foreground/75 transition-[transform,background-color,color] duration-100 ease-out hover:bg-foreground/10 hover:text-foreground active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
     >
       <ShoppingBag className="size-[18px]" aria-hidden="true" />
       {itemCount > 0 && (
