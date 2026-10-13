@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { AdminSidebar } from "@/components/admin/AdminSidebar";
+import { SkipLink } from "@/components/common/SkipLink";
 
 export const metadata: Metadata = {
   title: "پنل مدیریت",
@@ -24,12 +25,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   return (
     <AuthProvider>
       <div className="flex min-h-dvh flex-col lg:flex-row">
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:top-3 focus:start-4 focus:z-50 focus:rounded-md focus:border focus:border-line focus:bg-ink-2 focus:px-4 focus:py-2 focus:text-[13px] focus:font-bold focus:text-foreground"
-        >
-          پرش به محتوای اصلی
-        </a>
+        <SkipLink />
         <AdminSidebar />
         <main
           id="main"

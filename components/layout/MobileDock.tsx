@@ -92,7 +92,7 @@ export function MobileDock() {
     >
       <LiquidSelection
         className="w-full"
-        itemClassName="flex-1 flex-col items-center gap-0.5 rounded-full py-1.5 text-xs font-bold active:scale-95"
+        itemClassName="flex-1 flex-col items-center justify-center gap-0.5 rounded-full min-h-[44px] py-1 text-xs font-bold active:scale-95"
         equalWidth
         markerInset={6}
         value={current}

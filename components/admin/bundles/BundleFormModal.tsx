@@ -24,6 +24,7 @@ import {
 import { apiGet, apiPatch, apiPost } from "@/lib/api-client";
 import { toPersianDigits } from "@/lib/serializers";
 import type { PartnerBundleDTO } from "@/types/bundles";
+import { useFocusTrap } from "@/hooks/useFocusTrap";
 
 interface ProductVariantOption {
   id: number;
@@ -73,7 +74,13 @@ export function BundleFormModal({
   onSuccess,
   initialBundle,
 }: BundleFormModalProps) {
+  const modalRef = useRef<HTMLDivElement>(null);
   const [step, setStep] = useState<WizardStep>(1);
+
+  useFocusTrap(modalRef, {
+    enabled: isOpen,
+    onEscape: onClose,
+  });
 
   // General fields
   const [title, setTitle] = useState("");
@@ -451,13 +458,19 @@ export function BundleFormModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-xs p-4 overflow-y-auto">
-      <div className="relative w-full max-w-3xl rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-100 p-6 shadow-2xl my-8">
+      <div
+        ref={modalRef}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="bundle-modal-title"
+        className="relative w-full max-w-3xl rounded-2xl bg-zinc-900 border border-zinc-800 text-zinc-100 p-6 shadow-2xl my-8 outline-none"
+      >
         {/* Header with Title and Close */}
         <div className="flex items-center justify-between border-b border-zinc-800 pb-4 mb-4">
           <div className="flex items-center gap-2">
-            <PackageCheck className="text-amber-400" size={24} />
+            <PackageCheck className="text-amber-400" size={24} aria-hidden="true" />
             <div>
-              <h2 className="text-base font-bold">
+              <h2 id="bundle-modal-title" className="text-base font-bold">
                 {initialBundle ? "ویرایش سبد همکار" : "ایجاد سبد جدید همکار"}
               </h2>
               <p className="text-[11px] text-zinc-400">
@@ -468,9 +481,10 @@ export function BundleFormModal({
           <button
             type="button"
             onClick={onClose}
-            className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100 transition-colors cursor-pointer"
+            aria-label="بستن پنجره"
+            className="rounded-lg p-1.5 text-zinc-400 hover:bg-zinc-800 hover:text-zinc-100 transition-colors cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
           >
-            <X size={20} />
+            <X size={20} aria-hidden="true" />
           </button>
         </div>
 

@@ -14,6 +14,7 @@ import {
   Menu,
   Package,
   Store,
+  UserCheck,
   Users,
   X,
 } from "lucide-react";
@@ -27,7 +28,7 @@ import {
   CurveDrawerTitle,
   CurveDrawerTrigger,
 } from "@/components/curve-drawer-primitives";
-import { cn } from "@/lib/utils";
+import { cn, toFaDigits } from "@/lib/utils";
 
 /** The one nav model. The desktop rail maps all of it, the phone maps `RAIL_HREFS`
  * into the bottom rail and the rest into the «همه» sheet. A destination is declared
@@ -38,6 +39,7 @@ const DESTINATIONS = [
   { href: "/admin/orders", label: "سفارش‌ها", short: "سفارش", icon: Package },
   { href: "/admin/products", label: "محصولات", short: "محصول", icon: Boxes },
   { href: "/admin/users", label: "کاربران", short: "کاربر", icon: Users },
+  { href: "/admin/partners", label: "درخواست‌های همکاری", short: "همکاران", icon: UserCheck },
   { href: "/admin/categories", label: "دسته‌بندی‌ها", short: "دسته", icon: FolderTree },
   { href: "/admin/brands", label: "برندها", short: "برند", icon: Building2 },
   { href: "/admin/coupons", label: "کوپن‌ها", short: "کوپن", icon: BadgePercent },
@@ -97,11 +99,13 @@ function NavRow({
   pathname,
   onActivate,
   variant,
+  badgeCount,
 }: {
   destination: (typeof DESTINATIONS)[number];
   pathname: string;
   onActivate?: () => void;
   variant: "rail" | "sheet";
+  badgeCount?: number;
 }) {
   const active = isCurrent(pathname, destination.href);
   const { label, href, icon: Icon } = destination;
@@ -121,6 +125,11 @@ function NavRow({
         {active && <span aria-hidden="true" className="absolute inset-y-3 start-0 w-0.5 rounded-full bg-champagne" />}
         <Icon className="size-5 shrink-0" />
         <span className="min-w-0 truncate">{label}</span>
+        {Boolean(badgeCount && badgeCount > 0) && (
+          <span className="ms-auto flex items-center justify-center rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/30 px-1.5 py-0.5 text-[11px] font-bold">
+            {toFaDigits(badgeCount!)}
+          </span>
+        )}
       </Link>
     </li>
   );
@@ -166,9 +175,9 @@ function DestinationSheet({
             onClick={onClose}
             aria-label="بستن"
             autoFocus
-            className="grid size-11 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors duration-fast hover:bg-foreground/5 hover:text-foreground"
+            className="grid size-11 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors duration-fast hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
           >
-            <X className="size-5" />
+            <X className="size-5" aria-hidden="true" />
           </button>
         </div>
 
@@ -231,6 +240,22 @@ export function AdminSidebar() {
   const currentSection = DESTINATIONS.find((destination) => isCurrent(pathname, destination.href));
 
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [pendingCount, setPendingCount] = useState<number>(0);
+
+  useEffect(() => {
+    let active = true;
+    fetch("/api/admin/partners/count")
+      .then((res) => (res.ok ? res.json() : null))
+      .then((data) => {
+        if (active && typeof data?.data?.pendingCount === "number") {
+          setPendingCount(data.data.pendingCount);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, [pathname]);
 
   return (
     <>
@@ -269,9 +294,9 @@ export function AdminSidebar() {
                   <button
                     type="button"
                     aria-label="بستن منو"
-                    className="grid size-9 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground"
+                    className="grid size-9 shrink-0 place-items-center rounded-md text-muted-foreground transition-colors hover:bg-foreground/5 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
                   >
-                    <X className="size-5" />
+                    <X className="size-5" aria-hidden="true" />
                   </button>
                 </CurveDrawerClose>
               </CurveDrawerHeader>
@@ -285,6 +310,7 @@ export function AdminSidebar() {
                       pathname={pathname}
                       variant="sheet"
                       onActivate={() => setDrawerOpen(false)}
+                      badgeCount={destination.href === "/admin/partners" ? pendingCount : undefined}
                     />
                   ))}
                 </ul>
@@ -351,7 +377,13 @@ export function AdminSidebar() {
         <nav aria-label="بخش‌های مدیریت" className="mt-8 flex min-h-0 flex-1 flex-col gap-1 overflow-y-auto">
           <ul>
             {DESTINATIONS.map((destination) => (
-              <NavRow key={destination.href} destination={destination} pathname={pathname} variant="rail" />
+              <NavRow
+                key={destination.href}
+                destination={destination}
+                pathname={pathname}
+                variant="rail"
+                badgeCount={destination.href === "/admin/partners" ? pendingCount : undefined}
+              />
             ))}
           </ul>
         </nav>

@@ -140,7 +140,7 @@ export function PartnerBundlesClient() {
               <Store size={14} />
               <span>سبدهای عمده‌فروشی حامی همراه</span>
             </div>
-            <h1 className="text-2xl md:text-3xl font-black text-zinc-950 tracking-tight">
+            <h1 className="text-2xl md:text-3xl font-black text-zinc-950">
               سبدهای اختصاصی همکاران
             </h1>
             <p className="mt-2 text-sm text-zinc-600 max-w-2xl leading-relaxed font-medium">

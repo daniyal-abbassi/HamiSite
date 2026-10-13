@@ -64,11 +64,11 @@ As a store administrator and wholesale partner, I want the system to immediately
 
 **Why this priority**: Prevents overselling, race conditions, and customer dissatisfaction when limited stock runs out.
 
-**Independent Test**: When a bundle with 1 remaining quota is purchased, its status transitions to "Sold Out" («تکمیل ظرفیت» / «ناموجود»), and subsequent purchase attempts by any partner are rejected.
+**Independent Test**: When a bundle with 1 remaining quota is purchased, its status transitions to "Sold Out" («اتمام» / «ناموجود»), and subsequent purchase attempts by any partner are rejected.
 
 **Acceptance Scenarios**:
 
-1. **Given** a bundle with zero remaining quota or where any constituent product lacks sufficient warehouse stock, **When** a partner views the bundle catalog, **Then** the bundle is clearly marked as "Sold Out" («تکمیل ظرفیت») and the purchase button is disabled.
+1. **Given** a bundle with zero remaining quota or where any constituent product lacks sufficient warehouse stock, **When** a partner views the bundle catalog, **Then** the bundle is clearly marked as "Sold Out" («اتمام») and the purchase button is disabled.
 2. **Given** a bundle with 1 remaining stock, **When** two partners attempt to checkout concurrently, **Then** exactly one order succeeds, the second partner receives an honest out-of-stock notification, and no overselling occurs.
 3. **Given** a bundle deactivated by an administrator while in a partner's active cart, **When** the partner attempts to finalize checkout, **Then** the system notifies the partner that the promotional bundle is no longer active and prevents order submission.
 
@@ -95,7 +95,7 @@ As a store administrator and wholesale partner, I want the system to immediately
 - **FR-007**: The system MUST present bundles as all-or-nothing composite packages. Wholesale partners MUST NOT be able to pick-and-choose, substitute, or remove individual items from a bundle during browsing, cart review, or checkout.
 - **FR-008**: When a partner adds a bundle to their order, the system MUST add the entire bundle as a cohesive entity that can only be purchased in full or removed in full.
 - **FR-009**: The system MUST enforce limited bundle stock. When an order containing a bundle is successfully placed, the system MUST decrement the available bundle stock quota atomically.
-- **FR-010**: When a bundle's available stock reaches zero, the system MUST immediately prevent any further purchases of that bundle and display its status as sold out («تکمیل ظرفیت»).
+- **FR-010**: When a bundle's available stock reaches zero, the system MUST immediately prevent any further purchases of that bundle and display its status as sold out («اتمام»).
 - **FR-011**: All numbers, quantities, and prices displayed in the partner portal MUST be formatted using Persian numerals with Toman currency notation under RTL layout standards.
 - **FR-012**: The system MUST enforce synchronized dual inventory deduction: when a partner completes a bundle purchase, the system MUST decrement both the bundle's remaining quota AND the base warehouse inventory of each constituent product multiplied by its quantity in the bundle. If any constituent product's base inventory is less than the required amount, the bundle MUST automatically be marked unavailable.
 - **FR-013**: The system MUST allow wholesale partners to purchase multiple units of an active bundle in a single order, up to the maximum quantity supported by both the bundle quota and constituent stock levels.

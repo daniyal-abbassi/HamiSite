@@ -42,9 +42,9 @@ export function UserMenu() {
       <Link
         href="/login"
         aria-label="ورود به حساب"
-        className="grid size-11 shrink-0 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground"
+        className="grid size-11 shrink-0 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
       >
-        <UserRound className="size-[18px]" />
+        <UserRound className="size-[18px]" aria-hidden="true" />
       </Link>
     );
   }
@@ -60,9 +60,9 @@ export function UserMenu() {
           aria-expanded={mobileOpen}
           aria-controls="mobile-account-menu"
           onClick={() => setMobileOpen((open) => !open)}
-          className="grid size-11 shrink-0 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground"
+          className="grid size-11 shrink-0 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
         >
-          <UserRound className="size-[18px]" />
+          <UserRound className="size-[18px]" aria-hidden="true" />
         </button>
         {mobileOpen && (
           <div
@@ -102,7 +102,7 @@ export function UserMenu() {
         {(user.role === "WHOLESALE" || user.role === "AGENT" || user.role === "ADMIN") && (
           <Link
             href="/partners/bundles"
-            className="rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-300 hover:bg-amber-500/20 transition-colors"
+            className="rounded-full border border-amber-500/40 bg-amber-500/10 px-3 py-1 text-xs font-bold text-amber-300 hover:bg-amber-500/20 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 transition-colors"
           >
             سبدهای همکار
           </Link>
@@ -110,7 +110,7 @@ export function UserMenu() {
         <Link
           href="/account"
           title={`حساب کاربری: ${displayName}`}
-          className="max-w-36 truncate rounded-full border border-line bg-foreground/5 px-3 py-1.5 text-xs font-bold text-foreground/90 transition-colors hover:bg-foreground/10"
+          className="max-w-36 truncate rounded-full border border-line bg-foreground/5 px-3 py-1.5 text-xs font-bold text-foreground/90 transition-colors hover:bg-foreground/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
         >
           {displayName}
         </Link>
@@ -118,9 +118,9 @@ export function UserMenu() {
           type="button"
           onClick={() => void logout()}
           aria-label="خروج از حساب"
-          className="grid size-11 place-items-center rounded-full text-foreground/50 transition-colors hover:bg-foreground/10 hover:text-foreground"
+          className="grid size-11 place-items-center rounded-full text-foreground/50 transition-colors hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
         >
-          <LogOut className="size-4" />
+          <LogOut className="size-4" aria-hidden="true" />
         </button>
       </div>
     </>

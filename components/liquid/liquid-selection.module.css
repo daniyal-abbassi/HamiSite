@@ -172,6 +172,11 @@
   color: var(--ls-ink);
 }
 
+.item:focus-visible {
+  outline: 2px solid #fbbf24;
+  outline-offset: 2px;
+}
+
 /* The current item's ink is the FULL accent. It used to be
  * `rgb(var(--primary-foreground))`, which was right when the body was a solid
  * champagne pill — dark ink on a light slab — and near-invisible now that the

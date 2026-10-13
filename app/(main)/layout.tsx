@@ -1,3 +1,4 @@
+import { SkipLink } from "@/components/common/SkipLink";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { MobileDock } from "@/components/layout/MobileDock";
@@ -12,6 +13,8 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
       {/* CartProvider depends on AuthProvider: the server cart API is withAuth */}
       <CartProvider>
         <div className="site-shell flex min-h-screen flex-col relative">
+          {/* Skip link for keyboard/screen reader users */}
+          <SkipLink />
           {/* Desktop wheel/trackpad easing. Renders nothing and wraps nothing: Lenis animates the
               real document scroll, so unlike ScrollSmoother it creates no containing block and the
               fixed layers below need no special placement — see components/atmosphere/ScrollSmooth.tsx */}

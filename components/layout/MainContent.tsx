@@ -9,7 +9,11 @@ export function MainContent({ children }: { children: ReactNode }) {
   const isHomepage = pathname === "/";
 
   return (
-    <main className={cn("flex-1 relative z-10", !isHomepage && "pt-24 md:pt-28")}>
+    <main
+      id="main"
+      tabIndex={-1}
+      className={cn("flex-1 relative z-10 focus:outline-none", !isHomepage && "pt-24 md:pt-28")}
+    >
       {children}
     </main>
   );
