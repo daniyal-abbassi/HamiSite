@@ -78,6 +78,7 @@ export default async function ProductPage({ params }: { params: Params }) {
       <script
         type="application/ld+json"
         nonce={nonce}
+        suppressHydrationWarning
         dangerouslySetInnerHTML={{ __html: escapeJsonLd(structuredData) }}
       />
       <ProductDetail product={product} generatedAt={generatedAt} />

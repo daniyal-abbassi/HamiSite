@@ -66,6 +66,7 @@ export function DesignSystemBootstrap({ nonce }: { nonce?: string } = {}) {
     <script
       id="ds-bootstrap"
       nonce={nonce}
+      suppressHydrationWarning
       dangerouslySetInnerHTML={{ __html: bootstrapScript }}
     />
   );
