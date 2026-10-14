@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import { PRODUCT_PLACEHOLDER_IMAGE } from "@/lib/product-images";
 import {
   normalizePersianText,
   sanitizePersianSlug,
@@ -78,7 +79,7 @@ describe("Persian SEO Utilities", () => {
       expect(offers.availability).toBe("https://schema.org/InStock");
     });
 
-    it("generates OutOfStock status when product is not in stock", () => {
+    it("omits an offer and image when price and product image are not verified", () => {
       const schema = buildProductJsonLd({
         name: "محصول ناموجود",
         description: "توضیحات محصول",
@@ -86,8 +87,17 @@ describe("Persian SEO Utilities", () => {
         inStock: false,
       });
 
-      const offers = schema.offers as Record<string, unknown>;
-      expect(offers.availability).toBe("https://schema.org/OutOfStock");
+      expect(schema).not.toHaveProperty("offers");
+      expect(schema).not.toHaveProperty("image");
+    });
+
+    it("does not publish a zero-price offer or generic placeholder as product imagery", () => {
+      const schema = buildProductJsonLd({
+        name: "محصول تلفنی", description: "تماس بگیرید", slug: "call-product", price: 0,
+        images: [PRODUCT_PLACEHOLDER_IMAGE],
+      });
+      expect(schema).not.toHaveProperty("offers");
+      expect(schema).not.toHaveProperty("image");
     });
 
     it("generates valid schema.org/BreadcrumbList with incremental positions", () => {

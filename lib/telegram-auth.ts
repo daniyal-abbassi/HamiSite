@@ -101,9 +101,14 @@ export function verifyTelegramWebAppData(
     return { authenticated: false, error: "MISSING_HASH" };
   }
 
-  // 1. Verify HMAC-SHA256 hash
+  // 1. Verify HMAC-SHA256 hash using constant-time comparison
   const expectedHash = generateInitDataHash(data, botToken);
-  if (providedHash !== expectedHash) {
+  const providedBuffer = Buffer.from(providedHash, "utf8");
+  const expectedBuffer = Buffer.from(expectedHash, "utf8");
+  if (
+    providedBuffer.length !== expectedBuffer.length ||
+    !crypto.timingSafeEqual(providedBuffer, expectedBuffer)
+  ) {
     return { authenticated: false, error: "INVALID_HASH" };
   }
 

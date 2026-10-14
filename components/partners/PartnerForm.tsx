@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { toFaDigits } from "@/lib/utils";
 import { isValidEconomicCode, isValidIranianMobile, isValidIranianNationalCode, isValidIranianPostalCode, isValidLegalNationalId, isValidIranianLandline } from "@/lib/validators";
 import { partnerEntityOptions, partnerFileTypesNote, partnerIndividualFields, partnerLegalFields, partnerSharedFields, type PartnerEntity } from "@/lib/content/partners";
+import { validateUploadFile } from "@/lib/security/upload-validation";
 
 const ACCEPT = "image/jpeg,image/png,image/webp,application/pdf";
 const MAX_FILE_BYTES = 10 * 1024 * 1024;
@@ -73,10 +74,9 @@ function clientValidate(values: FormValues, files: FormFiles, entity: PartnerEnt
   for (const key of activeFileKeys) {
     const file = files[key];
     if (!file) continue;
-    if (file.size > MAX_FILE_BYTES) {
-      errors[key] = "حجم فایل نباید بیشتر از ۱۰ مگابایت باشد";
-    } else if (!file.type || !ACCEPT.split(",").includes(file.type)) {
-      errors[key] = "فرمت فایل مجاز نیست (JPG/PNG/WebP/PDF)";
+    const validation = validateUploadFile(file, "partner-document");
+    if (!validation.valid) {
+      errors[key] = validation.error ?? "فرمت فایل یا حجم آن معتبر نیست.";
     }
   }
 

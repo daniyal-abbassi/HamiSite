@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
-import { ApiError, ok, withErrorHandling } from "@/lib/http";
+import { ApiError, ok, parseJsonBody, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
 
 const updateAddressSchema = z.object({
@@ -45,16 +45,9 @@ export const GET = withAuth<{ id: string }>(async (_request, { user, params }) =
 export const PATCH = withAuth<{ id: string }>(async (request, { user, params }) => {
   return withErrorHandling(async () => {
     const id = parseId(params.id);
-    const body = await request.json();
-    const parsed = updateAddressSchema.safeParse(body);
-
-    if (!parsed.success) {
-      throw new ApiError(400, "Invalid request body", parsed.error.flatten());
-    }
+    const input = await parseJsonBody(request, updateAddressSchema);
 
     const existing = await loadOwnedAddress(id, user.id);
-
-    const input = parsed.data;
 
     const address = await prisma.$transaction(async (tx) => {
       if (input.isDefault === true) {

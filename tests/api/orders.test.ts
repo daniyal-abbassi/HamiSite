@@ -67,6 +67,21 @@ describe("order authorization", () => {
     expect(res.status).toBe(200);
   });
 
+  it("guest cannot GET or PATCH an order", async () => {
+    const created = await (
+      await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx())
+    ).json();
+
+    const getRes = await getOrder(getRequest(`http://localhost/api/orders/${created.data.id}`), ctx({ id: String(created.data.id) }));
+    expect(getRes.status).toBe(401);
+
+    const patchRes = await patchOrder(
+      jsonRequest(`http://localhost/api/orders/${created.data.id}`, "PATCH", { status: "PROCESSING" }),
+      ctx({ id: String(created.data.id) }),
+    );
+    expect(patchRes.status).toBe(401);
+  });
+
   it("a non-admin cannot PATCH an order's status", async () => {
     const created = await (
       await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx())
@@ -77,6 +92,22 @@ describe("order authorization", () => {
       ctx({ id: String(created.data.id) }),
     );
     expect(res.status).toBe(403);
+  });
+
+  it("customer B cannot PATCH customer A's order status and record remains unchanged", async () => {
+    const created = await (
+      await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx())
+    ).json();
+
+    const res = await patchOrder(
+      jsonRequest(`http://localhost/api/orders/${created.data.id}`, "PATCH", { status: "PROCESSING" }, wholesaleCookie),
+      ctx({ id: String(created.data.id) }),
+    );
+    expect(res.status).toBe(403);
+
+    // Verify record in database was untouched
+    const orderInDb = await prisma.order.findUniqueOrThrow({ where: { id: created.data.id } });
+    expect(orderInDb.status).toBe("PENDING");
   });
 
   it("an admin can PATCH an order's status", async () => {

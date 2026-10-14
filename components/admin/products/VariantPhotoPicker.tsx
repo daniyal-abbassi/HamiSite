@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Check, ImagePlus, LoaderCircle, Upload } from "lucide-react";
 import { apiErrorToFa } from "@/lib/api-error-fa";
+import { validateUploadFile } from "@/lib/security/upload-validation";
 import type { CatalogImage } from "@/components/admin/CatalogImageManager";
 
 export function VariantPhotoPicker({
@@ -26,6 +27,11 @@ export function VariantPhotoPicker({
 
   async function upload(file?: File) {
     if (!file) return;
+    const validation = validateUploadFile(file, "catalog-image");
+    if (!validation.valid) {
+      setError(validation.error ?? "فایل انتخاب‌شده نامعتبر است.");
+      return;
+    }
     setUploading(true);
     onUploadingChange(true);
     setError(null);

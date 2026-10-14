@@ -6,6 +6,7 @@ import { randomBytes } from "node:crypto";
 import { prisma } from "@/lib/prisma";
 import { ApiError, withErrorHandling } from "@/lib/http";
 import { SESSION_COOKIE_NAME, hashSessionToken } from "@/lib/session-token";
+import { assertSameOrigin } from "@/lib/security/csrf";
 
 export { SESSION_COOKIE_NAME, hashSessionToken } from "@/lib/session-token";
 
@@ -200,6 +201,9 @@ export function withAuth<Params = {}>(
   // second argument fails that check for every dynamic route.
   return async (request: Request, routeCtx: { params: Promise<Params> }) => {
     return withErrorHandling(async () => {
+      if (["POST", "PUT", "PATCH", "DELETE"].includes(request.method)) {
+        assertSameOrigin(request);
+      }
       const resolved = await resolveSession(request);
       if (!resolved) {
         throw ApiError.coded(401, "AUTH_REQUIRED", "Authentication required");

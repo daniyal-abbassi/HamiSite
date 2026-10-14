@@ -1,7 +1,7 @@
 import { OrderStatus, PaymentStatus, Role } from "@prisma/client";
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
-import { ApiError, ok, withErrorHandling } from "@/lib/http";
+import { ApiError, ok, parseJsonBody, withErrorHandling } from "@/lib/http";
 import { applyOrderStatusTransition, orderListInclude, serializeOrderSummary } from "@/lib/orders";
 import { prisma } from "@/lib/prisma";
 import { revalidateHomepage } from "@/lib/revalidate-homepage";
@@ -56,14 +56,7 @@ export const PATCH = withAuth<{ id: string }>(
   async (request, { params }) => {
     return withErrorHandling(async () => {
       const id = parseId(params.id);
-      const body = await request.json();
-      const parsed = updateOrderSchema.safeParse(body);
-
-      if (!parsed.success) {
-        throw new ApiError(400, "Invalid request body", parsed.error.flatten());
-      }
-
-      const input = parsed.data;
+      const input = await parseJsonBody(request, updateOrderSchema);
 
       const order = await prisma.order.findUnique({
         where: { id },

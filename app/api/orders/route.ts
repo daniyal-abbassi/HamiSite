@@ -2,7 +2,7 @@ import { B2BPaymentTerm, CouponType, OrderStatus, PaymentStatus, Role, StockType
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { evaluateCoupon } from "@/lib/coupons";
-import { ApiError, ok, parsePagination, withErrorHandling } from "@/lib/http";
+import { ApiError, ok, parseJsonBody, parsePagination, withErrorHandling } from "@/lib/http";
 import { orderListInclude, serializeOrderSummary } from "@/lib/orders";
 import { ensureB2BTermAllowed, normalizePaymentTerm, resolveMatchingTier } from "@/lib/pricing";
 import { prisma } from "@/lib/prisma";
@@ -90,14 +90,7 @@ export const GET = withAuth(async (request, { user }) => {
 
 export const POST = withAuth(async (request, { user }) => {
   return withErrorHandling(async () => {
-    const body = await request.json();
-    const parsed = createOrderSchema.safeParse(body);
-
-    if (!parsed.success) {
-      throw new ApiError(400, "Invalid request body", parsed.error.flatten());
-    }
-
-    const input = parsed.data;
+    const input = await parseJsonBody(request, createOrderSchema);
     const paymentTerm = normalizePaymentTerm(input.paymentTerm ?? "CASH");
 
     ensureB2BTermAllowed(user.role, paymentTerm);

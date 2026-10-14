@@ -20,6 +20,7 @@ export async function resetDb() {
     prisma.address.deleteMany(),
     prisma.session.deleteMany(),
     prisma.otpCode.deleteMany(),
+    prisma.partnerApplication.deleteMany(),
     prisma.user.deleteMany(),
   ]);
 }

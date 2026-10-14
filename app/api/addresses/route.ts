@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
-import { ApiError, ok, withErrorHandling } from "@/lib/http";
+import { ApiError, ok, parseJsonBody, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
 
 const createAddressSchema = z.object({
@@ -27,14 +27,7 @@ export const GET = withAuth(async (_request, { user }) => {
 
 export const POST = withAuth(async (request, { user }) => {
   return withErrorHandling(async () => {
-    const body = await request.json();
-    const parsed = createAddressSchema.safeParse(body);
-
-    if (!parsed.success) {
-      throw new ApiError(400, "Invalid request body", parsed.error.flatten());
-    }
-
-    const input = parsed.data;
+    const input = await parseJsonBody(request, createAddressSchema);
 
     const existingCount = await prisma.address.count({ where: { userId: user.id } });
     const shouldBeDefault = input.isDefault === true || existingCount === 0;

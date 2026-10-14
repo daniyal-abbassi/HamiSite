@@ -6,7 +6,9 @@ export default function robots(): MetadataRoute.Robots {
     rules: {
       userAgent: "*",
       allow: "/",
-      disallow: ["/api/", "/admin/", "/account", "/cart", "/checkout", "/login", "/register", "/orders", "/order/", "/payment/"],
+      // Noindex on customer pages must remain visible to crawlers. Authentication
+      // still protects private data; robots.txt is not an access-control layer.
+      disallow: ["/api/", "/admin/"],
     },
     sitemap: new URL("/sitemap.xml", SITE_ORIGIN).toString(),
   };

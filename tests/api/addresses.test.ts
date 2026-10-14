@@ -98,4 +98,12 @@ describe("address authorization", () => {
     const deleteRes = await deleteAddress(getRequest(`http://localhost/api/addresses/${id}`, retailCookie), ctx({ id: String(id) }));
     expect(deleteRes.status).toBe(200);
   });
+
+  it("guest cannot list or access addresses", async () => {
+    const listRes = await listAddresses(getRequest("http://localhost/api/addresses"), ctx());
+    expect(listRes.status).toBe(401);
+
+    const getRes = await getAddress(getRequest("http://localhost/api/addresses/1"), ctx({ id: "1" }));
+    expect(getRes.status).toBe(401);
+  });
 });

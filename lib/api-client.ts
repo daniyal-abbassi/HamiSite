@@ -69,9 +69,11 @@ export async function apiMutate<T>(
   const response = await fetch(path, {
     method,
     credentials: "same-origin",
-    ...(body !== undefined
-      ? { headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) }
-      : {}),
+    headers: {
+      "X-Hami-Client": "web",
+      ...(body !== undefined ? { "Content-Type": "application/json" } : {}),
+    },
+    ...(body !== undefined ? { body: JSON.stringify(body) } : {}),
   });
   return unwrap<T>(response);
 }

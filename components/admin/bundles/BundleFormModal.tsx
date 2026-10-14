@@ -25,6 +25,7 @@ import { apiGet, apiPatch, apiPost } from "@/lib/api-client";
 import { toPersianDigits } from "@/lib/serializers";
 import type { PartnerBundleDTO } from "@/types/bundles";
 import { useFocusTrap } from "@/hooks/useFocusTrap";
+import { validateUploadFile } from "@/lib/security/upload-validation";
 
 interface ProductVariantOption {
   id: number;
@@ -326,6 +327,15 @@ export function BundleFormModal({
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    const validation = validateUploadFile(file, "catalog-image");
+    if (!validation.valid) {
+      setUploadError(validation.error ?? "خطا در فرمت یا حجم تصویر");
+      if (fileInputRef.current) {
+        fileInputRef.current.value = "";
+      }
+      return;
+    }
 
     setUploadingImage(true);
     setUploadError(null);

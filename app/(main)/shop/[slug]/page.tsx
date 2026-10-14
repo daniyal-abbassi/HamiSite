@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { headers } from "next/headers";
 import { ProductDetail } from "@/components/shop/ProductDetail";
 import { RelatedProducts } from "@/components/shop/RelatedProducts";
 import { catalogGeneratedAt, findProductBySlug } from "@/lib/catalog-db";
 import { pageMetadata } from "@/lib/seo-metadata";
 import { buildProductJsonLd, buildBreadcrumbJsonLd } from "@/lib/persian-seo";
+import { isPurchasable } from "@/lib/product-identity";
+import { escapeJsonLd } from "@/lib/security/xss";
 
 type Params = Promise<{ slug: string }>;
 
@@ -36,6 +39,7 @@ export default async function ProductPage({ params }: { params: Params }) {
   const product = await findProductBySlug(slug);
   if (!product) notFound();
   const generatedAt = await catalogGeneratedAt();
+  const purchasable = isPurchasable(product);
 
   const productSchema = buildProductJsonLd({
     name: product.name,
@@ -45,9 +49,9 @@ export default async function ProductPage({ params }: { params: Params }) {
       product.name,
     slug: product.slug,
     images: product.images?.map((img) => img.url).filter(Boolean),
-    price: product.price,
+    price: purchasable && product.price > 0 ? product.price : undefined,
     currency: "IRT",
-    inStock: Boolean(product.available),
+    inStock: purchasable ? true : undefined,
     brandName: product.brand?.name,
     sku: String(product.id),
     categoryName: product.mainCategory?.name,
@@ -67,15 +71,17 @@ export default async function ProductPage({ params }: { params: Params }) {
     "@graph": [productSchema, breadcrumbSchema],
   };
 
+  const nonce = (await headers()).get("x-nonce") ?? undefined;
+
   return (
     <div className="container py-10">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+        nonce={nonce}
+        dangerouslySetInnerHTML={{ __html: escapeJsonLd(structuredData) }}
       />
       <ProductDetail product={product} generatedAt={generatedAt} />
       <RelatedProducts productId={product.id} />
     </div>
   );
 }
-

@@ -3,7 +3,8 @@ import { beforeEach, describe, expect, it } from "vitest";
 import { POST as login } from "@/app/api/auth/login/route";
 import { POST as register } from "@/app/api/auth/register/route";
 import { POST as logout } from "@/app/api/auth/logout/route";
-import { GET as me } from "@/app/api/auth/me/route";
+import { GET as me, PATCH as updateMe } from "@/app/api/auth/me/route";
+import { POST as changePassword } from "@/app/api/auth/change-password/route";
 import { hashSessionToken, SESSION_COOKIE_NAME } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
@@ -377,5 +378,176 @@ describe("session lifecycle (login -> me -> logout -> me)", () => {
     // so this must be rejected even though the cookie string itself is unchanged.
     const meAfterLogout = await me(new Request("http://localhost/api/auth/me", { headers: { cookie } }), ctx());
     expect(meAfterLogout.status).toBe(401);
+  });
+
+  it("rejects an authenticated session whose user has been deactivated with 403 ACCOUNT_DEACTIVATED", async () => {
+    const loginRes = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    const cookie = loginRes.headers.get("set-cookie")!.split(";")[0];
+
+    await prisma.user.update({ where: { id: seed.retail.id }, data: { isActive: false } });
+
+    const res = await me(new Request("http://localhost/api/auth/me", { headers: { cookie } }), ctx());
+    expect(res.status).toBe(403);
+    const body = await res.json();
+    expect(body.error.code).toBe("ACCOUNT_DEACTIVATED");
+  });
+});
+
+describe("PATCH /api/auth/me", () => {
+  it("returns 401 without a valid session", async () => {
+    const res = await updateMe(
+      new Request("http://localhost/api/auth/me", {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ firstName: "Ali" }),
+      }),
+      ctx(),
+    );
+    expect(res.status).toBe(401);
+  });
+
+  it("updates allowed profile fields and returns sanitized user", async () => {
+    const loginRes = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    const cookie = loginRes.headers.get("set-cookie")!.split(";")[0];
+
+    const res = await updateMe(
+      new Request("http://localhost/api/auth/me", {
+        method: "PATCH",
+        headers: { "content-type": "application/json", cookie },
+        body: JSON.stringify({ firstName: "Reza", lastName: "Rezayi", city: "Mashhad" }),
+      }),
+      ctx(),
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.data.firstName).toBe("Reza");
+    expect(body.data.lastName).toBe("Rezayi");
+    expect(body.data.city).toBe("Mashhad");
+    expect(body.data.passwordHash).toBeUndefined();
+
+    const dbUser = await prisma.user.findUniqueOrThrow({ where: { id: seed.retail.id } });
+    expect(dbUser.firstName).toBe("Reza");
+  });
+
+  it("drops or ignores unexpected identity and privilege fields (overposting defense)", async () => {
+    const loginRes = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    const cookie = loginRes.headers.get("set-cookie")!.split(";")[0];
+
+    const res = await updateMe(
+      new Request("http://localhost/api/auth/me", {
+        method: "PATCH",
+        headers: { "content-type": "application/json", cookie },
+        body: JSON.stringify({
+          firstName: "Hacked",
+          role: "ADMIN",
+          isActive: false,
+          id: 9999,
+          creditLimit: 99999999,
+        }),
+      }),
+      ctx(),
+    );
+    expect(res.status).toBe(200);
+
+    const dbUser = await prisma.user.findUniqueOrThrow({ where: { id: seed.retail.id } });
+    expect(dbUser.firstName).toBe("Hacked");
+    expect(dbUser.role).toBe(Role.RETAIL);
+    expect(dbUser.isActive).toBe(true);
+    expect(dbUser.id).toBe(seed.retail.id);
+  });
+
+  it("rejects duplicate email if already in use by another account", async () => {
+    await prisma.user.update({ where: { id: seed.wholesale.id }, data: { email: "wholesale@example.com" } });
+
+    const loginRes = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    const cookie = loginRes.headers.get("set-cookie")!.split(";")[0];
+
+    const res = await updateMe(
+      new Request("http://localhost/api/auth/me", {
+        method: "PATCH",
+        headers: { "content-type": "application/json", cookie },
+        body: JSON.stringify({ email: "wholesale@example.com" }),
+      }),
+      ctx(),
+    );
+    expect(res.status).toBe(409);
+    const body = await res.json();
+    expect(body.error.code).toBe("DUPLICATE_ACCOUNT");
+  });
+});
+
+describe("POST /api/auth/change-password", () => {
+  it("returns 401 without a valid session", async () => {
+    const res = await changePassword(
+      new Request("http://localhost/api/auth/change-password", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ currentPassword: seed.retail.password, newPassword: "newsecretpassword123" }),
+      }),
+      ctx(),
+    );
+    expect(res.status).toBe(401);
+  });
+
+  it("returns 400 INVALID_CURRENT_PASSWORD on wrong current password without revoking session", async () => {
+    const loginRes = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    const cookie = loginRes.headers.get("set-cookie")!.split(";")[0];
+
+    const res = await changePassword(
+      new Request("http://localhost/api/auth/change-password", {
+        method: "POST",
+        headers: { "content-type": "application/json", cookie },
+        body: JSON.stringify({ currentPassword: "wrongcurrentpassword", newPassword: "newsecretpassword123" }),
+      }),
+      ctx(),
+    );
+    expect(res.status).toBe(400);
+    const body = await res.json();
+    expect(body.error.code).toBe("INVALID_CURRENT_PASSWORD");
+
+    // Existing session must still be intact
+    const meRes = await me(new Request("http://localhost/api/auth/me", { headers: { cookie } }), ctx());
+    expect(meRes.status).toBe(200);
+  });
+
+  it("changes password successfully and revokes concurrent sessions while keeping current", async () => {
+    // Device 1
+    const login1 = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    const cookie1 = login1.headers.get("set-cookie")!.split(";")[0];
+
+    // Device 2
+    const login2 = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    const cookie2 = login2.headers.get("set-cookie")!.split(";")[0];
+
+    expect(await prisma.session.count({ where: { userId: seed.retail.id } })).toBe(2);
+
+    // Change password from Device 1
+    const res = await changePassword(
+      new Request("http://localhost/api/auth/change-password", {
+        method: "POST",
+        headers: { "content-type": "application/json", cookie: cookie1 },
+        body: JSON.stringify({ currentPassword: seed.retail.password, newPassword: "newBrandNewPassword123" }),
+      }),
+      ctx(),
+    );
+    expect(res.status).toBe(200);
+    const body = await res.json();
+    expect(body.data.passwordChanged).toBe(true);
+    expect(body.data.revokedSessions).toBe(1);
+
+    // Device 1 should still be authenticated
+    const me1 = await me(new Request("http://localhost/api/auth/me", { headers: { cookie: cookie1 } }), ctx());
+    expect(me1.status).toBe(200);
+
+    // Device 2 must now be revoked
+    const me2 = await me(new Request("http://localhost/api/auth/me", { headers: { cookie: cookie2 } }), ctx());
+    expect(me2.status).toBe(401);
+
+    // Old password should fail login, new password should succeed
+    const oldLogin = await login(jsonRequest({ identifier: seed.retail.username, password: seed.retail.password }));
+    expect(oldLogin.status).toBe(401);
+
+    const newLogin = await login(jsonRequest({ identifier: seed.retail.username, password: "newBrandNewPassword123" }));
+    expect(newLogin.status).toBe(200);
   });
 });

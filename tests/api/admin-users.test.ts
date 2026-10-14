@@ -93,4 +93,39 @@ describe("admin users", () => {
     const body = await res.json();
     expect(body.data.role).toBe(Role.AGENT);
   });
+
+  it("returns 401 AUTH_REQUIRED for unauthenticated guest requests to list or mutate users", async () => {
+    const listRes = await listUsers(getRequest("http://localhost/api/admin/users"), ctx());
+    expect(listRes.status).toBe(401);
+    const listBody = await listRes.json();
+    expect(listBody.error.code).toBe("AUTH_REQUIRED");
+
+    const getRes = await getUser(getRequest(`http://localhost/api/admin/users/${seed.retail.id}`), ctx({ id: String(seed.retail.id) }));
+    expect(getRes.status).toBe(401);
+
+    const patchRes = await patchUser(
+      jsonRequest(`http://localhost/api/admin/users/${seed.retail.id}`, "PATCH", { isActive: false }),
+      ctx({ id: String(seed.retail.id) }),
+    );
+    expect(patchRes.status).toBe(401);
+  });
+
+  it("returns 403 FORBIDDEN_ROLE for non-admin customer requests to get or patch a user", async () => {
+    const getRes = await getUser(getRequest(`http://localhost/api/admin/users/${seed.retail.id}`, retailCookie), ctx({ id: String(seed.retail.id) }));
+    expect(getRes.status).toBe(403);
+    const getBody = await getRes.json();
+    expect(getBody.error.code).toBe("FORBIDDEN_ROLE");
+
+    const patchRes = await patchUser(
+      jsonRequest(`http://localhost/api/admin/users/${seed.retail.id}`, "PATCH", { role: "ADMIN" }, retailCookie),
+      ctx({ id: String(seed.retail.id) }),
+    );
+    expect(patchRes.status).toBe(403);
+    const patchBody = await patchRes.json();
+    expect(patchBody.error.code).toBe("FORBIDDEN_ROLE");
+
+    // Ensure database was not modified
+    const stillRetail = await prisma.user.findUniqueOrThrow({ where: { id: seed.retail.id } });
+    expect(stillRetail.role).toBe(Role.RETAIL);
+  });
 });

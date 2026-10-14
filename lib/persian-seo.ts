@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { SITE_NAME, SITE_ORIGIN, SOCIAL_IMAGE } from "@/lib/seo-metadata";
+import { isPlaceholderImage } from "@/lib/product-images";
 import type {
   PersianSeoMetadataInput,
   PersianProductJsonLdInput,
@@ -49,29 +50,33 @@ export function sanitizePersianSlug(input: string): string {
  */
 export function buildProductJsonLd(input: PersianProductJsonLdInput): Record<string, unknown> {
   const productUrl = `${SITE_ORIGIN}/shop/${encodeURIComponent(input.slug)}`;
+  const images = (input.images ?? [])
+    .filter((image) => image && !isPlaceholderImage(image))
+    .map((image) => new URL(image, SITE_ORIGIN).toString());
+  const hasOffer = typeof input.price === "number" && Number.isFinite(input.price) && input.price > 0;
 
   return {
     "@context": "https://schema.org",
     "@type": "Product",
     name: input.name,
     description: input.description,
-    image: input.images && input.images.length > 0 ? input.images : [`${SITE_ORIGIN}${SOCIAL_IMAGE}`],
+    ...(images.length ? { image: images } : {}),
     ...(input.sku ? { sku: input.sku } : {}),
     ...(input.brandName ? { brand: { "@type": "Brand", name: input.brandName } } : {}),
-    offers: {
+    ...(hasOffer ? { offers: {
       "@type": "Offer",
       priceCurrency: input.currency ?? "IRT",
-      price: input.price ?? 0,
-      availability: input.inStock
-        ? "https://schema.org/InStock"
-        : "https://schema.org/OutOfStock",
+      price: input.price,
+      ...(typeof input.inStock === "boolean" ? {
+        availability: input.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+      } : {}),
       url: productUrl,
       seller: {
         "@type": "Organization",
         name: SITE_NAME,
         url: SITE_ORIGIN,
       },
-    },
+    } } : {}),
   };
 }
 
@@ -173,4 +178,3 @@ export function generatePersianMetadata(input: PersianSeoMetadataInput): Metadat
     ...(input.noIndex ? { robots: { index: false, follow: false } } : {}),
   };
 }
-

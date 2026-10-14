@@ -1,8 +1,9 @@
 node_modules/
 dist/
+build/
 .next/
-.env
-.env.test
+.env*
+!.env.example
 *.log
 tsconfig.tsbuildinfo
 .superpowers/

@@ -112,8 +112,9 @@ export const metadata: Metadata = {
  * measured. A check that passes both with and without the fix is not a check (see
  * `notes/parallel-agent-plan.md` §5.1).
  */
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { DesignSystemBootstrap } from "@/components/common/DesignSystemBootstrap";
+import { escapeJsonLd } from "@/lib/security/xss";
 import {
   DESIGN_SYSTEM_COOKIE_NAME,
   getDesignSystemClass,
@@ -121,7 +122,8 @@ import {
 } from "@/lib/design-system";
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const cookieStore = await cookies();
+  const [cookieStore, headerStore] = await Promise.all([cookies(), headers()]);
+  const nonce = headerStore.get("x-nonce") ?? undefined;
   const dsCookieValue = cookieStore.get(DESIGN_SYSTEM_COOKIE_NAME)?.value;
   const initialStyleClass = getDesignSystemClass(dsCookieValue);
 
@@ -157,10 +159,11 @@ export default async function RootLayout({ children }: { children: React.ReactNo
        live on :root there, so no next/font className is needed here. */
     <html lang="fa" dir="rtl" data-scroll-behavior="smooth" suppressHydrationWarning>
       <body className={initialStyleClass}>
-        <DesignSystemBootstrap />
+        <DesignSystemBootstrap nonce={nonce} />
         <script
           type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(structuredData).replace(/</g, "\\u003c") }}
+          nonce={nonce}
+          dangerouslySetInnerHTML={{ __html: escapeJsonLd(structuredData) }}
         />
         {children}
         <AgentationToolbar />

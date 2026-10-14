@@ -6,6 +6,7 @@ import { ImagePlus, LoaderCircle, Star, Trash2, Upload } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { apiPatch } from "@/lib/api-client";
 import { apiErrorToFa } from "@/lib/api-error-fa";
+import { validateUploadFile } from "@/lib/security/upload-validation";
 
 export type CatalogImage = { id: number; url: string; altText: string | null; isDefault: boolean };
 type Entity = "product" | "category" | "brand";
@@ -35,6 +36,11 @@ export function CatalogImageManager({
 
   async function upload(file?: File) {
     if (!file || ownerId == null) return;
+    const validation = validateUploadFile(file, "catalog-image");
+    if (!validation.valid) {
+      setError(validation.error ?? "فایل انتخاب‌شده نامعتبر است.");
+      return;
+    }
     setUploading(true);
     setError(null);
     try {

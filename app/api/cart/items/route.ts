@@ -2,7 +2,7 @@ import { Role, StockType } from "@prisma/client";
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { loadCartByUserId, serializeCart } from "@/lib/cart";
-import { ApiError, ok, withErrorHandling } from "@/lib/http";
+import { ApiError, ok, parseJsonBody, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
 import { toNumber } from "@/lib/serializers";
 
@@ -24,14 +24,7 @@ const addItemSchema = z
 
 export const POST = withAuth(async (request, { user }) => {
   return withErrorHandling(async () => {
-    const body = await request.json();
-    const parsed = addItemSchema.safeParse(body);
-
-    if (!parsed.success) {
-      throw new ApiError(400, "اطلاعات ارسالی نامعتبر است", parsed.error.flatten());
-    }
-
-    const input = parsed.data;
+    const input = await parseJsonBody(request, addItemSchema);
 
     const cart = await prisma.cart.upsert({
       where: { userId: user.id },

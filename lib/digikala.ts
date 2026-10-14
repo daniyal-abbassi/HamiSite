@@ -92,12 +92,35 @@ export function generateSlugFromTitle(title: string, id: number): string {
   return `${cleaned || "product"}-${id}`;
 }
 
+export function assertAllowedDigikalaUrl(urlStr: string): URL {
+  let parsed: URL;
+  try {
+    parsed = new URL(urlStr);
+  } catch {
+    throw new Error("Invalid Digikala URL");
+  }
+  if (parsed.protocol !== "https:") {
+    throw new Error("Only HTTPS requests to Digikala are permitted");
+  }
+  const hostname = parsed.hostname.toLowerCase();
+  if (hostname !== "api.digikala.com" && !hostname.endsWith(".digikala.com")) {
+    throw new Error(`Untrusted redirect host: ${hostname}`);
+  }
+  return parsed;
+}
+
 /**
  * Performs an HTTPS request to Digikala with automatic DigiCDN 307 cookie handling.
  */
 function fetchDigikalaRaw(url: string, cookie = ""): Promise<{ statusCode: number; headers: Record<string, any>; body: string }> {
   return new Promise((resolve, reject) => {
-    const parsedUrl = new URL(url);
+    let parsedUrl: URL;
+    try {
+      parsedUrl = assertAllowedDigikalaUrl(url);
+    } catch (err) {
+      return reject(err);
+    }
+
     const options: https.RequestOptions = {
       hostname: parsedUrl.hostname,
       port: 443,
@@ -112,10 +135,15 @@ function fetchDigikalaRaw(url: string, cookie = ""): Promise<{ statusCode: numbe
       timeout: 10000
     };
 
+    const maxBytes = 10 * 1024 * 1024;
     const req = https.request(options, (res) => {
       let data = "";
       res.on("data", (chunk) => {
         data += chunk;
+        if (data.length > maxBytes) {
+          req.destroy();
+          reject(new Error("Response size exceeded maximum allowed limit"));
+        }
       });
       res.on("end", () => {
         resolve({
@@ -149,6 +177,7 @@ export async function requestDigikalaApi(endpointUrl: string): Promise<any> {
 
     const cookieHeader = rawCookies.map((c) => c.split(";")[0]).join("; ");
     const redirectUrl = (initialRes.headers.location as string) || endpointUrl;
+    assertAllowedDigikalaUrl(redirectUrl);
 
     const followRes = await fetchDigikalaRaw(redirectUrl, cookieHeader);
     if (followRes.statusCode >= 400) {

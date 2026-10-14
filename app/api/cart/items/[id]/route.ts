@@ -3,7 +3,7 @@ import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { checkBundleAvailability, bundleInclude } from "@/lib/bundles";
 import { loadCartByUserId, serializeCart } from "@/lib/cart";
-import { ApiError, ok, withErrorHandling } from "@/lib/http";
+import { ApiError, ok, parseJsonBody, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
 
 const updateItemSchema = z.object({
@@ -41,15 +41,10 @@ async function loadItemWithStock(id: number, ownerId: number) {
 export const PATCH = withAuth<{ id: string }>(async (request, { user, params }) => {
   return withErrorHandling(async () => {
     const id = parseId(params.id);
-    const body = await request.json();
-    const parsed = updateItemSchema.safeParse(body);
-
-    if (!parsed.success) {
-      throw new ApiError(400, "Invalid request body", parsed.error.flatten());
-    }
+    const input = await parseJsonBody(request, updateItemSchema);
 
     const item = await loadItemWithStock(id, user.id);
-    const { quantity } = parsed.data;
+    const { quantity } = input;
 
     if (item.bundleId && item.bundle) {
       if (!item.bundle.isActive) {

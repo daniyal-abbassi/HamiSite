@@ -1,7 +1,7 @@
 import { B2BPaymentTerm, Role } from "@prisma/client";
 import { z } from "zod";
 import { getOptionalSessionUser } from "@/lib/auth";
-import { ApiError, ok, withErrorHandling } from "@/lib/http";
+import { ApiError, ok, parseJsonBody, withErrorHandling } from "@/lib/http";
 import { ensureB2BTermAllowed, normalizePaymentTerm, resolveMatchingTier } from "@/lib/pricing";
 import { prisma } from "@/lib/prisma";
 import { toNumber } from "@/lib/serializers";
@@ -19,14 +19,7 @@ const bodySchema = z.object({
 
 export async function POST(request: Request) {
   return withErrorHandling(async () => {
-    const json = await request.json();
-    const parsed = bodySchema.safeParse(json);
-
-    if (!parsed.success) {
-      throw new ApiError(400, "Invalid request body", parsed.error.flatten());
-    }
-
-    const input = parsed.data;
+    const input = await parseJsonBody(request, bodySchema);
     const paymentTerm = normalizePaymentTerm(input.paymentTerm ?? "CASH");
 
     const sessionUser = await getOptionalSessionUser(request);

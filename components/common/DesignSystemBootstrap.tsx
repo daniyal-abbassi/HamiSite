@@ -61,10 +61,11 @@ const bootstrapScript = `
 })();
 `.trim();
 
-export function DesignSystemBootstrap() {
+export function DesignSystemBootstrap({ nonce }: { nonce?: string } = {}) {
   return (
     <script
       id="ds-bootstrap"
+      nonce={nonce}
       dangerouslySetInnerHTML={{ __html: bootstrapScript }}
     />
   );

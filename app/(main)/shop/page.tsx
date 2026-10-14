@@ -10,11 +10,36 @@ import { shopCategoryTiles } from "@/lib/shop-category-tiles-db";
 import { pageMetadata } from "@/lib/seo-metadata";
 import "@/components/shop/shop-luxury.css";
 
-export const metadata: Metadata = pageMetadata({
-  title: "فروشگاه",
-  description: "خرید موبایل، لوازم جانبی و محصولات دیجیتال از حامی همراه در مشهد؛ فهرست محصولات و دسته‌بندی‌های فروشگاه را ببینید و برای قیمت روز تماس بگیرید.",
-  path: "/shop",
-});
+const shopDescription = "خرید موبایل، لوازم جانبی و محصولات دیجیتال از حامی همراه در مشهد؛ فهرست محصولات و دسته‌بندی‌های فروشگاه را ببینید و برای قیمت روز تماس بگیرید.";
+
+export async function generateMetadata({ searchParams }: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}): Promise<Metadata> {
+  const params = await searchParams;
+  const rawPage = typeof params.page === "string" ? params.page : "";
+  const page = /^\d+$/.test(rawPage) ? Number(rawPage) : 1;
+  // The catalog parser accepts pages 1–10,000. Keep the parameters that change
+  // the product set, and retain sort only when pagination changes membership.
+  const distinctPage = page > 1 && page <= 10_000;
+  const preferredParams = new URLSearchParams();
+  for (const key of ["category", "brand"] as const) {
+    const value = params[key];
+    if (typeof value === "string" && value.trim()) preferredParams.set(key, value.trim());
+  }
+  if (distinctPage) preferredParams.set("page", String(page));
+  const sort = params.sort;
+  if (distinctPage && typeof sort === "string" && sort.trim()) preferredParams.set("sort", sort.trim());
+  const query = preferredParams.toString();
+  const path = query ? `/shop?${query}` : "/shop";
+  const dynamicFilter = ["category", "brand", "q", "stock", "min", "max", "special"].some((key) => params[key] !== undefined);
+  return pageMetadata({
+    title: distinctPage ? `فروشگاه، صفحه ${page}` : "فروشگاه",
+    description: shopDescription,
+    path,
+    includeQuery: Boolean(query),
+    ...(dynamicFilter ? { robots: { index: false, follow: true } } : {}),
+  });
+}
 
 /**
  * The listing, read from the catalog seam on the server.

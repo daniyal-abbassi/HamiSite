@@ -49,6 +49,35 @@ describe("POST /api/orders/[id]/pay", () => {
     expect(payment.userId).toBe(seed.retail.id);
   });
 
+  it("ignores client body claims (spoofed amount, spoofed userId) and derives payment from persisted order", async () => {
+    const order = await createRetailOrder();
+
+    const res = await pay(
+      jsonRequest(
+        `http://localhost/api/orders/${order.id}/pay`,
+        "POST",
+        { amount: 100, userId: seed.wholesale.id },
+        retailCookie,
+      ),
+      ctx({ id: String(order.id) }),
+    );
+    expect(res.status).toBe(200);
+
+    const payment = await prisma.payment.findFirstOrThrow({ where: { orderId: order.id } });
+    expect(payment.userId).toBe(seed.retail.id);
+    expect(payment.amount.toNumber()).toBe(order.totals.totalAmount);
+    expect(payment.amount.toNumber()).toBeGreaterThan(0);
+  });
+
+  it("401s when payment initiation has no session", async () => {
+    const order = await createRetailOrder();
+    const res = await pay(
+      getRequest(`http://localhost/api/orders/${order.id}/pay`),
+      ctx({ id: String(order.id) }),
+    );
+    expect(res.status).toBe(401);
+  });
+
   it("403s when the order belongs to another user", async () => {
     const order = await createRetailOrder();
 

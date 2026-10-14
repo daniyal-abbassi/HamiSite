@@ -1,7 +1,7 @@
 import { Role } from "@prisma/client";
 import { z } from "zod";
 import { sanitizeUser, withAuth } from "@/lib/auth";
-import { ApiError, ok, withErrorHandling } from "@/lib/http";
+import { ApiError, ok, parseJsonBody, withErrorHandling } from "@/lib/http";
 import { prisma } from "@/lib/prisma";
 
 const updateUserSchema = z
@@ -38,13 +38,9 @@ export const PATCH = withAuth<{ id: string }>(
   async (request, { params, user: actingUser }) => {
     return withErrorHandling(async () => {
       const id = parseId(params.id);
-      const body = await request.json();
-      const parsed = updateUserSchema.safeParse(body);
-      if (!parsed.success) {
-        throw new ApiError(400, "Invalid request body", parsed.error.flatten());
-      }
+      const data = await parseJsonBody(request, updateUserSchema);
 
-      if (id === actingUser.id && (parsed.data.role !== undefined || parsed.data.isActive === false)) {
+      if (id === actingUser.id && (data.role !== undefined || data.isActive === false)) {
         throw new ApiError(400, "Cannot change your own role or deactivate your own account");
       }
 
@@ -53,7 +49,7 @@ export const PATCH = withAuth<{ id: string }>(
         throw new ApiError(404, "User not found");
       }
 
-      const updatedUser = await prisma.user.update({ where: { id }, data: parsed.data });
+      const updatedUser = await prisma.user.update({ where: { id }, data });
 
       return ok(sanitizeUser(updatedUser), { message: "User updated" });
     });

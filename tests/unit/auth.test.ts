@@ -1,13 +1,16 @@
 import { describe, expect, it } from "vitest";
-import { DUMMY_PASSWORD_HASH, verifyPassword } from "@/lib/auth";
-import { normalizeIranianMobile } from "@/lib/phone";
+import { Prisma, Role } from "@prisma/client";
 import {
+  DUMMY_PASSWORD_HASH,
   generateSessionToken,
   getSessionTokenFromRequest,
   hashSessionToken,
   SESSION_COOKIE_NAME,
   SESSION_TTL_MS,
+  sanitizeUser,
+  verifyPassword,
 } from "@/lib/auth";
+import { normalizeIranianMobile } from "@/lib/phone";
 
 describe("session token helpers", () => {
   it("generates a 64-char hex token that differs each call", () => {
@@ -72,5 +75,43 @@ describe("normalizeIranianMobile", () => {
   it("leaves anything unrecognised untouched so usernames pass through", () => {
     expect(normalizeIranianMobile("test.retail")).toBe("test.retail");
     expect(normalizeIranianMobile("admin")).toBe("admin");
+  });
+});
+
+describe("sanitizeUser", () => {
+  it("strips passwordHash and preserves critical safe attributes", () => {
+    const rawUser = {
+      id: 42,
+      role: Role.RETAIL,
+      username: "testuser",
+      email: "test@example.com",
+      passwordHash: "$2a$10$secretpasswordhash",
+      firstName: "Ali",
+      lastName: "Alavi",
+      phoneNumber: "+989121234567",
+      phoneVerified: true,
+      nationalNumber: "0012345678",
+      city: "Mashhad",
+      shopName: null,
+      businessLicenseNumber: null,
+      businessVerified: false,
+      creditLimit: new Prisma.Decimal("1000000"),
+      creditUsed: new Prisma.Decimal("250000"),
+      agentId: null,
+      isActive: true,
+      receiveNewsletters: false,
+      createdAt: new Date("2026-01-01T00:00:00Z"),
+      updatedAt: new Date("2026-01-02T00:00:00Z"),
+    };
+
+    const sanitized = sanitizeUser(rawUser as any);
+    expect((sanitized as any).passwordHash).toBeUndefined();
+    expect(sanitized.id).toBe(42);
+    expect(sanitized.username).toBe("testuser");
+    expect(sanitized.role).toBe(Role.RETAIL);
+    expect(sanitized.isActive).toBe(true);
+    expect(sanitized.creditLimit).toBe(1000000);
+    expect(sanitized.creditUsed).toBe(250000);
+    expect(sanitized.createdAt).toBe("2026-01-01T00:00:00.000Z");
   });
 });
