@@ -30,7 +30,7 @@ const SIZES = {
   lg: "h-8 gap-1.5 px-3 text-sm [--badge-icon:--spacing(4.5)] [--badge-media:--spacing(6)]",
 } as const;
 
-const ICON_PAD = { sm: "pl-1", md: "pl-1.5", lg: "pl-2" } as const;
+const ICON_PAD = { sm: "ps-1", md: "ps-1.5", lg: "ps-2" } as const;
 const CLOSE_SIZE = { sm: "size-4", md: "size-5", lg: "size-6" } as const;
 
 /** Inline styles the fold writes, cleared if the badge outlives its removal. */
@@ -256,8 +256,8 @@ export const Badge = React.forwardRef<HTMLSpanElement, BadgeProps>(
             "has-[[data-badge-action]:focus-visible]:outline-2 has-[[data-badge-action]:focus-visible]:outline-offset-2 has-[[data-badge-action]:focus-visible]:outline-ring",
           // A round avatar or flag sits as far from the rim as from the top
           // and bottom, like a ball in a slot.
-          media ? "pl-0.75" : icon && ICON_PAD[size],
-          onRemove && "pr-1",
+          media ? "ps-0.75" : icon && ICON_PAD[size],
+          onRemove && "pe-1",
           className,
         )}
         {...props}

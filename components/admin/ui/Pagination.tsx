@@ -28,7 +28,7 @@ type PaginationProps = {
 };
 
 const STEP =
-  "inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-md border border-line px-2 text-[13px] font-bold text-muted-foreground transition-colors duration-fast hover:bg-foreground/5 hover:text-foreground disabled:pointer-events-none disabled:opacity-50";
+  "inline-flex min-h-11 min-w-11 items-center justify-center gap-1 rounded-md border border-line px-2 type-label font-bold text-muted-foreground transition-colors duration-fast hover:bg-foreground/5 hover:text-foreground disabled:pointer-events-none disabled:opacity-50";
 
 function PageButton({
   page,
@@ -49,7 +49,7 @@ function PageButton({
         aria-current={active ? "page" : undefined}
         aria-label={`صفحه ${toFaDigits(page)}`}
         className={cn(
-          "inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border px-2 text-[13px] transition-colors duration-fast",
+          "inline-flex min-h-11 min-w-11 items-center justify-center rounded-md border px-2 type-label transition-colors duration-fast",
           // Three channels, none of them colour: `aria-current` for assistive tech, black rather than
           // bold weight, and a filled surface against a bare border. The fill is champagne with the
           // `primary-foreground` ink, which measures 13.49:1 — `text-foreground` over that same fill
@@ -83,7 +83,7 @@ export function Pagination({
 
   return (
     <nav aria-label="صفحه‌بندی" className={cn("mt-6 flex flex-wrap items-center justify-between gap-3", className)}>
-      <p className="w-full text-center text-xs leading-5 text-muted-foreground sm:w-auto sm:text-start">
+      <p className="w-full text-center type-label text-muted-foreground sm:w-auto sm:text-start">
         {total > 0 ? (
           <>
             نمایش {toFaDigits(range.from)} تا {toFaDigits(range.to)} از {toFaDigits(total)} رکورد
@@ -95,7 +95,7 @@ export function Pagination({
 
       <ul className="flex items-center gap-1">
         <li>
-          <button type="button" onClick={() => onPageChange(range.current - 1)} disabled={!range.hasPrevious} className={STEP}>
+          <button type="button" aria-label="صفحه قبل" onClick={() => onPageChange(range.current - 1)} disabled={!range.hasPrevious} className={STEP}>
             {/* «قبلی» points at the start edge, which under RTL is the right. The words are the
                 part that carries the meaning; the chevron only saves a glance. */}
             <ChevronRight aria-hidden="true" className="size-4 shrink-0" />
@@ -128,7 +128,7 @@ export function Pagination({
         </li>
 
         <li>
-          <button type="button" onClick={() => onPageChange(range.current + 1)} disabled={!range.hasNext} className={STEP}>
+          <button type="button" aria-label="صفحه بعد" onClick={() => onPageChange(range.current + 1)} disabled={!range.hasNext} className={STEP}>
             بعدی
             <ChevronLeft aria-hidden="true" className="size-4 shrink-0" />
           </button>

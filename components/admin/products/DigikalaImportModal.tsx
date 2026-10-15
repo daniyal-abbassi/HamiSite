@@ -259,7 +259,7 @@ export function DigikalaImportModal({ open, onClose }: DigikalaImportModalProps)
               onChange={(e) => setDirectInput(e.target.value)}
               placeholder="https://www.digikala.com/product/dkp-16603814/... یا dkp-16603814"
               dir="ltr"
-              className="text-left font-mono text-xs"
+              className="text-start font-mono text-xs"
               autoFocus
             />
             <p className="text-[11px] text-muted-foreground">

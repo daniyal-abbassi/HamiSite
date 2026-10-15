@@ -5,7 +5,8 @@ import { useRouter } from "next/navigation";
 import { OrderStatusBadge } from "@/components/tma/OrderStatusBadge";
 import { OrderStatusSheet } from "@/components/tma/OrderStatusSheet";
 import { useTelegram } from "@/components/tma/TelegramProvider";
-import { formatToman, toFaDigits } from "@/lib/utils";
+import { TomanPrice } from "@/components/ui/TomanPrice";
+import { toFaDigits } from "@/lib/utils";
 import { formatFaDate } from "@/lib/content/order";
 import {
   Phone,
@@ -208,12 +209,10 @@ export default function TMAOrderDetailPage({
                     </div>
                   )}
                   <div className="text-[11px] text-stone-400 mt-1">
-                    {toFaDigits(item.quantity)} عدد × {formatToman(item.unitPrice)}
+                    {toFaDigits(item.quantity)} عدد × <TomanPrice amount={item.unitPrice} />
                   </div>
                 </div>
-                <div className="font-semibold text-amber-300">
-                  {formatToman(item.totalPrice)}
-                </div>
+                <TomanPrice className="type-label font-semibold text-amber-300" amount={item.totalPrice} />
               </div>
             ))}
           </div>
@@ -228,24 +227,24 @@ export default function TMAOrderDetailPage({
 
           <div className="flex justify-between text-stone-400">
             <span>مجموع اقلام:</span>
-            <span>{formatToman(order.subtotal)}</span>
+            <span><TomanPrice amount={order.subtotal} /></span>
           </div>
 
           <div className="flex justify-between text-stone-400">
             <span>هزینه ارسال ({order.shippingMethodName || "پست"}):</span>
-            <span>{formatToman(order.shippingPrice)}</span>
+            <span><TomanPrice amount={order.shippingPrice} /></span>
           </div>
 
           {order.discountAmount > 0 && (
             <div className="flex justify-between text-rose-400">
               <span>تخفیف:</span>
-              <span>- {formatToman(order.discountAmount)}</span>
+              <span><TomanPrice amount={-order.discountAmount} /></span>
             </div>
           )}
 
           <div className="flex justify-between text-stone-100 font-bold pt-2 border-t border-stone-800/80 text-sm">
             <span>مبلغ پرداختی کل:</span>
-            <span className="text-amber-400 font-black">{formatToman(order.totalAmount)}</span>
+            <TomanPrice className="type-label font-semibold text-amber-400" amount={order.totalAmount} />
           </div>
         </div>
       </div>
@@ -263,4 +262,3 @@ export default function TMAOrderDetailPage({
     </div>
   );
 }
-

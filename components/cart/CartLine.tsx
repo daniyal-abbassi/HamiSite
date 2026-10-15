@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Minus, Plus, Sparkles, Trash2 } from "lucide-react";
 import { resolveProductImage } from "@/lib/product-images";
+import { TomanPrice } from "@/components/ui/TomanPrice";
 import { cn, formatToman } from "@/lib/utils";
 import type { CartItem } from "@/types/store";
 
@@ -54,7 +55,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
                   <Sparkles size={11} />
                   <span>سبد اختصاصی همکار</span>
                 </div>
-                <h3 className="truncate text-sm font-extrabold text-foreground">
+                <h3 className="line-clamp-2 type-body font-bold text-foreground">
                   {item.bundleTitle}
                 </h3>
               </div>
@@ -73,11 +74,11 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
         {/* Breakdown of constituent items */}
         {item.bundleItems && item.bundleItems.length > 0 && (
           <div className="rounded-xl bg-ink/40 border border-line/40 p-2.5 text-xs text-muted-foreground space-y-1">
-            <p className="font-bold text-[11px] text-foreground/90">محتویات سبد (غیرقابل تفکیک):</p>
+            <p className="font-bold type-label text-foreground/90">محتویات سبد (غیرقابل تفکیک):</p>
             <ul className="space-y-0.5">
               {item.bundleItems.map((bi) => (
-                <li key={`${bi.productId}-${bi.variantId ?? "base"}`} className="flex items-center justify-between text-[11px]">
-                  <span className="truncate pr-1">• {bi.productName}</span>
+                <li key={`${bi.productId}-${bi.variantId ?? "base"}`} className="flex items-center justify-between type-label">
+                  <span className="truncate pe-1">• {bi.productName}</span>
                   <span className="font-bold text-amber-300/90 shrink-0">
                     ×{bi.totalQuantity.toLocaleString("fa-IR")}
                   </span>
@@ -99,7 +100,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
             >
               <Minus className="size-3.5" />
             </button>
-            <span className="min-w-7 text-center font-mono text-sm font-bold" aria-live="polite">
+            <span className="min-w-7 text-center type-label tabular-nums font-bold" aria-live="polite">
               {item.quantity.toLocaleString("fa-IR")}
             </span>
             <button
@@ -112,7 +113,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
               <Plus className="size-3.5" />
             </button>
           </div>
-          <strong className="text-sm font-black text-amber-400">{formatToman(item.lineTotal)}</strong>
+          <TomanPrice as="strong" className="type-price text-amber-400" amount={item.lineTotal} />
         </div>
       </div>
     );
@@ -141,13 +142,13 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
       <div className="min-w-0 flex-1">
         <div className="flex items-start justify-between gap-2">
           <div className="min-w-0">
-            <h3 className="truncate text-sm font-extrabold">
+            <h3 className="line-clamp-2 type-body font-bold">
               <Link href={`/shop/${item.product?.slug ?? ""}`} className="hover:text-aqua">
                 {item.product?.name}
               </Link>
             </h3>
             {variantLabel(item) && (
-              <p className="mt-0.5 font-mono text-xs tracking-normal text-muted-foreground/70">
+              <p className="type-label mt-0.5 tracking-normal text-muted-foreground/70">
                 {variantLabel(item)}
               </p>
             )}
@@ -163,7 +164,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
         </div>
 
         {item.priceChanged && (
-          <p className="mt-1.5 text-xs text-aqua">
+          <p className="type-label mt-1.5 text-aqua">
             قیمت به‌روزرسانی شده — اکنون {formatToman(item.currentUnitPrice)} است.
           </p>
         )}
@@ -179,7 +180,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
             >
               <Minus className="size-3.5" />
             </button>
-            <span className="min-w-7 text-center font-mono text-sm" aria-live="polite">
+            <span className="min-w-7 text-center type-label tabular-nums" aria-live="polite">
               {item.quantity.toLocaleString("fa-IR")}
             </span>
             <button
@@ -192,7 +193,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
               <Plus className="size-3.5" />
             </button>
           </div>
-          <strong className="text-sm font-black text-aqua">{formatToman(item.lineTotal)}</strong>
+          <TomanPrice as="strong" className="type-price text-aqua" amount={item.lineTotal} />
         </div>
       </div>
     </div>

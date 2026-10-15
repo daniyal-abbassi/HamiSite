@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { BadgePercent, Check, MapPin, RotateCcw, ShoppingBag, Truck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { TomanPrice } from "@/components/ui/TomanPrice";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
@@ -14,6 +15,7 @@ import { ApiClientError, apiGet, apiPost } from "@/lib/api-client";
 import { checkoutAddressError } from "@/lib/checkout-validation";
 import { paymentTermLabels, shippingOptions, type ShippingOptionKey } from "@/lib/content/order";
 import { cn, formatToman } from "@/lib/utils";
+import { normalizePersianDigits } from "@/lib/persian-typography";
 import type { Address, CouponValidation, OrderCreationResult, PaymentInitiation } from "@/types/store";
 
 type NewAddress = {
@@ -144,11 +146,11 @@ export function CheckoutClient() {
     const payload: Record<string, unknown> = {
       firstName: saved?.firstName || newAddress.firstName || user?.firstName || "",
       lastName: saved?.lastName || newAddress.lastName || user?.lastName || "",
-      phone: saved?.phoneNumber || newAddress.phone || user?.phoneNumber || "",
+      phone: normalizePersianDigits(saved?.phoneNumber || newAddress.phone || user?.phoneNumber || ""),
       province: saved?.province || newAddress.province || undefined,
       city: saved?.city || newAddress.city,
       addressText: saved?.address || newAddress.addressText,
-      postalCode: saved?.postalCode || newAddress.postalCode || undefined,
+      postalCode: normalizePersianDigits(saved?.postalCode || newAddress.postalCode || "") || undefined,
       shippingMethodName: shippingOption.label,
       shippingPrice: shippingOption.price,
       paymentTerm,
@@ -260,7 +262,7 @@ export function CheckoutClient() {
                       setSelectedAddressId(address.id);
                     }}
                   />
-                  <span className="min-w-0 text-[13px] leading-6">
+                  <span className="min-w-0 type-label">
                     <strong className="block">
                       {address.firstName || user?.firstName} {address.lastName || user?.lastName} — {address.city}
                       {address.isDefault && <span className="ms-2 rounded-full bg-aqua/15 px-2 py-0.5 text-xs text-aqua">پیش‌فرض</span>}
@@ -282,31 +284,31 @@ export function CheckoutClient() {
           {(addressMode === "new" || (addresses ?? []).length === 0) && (
             <div className="grid gap-3.5 sm:grid-cols-2">
               <div>
-                <label htmlFor="co-firstName" className="mb-1 block text-xs font-bold text-foreground/80">نام</label>
+                <label htmlFor="co-firstName" className="type-label mb-1 block font-bold text-foreground/80">نام</label>
                 <Input id="co-firstName" className={inputClass} value={newAddress.firstName} onChange={newAddressField("firstName")} autoComplete="given-name" />
               </div>
               <div>
-                <label htmlFor="co-lastName" className="mb-1 block text-xs font-bold text-foreground/80">نام خانوادگی</label>
+                <label htmlFor="co-lastName" className="type-label mb-1 block font-bold text-foreground/80">نام خانوادگی</label>
                 <Input id="co-lastName" className={inputClass} value={newAddress.lastName} onChange={newAddressField("lastName")} autoComplete="family-name" />
               </div>
               <div>
-                <label htmlFor="co-phone" className="mb-1 block text-xs font-bold text-foreground/80">شماره تماس *</label>
-                <Input id="co-phone" className={inputClass} value={newAddress.phone} onChange={newAddressField("phone")} type="tel" autoComplete="tel" />
+                <label htmlFor="co-phone" className="type-label mb-1 block font-bold text-foreground/80">شماره تماس *</label>
+                <Input id="co-phone" className={inputClass} value={newAddress.phone} onChange={newAddressField("phone")} type="tel" inputMode="tel" dir="ltr" autoComplete="tel" />
               </div>
               <div>
-                <label htmlFor="co-city" className="mb-1 block text-xs font-bold text-foreground/80">شهر *</label>
+                <label htmlFor="co-city" className="type-label mb-1 block font-bold text-foreground/80">شهر *</label>
                 <Input id="co-city" className={inputClass} value={newAddress.city} onChange={newAddressField("city")} autoComplete="address-level2" />
               </div>
               <div className="sm:col-span-2">
-                <label htmlFor="co-province" className="mb-1 block text-xs font-bold text-foreground/80">استان</label>
+                <label htmlFor="co-province" className="type-label mb-1 block font-bold text-foreground/80">استان</label>
                 <Input id="co-province" className={inputClass} value={newAddress.province} onChange={newAddressField("province")} autoComplete="address-level1" />
               </div>
               <div className="sm:col-span-2">
-                <label htmlFor="co-addressText" className="mb-1 block text-xs font-bold text-foreground/80">نشانی کامل *</label>
+                <label htmlFor="co-addressText" className="type-label mb-1 block font-bold text-foreground/80">نشانی کامل *</label>
                 <Input id="co-addressText" className={inputClass} value={newAddress.addressText} onChange={newAddressField("addressText")} autoComplete="street-address" />
               </div>
               <div className="sm:col-span-2">
-                <label htmlFor="co-postalCode" className="mb-1 block text-xs font-bold text-foreground/80">کد پستی</label>
+                <label htmlFor="co-postalCode" className="type-label mb-1 block font-bold text-foreground/80">کد پستی</label>
                 {/* An Iranian postal code is ten digits. Without inputMode the
                     phone opens a full alphabetic keyboard for a field that can
                     only ever take numbers; without `dir="ltr"` the digits render
@@ -324,7 +326,7 @@ export function CheckoutClient() {
                   onChange={newAddressField("postalCode")}
                   autoComplete="postal-code"
                 />
-                <span id="co-postalCode-hint" className="mt-1 block text-[11px] text-muted-foreground">
+                <span id="co-postalCode-hint" className="type-label mt-1 block text-muted-foreground">
                   کد پستی ۱۰ رقمی (اختیاری)
                 </span>
               </div>
@@ -370,10 +372,10 @@ export function CheckoutClient() {
                   />
                   <strong className="text-[13px]">{option.label}</strong>
                 </span>
-                <span className="mt-2 block font-mono text-xs text-aqua">
-                  {option.price === 0 ? "رایگان" : formatToman(option.price)}
+                <span className="mt-2 block type-label text-aqua">
+                  {option.price === 0 ? "رایگان" : <TomanPrice amount={option.price} />}
                 </span>
-                <span className="mt-1 block text-xs text-muted-foreground">{option.note}</span>
+                <span className="type-label mt-1 block text-muted-foreground">{option.note}</span>
               </label>
             ))}
           </div>
@@ -402,7 +404,7 @@ export function CheckoutClient() {
             </Button>
           </div>
           {couponMessage && (
-            <p className={cn("mt-3 text-xs", coupon?.valid ? "text-emerald-400" : "text-muted-foreground")} aria-live="polite">
+            <p className={cn("type-label mt-3", coupon?.valid ? "text-emerald-400" : "text-muted-foreground")} aria-live="polite">
               {couponMessage}
             </p>
           )}
@@ -421,7 +423,7 @@ export function CheckoutClient() {
                 <label
                   key={term}
                   className={cn(
-                    "cursor-pointer rounded-xl border p-3.5 text-[13px] transition-all duration-fast",
+                    "cursor-pointer rounded-xl border p-3.5 type-label transition-all duration-fast",
                     paymentTerm === term ? "border-aqua bg-aqua/10" : "border-line bg-foreground/5 hover:border-aqua/40",
                   )}
                 >
@@ -439,12 +441,12 @@ export function CheckoutClient() {
               ))}
             </div>
           ) : (
-            <p className="text-[13px] text-muted-foreground">
+            <p className="type-label text-muted-foreground">
               پس از ثبت سفارش، برای پرداخت آنلاین به درگاه زرین‌پال منتقل می‌شوید.
             </p>
           )}
           <div className="mt-4">
-            <label htmlFor="co-note" className="mb-1 block text-xs font-bold text-foreground/80">یادداشت سفارش (اختیاری)</label>
+            <label htmlFor="co-note" className="type-label mb-1 block font-bold text-foreground/80">یادداشت سفارش (اختیاری)</label>
             <Input id="co-note" className={inputClass} value={note} onChange={(event) => setNote(event.target.value)} placeholder="مثلاً زمان مناسب تحویل…" />
           </div>
         </section>
@@ -457,47 +459,45 @@ export function CheckoutClient() {
           other. The order override is gone; on a phone the summary now follows the
           controls, which is also the reading order of a checkout. */}
       <aside className="glass h-fit rounded-2xl p-6 lg:sticky lg:top-24">
-        <h2 className="text-base font-black">سفارش شما</h2>
+        <h2 className="type-section">سفارش شما</h2>
         <div className="brand-hairline my-4" />
         <ul className="max-h-52 space-y-2.5 overflow-y-auto pe-1">
           {cart.items.map((item) => (
-            <li key={item.id} className="flex items-start justify-between gap-2 text-[12px]">
+            <li key={item.id} className="flex items-start justify-between gap-2 type-label">
               <span className="min-w-0">
                 <span className="block truncate font-bold">
                   {item.isBundle ? `سبد: ${item.bundleTitle}` : item.product?.name ?? "کالا"}
                 </span>
-                <span className="font-mono text-xs text-muted-foreground">
+                <span className="text-muted-foreground">
                   {item.isBundle
                     ? `${item.bundleItems?.length ?? 0} قلم کالا`
                     : [item.variant?.storage, item.variant?.color].filter(Boolean).join(" — ") || "—"}{" "}
                   × {item.quantity.toLocaleString("fa-IR")}
                 </span>
               </span>
-              <span className="shrink-0 font-mono text-muted-foreground">{formatToman(item.lineTotal)}</span>
+              <span className="shrink-0 text-muted-foreground"><TomanPrice amount={item.lineTotal} /></span>
             </li>
           ))}
         </ul>
         <div className="brand-hairline my-4" />
-        <dl className="space-y-2.5 text-[13px]">
+        <dl className="space-y-2.5 type-label">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">جمع کالاها</dt>
-            <dd className="font-mono">{formatToman(subtotal)}</dd>
+            <dd><TomanPrice amount={subtotal} /></dd>
           </div>
           {discount > 0 && (
             <div className="flex justify-between text-emerald-400">
               <dt>تخفیف</dt>
-              <dd className="font-mono">−{formatToman(discount)}</dd>
+              <dd><TomanPrice amount={-discount} /></dd>
             </div>
           )}
           <div className="flex justify-between">
             <dt className="text-muted-foreground">ارسال ({shippingOption.label})</dt>
-            <dd className="font-mono">{shippingOption.price === 0 ? "رایگان" : formatToman(shippingOption.price)}</dd>
+            <dd>{shippingOption.price === 0 ? "رایگان" : <TomanPrice amount={shippingOption.price} />}</dd>
           </div>
           <div className="flex justify-between border-t border-line pt-3 text-base">
             <dt className="font-black">مبلغ نهایی</dt>
-            <dd className="font-black text-aqua" aria-live="polite">
-              {formatToman(total)}
-            </dd>
+            <dd aria-live="polite"><TomanPrice className="type-price text-aqua" amount={total} /></dd>
           </div>
         </dl>
 

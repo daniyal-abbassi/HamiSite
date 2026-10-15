@@ -7,10 +7,11 @@ import { ArrowLeft, PackageOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { OrderStatusBadge, PaymentStatusBadge } from "@/components/order/StatusBadge";
+import { TomanPrice } from "@/components/ui/TomanPrice";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { ApiClientError, apiGet, apiGetWithMeta } from "@/lib/api-client";
 import { formatFaDate } from "@/lib/content/order";
-import { formatToman, toFaDigits } from "@/lib/utils";
+import { toFaDigits } from "@/lib/utils";
 import type { OrderSummary } from "@/types/store";
 
 type Meta = { page: number; pageSize: number; total: number; hasNextPage: boolean };
@@ -106,7 +107,7 @@ export function OrdersListClient() {
             <span className="flex flex-wrap items-center gap-2 text-xs">
               <OrderStatusBadge status={order.status} />
               <PaymentStatusBadge status={order.paymentStatus} />
-              <strong className="font-mono text-sm text-foreground">{formatToman(order.totals.totalAmount)}</strong>
+              <TomanPrice as="strong" className="type-label text-foreground" amount={order.totals.totalAmount} />
               <ArrowLeft className="size-4 text-aqua" />
             </span>
           </Link>

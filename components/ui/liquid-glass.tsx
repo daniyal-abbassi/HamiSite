@@ -1085,7 +1085,7 @@ export function GlassMenu({
                   close();
                 }}
                 className={cn(
-                  "flex cursor-pointer items-center gap-3.5 rounded-[22px] pr-6 pl-4 font-medium text-foreground outline-none hover:bg-foreground/6 focus-visible:bg-foreground/8 disabled:cursor-not-allowed disabled:opacity-50",
+                  "flex cursor-pointer items-center gap-3.5 rounded-[22px] pe-6 ps-4 font-medium text-foreground outline-none hover:bg-foreground/6 focus-visible:bg-foreground/8 disabled:cursor-not-allowed disabled:opacity-50",
                   PILL_CSS,
                 )}
                 style={{ height: ROW }}

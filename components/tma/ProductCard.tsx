@@ -2,7 +2,8 @@
 
 import React, { useState } from "react";
 import Image from "next/image";
-import { formatToman, toFaDigits } from "@/lib/utils";
+import { TomanPrice } from "@/components/ui/TomanPrice";
+import { toFaDigits } from "@/lib/utils";
 import { useTelegram } from "./TelegramProvider";
 import { Layers, Package, Check, X, AlertCircle } from "lucide-react";
 
@@ -93,7 +94,7 @@ export function ProductCard({
         <div className="flex-1 min-w-0">
           <div className="flex items-center justify-between gap-1 mb-1">
             {product.categoryName && (
-              <span className="text-[10px] text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2 py-0.5 rounded-full font-medium">
+              <span className="type-caption text-amber-400 bg-amber-400/10 border border-amber-400/20 px-2 py-0.5 rounded-full font-medium">
                 {product.categoryName}
               </span>
             )}
@@ -101,7 +102,7 @@ export function ProductCard({
             <button
               onClick={handleToggleAvailability}
               disabled={isToggling}
-              className={`flex items-center gap-1 text-[11px] px-2.5 py-0.5 rounded-full font-medium transition-all ${
+              className={`flex items-center gap-1 type-label px-2.5 py-0.5 rounded-full font-medium transition-all ${
                 isAvailable
                   ? "bg-emerald-500/15 border border-emerald-500/30 text-emerald-300"
                   : "bg-rose-500/15 border border-rose-500/30 text-rose-300"
@@ -116,18 +117,14 @@ export function ProductCard({
             </button>
           </div>
 
-          <h3 className="text-xs font-bold text-stone-100 line-clamp-2 leading-relaxed">
+          <h3 className="type-body font-bold text-stone-100 line-clamp-2 leading-relaxed">
             {product.name}
           </h3>
 
           <div className="flex items-baseline gap-2 mt-1">
-            <span className="text-xs font-black text-amber-300">
-              {formatToman(product.price)}
-            </span>
+            <TomanPrice className="type-price text-amber-300" amount={product.price} />
             {product.compareAtPrice && product.compareAtPrice > product.price && (
-              <span className="text-[10px] line-through text-stone-500 font-mono">
-                {formatToman(product.compareAtPrice)}
-              </span>
+              <del className="type-caption text-stone-500"><TomanPrice amount={product.compareAtPrice} /></del>
             )}
           </div>
         </div>
@@ -136,12 +133,12 @@ export function ProductCard({
       {/* Footer Actions: Variants or Single Stock */}
       <div className="pt-2 border-t border-stone-800/80 flex items-center justify-between text-xs">
         {product.hasVariants ? (
-          <div className="flex items-center gap-1.5 text-stone-400 text-[11px]">
+          <div className="flex items-center gap-1.5 text-stone-400 type-label">
             <Layers className="w-3.5 h-3.5 text-amber-400" />
             <span>دارای {toFaDigits(product.variants.length)} تنوع (رنگ/حافظه)</span>
           </div>
         ) : (
-          <div className="flex items-center gap-1.5 text-stone-400 text-[11px]">
+          <div className="flex items-center gap-1.5 text-stone-400 type-label">
             <Package className="w-3.5 h-3.5" />
             <span>
               موجودی انبار:{" "}
@@ -156,7 +153,7 @@ export function ProductCard({
               haptic.selection();
               onManageVariants(product);
             }}
-            className="text-[11px] font-semibold text-amber-300 bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 px-3 py-1 rounded-xl active:scale-95 transition-all"
+            className="type-label font-semibold text-amber-300 bg-amber-400/10 hover:bg-amber-400/20 border border-amber-400/30 px-3 py-1 rounded-xl active:scale-95 transition-all"
           >
             مدیریت قیمت و موجودی
           </button>
@@ -165,4 +162,3 @@ export function ProductCard({
     </div>
   );
 }
-

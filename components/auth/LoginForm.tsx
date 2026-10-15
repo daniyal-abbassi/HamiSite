@@ -11,6 +11,7 @@ import { useCart } from "@/components/providers/CartProvider";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { ApiClientError, apiPost } from "@/lib/api-client";
 import { safeNextPath } from "@/lib/safe-next-path";
+import { normalizePersianDigits } from "@/lib/persian-typography";
 import type { PublicUser } from "@/types/auth";
 
 type FieldErrors = Record<string, string>;
@@ -48,7 +49,10 @@ export function LoginForm() {
     setError(null);
     setFieldErrors({});
     try {
-      await apiPost<PublicUser>("/api/auth/login", { identifier, password });
+      await apiPost<PublicUser>("/api/auth/login", {
+        identifier: normalizePersianDigits(identifier.trim()),
+        password,
+      });
       await refresh();
       void refreshCart();
       router.push(nextPath);
@@ -66,8 +70,8 @@ export function LoginForm() {
         <span>ورود</span>
         <i />
       </div>
-      <h1 className="mt-3 text-xl font-black">خوش آمدید</h1>
-      <p className="mt-1.5 text-[13px] leading-6 text-muted-foreground">
+      <h1 className="type-page mt-3">خوش آمدید</h1>
+      <p className="type-support mt-1.5 text-muted-foreground">
         {returningToProduct
           ? "برای ادامه خرید، وارد حساب خود شوید. پس از ورود به همین صفحه برمی‌گردید تا افزودن به سبد را انتخاب کنید."
           : "با نام کاربری یا شماره موبایل وارد شوید."}
@@ -75,7 +79,7 @@ export function LoginForm() {
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
         <div>
-          <label htmlFor="identifier" className="mb-1.5 block text-xs font-bold text-foreground/85">
+          <label htmlFor="identifier" className="type-label mb-1.5 block font-bold text-foreground/85">
             نام کاربری یا شماره موبایل
           </label>
           <Input
@@ -83,16 +87,17 @@ export function LoginForm() {
             name="identifier"
             autoComplete="username"
             required
+            dir="auto"
             value={identifier}
             onChange={(event) => setIdentifier(event.target.value)}
             aria-invalid={Boolean(fieldErrors.identifier)}
             placeholder="مثلاً ۰۹۱۲۱۱۱۲۲۳۳"
           />
-          {fieldErrors.identifier && <p className="mt-1 text-xs text-destructive">{fieldErrors.identifier}</p>}
+          {fieldErrors.identifier && <p className="type-label mt-1 text-destructive">{fieldErrors.identifier}</p>}
         </div>
 
         <div>
-          <label htmlFor="password" className="mb-1.5 block text-xs font-bold text-foreground/85">
+          <label htmlFor="password" className="type-label mb-1.5 block font-bold text-foreground/85">
             رمز عبور
           </label>
           <Input
@@ -101,11 +106,12 @@ export function LoginForm() {
             type="password"
             autoComplete="current-password"
             required
+            dir="ltr"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             aria-invalid={Boolean(fieldErrors.password)}
           />
-          {fieldErrors.password && <p className="mt-1 text-xs text-destructive">{fieldErrors.password}</p>}
+          {fieldErrors.password && <p className="type-label mt-1 text-destructive">{fieldErrors.password}</p>}
         </div>
 
         {error && (
@@ -120,7 +126,7 @@ export function LoginForm() {
         </Button>
       </form>
 
-      <p className="mt-5 text-center text-[13px] text-muted-foreground">
+      <p className="type-label mt-5 text-center text-muted-foreground">
         حساب ندارید؟{" "}
         <Link
           href={nextPath !== "/" ? `/register?next=${encodeURIComponent(nextPath)}` : "/register"}

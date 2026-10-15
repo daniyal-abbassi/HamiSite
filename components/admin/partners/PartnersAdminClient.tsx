@@ -100,7 +100,7 @@ export function PartnersAdminClient() {
             setStatusFilter("ALL");
             setPage(1);
           }}
-          className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all text-right cursor-pointer ${
+          className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all text-start cursor-pointer ${
             statusFilter === "ALL"
               ? "bg-zinc-800/90 border-zinc-600 text-zinc-100 shadow-md"
               : "bg-zinc-900/40 border-zinc-800/80 text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200"
@@ -121,7 +121,7 @@ export function PartnersAdminClient() {
             setStatusFilter("PENDING");
             setPage(1);
           }}
-          className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all text-right cursor-pointer ${
+          className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all text-start cursor-pointer ${
             statusFilter === "PENDING"
               ? "bg-amber-950/40 border-amber-500/50 text-amber-200 shadow-md"
               : "bg-zinc-900/40 border-zinc-800/80 text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200"
@@ -142,7 +142,7 @@ export function PartnersAdminClient() {
             setStatusFilter("APPROVED");
             setPage(1);
           }}
-          className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all text-right cursor-pointer ${
+          className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all text-start cursor-pointer ${
             statusFilter === "APPROVED"
               ? "bg-emerald-950/40 border-emerald-500/50 text-emerald-200 shadow-md"
               : "bg-zinc-900/40 border-zinc-800/80 text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200"
@@ -163,7 +163,7 @@ export function PartnersAdminClient() {
             setStatusFilter("REJECTED");
             setPage(1);
           }}
-          className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all text-right cursor-pointer ${
+          className={`flex items-center justify-between p-3.5 rounded-2xl border transition-all text-start cursor-pointer ${
             statusFilter === "REJECTED"
               ? "bg-rose-950/40 border-rose-500/50 text-rose-200 shadow-md"
               : "bg-zinc-900/40 border-zinc-800/80 text-zinc-400 hover:bg-zinc-800/40 hover:text-zinc-200"
@@ -182,7 +182,7 @@ export function PartnersAdminClient() {
       {/* Search and Entity Filters Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-zinc-900/60 border border-zinc-800 p-4 rounded-2xl">
         <div className="relative flex-1 max-w-lg">
-          <Search size={16} className="absolute right-3.5 top-3 text-zinc-500" />
+          <Search size={16} className="absolute start-3.5 top-3 text-zinc-500" />
           <input
             type="text"
             value={search}
@@ -191,7 +191,7 @@ export function PartnersAdminClient() {
               setPage(1);
             }}
             placeholder="جست‌وجوی نام متقاضی، شماره موبایل، کد ملی یا نام فروشگاه..."
-            className="w-full rounded-xl bg-zinc-950 border border-zinc-800 pr-10 pl-3.5 py-2.5 text-xs focus:border-amber-400 focus:outline-hidden text-zinc-200 placeholder:text-zinc-600"
+            className="w-full rounded-xl bg-zinc-950 border border-zinc-800 ps-10 pe-3.5 py-2.5 text-xs focus:border-amber-400 focus:outline-hidden text-zinc-200 placeholder:text-zinc-600"
           />
         </div>
 
@@ -216,7 +216,7 @@ export function PartnersAdminClient() {
       {/* Applications Table */}
       <div className="rounded-2xl border border-zinc-800 bg-zinc-900/40 overflow-hidden shadow-xl">
         <div className="overflow-x-auto">
-          <table className="w-full text-right text-xs">
+          <table className="w-full text-start text-xs">
             <thead className="bg-zinc-900/80 border-b border-zinc-800 text-zinc-400">
               <tr>
                 <th className="py-3.5 px-4 font-bold">شناسه</th>

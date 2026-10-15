@@ -4,6 +4,7 @@ import { useId, useRef, useState, type ReactNode } from "react";
 import { ArrowUpLeft, Building2, Check, FileCheck2, Loader2, Store, UploadCloud } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toFaDigits } from "@/lib/utils";
+import { normalizePersianDigits } from "@/lib/persian-typography";
 import { isValidEconomicCode, isValidIranianMobile, isValidIranianNationalCode, isValidIranianPostalCode, isValidLegalNationalId, isValidIranianLandline } from "@/lib/validators";
 import { partnerEntityOptions, partnerFileTypesNote, partnerIndividualFields, partnerLegalFields, partnerSharedFields, type PartnerEntity } from "@/lib/content/partners";
 import { validateUploadFile } from "@/lib/security/upload-validation";
@@ -181,8 +182,13 @@ export function PartnerForm() {
       const formData = new FormData();
       formData.set("entityType", entity);
       for (const field of [...partnerSharedFields, ...branchTextFields]) {
-        const value = values[field.key as keyof FormValues];
-        if (value) formData.set(field.key, value);
+        let value = values[field.key as keyof FormValues];
+        if (value) {
+          if (("dir" in field && field.dir === "ltr") || field.key === "mobile" || field.key === "shopPhone") {
+            value = normalizePersianDigits(value.trim());
+          }
+          formData.set(field.key, value);
+        }
       }
       for (const field of branchFileFields) {
         const file = files[field.key];
@@ -221,11 +227,13 @@ export function PartnerForm() {
     const label = !branchIsIndividual && key === "nationalCode" ? "کد ملی نماینده شرکت"
       : !branchIsIndividual && key === "fullName" ? "نام و نام خانوادگی نماینده شرکت" : field.label;
     const autoComplete = key === "fullName" ? "name" : key === "mobile" ? "tel" : key === "companyName" ? "organization" : "off";
+    const isPhone = key === "mobile" || key === "shopPhone";
     return (
       <div key={key} className={field.span === "full" ? "partner-field-full" : undefined}>
         <Field id={id} label={label} required={field.required} error={errors[key]}>
-          <Input id={id} name={key} value={values[key]} required={field.required} dir={field.dir}
-            autoComplete={autoComplete} inputMode={key === "mobile" || key === "shopPhone" ? "tel" : field.dir === "ltr" ? "numeric" : "text"}
+          {/* phone inputs and numeric codes enforce dir="ltr" */}
+          <Input id={id} name={key} value={values[key]} required={field.required} dir={isPhone || field.dir === "ltr" ? "ltr" : undefined}
+            autoComplete={autoComplete} inputMode={isPhone ? "tel" : field.dir === "ltr" ? "numeric" : "text"}
             aria-invalid={!!errors[key]} aria-describedby={errors[key] ? `${id}-error` : undefined}
             onChange={(event) => setValue(key, event.target.value)} placeholder={field.placeholder} />
         </Field>

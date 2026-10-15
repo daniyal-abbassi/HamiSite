@@ -361,8 +361,8 @@ export function ProductForm({ mode, productId }: { mode: "new" | "edit"; product
 
       {/* Basic info */}
       <section className="rounded-2xl border border-line bg-ink-2/60 p-6">
-        <h2 className="text-sm font-black">هویت و رسانه محصول</h2>
-        <p className="mt-1 text-xs text-muted-foreground">نام، شناسه و تصویرهایی که مشتری در فروشگاه می‌بیند.</p>
+        <h2 className="type-section">هویت و رسانه محصول</h2>
+        <p className="type-label mt-1 text-muted-foreground">نام، شناسه و تصویرهایی که مشتری در فروشگاه می‌بیند.</p>
         <div className="brand-hairline my-4" />
         <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
           <div>
@@ -396,8 +396,8 @@ export function ProductForm({ mode, productId }: { mode: "new" | "edit"; product
       </section>
 
       <section className="rounded-2xl border border-line bg-ink-2/60 p-6">
-        <h2 className="text-sm font-black">قیمت و موجودی</h2>
-        <p className="mt-1 text-xs text-muted-foreground">قیمت پایه و محدودیت‌های سفارش این محصول.</p>
+        <h2 className="type-section">قیمت و موجودی</h2>
+        <p className="type-label mt-1 text-muted-foreground">قیمت پایه و محدودیت‌های سفارش این محصول.</p>
         <div className="brand-hairline my-4" />
         <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
           <div>
@@ -480,7 +480,7 @@ export function ProductForm({ mode, productId }: { mode: "new" | "edit"; product
 
       {/* Description / flags */}
       <section className="rounded-2xl border border-line bg-ink-2/60 p-6">
-        <h2 className="text-sm font-black">توضیحات و تنظیمات</h2>
+        <h2 className="type-section">توضیحات و تنظیمات</h2>
         <div className="brand-hairline my-4" />
         <div className="grid gap-4">
           <div>
@@ -537,7 +537,7 @@ export function ProductForm({ mode, productId }: { mode: "new" | "edit"; product
       <section className="rounded-2xl border border-line bg-ink-2/60 p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <h2 className="text-sm font-black">ویژگی‌ها و مشخصات فنی (Specs)</h2>
+            <h2 className="type-section">ویژگی‌ها و مشخصات فنی (Specs)</h2>
             <p className="mt-0.5 text-xs text-muted-foreground">
               ویژگی‌های ساختاریافته مانند ریجن، ابعاد، وزن، حافظه، پردازنده و...
             </p>
@@ -629,7 +629,7 @@ export function ProductForm({ mode, productId }: { mode: "new" | "edit"; product
 
       {/* SEO */}
       <section className="rounded-2xl border border-line bg-ink-2/60 p-6">
-        <h2 className="text-sm font-black">SEO</h2>
+        <h2 className="type-section">SEO</h2>
         <div className="brand-hairline my-4" />
         <div className="grid gap-4">
           <div>
@@ -646,7 +646,7 @@ export function ProductForm({ mode, productId }: { mode: "new" | "edit"; product
       {/* Variants — edit only */}
       {mode === "edit" && productId !== undefined && (
         <section className="rounded-2xl border border-line bg-ink-2/60 p-6">
-          <h2 className="text-sm font-black">واریانت‌ها</h2>
+          <h2 className="type-section">واریانت‌ها</h2>
           <div className="brand-hairline my-4" />
           <VariantsManager productId={productId} variants={variants} images={images} onImagesChange={setImages} onChanged={reloadProduct} />
         </section>
@@ -703,9 +703,9 @@ export function ProductForm({ mode, productId }: { mode: "new" | "edit"; product
 function FlagRow({ label, hint, htmlFor, children }: { label: string; hint: string; htmlFor?: string; children: React.ReactNode }) {
   return (
     <div className="flex items-center justify-between gap-3 rounded-xl border border-line bg-ink/40 px-3.5 py-3">
-      <label htmlFor={htmlFor} className={cn("text-[12px] font-bold", htmlFor && "cursor-pointer select-none")}>
+      <label htmlFor={htmlFor} className={cn("type-label font-bold", htmlFor && "cursor-pointer select-none")}>
         {label}
-        <span className="block text-[10px] font-normal text-muted-foreground/70">{hint}</span>
+        <span className="block type-caption font-normal text-muted-foreground/70">{hint}</span>
       </label>
       {children}
     </div>
@@ -714,7 +714,7 @@ function FlagRow({ label, hint, htmlFor, children }: { label: string; hint: stri
 
 function Field({ label, htmlFor }: { label: string; htmlFor: string }) {
   return (
-    <label htmlFor={htmlFor} className="mb-1 block text-[11px] font-bold text-foreground/80">
+    <label htmlFor={htmlFor} className="type-label mb-1 block font-bold text-foreground/80">
       {label}
     </label>
   );

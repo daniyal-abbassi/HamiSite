@@ -592,7 +592,7 @@ export function BundleFormModal({
                     قیمت واحد، تعداد و رنگ (اختیاری) هر قلم را می‌توانید مستقیماً تعیین کنید.
                   </p>
                 </div>
-                <div className="text-left sm:text-right">
+                <div className="text-end sm:text-start">
                   <span className="text-xs text-zinc-400">جمع بهای اقلام: </span>
                   <span className="text-sm font-bold text-amber-400">
                     {toPersianDigits(aggregateSum.toLocaleString())} تومان
@@ -606,7 +606,7 @@ export function BundleFormModal({
                   هنوز کالایی تیک نخورده است. از لیست کالاهای زیر تیک بزنید تا به سبد افزوده شود.
                 </div>
               ) : (
-                <div className="space-y-2.5 max-h-56 overflow-y-auto pr-1">
+                <div className="space-y-2.5 max-h-56 overflow-y-auto pe-1">
                   {items.map((item) => {
                     const lineTotal = item.unitPrice * item.quantity;
                     const hasVariants = Boolean(
@@ -672,7 +672,7 @@ export function BundleFormModal({
                             </div>
 
                             {/* جمع سطر */}
-                            <div className="min-w-[80px] text-left text-[11px] text-zinc-300 font-medium">
+                            <div className="min-w-[80px] text-end text-[11px] text-zinc-300 font-medium">
                               {toPersianDigits(lineTotal.toLocaleString())} ت
                             </div>
 
@@ -761,13 +761,13 @@ export function BundleFormModal({
                 </div>
 
                 <div className="relative">
-                  <Search size={16} className="absolute right-3.5 top-3 text-zinc-500" />
+                  <Search size={16} className="absolute start-3.5 top-3 text-zinc-500" />
                   <input
                     type="text"
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     placeholder="جست‌وجوی نام کالا (انگلیسی یا فارسی)..."
-                    className="w-full rounded-xl bg-zinc-950 border border-zinc-800 pr-10 pl-3.5 py-2 text-xs focus:border-amber-400 focus:outline-hidden"
+                    className="w-full rounded-xl bg-zinc-950 border border-zinc-800 ps-10 pe-3.5 py-2 text-xs focus:border-amber-400 focus:outline-hidden"
                   />
                 </div>
 
@@ -794,7 +794,7 @@ export function BundleFormModal({
                               : "hover:bg-zinc-900 border border-transparent text-zinc-300"
                           }`}
                         >
-                          <div className="flex items-center gap-3 min-w-0 pr-1">
+                          <div className="flex items-center gap-3 min-w-0 pe-1">
                             <div
                               className={`w-4 h-4 rounded-md border flex items-center justify-center shrink-0 transition-colors ${
                                 isChecked
@@ -827,7 +827,7 @@ export function BundleFormModal({
                             </div>
                           </div>
 
-                          <div className="flex items-center gap-3 shrink-0 pl-1">
+                          <div className="flex items-center gap-3 shrink-0 ps-1">
                             <span className="text-zinc-400 text-[11px]">
                               {toPersianDigits(prod.price.toLocaleString())} تومان
                             </span>
@@ -865,7 +865,7 @@ export function BundleFormModal({
                 </p>
               </div>
 
-              <div className="space-y-2 max-h-80 overflow-y-auto pr-1">
+              <div className="space-y-2 max-h-80 overflow-y-auto pe-1">
                 {items.map((item, index) => (
                   <div
                     key={item.uid}
@@ -971,7 +971,7 @@ export function BundleFormModal({
                     ویرایش اقلام یا رنگ‌ها
                   </button>
                 </div>
-                <div className="max-h-32 overflow-y-auto space-y-1 pr-1 text-xs">
+                <div className="max-h-32 overflow-y-auto space-y-1 pe-1 text-xs">
                   {items.map((it, idx) => (
                     <div
                       key={it.uid}

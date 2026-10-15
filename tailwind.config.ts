@@ -111,8 +111,8 @@ const config: Config = {
         "3xl": "34px",
       },
       fontFamily: {
-        sans: ["var(--font-vazirmatn)", "Tahoma", "sans-serif"],
-        mono: ["var(--font-dm-mono)", "var(--font-vazirmatn)", "monospace"],
+        sans: ["var(--font-ui)"],
+        mono: ["var(--font-dm-mono)"],
       },
       boxShadow: {
         /* Layered ambient shadows — a hairline contact line, a mid falloff,

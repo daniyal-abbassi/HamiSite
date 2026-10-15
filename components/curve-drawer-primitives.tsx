@@ -215,7 +215,7 @@ export function CurveDrawerHeader({
   return (
     <div
       className={cn(
-        "flex flex-col gap-0.5 p-4 group-data-[vaul-drawer-direction=bottom]/curve-drawer-content:text-center group-data-[vaul-drawer-direction=top]/curve-drawer-content:text-center md:gap-0.5 md:text-left",
+        "flex flex-col gap-0.5 p-4 group-data-[vaul-drawer-direction=bottom]/curve-drawer-content:text-center group-data-[vaul-drawer-direction=top]/curve-drawer-content:text-center md:gap-0.5 md:text-start",
         className
       )}
       data-slot="curve-drawer-header"

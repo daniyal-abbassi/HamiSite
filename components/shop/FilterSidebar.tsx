@@ -14,7 +14,7 @@ import type { CategoryFacet } from "@/lib/shop-query-db";
 const FILTER_KEYS = ["q", "category", "brand", "min", "max", "stock", "special"] as const;
 
 function SidebarHeading({ children }: { children: React.ReactNode }) {
-  return <h3 className="font-mono text-xs tracking-normal text-aqua">{children}</h3>;
+  return <h3 className="type-label font-semibold tracking-normal text-aqua">{children}</h3>;
 }
 
 export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: CategoryFacet[]; brands: ShopBrand[] }) {
@@ -107,7 +107,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
                     })
                   }
                   className={cn(
-                    "rounded-full border px-3.5 py-1 text-xs font-bold transition-colors",
+                    "type-label rounded-full border px-3.5 py-1 font-bold transition-colors",
                     active
                       ? "border-aqua bg-aqua/10 text-aqua"
                       : "border-line text-foreground/70 hover:border-aqua/50 hover:text-foreground",
@@ -115,7 +115,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
                 >
                   {category.label}
                   {category.showsCount && (
-                    <span className="ms-1.5 font-mono text-[10px] opacity-60">{toFaDigits(category.count)}</span>
+                    <span className="ms-1.5 tabular-nums opacity-70">{toFaDigits(category.count)}</span>
                   )}
                 </button>
               );
@@ -148,7 +148,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
                     })
                   }
                   className={cn(
-                    "rounded-full border px-3.5 py-1 text-xs font-bold transition-colors",
+                    "type-label rounded-full border px-3.5 py-1 font-bold transition-colors",
                     active
                       ? "border-aqua bg-aqua/10 text-aqua"
                       : "border-line text-foreground/70 hover:border-aqua/50 hover:text-foreground",
@@ -156,7 +156,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
                 >
                   {brandLabel(brand.name)}
                   {(brand.productCount ?? 0) > 0 && (
-                    <span className="ms-1.5 font-mono text-[10px] opacity-60">{toFaDigits(brand.productCount!)}</span>
+                    <span className="ms-1.5 tabular-nums opacity-70">{toFaDigits(brand.productCount!)}</span>
                   )}
                 </button>
               );

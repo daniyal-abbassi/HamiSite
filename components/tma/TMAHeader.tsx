@@ -21,7 +21,7 @@ export function TMAHeader({ title = "حامی همراه", subtitle = "مدیر�
           </div>
         </div>
         <div>
-          <h1 className="text-sm font-bold text-stone-100 tracking-tight flex items-center gap-1.5">
+          <h1 className="text-sm font-bold text-stone-100 flex items-center gap-1.5">
             {title}
             <span className="inline-block w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
           </h1>

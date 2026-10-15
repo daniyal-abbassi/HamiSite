@@ -3,12 +3,12 @@
 import Link from "next/link";
 import { ShoppingBag, X } from "lucide-react";
 import { CartLine } from "@/components/cart/CartLine";
+import { TomanPrice } from "@/components/ui/TomanPrice";
 import { buttonVariants } from "@/components/ui/button";
 import { useModalDialog } from "@/components/ui/useModalDialog";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
-import { formatToman } from "@/lib/utils";
 
 /** Floating glass drawer anchored to the logical end edge (physical left under
  * RTL — the same side as the header's cart icon). Renders inside CartProvider
@@ -94,7 +94,7 @@ export function CartDrawer() {
 
             <div className="flex items-center justify-between text-sm">
               <span className="text-muted-foreground">جمع کل ({cart.itemCount.toLocaleString("fa-IR")} کالا)</span>
-              <strong className="text-base font-black text-aqua">{formatToman(cart.subtotal)}</strong>
+              <TomanPrice as="strong" className="type-price text-aqua" amount={cart.subtotal} />
             </div>
 
             <div className="mt-4 grid grid-cols-2 gap-2.5">

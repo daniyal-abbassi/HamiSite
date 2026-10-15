@@ -6,12 +6,13 @@ import { useRouter } from "next/navigation";
 import { CreditCard, MapPin, PackageCheck, RotateCcw, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
+import { TomanPrice } from "@/components/ui/TomanPrice";
 import { OrderStatusBadge, PaymentStatusBadge } from "@/components/order/StatusBadge";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { ApiClientError, apiGet, apiPost } from "@/lib/api-client";
 import { formatFaDate, formatFaDateTime } from "@/lib/content/order";
-import { formatToman, toFaDigits } from "@/lib/utils";
+import { toFaDigits } from "@/lib/utils";
 import type { OrderDetail, PaymentInitiation } from "@/types/store";
 
 const TERMINAL_STATUSES = ["CANCELED", "FAILED", "REVERSED"];
@@ -148,11 +149,11 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
               <span className="min-w-0">
                 <span className="block font-bold">{item.productName}</span>
                 {item.variantName && <span className="block text-xs text-muted-foreground">{item.variantName}</span>}
-                <span className="mt-0.5 block font-mono text-xs text-muted-foreground">
-                  {item.quantity.toLocaleString("fa-IR")} × {formatToman(item.price)}
+                <span className="mt-0.5 block type-caption text-muted-foreground">
+                  {item.quantity.toLocaleString("fa-IR")} × <TomanPrice amount={item.price} />
                 </span>
               </span>
-              <strong className="shrink-0 text-aqua">{formatToman(item.lineTotal)}</strong>
+              <TomanPrice as="strong" className="shrink-0 type-label text-aqua" amount={item.lineTotal} />
             </li>
           ))}
         </ul>
@@ -161,23 +162,21 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
         <dl className="space-y-2 text-[13px]">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">جمع کالاها</dt>
-            <dd className="font-mono">{formatToman(order.totals.subtotal)}</dd>
+            <dd><TomanPrice amount={order.totals.subtotal} /></dd>
           </div>
           {order.totals.discountAmount > 0 && (
             <div className="flex justify-between text-emerald-400">
               <dt>تخفیف {order.coupon ? `(${order.coupon.code})` : ""}</dt>
-              <dd className="font-mono">−{formatToman(order.totals.discountAmount)}</dd>
+              <dd><TomanPrice amount={-order.totals.discountAmount} /></dd>
             </div>
           )}
           <div className="flex justify-between">
             <dt className="text-muted-foreground">ارسال{order.shipping.methodName ? ` (${order.shipping.methodName})` : ""}</dt>
-            <dd className="font-mono">
-              {order.shipping.shippingPrice === 0 ? "رایگان" : formatToman(order.shipping.shippingPrice)}
-            </dd>
+            <dd>{order.shipping.shippingPrice === 0 ? "رایگان" : <TomanPrice amount={order.shipping.shippingPrice} />}</dd>
           </div>
           <div className="flex justify-between border-t border-line pt-2.5 text-base">
             <dt className="font-black">مبلغ کل</dt>
-            <dd className="font-black text-aqua">{formatToman(order.totals.totalAmount)}</dd>
+            <dd><TomanPrice className="type-label font-semibold text-aqua" amount={order.totals.totalAmount} /></dd>
           </div>
         </dl>
       </div>
@@ -230,7 +229,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
                     <span className="block text-xs text-muted-foreground">{formatFaDate(payment.createdAt)}</span>
                   </span>
                   <span className="text-end">
-                    <strong className="block font-mono">{formatToman(payment.amount)}</strong>
+                    <TomanPrice as="strong" className="type-label" amount={payment.amount} />
                     <PaymentStatusBadge status={payment.status} />
                   </span>
                 </li>

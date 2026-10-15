@@ -55,7 +55,7 @@ export function CatalogListing({
   const viewHref = (next: Partial<ListingView>) => listingViewHref(basePath, view, next);
   return (
     <div className="container py-10">
-      <nav aria-label="مسیر صفحه" className="mb-6 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground/70">
+      <nav aria-label="مسیر صفحه" className="type-label mb-6 flex flex-wrap items-center gap-1.5 text-muted-foreground/70">
         <Link href="/" className="transition-colors hover:text-aqua">خانه</Link>
         {breadcrumb.map((crumb) => (
           <span key={crumb.href} className="flex items-center gap-1.5">
@@ -75,14 +75,14 @@ export function CatalogListing({
           <i />
           <p>{title}</p>
         </div>
-        <h1 className="mt-4 text-2xl font-black tracking-normal text-foreground md:text-3xl">{title}</h1>
-        <p className="mt-2 max-w-xl text-sm leading-7 text-muted-foreground">{description}</p>
-        <p className="mt-3 text-xs text-foreground/60" aria-live="polite">
+        <h1 className="type-page mt-4 tracking-normal text-foreground">{title}</h1>
+        <p className="type-support mt-2 max-w-xl text-muted-foreground">{description}</p>
+        <p className="type-label mt-3 text-foreground/70" aria-live="polite">
           {shownTotal === total
             ? `${toFaDigits(total)} محصول`
             : `${toFaDigits(shownTotal)} محصول از ${toFaDigits(total)}`}
         </p>
-        <DataCurrencyNote generatedAt={generatedAt} className="mt-2 text-xs" />
+        <DataCurrencyNote generatedAt={generatedAt} className="type-label mt-2" />
       </header>
 
       <div className="mb-6 flex flex-wrap items-center gap-x-4 gap-y-2">
@@ -91,7 +91,7 @@ export function CatalogListing({
             href={viewHref({ obtainable: false })}
             aria-pressed={!view.obtainable}
             className={cn(
-              "rounded-full border px-3.5 py-1.5 text-xs font-bold transition-colors",
+              "type-label rounded-full border px-3.5 py-1.5 font-bold transition-colors",
               !view.obtainable ? "border-champagne/60 text-champagne" : "border-line text-foreground/70 hover:border-champagne/40",
             )}
           >
@@ -101,7 +101,7 @@ export function CatalogListing({
             href={viewHref({ obtainable: true })}
             aria-pressed={view.obtainable}
             className={cn(
-              "rounded-full border px-3.5 py-1.5 text-xs font-bold transition-colors",
+              "type-label rounded-full border px-3.5 py-1.5 font-bold transition-colors",
               view.obtainable ? "border-champagne/60 text-champagne" : "border-line text-foreground/70 hover:border-champagne/40",
             )}
           >
@@ -126,19 +126,19 @@ export function CatalogListing({
               }
               aria-pressed={view.sort === "price-asc" && view.obtainable}
               className={cn(
-                "rounded-full border px-3.5 py-1.5 text-xs font-bold transition-colors",
+                "type-label rounded-full border px-3.5 py-1.5 font-bold transition-colors",
                 view.sort === "price-asc" && view.obtainable
                   ? "border-aqua text-aqua"
                   : "border-line text-foreground/70 hover:border-aqua/40",
               )}
             >
               ارزان‌ترینِ قابل خرید
-              <span className="ms-1.5 font-mono text-[10px] opacity-60">{toFaDigits(obtainableCount)}</span>
+              <span className="ms-1.5 tabular-nums opacity-70">{toFaDigits(obtainableCount)}</span>
             </Link>
           )}
 
           {isFilteredView(view) && (
-            <Link href={viewHref({ sort: "", obtainable: false })} className="px-1 text-xs font-bold text-muted-foreground underline-offset-4 hover:underline">
+            <Link href={viewHref({ sort: "", obtainable: false })} className="type-label px-1 font-bold text-muted-foreground underline-offset-4 hover:underline">
               پاک کردن
             </Link>
           )}
@@ -151,7 +151,7 @@ export function CatalogListing({
               href={viewHref({ sort: view.sort === option.key ? "" : option.key })}
               aria-pressed={view.sort === option.key}
               className={cn(
-                "rounded-full border px-3.5 py-1.5 text-xs font-bold transition-colors",
+                "type-label rounded-full border px-3.5 py-1.5 font-bold transition-colors",
                 view.sort === option.key ? "border-aqua text-aqua" : "border-line text-foreground/70 hover:border-aqua/40",
               )}
             >

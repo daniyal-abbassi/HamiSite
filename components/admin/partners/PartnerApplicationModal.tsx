@@ -135,7 +135,7 @@ export function PartnerApplicationModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="partner-app-title"
-        className="relative w-full max-w-3xl my-8 bg-zinc-950 border border-zinc-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col text-right outline-none"
+        className="relative w-full max-w-3xl my-8 bg-zinc-950 border border-zinc-800 rounded-3xl shadow-2xl overflow-hidden flex flex-col text-start outline-none"
       >
         {/* Header */}
         <div className="flex items-center justify-between px-6 py-5 border-b border-zinc-800 bg-zinc-900/40">

@@ -1,8 +1,9 @@
 import type React from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowRight, BadgePercent, Heart, Star } from "lucide-react";
+import { ArrowLeft, BadgePercent, Heart, Star } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { TomanPrice } from "@/components/ui/TomanPrice";
 import hamiWordmark from "@/public/brand/hami-wordmark-fa.png";
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
 import { PLACEHOLDER_ALT, PLACEHOLDER_LABEL, isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
@@ -16,7 +17,7 @@ import {
   unitPriceOf,
 } from "@/lib/product-identity";
 import { storeWarranty } from "@/lib/content/verified-facts";
-import { cn, formatToman, toFaDigits } from "@/lib/utils";
+import { cn, toFaDigits } from "@/lib/utils";
 
 /**
  * The product card.
@@ -260,7 +261,7 @@ export function ProductCard({
             announce. */}
         <div className={cn("flex items-baseline justify-between gap-3", sourceStyle && "featured-source-card__brand")}>
           <span
-            className="font-mono text-xs font-bold tracking-normal"
+            className="type-label font-bold tracking-normal"
             style={{ color: accent }}
           >
             {sourceStyle && product.brand?.name === "سامسونگ" ? "SAMSUNG" : brandLabel(product.brand?.name)}
@@ -268,20 +269,20 @@ export function ProductCard({
           {model && (
             <span
               dir="ltr"
-              className="truncate font-mono text-xs tracking-normal text-foreground/70"
+              className="type-label min-w-0 max-w-[60%] break-words text-end font-mono tracking-normal text-foreground/70"
             >
               {model}
             </span>
           )}
         </div>
 
-        <h3 className="mt-2.5 text-base">
+        <h3 className="mt-2.5 type-body">
           <Link
             href={href}
             /* The painted text is 28px tall per line; the ::after inset grows
                the *hit area* to 44+ without repainting anything (WCAG 2.5.8).
                The overlap lands on the non-interactive spec line below. */
-            className="relative line-clamp-2 font-bold leading-7 after:absolute after:inset-x-[-8px] after:inset-y-[-8px] after:content-['']"
+            className="relative line-clamp-3 font-bold leading-7 after:absolute after:inset-x-[-8px] after:inset-y-[-8px] after:content-['']"
             dir={sourceStyle ? "ltr" : undefined}
           >
             {title}
@@ -317,13 +318,13 @@ export function ProductCard({
         )}
 
         {specs && (
-          <p className="mt-1 line-clamp-2 text-xs leading-5 text-muted-foreground">{specs}</p>
+          <p className="type-support mt-1 line-clamp-2 text-muted-foreground">{specs}</p>
         )}
 
         {/* Everything below is the transaction, held to the bottom so cards in a
             row align on their prices however long the names run. */}
         <div className="mt-auto pt-5">
-          <div className={cn("lux-stock flex items-center justify-between gap-2 text-xs font-bold tracking-normal", sourceStyle && "featured-source-card__stock")}>
+          <div className={cn("lux-stock flex items-center justify-between gap-2 type-label font-bold tracking-normal", sourceStyle && "featured-source-card__stock")}>
             <div className="flex items-center gap-2">
               <span
                 className="inline-flex items-center gap-1.5"
@@ -342,7 +343,7 @@ export function ProductCard({
                   {/* FR-011: the number is Persian even inside an LTR run, because
                       the run exists to keep the minus sign on the left, not to
                       switch the digits back to Latin. */}
-                  <span dir="ltr" className="font-mono text-champagne">
+                  <span dir="ltr" className="font-sans text-champagne tabular-nums">
                     −{toFaDigits(off)}٪
                   </span>
                 </>
@@ -360,8 +361,8 @@ export function ProductCard({
           <div className={cn("lux-buy mt-2 flex items-end justify-between gap-3", sourceStyle && "featured-source-card__actions")}>
             <div className="min-w-0">
               {state === "sale" && product.compareAtPrice != null && (
-                <del className="block text-xs leading-4 text-muted-foreground">
-                  {formatToman(product.compareAtPrice)}
+                <del className="type-caption block text-muted-foreground">
+                  <TomanPrice amount={product.compareAtPrice} />
                 </del>
               )}
               {state === "unavailable" ? (
@@ -369,12 +370,12 @@ export function ProductCard({
                   تماس بگیرید
                 </strong>
               ) : (
-                <strong
-                  className="block text-[26px] font-black leading-9 tracking-normal tabular-nums"
+                <TomanPrice
+                  as="strong"
+                  amount={displayPrice}
+                  className="type-price tracking-normal"
                   style={{ color: "var(--lux-price)" }}
-                >
-                  {formatToman(displayPrice)}
-                </strong>
+                />
               )}
             </div>
 
@@ -398,7 +399,7 @@ export function ProductCard({
             />
             {sourceStyle && (
               <Link href={href} className="featured-source-card__detail" aria-label={`مشاهده ${product.name}`}>
-                <ArrowRight aria-hidden="true" />
+                <ArrowLeft aria-hidden="true" />
               </Link>
             )}
           </div>

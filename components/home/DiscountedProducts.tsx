@@ -6,9 +6,10 @@ import Link from "next/link";
 import { ArrowLeft, BadgePercent, Check, Crown, ShoppingCart, Sparkles } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
+import { TomanPrice } from "@/components/ui/TomanPrice";
 import type { DiscountRailProduct, RailProduct } from "@/lib/home-rails-db";
 import { isPurchasable } from "@/lib/product-identity";
-import { formatToman, toFaDigits } from "@/lib/utils";
+import { toFaDigits } from "@/lib/utils";
 
 const SPARKLES = [
   { left: "12%", top: "18%", delay: "0s" },
@@ -184,8 +185,8 @@ function ProductDeal({
           <DiscountMeter rate={rate} scale={scale} featured />
           <div className="deal-featured__price-row">
             <div className="deal-featured__prices">
-              {rate != null && compareAtPrice != null && <del>{formatToman(compareAtPrice)}</del>}
-              <strong>{formatToman(price)}</strong>
+              {rate != null && compareAtPrice != null && <del><TomanPrice amount={compareAtPrice} /></del>}
+              <strong className="type-price"><TomanPrice amount={price} /></strong>
             </div>
             {rate != null && (
               <Badge
@@ -239,8 +240,8 @@ function ProductDeal({
         </div>
         <div className="deal-card__bottom">
           <div className="deal-card__prices">
-            {rate != null && compareAtPrice != null && <del>{formatToman(compareAtPrice)}</del>}
-            <strong>{formatToman(price)}</strong>
+            {rate != null && compareAtPrice != null && <del><TomanPrice amount={compareAtPrice} /></del>}
+            <strong className="type-price"><TomanPrice amount={price} /></strong>
           </div>
           <AddToCartButton
             productId={product.id}

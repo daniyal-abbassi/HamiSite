@@ -4,12 +4,12 @@ import { useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Phone, ShoppingBag } from "lucide-react";
 import { CartLine } from "@/components/cart/CartLine";
+import { TomanPrice } from "@/components/ui/TomanPrice";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
 import { apiErrorToFa } from "@/lib/api-error-fa";
-import { formatToman } from "@/lib/utils";
 import { storeContact } from "@/lib/content/contact";
 
 export function CartPageClient() {
@@ -100,19 +100,19 @@ export function CartPageClient() {
       </div>
 
       <aside className="glass h-fit rounded-2xl p-6 lg:sticky lg:top-24">
-        <h2 className="text-base font-black">خلاصه سفارش</h2>
+        <h2 className="type-section">خلاصه سفارش</h2>
         <div className="brand-hairline my-4" />
-        <dl className="space-y-3 text-sm">
+        <dl className="space-y-3 type-body">
           <div className="flex items-center justify-between">
             <dt className="text-muted-foreground">تعداد کالا</dt>
-            <dd className="font-mono">{cart.itemCount.toLocaleString("fa-IR")}</dd>
+            <dd className="tabular-nums">{cart.itemCount.toLocaleString("fa-IR")}</dd>
           </div>
           <div className="flex items-center justify-between">
             <dt className="text-muted-foreground">جمع سبد</dt>
-            <dd className="font-black text-aqua">{formatToman(cart.subtotal)}</dd>
+            <dd><TomanPrice className="type-price text-aqua" amount={cart.subtotal} /></dd>
           </div>
         </dl>
-        <p className="mt-3 text-xs leading-6 text-muted-foreground/70">
+        <p className="type-label mt-3 text-muted-foreground/70">
           پرداخت آنلاین در این فروشگاه فعال نیست. برای تأیید قیمت و موجودی تماس بگیرید؛ هزینهٔ ارسال و
           تخفیف در همان تماس مشخص می‌شود.
         </p>

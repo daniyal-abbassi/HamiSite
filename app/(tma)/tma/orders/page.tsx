@@ -70,13 +70,13 @@ export default function TMAOrdersPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="جست‌وجو با شماره سفارش، نام مشتری یا موبایل..."
-            className="w-full bg-stone-900/90 border border-stone-800 rounded-2xl pl-10 pr-10 py-3 text-xs text-stone-100 placeholder:text-stone-500 focus:outline-hidden focus:border-amber-400/80 transition-all"
+            className="w-full bg-stone-900/90 border border-stone-800 rounded-2xl ps-10 pe-10 py-3 text-xs text-stone-100 placeholder:text-stone-500 focus:outline-hidden focus:border-amber-400/80 transition-all"
           />
-          <Search className="w-4 h-4 text-stone-400 absolute right-3.5 top-3.5" />
+          <Search className="w-4 h-4 text-stone-400 absolute start-3.5 top-3.5" />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="p-1 rounded-full text-stone-400 hover:text-stone-200 absolute left-3 top-2.5"
+              className="p-1 rounded-full text-stone-400 hover:text-stone-200 absolute end-3 top-2.5"
             >
               <X className="w-4 h-4" />
             </button>

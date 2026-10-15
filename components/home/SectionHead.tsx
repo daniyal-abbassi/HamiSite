@@ -60,13 +60,13 @@ export function SectionHead({
           {eyebrow && (
             <span className="mb-3 block font-mono text-xs tracking-normal text-aqua/70">{eyebrow}</span>
           )}
-          <h2 id={id} className="text-3xl font-black leading-[1.35] tracking-normal md:text-[2.6rem]">
+          <h2 id={id} className="type-section">
             {title}
           </h2>
         </div>
         {(description || action) && (
           <div className="lg:max-w-sm lg:text-start">
-            {description && <p className="text-sm leading-7 text-muted-foreground">{description}</p>}
+            {description && <p className="type-support text-muted-foreground">{description}</p>}
             {action && <div className="mt-4">{action}</div>}
           </div>
         )}
@@ -85,11 +85,11 @@ export function SectionHead({
           <i className="h-px flex-1 bg-line" aria-hidden="true" />
           {action}
         </div>
-        <h2 id={id} className="mt-6 text-3xl font-black tracking-normal md:text-4xl">
+        <h2 id={id} className="type-section mt-6">
           {title}
         </h2>
         {description && (
-          <p className="mt-3 max-w-lg text-sm leading-7 text-muted-foreground">{description}</p>
+          <p className="type-support mt-3 max-w-lg text-muted-foreground">{description}</p>
         )}
       </div>
     );
@@ -100,12 +100,12 @@ export function SectionHead({
       <div className={cn("max-w-3xl", className)}>
         <h2
           id={id}
-          className="text-[2.4rem] font-black leading-[1.25] tracking-normal md:text-6xl md:leading-[1.15]"
+          className="type-display"
         >
           {title}
         </h2>
         {description && (
-          <p className="mt-6 max-w-lg text-base leading-8 text-muted-foreground">{description}</p>
+          <p className="type-body mt-6 max-w-lg text-muted-foreground">{description}</p>
         )}
         {action && <div className="mt-7">{action}</div>}
       </div>
@@ -119,10 +119,10 @@ export function SectionHead({
           <i /> {eyebrow}
         </span>
       )}
-      <h2 id={id} className="mt-4 text-3xl font-black tracking-normal md:text-4xl">
+      <h2 id={id} className="type-section mt-4">
         {title}
       </h2>
-      {description && <p className="mt-3 max-w-md text-sm leading-7 text-muted-foreground">{description}</p>}
+      {description && <p className="type-support mt-3 max-w-md text-muted-foreground">{description}</p>}
       {action && <div className="mt-5">{action}</div>}
     </div>
   );

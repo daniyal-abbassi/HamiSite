@@ -12,6 +12,7 @@ import { apiErrorToFa } from "@/lib/api-error-fa";
 import { ApiClientError, apiPost } from "@/lib/api-client";
 import { safeNextPath } from "@/lib/safe-next-path";
 import { isValidIranianMobile } from "@/lib/validators";
+import { normalizePersianDigits } from "@/lib/persian-typography";
 import { cn } from "@/lib/utils";
 import type { PublicUser } from "@/types/auth";
 
@@ -106,9 +107,9 @@ export function RegisterForm() {
       // Register sets the session cookie server-side — the user is signed in
       // immediately, matching the storefront's no-friction flow.
       await apiPost<PublicUser>("/api/auth/register", {
-        username: values.username.trim(),
+        username: normalizePersianDigits(values.username.trim()),
         password: values.password,
-        phoneNumber: values.phoneNumber.trim(),
+        phoneNumber: normalizePersianDigits(values.phoneNumber.trim()),
         role,
         ...optional,
       });
@@ -131,6 +132,7 @@ export function RegisterForm() {
     autoComplete,
     required = false,
     placeholder,
+    dir,
   }: {
     id: string;
     label: string;
@@ -139,10 +141,11 @@ export function RegisterForm() {
     autoComplete?: string;
     required?: boolean;
     placeholder?: string;
+    dir?: "ltr" | "rtl" | "auto";
   }) {
     return (
       <div>
-        <label htmlFor={id} className="mb-1.5 block text-xs font-bold text-foreground/85">
+        <label htmlFor={id} className="type-label mb-1.5 block font-bold text-foreground/85">
           {label}
           {required && <span className="ms-1 text-aqua">*</span>}
         </label>
@@ -153,11 +156,13 @@ export function RegisterForm() {
           autoComplete={autoComplete}
           required={required}
           placeholder={placeholder}
+          dir={dir}
+          inputMode={type === "tel" || id === "phoneNumber" ? "tel" : undefined}
           value={values[field]}
           onChange={setField(field)}
           aria-invalid={Boolean(fieldErrors[field])}
         />
-        {fieldErrors[field] && <p className="mt-1 text-xs text-destructive">{fieldErrors[field]}</p>}
+        {fieldErrors[field] && <p className="type-label mt-1 text-destructive">{fieldErrors[field]}</p>}
       </div>
     );
   }
@@ -168,8 +173,8 @@ export function RegisterForm() {
         <span>ثبت‌نام</span>
         <i />
       </div>
-      <h1 className="mt-3 text-xl font-black">ساخت حساب کاربری</h1>
-      <p className="mt-1.5 text-[13px] leading-6 text-muted-foreground">
+      <h1 className="type-page mt-3">ساخت حساب کاربری</h1>
+      <p className="type-support mt-1.5 text-muted-foreground">
         خرید خرد یا عمده — حساب کاربری هر دو را پوشش می‌دهد.
       </p>
 
@@ -202,9 +207,9 @@ export function RegisterForm() {
 
       <form onSubmit={handleSubmit} className="mt-6 space-y-4" noValidate>
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field id="username" label="نام کاربری" field="username" required autoComplete="username" />
-          <Field id="phoneNumber" label="شماره موبایل" field="phoneNumber" required type="tel" autoComplete="tel" placeholder="۰۹۱۲…" />
-          <Field id="password" label="رمز عبور" field="password" required type="password" autoComplete="new-password" />
+          <Field id="username" label="نام کاربری" field="username" required autoComplete="username" dir="auto" />
+          <Field id="phoneNumber" label="شماره موبایل" field="phoneNumber" required type="tel" autoComplete="tel" placeholder="۰۹۱۲…" dir="ltr" />
+          <Field id="password" label="رمز عبور" field="password" required type="password" autoComplete="new-password" dir="ltr" />
           <Field id="firstName" label="نام" field="firstName" autoComplete="given-name" />
           <Field id="lastName" label="نام خانوادگی" field="lastName" autoComplete="family-name" />
           <Field id="city" label="شهر" field="city" autoComplete="address-level2" />
@@ -229,7 +234,7 @@ export function RegisterForm() {
         </Button>
       </form>
 
-      <p className="mt-5 text-center text-[13px] text-muted-foreground">
+      <p className="type-label mt-5 text-center text-muted-foreground">
         قبلاً ثبت‌نام کرده‌اید؟{" "}
         <Link
           href={nextPath !== "/" ? `/login?next=${encodeURIComponent(nextPath)}` : "/login"}

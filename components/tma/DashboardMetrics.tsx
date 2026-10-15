@@ -2,7 +2,8 @@
 
 import React from "react";
 import { TrendingUp, Clock, CheckCircle2, AlertTriangle } from "lucide-react";
-import { formatToman, toFaDigits } from "@/lib/utils";
+import { TomanPrice } from "@/components/ui/TomanPrice";
+import { toFaDigits } from "@/lib/utils";
 import { type DashboardMetricsResult } from "@/lib/tma-service";
 
 interface DashboardMetricsProps {
@@ -20,7 +21,7 @@ export function DashboardMetrics({
     <div className="grid grid-cols-2 gap-3">
       {/* 1. Today's Revenue (Spans 2 columns for primary prominence) */}
       <div className="col-span-2 bg-gradient-to-br from-amber-500/10 via-stone-900 to-stone-950 border border-amber-500/25 rounded-2xl p-4.5 relative overflow-hidden shadow-lg">
-        <div className="absolute top-0 right-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
+        <div className="absolute top-0 end-0 w-32 h-32 bg-amber-500/5 rounded-full blur-2xl pointer-events-none" />
         <div className="flex items-center justify-between mb-2">
           <span className="text-xs font-medium text-stone-300 flex items-center gap-1.5">
             <TrendingUp className="w-4 h-4 text-amber-400" />
@@ -30,9 +31,7 @@ export function DashboardMetrics({
             زنده
           </span>
         </div>
-        <div className="text-2xl font-black text-amber-300 tracking-tight">
-          {formatToman(metrics.todayRevenue)}
-        </div>
+        <TomanPrice className="type-price mt-2 text-amber-300" amount={metrics.todayRevenue} />
         <p className="text-[11px] text-stone-400 mt-1">
           {toFaDigits(metrics.todayCompletedCount)} سفارش موفق ثبت شده در طول روز
         </p>
@@ -80,4 +79,3 @@ export function DashboardMetrics({
     </div>
   );
 }
-

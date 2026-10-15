@@ -66,7 +66,7 @@ export function TMABottomNav() {
               >
                 <Icon className="w-5 h-5 stroke-[1.8]" />
               </div>
-              <span className="text-[11px] mt-0.5 tracking-tight">{item.label}</span>
+              <span className="text-[11px] mt-0.5">{item.label}</span>
               {isActive && (
                 <span className="absolute -top-1 w-1.5 h-1.5 rounded-full bg-amber-400" />
               )}

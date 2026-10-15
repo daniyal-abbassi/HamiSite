@@ -13,7 +13,8 @@ import { stockLabels } from "@/lib/content/shop";
 import { storeContact } from "@/lib/content/contact";
 import { storeWarranty } from "@/lib/content/verified-facts";
 import { compareAtOf, isPurchasable, unitPriceOf } from "@/lib/product-identity";
-import { cn, formatToman, toFaDigits } from "@/lib/utils";
+import { cn, toFaDigits } from "@/lib/utils";
+import { TomanPrice } from "@/components/ui/TomanPrice";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
 import { ProductGallery } from "@/components/shop/ProductGallery";
 import { LiquidSelection } from "@/components/liquid/LiquidSelection";
@@ -225,7 +226,7 @@ export function ProductDetail({ product, generatedAt }: Props) {
        the tags row at the bottom of this page sits behind both. */
     <div className="pb-[calc(7.5rem+env(safe-area-inset-bottom))] md:pb-0">
       {/* Breadcrumb */}
-      <nav aria-label="مسیر صفحه" className="mb-6 flex flex-wrap items-center gap-1.5 text-xs text-muted-foreground/70">
+      <nav aria-label="مسیر صفحه" className="type-label mb-6 flex flex-wrap items-center gap-1.5 text-muted-foreground/70">
         <Link href="/" className="transition-colors hover:text-aqua">خانه</Link>
         <span aria-hidden="true">/</span>
         <Link href="/shop" className="transition-colors hover:text-aqua">فروشگاه</Link>
@@ -246,11 +247,11 @@ export function ProductDetail({ product, generatedAt }: Props) {
 
         {/* Buy box */}
         <div>
-          <span className="font-mono text-xs tracking-normal text-champagne">
+          <span className="type-label tracking-normal text-champagne">
             {product.brand?.name ?? "—"}
             {product.englishName ? ` · ${product.englishName}` : ""}
           </span>
-          <h1 className="mt-2 text-2xl font-black leading-snug md:text-3xl text-foreground">{product.name}</h1>
+          <h1 className="type-page mt-2 text-foreground">{product.name}</h1>
 
           <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
             <span className={cn("inline-flex items-center gap-1.5 rounded-full border border-champagne/20 bg-champagne/5 px-3 py-1", stockType === "out_of_stock" && "text-destructive")}>
@@ -267,18 +268,16 @@ export function ProductDetail({ product, generatedAt }: Props) {
           </div>
 
           <div className="mt-6 rounded-2xl glass-smoked border border-champagne/25 p-6 shadow-card">
-            <DataCurrencyNote generatedAt={generatedAt} className="mb-3 text-[11px]" />
+            <DataCurrencyNote generatedAt={generatedAt} className="type-label mb-3" />
             {unitPrice !== null ? (
               <div className="flex flex-wrap items-baseline gap-3">
                 {compareAtPrice != null && compareAtPrice > unitPrice && (
-                  <del className="text-sm text-foreground/50">{formatToman(compareAtPrice)}</del>
+                  <del className="type-label text-foreground/50"><TomanPrice amount={compareAtPrice} /></del>
                 )}
-                <strong className="text-3xl font-black text-champagne tracking-normal" aria-live="polite">
-                  {formatToman(unitPrice * quantity)}
-                </strong>
+                <TomanPrice as="strong" className="type-price text-champagne tracking-normal" amount={unitPrice * quantity} aria-live="polite" />
                 {quantity > 1 && (
-                  <span className="font-mono text-xs text-muted-foreground">
-                    ({toFaDigits(quantity)} × {formatToman(unitPrice)})
+                  <span className="type-label text-muted-foreground">
+                    ({toFaDigits(quantity)} × <TomanPrice amount={unitPrice} />)
                   </span>
                 )}
               </div>
@@ -305,7 +304,7 @@ export function ProductDetail({ product, generatedAt }: Props) {
             <div className="mt-6 space-y-4">
               {optionGroups.map(([label, values]) => (
                 <div key={label}>
-                  <p className="mb-2 font-mono text-xs text-muted-foreground/70">{label}</p>
+                  <p className="mb-2 type-label text-muted-foreground/70">{label}</p>
                   {/*
                     One marker per option group, not one per product: a product like
                     347 carries three independent groups (دامنه/سرور/نوع), and each
@@ -394,7 +393,7 @@ export function ProductDetail({ product, generatedAt }: Props) {
               >
                 <Minus className="size-4" />
               </button>
-              <span className="min-w-9 text-center font-mono text-base" aria-live="polite">
+                <span className="min-w-9 text-center font-sans text-base tabular-nums" aria-live="polite">
                 {toFaDigits(quantity)}
               </span>
               <button
@@ -492,7 +491,7 @@ export function ProductDetail({ product, generatedAt }: Props) {
 
       {product.tags.length > 0 && (
         <div className="mt-8 flex flex-wrap items-center gap-2">
-          <span className="font-mono text-xs tracking-normal text-champagne">برچسب‌ها:</span>
+          <span className="type-label tracking-normal text-champagne">برچسب‌ها:</span>
           {product.tags.map((tag) => (
             <span key={tag} className="rounded-full border border-champagne/15 bg-champagne/5 px-3 py-1 font-mono text-xs text-foreground/70">
               {tag}
@@ -510,10 +509,8 @@ export function ProductDetail({ product, generatedAt }: Props) {
           <div className="min-w-0 flex-1">
             {unitPrice !== null ? (
               <>
-                <span className="block font-mono text-xs text-champagne/75">قیمت نهایی</span>
-                <b className="block truncate text-base font-black leading-tight tabular-nums text-champagne">
-                  {formatToman(unitPrice * quantity)}
-                </b>
+                <span className="block type-caption text-champagne/75">قیمت نهایی</span>
+                <TomanPrice as="strong" className="block truncate text-base font-semibold leading-tight text-champagne" amount={unitPrice * quantity} />
               </>
             ) : (
               <b className="block text-sm font-black text-muted-foreground">تماس بگیرید</b>

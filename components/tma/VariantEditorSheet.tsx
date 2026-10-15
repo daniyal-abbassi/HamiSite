@@ -3,7 +3,8 @@
 import React, { useState } from "react";
 import { Drawer } from "vaul";
 import { useTelegram } from "./TelegramProvider";
-import { formatToman, toFaDigits } from "@/lib/utils";
+import { TomanPrice } from "@/components/ui/TomanPrice";
+import { toFaDigits } from "@/lib/utils";
 import { Plus, Minus, Check, X, Loader2, Save } from "lucide-react";
 import { type TMAProductItem, type TMAVariant } from "./ProductCard";
 
@@ -127,7 +128,7 @@ export function VariantEditorSheet({
           <div className="p-5 overflow-y-auto">
             {/* Header */}
             <div className="flex items-center justify-between mb-4 pb-2 border-b border-stone-800/80">
-              <div className="flex-1 pr-1">
+              <div className="flex-1 pe-1">
                 <h3 className="text-sm font-bold text-stone-100 line-clamp-1">{product.name}</h3>
                 <p className="text-xs text-amber-300 mt-0.5">مدیریت تنوع‌ها، موجودی و قیمت</p>
               </div>
@@ -166,7 +167,7 @@ export function VariantEditorSheet({
                     <div className="flex items-center justify-between gap-2 mb-2">
                       <span className="text-xs font-bold text-stone-100">{variantTitle}</span>
                       <span className="text-xs font-bold text-amber-300">
-                        {formatToman(v.price)}
+                        <TomanPrice amount={v.price} />
                       </span>
                     </div>
 
@@ -196,7 +197,7 @@ export function VariantEditorSheet({
 
                     {/* Edit Price Expand Toggle */}
                     {!isEditingThis ? (
-                      <div className="mt-2.5 text-left">
+                      <div className="mt-2.5 text-end">
                         <button
                           onClick={() => handleSelectVariant(v)}
                           className="text-[11px] text-amber-400 hover:text-amber-300 font-medium underline-offset-4 hover:underline"
@@ -214,7 +215,7 @@ export function VariantEditorSheet({
                             type="number"
                             value={editPrice}
                             onChange={(e) => setEditPrice(e.target.value)}
-                            className="w-full bg-stone-950 border border-stone-800 rounded-xl px-3 py-2 text-xs text-stone-100 font-mono text-left focus:outline-hidden focus:border-amber-400"
+                            className="w-full bg-stone-950 border border-stone-800 rounded-xl px-3 py-2 text-xs text-stone-100 font-mono text-start focus:outline-hidden focus:border-amber-400"
                             dir="ltr"
                           />
                         </div>
@@ -228,7 +229,7 @@ export function VariantEditorSheet({
                             value={editCompareAtPrice}
                             onChange={(e) => setEditCompareAtPrice(e.target.value)}
                             placeholder="خالی برای بدون تخفیف"
-                            className="w-full bg-stone-950 border border-stone-800 rounded-xl px-3 py-2 text-xs text-stone-100 font-mono text-left focus:outline-hidden focus:border-amber-400"
+                            className="w-full bg-stone-950 border border-stone-800 rounded-xl px-3 py-2 text-xs text-stone-100 font-mono text-start focus:outline-hidden focus:border-amber-400"
                             dir="ltr"
                           />
                         </div>
@@ -265,4 +266,3 @@ export function VariantEditorSheet({
     </Drawer.Root>
   );
 }
-

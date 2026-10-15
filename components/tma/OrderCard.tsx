@@ -1,7 +1,8 @@
 "use client";
 
 import React from "react";
-import { formatToman, toFaDigits } from "@/lib/utils";
+import { TomanPrice } from "@/components/ui/TomanPrice";
+import { toFaDigits } from "@/lib/utils";
 import { OrderStatusBadge } from "./OrderStatusBadge";
 import { ChevronLeft, Package, Phone } from "lucide-react";
 import { formatFaDate } from "@/lib/content/order";
@@ -40,11 +41,11 @@ export function OrderCard({ order, onClick }: OrderCardProps) {
     >
       <div className="flex items-start justify-between gap-2 mb-2.5">
         <div>
-          <div className="text-sm font-bold text-stone-100 flex items-center gap-2">
+          <div className="type-body font-bold text-stone-100 flex items-center gap-2">
             <span>{order.customerName || "مشتری مهمان"}</span>
           </div>
-          <div className="text-xs text-stone-400 mt-0.5 flex items-center gap-2">
-            <span className="font-mono text-stone-400">{toFaDigits(order.orderNumber)}</span>
+          <div className="type-label text-stone-400 mt-0.5 flex items-center gap-2">
+            <span className="tabular-nums text-stone-400">{toFaDigits(order.orderNumber)}</span>
             <span>•</span>
             <span>{formatFaDate(order.createdAt)}</span>
           </div>
@@ -54,11 +55,9 @@ export function OrderCard({ order, onClick }: OrderCardProps) {
 
       <div className="flex items-center justify-between pt-2.5 border-t border-stone-800/80 text-xs">
         <div className="flex items-center gap-3 text-stone-300">
-          <span className="font-semibold text-amber-300 text-sm">
-            {formatToman(order.totalAmount)}
-          </span>
+          <TomanPrice className="type-label font-semibold text-amber-300" amount={order.totalAmount} />
           {order.itemCount !== undefined && order.itemCount > 0 && (
-            <span className="text-stone-400 text-[11px] flex items-center gap-1">
+            <span className="text-stone-400 type-label flex items-center gap-1">
               <Package className="w-3.5 h-3.5" />
               {toFaDigits(order.itemCount)} قلم
             </span>
@@ -66,11 +65,10 @@ export function OrderCard({ order, onClick }: OrderCardProps) {
         </div>
 
         <div className="flex items-center gap-1 text-stone-400">
-          <span className="text-[11px]">جزئیات</span>
+          <span className="type-label">جزئیات</span>
           <ChevronLeft className="w-4 h-4" />
         </div>
       </div>
     </div>
   );
 }
-

@@ -95,13 +95,13 @@ export default function TMAProductsPage() {
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="جست‌وجوی کالا، بارکد یا مدل..."
-            className="w-full bg-stone-900/90 border border-stone-800 rounded-2xl pl-10 pr-10 py-3 text-xs text-stone-100 placeholder:text-stone-500 focus:outline-hidden focus:border-amber-400/80 transition-all"
+            className="w-full bg-stone-900/90 border border-stone-800 rounded-2xl ps-10 pe-10 py-3 type-control text-stone-100 placeholder:text-stone-500 focus:outline-hidden focus:border-amber-400/80 transition-all"
           />
-          <Search className="w-4 h-4 text-stone-400 absolute right-3.5 top-3.5" />
+          <Search className="w-4 h-4 text-stone-400 absolute start-3.5 top-3.5" />
           {searchQuery && (
             <button
               onClick={() => setSearchQuery("")}
-              className="p-1 rounded-full text-stone-400 hover:text-stone-200 absolute left-3 top-2.5"
+              className="p-1 rounded-full text-stone-400 hover:text-stone-200 absolute end-3 top-2.5"
             >
               <X className="w-4 h-4" />
             </button>
@@ -116,7 +116,7 @@ export default function TMAProductsPage() {
               setStockFilter("all");
             }}
             className={cn(
-              "px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border",
+              "px-3.5 py-1.5 rounded-full type-label font-medium transition-all border",
               stockFilter === "all"
                 ? "bg-amber-400/20 text-amber-300 border-amber-400/40 shadow-xs"
                 : "bg-stone-900/60 text-stone-400 border-stone-800"
@@ -130,7 +130,7 @@ export default function TMAProductsPage() {
               setStockFilter("low");
             }}
             className={cn(
-              "px-3.5 py-1.5 rounded-full text-xs font-medium transition-all border flex items-center gap-1.5",
+              "px-3.5 py-1.5 rounded-full type-label font-medium transition-all border flex items-center gap-1.5",
               stockFilter === "low"
                 ? "bg-rose-500/20 text-rose-300 border-rose-500/40 shadow-xs"
                 : "bg-stone-900/60 text-stone-400 border-stone-800"
@@ -151,8 +151,8 @@ export default function TMAProductsPage() {
         ) : products.length === 0 ? (
           <div className="text-center py-16 bg-stone-900/30 rounded-2xl border border-stone-800/80 p-6">
             <Package className="w-10 h-10 text-stone-600 mx-auto mb-3" />
-            <h3 className="text-sm font-semibold text-stone-200">کالایی یافت نشد</h3>
-            <p className="text-xs text-stone-400 mt-1">
+            <h3 className="type-body font-semibold text-stone-200">کالایی یافت نشد</h3>
+            <p className="type-label text-stone-400 mt-1">
               با عبارت جست‌وجو یا فیلتر انتخابی کالایی یافت نشد.
             </p>
           </div>

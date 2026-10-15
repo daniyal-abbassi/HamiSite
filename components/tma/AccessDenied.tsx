@@ -17,7 +17,7 @@ export function AccessDenied({ userId, username, onClose }: AccessDeniedProps) {
         <div className="w-20 h-20 rounded-full bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400">
           <ShieldAlert className="w-10 h-10" />
         </div>
-        <div className="absolute -bottom-1 -right-1 bg-red-500 rounded-full p-1 text-white shadow-lg">
+        <div className="absolute -bottom-1 -end-1 bg-red-500 rounded-full p-1 text-white shadow-lg">
           <XCircle className="w-4 h-4" />
         </div>
       </div>
@@ -30,7 +30,7 @@ export function AccessDenied({ userId, username, onClose }: AccessDeniedProps) {
       </p>
 
       {userId && (
-        <div className="w-full max-w-xs bg-stone-900/80 border border-stone-800 rounded-2xl p-4 mb-6 text-right">
+        <div className="w-full max-w-xs bg-stone-900/80 border border-stone-800 rounded-2xl p-4 mb-6 text-start">
           <div className="text-xs text-stone-400 mb-1">شناسه تلگرام شما:</div>
           <div className="font-mono text-base font-semibold text-amber-300 dir-ltr text-center">
             {toFaDigits(userId)}

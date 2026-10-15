@@ -76,10 +76,24 @@
   --background: 11 2 4;          /* #0B0204 — Obsidian Canvas */
   --foreground: 240 236 233;    /* #F0ECE9 — Warm Platinum / Diamond White */
 
-  --font-vazirmatn: "Estedad Variable", "Vazirmatn Variable", "Vazirmatn", "Tahoma", sans-serif;
+  /* One Persian text family, with a metric-conscious Persian fallback. The
+     legacy alias stays until every consumer has migrated to --font-ui. */
+  --font-ui: "Estedad Variable", "Vazirmatn Variable", "Tahoma", sans-serif;
+  --font-vazirmatn: var(--font-ui);
   /* DM Mono has Latin glyphs only. Keep it for Latin runs and fall back to
      the site's Persian face before generic monospace for Persian text. */
-  --font-dm-mono: "DM Mono", var(--font-vazirmatn), ui-monospace, "Courier New", monospace;
+  --font-dm-mono: "DM Mono", var(--font-ui), ui-monospace, "Courier New", monospace;
+
+  --type-display: clamp(2rem, 3.65vw, 3.2rem);
+  --type-page: clamp(1.75rem, 2.6vw, 2.5rem);
+  --type-section: clamp(1.5rem, 2.1vw, 2rem);
+  --type-body: 1rem;
+  --type-support: .9375rem;
+  --type-label: .875rem;
+  --type-caption: .8125rem;
+  --type-control: 1rem;
+  --type-heading-weight: 700;
+  --type-heading-leading: 1.3;
 
   --card: 20 6 10;              /* #14060A — Smoked Obsidian Card */
   --card-foreground: 240 236 233;
@@ -142,7 +156,9 @@
     @apply bg-background text-foreground font-sans antialiased;
     overflow-x: hidden;
     letter-spacing: 0;
+    font-size: var(--type-body);
     line-height: 1.8;
+    font-synthesis: none;
   }
   /* Band 3 (T073): one canvas, one light.
      ------------------------------------------------------------------
@@ -270,6 +286,21 @@
     scroll-margin-bottom: calc(var(--dock-height, 5rem) + 1.5rem);
   }
 }
+
+/* Shared Persian type roles. Components choose a role; the family and rhythm
+   stay consistent across storefront and operational surfaces. */
+.type-display { font-size: var(--type-display); font-weight: var(--type-heading-weight); line-height: 1.24; letter-spacing: 0; }
+.type-page { font-size: var(--type-page); font-weight: var(--type-heading-weight); line-height: var(--type-heading-leading); letter-spacing: 0; }
+.type-section { font-size: var(--type-section); font-weight: var(--type-heading-weight); line-height: var(--type-heading-leading); letter-spacing: 0; }
+.type-body { font-size: var(--type-body); line-height: 1.8; letter-spacing: 0; }
+.type-support { font-size: var(--type-support); line-height: 1.75; letter-spacing: 0; }
+.type-label { font-size: var(--type-label); line-height: 1.6; letter-spacing: 0; }
+.type-caption { font-size: var(--type-caption); line-height: 1.6; letter-spacing: 0; }
+.type-control { font-size: var(--type-control); line-height: 1.5; letter-spacing: 0; }
+.type-price { font-size: clamp(1.05rem, 1.8vw, 1.625rem); font-weight: 600; line-height: 1.45; font-variant-numeric: normal; letter-spacing: 0; }
+.toman-price { display: inline-flex; align-items: baseline; gap: .28em; font-variant-numeric: normal; white-space: nowrap; }
+.toman-price__amount { font-variant-numeric: proportional-nums; }
+.toman-price__unit { flex: none; font-size: max(.58em, 10px); font-weight: 450; line-height: 1.5; opacity: .72; }
 
 @media (prefers-reduced-motion: reduce) {
   html {

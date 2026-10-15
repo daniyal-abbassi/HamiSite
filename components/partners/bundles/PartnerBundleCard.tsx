@@ -4,6 +4,7 @@ import { useState } from "react";
 import Image from "next/image";
 import { Check, Package, ShoppingBag, Sparkles } from "lucide-react";
 import { toPersianDigits } from "@/lib/serializers";
+import { TomanPrice } from "@/components/ui/TomanPrice";
 import type { PartnerBundleDTO } from "@/types/bundles";
 
 interface PartnerBundleCardProps {
@@ -92,7 +93,7 @@ export function PartnerBundleCard({ bundle, onAddToCart }: PartnerBundleCardProp
 
         {/* Title (اسم سبد) & Description */}
         <div className="mb-3">
-          <span className="text-[11px] font-bold text-amber-400 block mb-1">
+          <span className="type-label font-bold text-amber-400 block mb-1">
             نام سبد:
           </span>
           <h3 className="text-base md:text-lg font-black text-zinc-100 group-hover:text-amber-400 transition-colors leading-snug">
@@ -101,16 +102,16 @@ export function PartnerBundleCard({ bundle, onAddToCart }: PartnerBundleCardProp
         </div>
 
         {bundle.description && (
-          <p className="text-xs text-zinc-400 line-clamp-2 leading-relaxed mb-4">
+          <p className="type-support text-zinc-400 line-clamp-2 leading-relaxed mb-4">
             {bundle.description}
           </p>
         )}
 
         {/* Constituent Line Items with 20% White card & Product Photos */}
         <div className="rounded-2xl bg-white text-zinc-900 border border-zinc-200/90 p-3.5 mb-5 shadow-xs space-y-2.5">
-          <div className="text-[11px] font-bold text-zinc-600 flex items-center justify-between pb-1.5 border-b border-zinc-100">
+          <div className="type-label font-bold text-zinc-600 flex items-center justify-between pb-1.5 border-b border-zinc-100">
             <span>محتویات سبد ({toPersianDigits(bundle.itemsCount)} قلم):</span>
-            <span className="bg-zinc-100 text-zinc-700 text-[10px] font-bold px-2 py-0.5 rounded-md">
+            <span className="type-caption bg-zinc-100 text-zinc-700 font-bold px-2 py-0.5 rounded-md">
               مجموع {toPersianDigits(bundle.totalUnitsCount)} عدد
             </span>
           </div>
@@ -122,7 +123,7 @@ export function PartnerBundleCard({ bundle, onAddToCart }: PartnerBundleCardProp
               return (
                 <li
                   key={item.id}
-                  className="flex items-center justify-between gap-2.5 py-1 text-xs border-b border-zinc-100 last:border-b-0"
+                  className="flex items-center justify-between gap-2.5 py-1 type-label border-b border-zinc-100 last:border-b-0"
                 >
                   <div className="flex items-center gap-2.5 min-w-0 flex-1">
                     {/* عکس کالا */}
@@ -143,13 +144,13 @@ export function PartnerBundleCard({ bundle, onAddToCart }: PartnerBundleCardProp
                     {/* فقط نام خارجی کالا */}
                     <div className="min-w-0 flex-1">
                       <p
-                        className="font-mono font-bold text-zinc-900 text-[12px] truncate leading-tight"
+                        className="font-bold text-zinc-900 type-label truncate leading-tight"
                         dir="ltr"
                       >
                         {foreignName}
                       </p>
                       {item.variantName && (
-                        <span className="inline-block mt-0.5 text-[10px] font-semibold text-amber-800 bg-amber-100/90 border border-amber-200 px-1.5 py-0.2 rounded">
+                        <span className="inline-block mt-0.5 type-caption font-semibold text-amber-800 bg-amber-100/90 border border-amber-200 px-1.5 py-0.2 rounded">
                           رنگ: {item.variantName}
                         </span>
                       )}
@@ -157,7 +158,7 @@ export function PartnerBundleCard({ bundle, onAddToCart }: PartnerBundleCardProp
                   </div>
 
                   {/* تعداد قلم */}
-                  <div className="shrink-0 flex items-center gap-1 font-mono font-bold text-xs bg-zinc-900 text-white px-2 py-0.5 rounded-md">
+                  <div className="shrink-0 flex items-center gap-1 font-bold type-label tabular-nums bg-zinc-900 text-white px-2 py-0.5 rounded-md">
                     <span>×</span>
                     <span>{toPersianDigits(item.quantity)}</span>
                   </div>
@@ -171,22 +172,19 @@ export function PartnerBundleCard({ bundle, onAddToCart }: PartnerBundleCardProp
       {/* Pricing & Checkout Actions */}
       <div className="pt-4 border-t border-zinc-800/80 mt-auto">
         <div className="flex items-baseline justify-between mb-3">
-          <span className="text-xs text-zinc-400">قیمت سبد:</span>
-          <div className="text-left">
+          <span className="type-label text-zinc-400">قیمت سبد:</span>
+          <div className="text-end">
             {bundle.compareAtPrice && bundle.compareAtPrice > bundle.price && (
-              <div className="text-xs text-zinc-500 line-through">
-                {toPersianDigits(bundle.compareAtPrice.toLocaleString())} تومان
+              <div className="type-label text-zinc-500 line-through">
+                <TomanPrice amount={bundle.compareAtPrice} />
               </div>
             )}
-            <div className="text-lg font-black text-amber-400">
-              {toPersianDigits(bundle.price.toLocaleString())}{" "}
-              <span className="text-xs font-medium text-zinc-400">تومان</span>
-            </div>
+            <TomanPrice className="type-price text-amber-400" amount={bundle.price} />
           </div>
         </div>
 
         {/* Stock Quota Badge */}
-        <div className="flex items-center justify-between text-xs mb-4">
+        <div className="flex items-center justify-between type-label mb-4">
           <span className="text-zinc-400 flex items-center gap-1.5">
             <Package size={14} className="text-zinc-500" />
             <span>وضعیت سهمیه:</span>
@@ -206,14 +204,14 @@ export function PartnerBundleCard({ bundle, onAddToCart }: PartnerBundleCardProp
         <div className="flex items-center gap-2">
           {!isSoldOut && bundle.maxPurchasableUnits > 1 && (
             <div className="flex items-center bg-white border border-zinc-300 rounded-xl px-2 py-1.5 shrink-0 shadow-xs">
-              <label htmlFor={`qty-${bundle.id}`} className="text-[11px] text-zinc-600 ml-1">
+              <label htmlFor={`qty-${bundle.id}`} className="type-label text-zinc-600 me-1">
                 تعداد:
               </label>
               <select
                 id={`qty-${bundle.id}`}
                 value={selectedQty}
                 onChange={(e) => setSelectedQty(Number(e.target.value))}
-                className="bg-transparent text-xs font-bold text-zinc-900 focus:outline-hidden cursor-pointer"
+                className="bg-transparent type-control font-bold text-zinc-900 focus:outline-hidden cursor-pointer"
               >
                 {Array.from(
                   { length: Math.min(10, bundle.maxPurchasableUnits) },
@@ -231,7 +229,7 @@ export function PartnerBundleCard({ bundle, onAddToCart }: PartnerBundleCardProp
             type="button"
             disabled={isSoldOut || adding}
             onClick={handleAdd}
-            className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+            className={`flex-1 flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl type-control font-bold transition-all cursor-pointer ${
               isSoldOut
                 ? "bg-zinc-800 text-zinc-500 cursor-not-allowed"
                 : added
