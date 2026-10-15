@@ -26,6 +26,8 @@ Thumbs.db
 *.tmp
 *.swp
 .vscode/
+!.vscode/
+!.vscode/mcp.json
 .idea/
 
 # Local env variants and test output
@@ -34,6 +36,7 @@ Thumbs.db
 coverage/
 test-results/
 playwright-report/
+uiverify-archive/
 
 # Vendored agent skill trees and tool scratch state. Installed per-machine by the
 # skills CLI, regenerated on demand, and noise for both review and the graph.
