@@ -59,7 +59,7 @@ export function CategoryTiles({ activeSlug, tiles }: { activeSlug: string | null
               <span className="text-xs font-bold leading-5">{tile.label}</span>
               {/* Absent rather than zero: a door that opens on part of its kind has no
                   honest number to print, so it prints nothing. */}
-              {tile.countLabel && <span className="font-mono text-[10px] text-muted-foreground">{tile.countLabel}</span>}
+              {tile.countLabel && <span className="font-mono text-xs text-muted-foreground">{tile.countLabel}</span>}
             </>
           ),
         }))}

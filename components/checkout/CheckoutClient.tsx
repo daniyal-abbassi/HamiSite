@@ -368,9 +368,12 @@ export function CheckoutClient() {
                     name="shipping"
                     className="accent-brass"
                     checked={shippingKey === option.key}
-                    onChange={() => setShippingKey(option.key)}
+                    onChange={(e) => {
+                      e.currentTarget.closest("section")?.setAttribute("aria-busy", "true");
+                      setShippingKey(option.key);
+                    }}
                   />
-                  <strong className="text-[13px]">{option.label}</strong>
+                  <strong className="text-sm">{option.label}</strong>
                 </span>
                 <span className="mt-2 block type-label text-aqua">
                   {option.price === 0 ? "رایگان" : <TomanPrice amount={option.price} />}

@@ -1,6 +1,7 @@
 import { Prisma, StockType } from "@prisma/client";
 import { prisma } from "@/lib/prisma";
 import { persianIncludes } from "@/lib/persian";
+import { isPurchasable } from "@/lib/product-identity";
 
 const productRelations = {
   brand: true,
@@ -228,6 +229,68 @@ export async function findProductBySlug(slug: string, { includeAdminFields = fal
   const decoded = decodeURIComponent(slug);
   const product = await prisma.product.findUnique({ where: { slug: decoded }, include: productRelations });
   return product ? serializeProduct(product, true, includeAdminFields) : null;
+}
+
+function hasPriceReduction(price: number | null | undefined, compareAtPrice: number | null | undefined) {
+  return price != null && price > 0 && compareAtPrice != null && compareAtPrice > price;
+}
+
+export type DiscountedRailProduct = CatalogProduct & { initialVariantId?: number };
+
+/**
+ * Deep query projection: retrieves the top purchasable products with active price reductions,
+ * computing variant-level eligibility and ranking by highest discount rate in one cohesive module.
+ */
+export async function queryDiscountedRailProducts(limit = 5): Promise<DiscountedRailProduct[]> {
+  const records = await prisma.product.findMany({
+    where: { available: true },
+    include: productRelations,
+    orderBy: [{ specialOffer: "desc" }, { updatedAt: "desc" }, { id: "asc" }],
+  });
+
+  const products = records.map((record) => serializeProduct(record, true));
+
+  const candidates = products.flatMap((product) => {
+    if (product.variants?.length) {
+      const eligibleVariants = product.variants.filter((variant) =>
+        isPurchasable({ available: product.available, stockType: variant.stockType })
+        && !(variant.stockType === "limited" && variant.stock <= 0)
+        && hasPriceReduction(variant.price, variant.compareAtPrice),
+      );
+      if (!eligibleVariants.length) return [];
+      const featuredVariant = eligibleVariants.reduce((best, variant) => {
+        const bestRate = (best.compareAtPrice! - best.price) / best.compareAtPrice!;
+        const rate = (variant.compareAtPrice! - variant.price) / variant.compareAtPrice!;
+        return rate > bestRate ? variant : best;
+      });
+      const rate = (featuredVariant.compareAtPrice! - featuredVariant.price) / featuredVariant.compareAtPrice!;
+      return [{ product: { ...product, initialVariantId: featuredVariant.id }, rate }];
+    }
+
+    if (!isPurchasable(product) || !hasPriceReduction(product.displayPrice, product.compareAtPrice)) {
+      return [];
+    }
+    const rate = (product.compareAtPrice! - product.displayPrice) / product.compareAtPrice!;
+    return [{ product, rate }];
+  });
+
+  return candidates
+    .sort((a, b) => b.rate - a.rate)
+    .slice(0, limit)
+    .map(({ product }) => product);
+}
+
+/**
+ * Read every currently available product in the offer comparator's order.
+ * @deprecated Prefer queryDiscountedRailProducts(limit) which encapsulates variant discount ranking.
+ */
+export async function availableProductsForDiscountRail(): Promise<CatalogProduct[]> {
+  const records = await prisma.product.findMany({
+    where: { available: true },
+    include: productRelations,
+    orderBy: [{ specialOffer: "desc" }, { updatedAt: "desc" }, { id: "asc" }],
+  });
+  return records.map((record) => serializeProduct(record, true));
 }
 
 export async function findProductSlugById(id: number) {

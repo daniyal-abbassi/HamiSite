@@ -159,7 +159,7 @@ function ProductDeal({
   if (featured) {
     return (
       <article className="deal-featured" style={{ animationDelay: `${0.12 + index * 0.08}s` }}>
-        <Link href={href} className="deal-featured__media">
+        <Link href={href} className="deal-featured__media relative block aspect-[16/10] overflow-hidden">
           {image ? <Image src={image} alt="" fill sizes={sizes} className="deal-featured__image" /> : null}
           <span className="deal-featured__shade" aria-hidden="true" />
           <Badge
@@ -214,7 +214,7 @@ function ProductDeal({
 
   return (
     <article className="deal-card" style={{ animationDelay: `${0.2 + index * 0.1}s` }}>
-      <Link href={href} className="deal-card__media">
+      <Link href={href} className="deal-card__media relative block aspect-square overflow-hidden">
         {image ? <Image src={image} alt={product.name} fill sizes={sizes} className="deal-card__image" /> : null}
         <span className="deal-card__shade" aria-hidden="true" />
         {rate != null && (

@@ -1,102 +1,58 @@
+import { createHash, randomBytes } from "node:crypto";
 import { Prisma, Role } from "@prisma/client";
-import { createSession, hashPassword, sanitizeUser, setSessionCookie } from "@/lib/auth";
+import { NextResponse } from "next/server";
+import { generateSessionToken, hashPassword, hashSessionToken, sanitizeUser, SESSION_TTL_MS, setSessionCookie } from "@/lib/auth";
 import { ApiError, ok, parseJsonBody, withErrorHandling } from "@/lib/http";
+import { assertSameOrigin } from "@/lib/security/csrf";
 import { prisma } from "@/lib/prisma";
 import { registerSchema } from "@/lib/schemas/auth";
 import type { RegisterResponse } from "@/types/auth";
 
-/** Prisma reports the violated unique index in `meta.target`; on Postgres that's
- * an array of COLUMN names. username/email/phoneNumber have no @map, so column
- * names equal field names. Defensive about the shape anyway. */
-function duplicateFieldFrom(error: Prisma.PrismaClientKnownRequestError): string {
-  const target = (error.meta as { target?: unknown } | undefined)?.target;
-  const first = Array.isArray(target) ? target[0] : target;
-  return typeof first === "string" ? first : "account";
+const PROOF_COOKIE = "registration_proof";
+function getCookie(request: Request, name: string) {
+  const item = request.headers.get("cookie")?.split(";").map((v) => v.trim()).find((v) => v.startsWith(`${name}=`));
+  if (!item) return null;
+  try { return decodeURIComponent(item.slice(name.length + 1)); } catch { return null; }
 }
 
 export async function POST(request: Request) {
   return withErrorHandling(async () => {
+    assertSameOrigin(request);
     const input = await parseJsonBody(request, registerSchema);
+    const token = getCookie(request, PROOF_COOKIE);
+    if (!token || !/^[a-f0-9]{64}$/i.test(token)) throw ApiError.coded(401, "REGISTRATION_PROOF_REQUIRED", "Verify your phone first");
+    const tokenHash = createHash("sha256").update(token).digest("hex");
     const role = input.role ?? Role.RETAIL;
-
-    const existing = await prisma.user.findFirst({
-      where: {
-        OR: [
-          { username: input.username },
-          { phoneNumber: input.phoneNumber },
-          ...(input.email ? [{ email: input.email }] : []),
-        ],
-      },
-      select: { username: true, phoneNumber: true, email: true },
-    });
-
-    if (existing) {
-      const field =
-        existing.username === input.username
-          ? "username"
-          : existing.phoneNumber === input.phoneNumber
-            ? "phoneNumber"
-            : "email";
-      throw ApiError.coded(409, "DUPLICATE_ACCOUNT", `An account with this ${field} already exists`);
-    }
-
     if (input.agentId) {
-      if (role !== Role.WHOLESALE) {
-        throw new ApiError(400, "agentId can only be set for WHOLESALE accounts");
-      }
-
-      const agent = await prisma.user.findUnique({
-        where: { id: input.agentId },
-        select: { id: true, role: true, isActive: true },
-      });
-
-      if (!agent || !agent.isActive || agent.role !== Role.AGENT) {
-        throw new ApiError(400, "Invalid agentId — must reference an active AGENT user");
-      }
+      if (role !== Role.WHOLESALE) throw new ApiError(400, "agentId can only be set for WHOLESALE accounts");
+      const agent = await prisma.user.findUnique({ where: { id: input.agentId }, select: { id: true, role: true, isActive: true } });
+      if (!agent || !agent.isActive || agent.role !== Role.AGENT) throw new ApiError(400, "Invalid agentId — must reference an active AGENT user");
     }
-
-    const passwordHash = await hashPassword(input.password);
-
+    const passwordHash = await hashPassword(randomBytes(48).toString("base64url"));
+    const sessionToken = generateSessionToken();
     let user;
     try {
-      user = await prisma.user.create({
-        data: {
-          username: input.username,
-          email: input.email,
-          passwordHash,
-          role,
-          firstName: input.firstName,
-          lastName: input.lastName,
-          phoneNumber: input.phoneNumber,
-          city: input.city,
-          shopName: role === Role.WHOLESALE ? input.shopName : undefined,
-          businessLicenseNumber: role === Role.WHOLESALE ? input.businessLicenseNumber : undefined,
-          nationalNumber: input.nationalNumber,
-          agentId: input.agentId,
-          referer: input.referer,
-          creationMethod: "password",
-        },
+      user = await prisma.$transaction(async (tx) => {
+        await tx.$queryRaw`SELECT id FROM "registration_proofs" WHERE "tokenHash" = ${tokenHash} FOR UPDATE`;
+        const [{ now }] = await tx.$queryRaw<Array<{ now: Date }>>`SELECT timezone('UTC', clock_timestamp()) AS now`;
+        const proof = await tx.registrationProof.findUnique({ where: { tokenHash } });
+        if (!proof || proof.consumedAt || proof.expiresAt <= now) throw ApiError.coded(401, "REGISTRATION_PROOF_REQUIRED", "Verify your phone first");
+        const existing = await tx.user.findFirst({ where: { OR: [{ phoneNumber: proof.phoneNumber }, { username: input.username }, ...(input.email ? [{ email: input.email }] : [])] }, select: { id: true } });
+        if (existing) throw ApiError.coded(409, "DUPLICATE_ACCOUNT", "Account already exists");
+        const claimed = await tx.registrationProof.updateMany({ where: { id: proof.id, consumedAt: null, expiresAt: { gt: now } }, data: { consumedAt: now } });
+        if (claimed.count !== 1) throw ApiError.coded(401, "REGISTRATION_PROOF_REQUIRED", "Verify your phone first");
+        const created = await tx.user.create({ data: { username: input.username, email: input.email, passwordHash, role, firstName: input.firstName, lastName: input.lastName, phoneNumber: proof.phoneNumber, phoneVerified: true, phoneVerifiedAt: now, city: input.city, shopName: role === Role.WHOLESALE ? input.shopName : undefined, businessLicenseNumber: role === Role.WHOLESALE ? input.businessLicenseNumber : undefined, nationalNumber: input.nationalNumber, agentId: input.agentId, referer: input.referer, creationMethod: "otp" } });
+        const expiresAt = new Date(now.getTime() + SESSION_TTL_MS);
+        await tx.session.create({ data: { userId: created.id, tokenHash: hashSessionToken(sessionToken), userAgent: request.headers.get("user-agent"), expiresAt } });
+        return { user: created, expiresAt };
       });
     } catch (error) {
-      // The pre-check above is best-effort: two concurrent registrations can
-      // both pass it. The unique index is what actually prevents the duplicate;
-      // this turns its violation into the same 409 instead of a 500.
-      // (A transaction would NOT help — at READ COMMITTED both txns read
-      // "no existing user" and both insert.)
-      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-        throw ApiError.coded(
-          409,
-          "DUPLICATE_ACCOUNT",
-          `An account with this ${duplicateFieldFrom(error)} already exists`,
-        );
-      }
+      if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") throw ApiError.coded(409, "DUPLICATE_ACCOUNT", "Account already exists");
       throw error;
     }
-
-    const { token, session } = await createSession(user.id, request.headers.get("user-agent"));
-    const response = ok<RegisterResponse>(sanitizeUser(user), { message: "Account created" });
-    setSessionCookie(response, token, session.expiresAt);
-
+    const response = ok<RegisterResponse>(sanitizeUser(user.user), { message: "Account created" });
+    setSessionCookie(response, sessionToken, user.expiresAt);
+    response.cookies.set(PROOF_COOKIE, "", { httpOnly: true, secure: process.env.NODE_ENV === "production", sameSite: "lax", path: "/", expires: new Date(0) });
     return response;
   });
 }

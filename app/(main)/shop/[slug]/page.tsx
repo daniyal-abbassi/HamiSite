@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { cache } from "react";
 import { notFound } from "next/navigation";
 import { headers } from "next/headers";
 import { ProductDetail } from "@/components/shop/ProductDetail";
@@ -11,12 +12,15 @@ import { escapeJsonLd } from "@/lib/security/xss";
 
 type Params = Promise<{ slug: string }>;
 
+// Metadata and the page resolve the same product during one render request.
+// Prisma batches the two identical reads into one SQL IN query, but still
+// materializes and serializes the record twice without request-scoped caching.
+const productForRequest = cache((slug: string) => findProductBySlug(slug));
+
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
-  const product = await findProductBySlug(slug);
-  if (!product) {
-    return { title: "محصول یافت نشد | حامی همراه", robots: { index: false, follow: false } };
-  }
+  const product = await productForRequest(slug);
+  if (!product) notFound();
   const description =
     product.description?.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 155) ||
     `مشخصات و وضعیت عرضه ${product.name} در فروشگاه حامی همراه مشهد؛ برای استعلام قیمت روز و راهنمای خرید با فروشگاه تماس بگیرید.`;
@@ -36,7 +40,7 @@ export default async function ProductPage({ params }: { params: Params }) {
    * require an API round-trip (Constitution III) — this route used to prerender an
    * empty shell and fetch `/api/products/[slug]` after hydration.
    */
-  const product = await findProductBySlug(slug);
+  const product = await productForRequest(slug);
   if (!product) notFound();
   const generatedAt = await catalogGeneratedAt();
   const purchasable = isPurchasable(product);

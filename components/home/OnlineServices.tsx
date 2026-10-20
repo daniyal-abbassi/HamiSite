@@ -41,7 +41,7 @@ export function OnlineServices() {
           </Reveal>
 
           <Reveal delay={100}>
-            <div className="online-services-visual" role="group" aria-label="دسته‌های خدمات دیجیتال حامی همراه">
+            <div className="online-services-visual relative aspect-[16/10] overflow-hidden" role="group" aria-label="دسته‌های خدمات دیجیتال حامی همراه">
               <Image
                 className="online-services-visual__image"
                 src="/images/shapes/online-services-digital-studio.webp"

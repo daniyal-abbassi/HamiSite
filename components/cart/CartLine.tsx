@@ -34,7 +34,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
     return (
       <div className={cn("flex flex-col gap-2 py-4 border-b border-line/40 last:border-b-0", busy && "pointer-events-none opacity-60")}>
         <div className="flex gap-3">
-          <div className="relative size-16 shrink-0 overflow-hidden rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
+          <div className="relative aspect-square size-16 shrink-0 overflow-hidden rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
             {item.product?.image?.url ? (
               <Image
                 src={item.product.image.url}
@@ -51,7 +51,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
           <div className="min-w-0 flex-1">
             <div className="flex items-start justify-between gap-2">
               <div className="min-w-0">
-                <div className="inline-flex items-center gap-1 text-[10px] font-bold text-amber-400 mb-0.5">
+                <div className="inline-flex items-center gap-1 text-xs font-bold text-amber-400 mb-0.5">
                   <Sparkles size={11} />
                   <span>سبد اختصاصی همکار</span>
                 </div>
@@ -124,7 +124,7 @@ export function CartLine({ item, busy = false, onUpdate, onRemove }: CartLinePro
     <div className={cn("flex gap-3 py-4", busy && "pointer-events-none opacity-60")}>
       <Link
         href={`/shop/${item.product?.slug ?? ""}`}
-        className="relative size-20 shrink-0 overflow-hidden rounded-lg bg-ink/40"
+        className="relative aspect-square size-20 shrink-0 overflow-hidden rounded-lg bg-ink/40"
         aria-label={item.product?.name ?? "محصول"}
       >
         <Image

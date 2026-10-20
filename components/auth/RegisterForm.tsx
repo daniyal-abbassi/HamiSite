@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { UserPlus } from "lucide-react";
@@ -19,7 +19,6 @@ import type { PublicUser } from "@/types/auth";
 type Role = "RETAIL" | "WHOLESALE";
 type Values = {
   username: string;
-  password: string;
   phoneNumber: string;
   firstName: string;
   lastName: string;
@@ -32,7 +31,6 @@ type FieldErrors = Partial<Record<keyof Values, string>>;
 
 const EMPTY: Values = {
   username: "",
-  password: "",
   phoneNumber: "",
   firstName: "",
   lastName: "",
@@ -45,7 +43,6 @@ const EMPTY: Values = {
 function clientValidate(values: Values, role: Role): FieldErrors {
   const errors: FieldErrors = {};
   if (values.username.trim().length < 3) errors.username = "نام کاربری حداقل ۳ کاراکتر است.";
-  if (values.password.length < 6) errors.password = "رمز عبور حداقل ۶ کاراکتر است.";
   if (!isValidIranianMobile(values.phoneNumber)) errors.phoneNumber = "شماره موبایل معتبر نیست.";
   if (values.email && !/^\S+@\S+\.\S+$/.test(values.email)) errors.email = "ایمیل معتبر نیست.";
   if (role === "WHOLESALE" && values.shopName.trim().length < 2) errors.shopName = "نام فروشگاه الزامی است.";
@@ -74,8 +71,18 @@ export function RegisterForm() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<FieldErrors>({});
+  const [challenge, setChallenge] = useState<string | null>(null);
+  const [code, setCode] = useState("");
+  const [verified, setVerified] = useState(false);
+  const [retryIn, setRetryIn] = useState(0);
 
   const nextPath = safeNextPath(searchParams.get("next"));
+
+  useEffect(() => {
+    if (!challenge || retryIn <= 0) return;
+    const timer = window.setTimeout(() => setRetryIn((value) => Math.max(0, value - 1)), 1000);
+    return () => window.clearTimeout(timer);
+  }, [challenge, retryIn]);
 
   function setField(field: keyof Values) {
     return (event: React.ChangeEvent<HTMLInputElement>) =>
@@ -84,6 +91,7 @@ export function RegisterForm() {
 
   async function handleSubmit(event: React.FormEvent) {
     event.preventDefault();
+    if (!verified) { setError("ابتدا شماره موبایل خود را تأیید کنید."); return; }
     const validation = clientValidate(values, role);
     setFieldErrors(validation);
     setError(null);
@@ -104,12 +112,8 @@ export function RegisterForm() {
     );
 
     try {
-      // Register sets the session cookie server-side — the user is signed in
-      // immediately, matching the storefront's no-friction flow.
       await apiPost<PublicUser>("/api/auth/register", {
         username: normalizePersianDigits(values.username.trim()),
-        password: values.password,
-        phoneNumber: normalizePersianDigits(values.phoneNumber.trim()),
         role,
         ...optional,
       });
@@ -122,6 +126,25 @@ export function RegisterForm() {
       setError(apiErrorToFa(cause));
       setSubmitting(false);
     }
+  }
+
+  async function requestCode() {
+    setSubmitting(true); setError(null);
+    try {
+      const result = await apiPost<{ challengeId: string; resendAfterSeconds: number }>("/api/auth/otp/request", { phoneNumber: normalizePersianDigits(values.phoneNumber.trim()), purpose: "REGISTER" });
+      setChallenge(result.challengeId);
+      setRetryIn(result.resendAfterSeconds);
+    } catch (cause) { setError(apiErrorToFa(cause)); }
+    finally { setSubmitting(false); }
+  }
+
+  async function verifyCode() {
+    if (!challenge) return; setSubmitting(true); setError(null);
+    try {
+      await apiPost("/api/auth/otp/verify", { challengeId: challenge, code: normalizePersianDigits(code.trim()) });
+      setVerified(true);
+    } catch (cause) { setError(apiErrorToFa(cause)); }
+    finally { setSubmitting(false); }
   }
 
   function Field({
@@ -155,6 +178,7 @@ export function RegisterForm() {
           type={type}
           autoComplete={autoComplete}
           required={required}
+          disabled={field === "phoneNumber" && Boolean(challenge)}
           placeholder={placeholder}
           dir={dir}
           inputMode={type === "tel" || id === "phoneNumber" ? "tel" : undefined}
@@ -209,7 +233,6 @@ export function RegisterForm() {
         <div className="grid gap-4 sm:grid-cols-2">
           <Field id="username" label="نام کاربری" field="username" required autoComplete="username" dir="auto" />
           <Field id="phoneNumber" label="شماره موبایل" field="phoneNumber" required type="tel" autoComplete="tel" placeholder="۰۹۱۲…" dir="ltr" />
-          <Field id="password" label="رمز عبور" field="password" required type="password" autoComplete="new-password" dir="ltr" />
           <Field id="firstName" label="نام" field="firstName" autoComplete="given-name" />
           <Field id="lastName" label="نام خانوادگی" field="lastName" autoComplete="family-name" />
           <Field id="city" label="شهر" field="city" autoComplete="address-level2" />
@@ -222,13 +245,24 @@ export function RegisterForm() {
         </div>
         <Field id="email" label="ایمیل (اختیاری)" field="email" type="email" autoComplete="email" />
 
+        {!verified ? <div className="space-y-3 rounded-xl border border-border p-4">
+          {!challenge ? <Button type="button" className="w-full" size="lg" loading={submitting} onClick={() => { if (isValidIranianMobile(values.phoneNumber)) void requestCode(); else setFieldErrors((prev) => ({ ...prev, phoneNumber: "شماره موبایل معتبر نیست." })); }}>ارسال کد تأیید موبایل</Button> : <>
+            <label htmlFor="register-otp" className="type-label mb-1.5 block font-bold">کد شش‌رقمی پیامک‌شده</label>
+            <Input id="register-otp" inputMode="numeric" autoComplete="one-time-code" dir="ltr" maxLength={6} value={code} onChange={(e) => setCode(e.target.value)} />
+            <Button type="button" className="w-full" size="lg" loading={submitting} onClick={() => void verifyCode()}>تأیید شماره موبایل</Button>
+            <Button type="button" variant="ghost" className="w-full" disabled={submitting || retryIn > 0} onClick={() => void requestCode()}>
+              ارسال دوباره کد{retryIn > 0 ? ` پس از ${retryIn} ثانیه` : ""}
+            </Button>
+          </>}
+        </div> : <p className="rounded-xl border border-aqua/40 bg-aqua/10 px-4 py-3 text-sm font-bold text-aqua">شماره موبایل تأیید شد.</p>}
+
         {error && (
           <p role="alert" className="rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
             {error}
           </p>
         )}
 
-        <Button type="submit" className="w-full" size="lg" loading={submitting}>
+        <Button type="submit" className="w-full" size="lg" loading={submitting} disabled={!verified}>
           <UserPlus className="size-4" />
           ایجاد حساب
         </Button>

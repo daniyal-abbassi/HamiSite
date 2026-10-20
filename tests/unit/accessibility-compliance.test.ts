@@ -75,7 +75,7 @@ describe("WCAG 2.2 Accessibility Compliance - Landmarks & Skip Links", () => {
       join(process.cwd(), "components/layout/MobileDock.tsx"),
       "utf8"
     );
-    expect(dock).toContain("min-h-[44px]");
+    expect(dock.includes("min-h-[44px]") || dock.includes("min-h-11")).toBe(true);
   });
 
   it("verifies prefersReducedMotion guard correctly defaults safe in non-window env", async () => {

@@ -116,7 +116,7 @@ const CP_URL = "http://localhost/api/auth/change-password";
 const LOGIN_URL = "http://localhost/api/auth/login";
 
 describe("POST /api/auth/change-password", () => {
-  it("changes the password; the old one stops working and the new one works", async () => {
+  it("changes the stored password while customer password login stays disabled", async () => {
     const res = await changePassword(
       jsonRequest(CP_URL, "POST", { currentPassword: seed.retail.password, newPassword: "NewPassword@456" }, cookie), ctx());
     expect(res.status).toBe(200);
@@ -131,7 +131,7 @@ describe("POST /api/auth/change-password", () => {
     const fresh = await login(
       jsonRequest(LOGIN_URL, "POST", { identifier: seed.retail.username, password: "NewPassword@456" }),
     );
-    expect(fresh.status).toBe(200);
+    expect(fresh.status).toBe(401);
   });
 
   it("revokes every OTHER session and keeps the current one alive", async () => {
@@ -158,7 +158,7 @@ describe("POST /api/auth/change-password", () => {
     expect(
       (await login(jsonRequest(LOGIN_URL, "POST", { identifier: seed.retail.username, password: seed.retail.password })))
         .status,
-    ).toBe(200);
+    ).toBe(401);
     expect((await me(getRequest(URL, cookie), ctx())).status).toBe(200);
   });
 

@@ -1,0 +1,1330 @@
+{
+  "phase": "baseline",
+  "profile": {
+    "profile_id": "prof-mobile-4x-2026-10-15",
+    "viewport": {
+      "width": 390,
+      "height": 844,
+      "device_scale_factor": 3
+    },
+    "desktop_visual_viewport": {
+      "width": 1280,
+      "height": 800,
+      "device_scale_factor": 1
+    },
+    "cpu_slowdown": 4,
+    "network": {
+      "download_kbps": 1600,
+      "upload_kbps": 750,
+      "latency_ms": 150
+    },
+    "browser_cache_policy": "fresh = new context (empty HTTP cache); returning = same context, cache warm, same session"
+  },
+  "base_url": "http://127.0.0.1:3000",
+  "server_build_id": "SI5JalMD_PFquWP7kYRcV",
+  "captured_at": "2026-10-15T23:33:34.201Z",
+  "git_head": "7d646924bac6402fa2f247c6255e1d6ea929f8a2",
+  "samples_expected": 40,
+  "samples": [
+    {
+      "sample_id": "home-fresh-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "home",
+      "exact_url": "http://127.0.0.1:3000/",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 1,
+      "principal_content_selector": "article.product-card (first visible home rail card)",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 6231,
+      "lcp_ms": 1764,
+      "cls": 0.0022,
+      "wall_ms": 9687,
+      "request_failures": [],
+      "transfer_bytes_total": 1273094,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/baseline/traces/home-fresh-r1.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/baseline/home-fresh-r1.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 1.55,
+        "load_5m": 1.7
+      },
+      "captured_at": "2026-10-15T23:29:14.965Z"
+    },
+    {
+      "sample_id": "home-fresh-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "home",
+      "exact_url": "http://127.0.0.1:3000/",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 2,
+      "principal_content_selector": "article.product-card (first visible home rail card)",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 6352,
+      "lcp_ms": 1648,
+      "cls": 0.0011,
+      "wall_ms": 7620,
+      "request_failures": [],
+      "transfer_bytes_total": 1273220,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.79,
+        "load_5m": 1.74
+      },
+      "captured_at": "2026-10-15T23:29:24.272Z"
+    },
+    {
+      "sample_id": "home-fresh-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "home",
+      "exact_url": "http://127.0.0.1:3000/",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 3,
+      "principal_content_selector": "article.product-card (first visible home rail card)",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 6353,
+      "lcp_ms": 1924,
+      "cls": 0.0022,
+      "wall_ms": 7686,
+      "request_failures": [],
+      "transfer_bytes_total": 1272429,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 2.11,
+        "load_5m": 1.82
+      },
+      "captured_at": "2026-10-15T23:29:33.615Z"
+    },
+    {
+      "sample_id": "home-fresh-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "home",
+      "exact_url": "http://127.0.0.1:3000/",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 4,
+      "principal_content_selector": "article.product-card (first visible home rail card)",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 6371,
+      "lcp_ms": 1924,
+      "cls": 0.0062,
+      "wall_ms": 7638,
+      "request_failures": [],
+      "transfer_bytes_total": 1270029,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 2.54,
+        "load_5m": 1.92
+      },
+      "captured_at": "2026-10-15T23:29:42.921Z"
+    },
+    {
+      "sample_id": "home-fresh-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "home",
+      "exact_url": "http://127.0.0.1:3000/",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 5,
+      "principal_content_selector": "article.product-card (first visible home rail card)",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 6290,
+      "lcp_ms": 1872,
+      "cls": 0.0022,
+      "wall_ms": 7594,
+      "request_failures": [],
+      "transfer_bytes_total": 1272235,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 2.23,
+        "load_5m": 1.87
+      },
+      "captured_at": "2026-10-15T23:29:52.186Z"
+    },
+    {
+      "sample_id": "home-returning-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "home",
+      "exact_url": "http://127.0.0.1:3000/",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 1,
+      "principal_content_selector": "article.product-card (first visible home rail card)",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 2378,
+      "lcp_ms": 808,
+      "cls": 0.0011,
+      "wall_ms": 4536,
+      "request_failures": [
+        {
+          "requestId": "52392.1955",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "52392.1956",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 131748,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 2.44,
+        "load_5m": 1.93
+      },
+      "captured_at": "2026-10-15T23:30:05.274Z"
+    },
+    {
+      "sample_id": "home-returning-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "home",
+      "exact_url": "http://127.0.0.1:3000/",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 2,
+      "principal_content_selector": "article.product-card (first visible home rail card)",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 2893,
+      "lcp_ms": 772,
+      "cls": 0.0011,
+      "wall_ms": 4138,
+      "request_failures": [
+        {
+          "requestId": "52392.1955",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "52392.1956",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 125067,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 2.22,
+        "load_5m": 1.9
+      },
+      "captured_at": "2026-10-15T23:30:10.913Z"
+    },
+    {
+      "sample_id": "home-returning-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "home",
+      "exact_url": "http://127.0.0.1:3000/",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 3,
+      "principal_content_selector": "article.product-card (first visible home rail card)",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 2806,
+      "lcp_ms": 2824,
+      "cls": 0.0062,
+      "wall_ms": 4088,
+      "request_failures": [
+        {
+          "requestId": "52392.1955",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "52392.1956",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 125184,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 2.12,
+        "load_5m": 1.88
+      },
+      "captured_at": "2026-10-15T23:30:16.501Z"
+    },
+    {
+      "sample_id": "home-returning-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "home",
+      "exact_url": "http://127.0.0.1:3000/",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 4,
+      "principal_content_selector": "article.product-card (first visible home rail card)",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 2785,
+      "lcp_ms": 732,
+      "cls": 0.0011,
+      "wall_ms": 4077,
+      "request_failures": [
+        {
+          "requestId": "52392.1955",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "52392.1956",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 125162,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 2.03,
+        "load_5m": 1.87
+      },
+      "captured_at": "2026-10-15T23:30:22.078Z"
+    },
+    {
+      "sample_id": "home-returning-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "home",
+      "exact_url": "http://127.0.0.1:3000/",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 5,
+      "principal_content_selector": "article.product-card (first visible home rail card)",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 2379,
+      "lcp_ms": 784,
+      "cls": 0.0011,
+      "wall_ms": 6644,
+      "request_failures": [
+        {
+          "requestId": "52392.1955",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "52392.1956",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 125741,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/baseline/traces/home-returning-r5.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/baseline/home-returning-r5.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 2.19,
+        "load_5m": 1.9
+      },
+      "captured_at": "2026-10-15T23:30:30.227Z"
+    },
+    {
+      "sample_id": "shop-fresh-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "shop",
+      "exact_url": "http://127.0.0.1:3000/shop",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 1,
+      "principal_content_selector": ".shop-product-grid article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 3567,
+      "lcp_ms": 3192,
+      "cls": 0,
+      "wall_ms": 6533,
+      "request_failures": [],
+      "transfer_bytes_total": 761848,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/baseline/traces/shop-fresh-r1.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/baseline/shop-fresh-r1.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 2.32,
+        "load_5m": 1.94
+      },
+      "captured_at": "2026-10-15T23:30:38.427Z"
+    },
+    {
+      "sample_id": "shop-fresh-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "shop",
+      "exact_url": "http://127.0.0.1:3000/shop",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 2,
+      "principal_content_selector": ".shop-product-grid article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 3058,
+      "lcp_ms": 2152,
+      "cls": 0.0013,
+      "wall_ms": 5148,
+      "request_failures": [],
+      "transfer_bytes_total": 747884,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 2.21,
+        "load_5m": 1.92
+      },
+      "captured_at": "2026-10-15T23:30:45.190Z"
+    },
+    {
+      "sample_id": "shop-fresh-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "shop",
+      "exact_url": "http://127.0.0.1:3000/shop",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 3,
+      "principal_content_selector": ".shop-product-grid article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 3246,
+      "lcp_ms": 2844,
+      "cls": 0,
+      "wall_ms": 5117,
+      "request_failures": [],
+      "transfer_bytes_total": 747918,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 2.03,
+        "load_5m": 1.89
+      },
+      "captured_at": "2026-10-15T23:30:52.025Z"
+    },
+    {
+      "sample_id": "shop-fresh-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "shop",
+      "exact_url": "http://127.0.0.1:3000/shop",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 4,
+      "principal_content_selector": ".shop-product-grid article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 3298,
+      "lcp_ms": 2848,
+      "cls": 0.0047,
+      "wall_ms": 5173,
+      "request_failures": [],
+      "transfer_bytes_total": 747877,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.95,
+        "load_5m": 1.88
+      },
+      "captured_at": "2026-10-15T23:30:58.876Z"
+    },
+    {
+      "sample_id": "shop-fresh-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "shop",
+      "exact_url": "http://127.0.0.1:3000/shop",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 5,
+      "principal_content_selector": ".shop-product-grid article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 3335,
+      "lcp_ms": 2944,
+      "cls": 0,
+      "wall_ms": 4950,
+      "request_failures": [],
+      "transfer_bytes_total": 747841,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 2.19,
+        "load_5m": 1.93
+      },
+      "captured_at": "2026-10-15T23:31:05.527Z"
+    },
+    {
+      "sample_id": "shop-returning-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "shop",
+      "exact_url": "http://127.0.0.1:3000/shop",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 1,
+      "principal_content_selector": ".shop-product-grid article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 1621,
+      "lcp_ms": 1904,
+      "cls": 0.0011,
+      "wall_ms": 3135,
+      "request_failures": [
+        {
+          "requestId": "52714.860",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "52714.778",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 68310,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.94,
+        "load_5m": 1.88
+      },
+      "captured_at": "2026-10-15T23:31:14.445Z"
+    },
+    {
+      "sample_id": "shop-returning-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "shop",
+      "exact_url": "http://127.0.0.1:3000/shop",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 2,
+      "principal_content_selector": ".shop-product-grid article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 1593,
+      "lcp_ms": 1672,
+      "cls": 0.0011,
+      "wall_ms": 3084,
+      "request_failures": [
+        {
+          "requestId": "52714.860",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "52714.778",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 62322,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.86,
+        "load_5m": 1.87
+      },
+      "captured_at": "2026-10-15T23:31:19.029Z"
+    },
+    {
+      "sample_id": "shop-returning-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "shop",
+      "exact_url": "http://127.0.0.1:3000/shop",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 3,
+      "principal_content_selector": ".shop-product-grid article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 1765,
+      "lcp_ms": 1780,
+      "cls": 0.0011,
+      "wall_ms": 3075,
+      "request_failures": [
+        {
+          "requestId": "52714.860",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "52714.778",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 62255,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.87,
+        "load_5m": 1.87
+      },
+      "captured_at": "2026-10-15T23:31:23.604Z"
+    },
+    {
+      "sample_id": "shop-returning-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "shop",
+      "exact_url": "http://127.0.0.1:3000/shop",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 4,
+      "principal_content_selector": ".shop-product-grid article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 1429,
+      "lcp_ms": 1716,
+      "cls": 0.0011,
+      "wall_ms": 2975,
+      "request_failures": [
+        {
+          "requestId": "52714.860",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "52714.778",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 64578,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.8,
+        "load_5m": 1.86
+      },
+      "captured_at": "2026-10-15T23:31:28.078Z"
+    },
+    {
+      "sample_id": "shop-returning-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "shop",
+      "exact_url": "http://127.0.0.1:3000/shop",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 5,
+      "principal_content_selector": ".shop-product-grid article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 1652,
+      "lcp_ms": 2004,
+      "cls": 0.0032,
+      "wall_ms": 4629,
+      "request_failures": [
+        {
+          "requestId": "52714.860",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "52714.778",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 69488,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/baseline/traces/shop-returning-r5.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/baseline/shop-returning-r5.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 1.98,
+        "load_5m": 1.89
+      },
+      "captured_at": "2026-10-15T23:31:34.210Z"
+    },
+    {
+      "sample_id": "category-fresh-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "category",
+      "exact_url": "http://127.0.0.1:3000/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 1,
+      "principal_content_selector": "category listing article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 2669,
+      "lcp_ms": 2716,
+      "cls": 0.098,
+      "wall_ms": 4864,
+      "request_failures": [],
+      "transfer_bytes_total": 643478,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/baseline/traces/category-fresh-r1.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/baseline/category-fresh-r1.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 1.9,
+        "load_5m": 1.88
+      },
+      "captured_at": "2026-10-15T23:31:40.713Z"
+    },
+    {
+      "sample_id": "category-fresh-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "category",
+      "exact_url": "http://127.0.0.1:3000/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 2,
+      "principal_content_selector": "category listing article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 2468,
+      "lcp_ms": 2704,
+      "cls": 0.098,
+      "wall_ms": 3869,
+      "request_failures": [],
+      "transfer_bytes_total": 628033,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.76,
+        "load_5m": 1.85
+      },
+      "captured_at": "2026-10-15T23:31:46.187Z"
+    },
+    {
+      "sample_id": "category-fresh-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "category",
+      "exact_url": "http://127.0.0.1:3000/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 3,
+      "principal_content_selector": "category listing article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 2459,
+      "lcp_ms": 2688,
+      "cls": 0.098,
+      "wall_ms": 3841,
+      "request_failures": [],
+      "transfer_bytes_total": 627969,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.7,
+        "load_5m": 1.83
+      },
+      "captured_at": "2026-10-15T23:31:51.707Z"
+    },
+    {
+      "sample_id": "category-fresh-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "category",
+      "exact_url": "http://127.0.0.1:3000/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 4,
+      "principal_content_selector": "category listing article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 2454,
+      "lcp_ms": 2680,
+      "cls": 0.098,
+      "wall_ms": 3678,
+      "request_failures": [],
+      "transfer_bytes_total": 628101,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.72,
+        "load_5m": 1.84
+      },
+      "captured_at": "2026-10-15T23:31:57.060Z"
+    },
+    {
+      "sample_id": "category-fresh-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "category",
+      "exact_url": "http://127.0.0.1:3000/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 5,
+      "principal_content_selector": "category listing article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 2482,
+      "lcp_ms": 2696,
+      "cls": 0.098,
+      "wall_ms": 3851,
+      "request_failures": [],
+      "transfer_bytes_total": 628059,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.75,
+        "load_5m": 1.84
+      },
+      "captured_at": "2026-10-15T23:32:02.756Z"
+    },
+    {
+      "sample_id": "category-returning-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "category",
+      "exact_url": "http://127.0.0.1:3000/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 1,
+      "principal_content_selector": "category listing article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 1528,
+      "lcp_ms": 1552,
+      "cls": 0.0002,
+      "wall_ms": 2749,
+      "request_failures": [
+        {
+          "requestId": "53011.577",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 55333,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.77,
+        "load_5m": 1.84
+      },
+      "captured_at": "2026-10-15T23:32:10.640Z"
+    },
+    {
+      "sample_id": "category-returning-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "category",
+      "exact_url": "http://127.0.0.1:3000/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 2,
+      "principal_content_selector": "category listing article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 1377,
+      "lcp_ms": 1400,
+      "cls": 0.0002,
+      "wall_ms": 2596,
+      "request_failures": [
+        {
+          "requestId": "53011.577",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 49295,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.71,
+        "load_5m": 1.83
+      },
+      "captured_at": "2026-10-15T23:32:14.736Z"
+    },
+    {
+      "sample_id": "category-returning-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "category",
+      "exact_url": "http://127.0.0.1:3000/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 3,
+      "principal_content_selector": "category listing article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 1273,
+      "lcp_ms": 1404,
+      "cls": 0.0002,
+      "wall_ms": 2591,
+      "request_failures": [
+        {
+          "requestId": "53011.577",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 49320,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.65,
+        "load_5m": 1.81
+      },
+      "captured_at": "2026-10-15T23:32:18.827Z"
+    },
+    {
+      "sample_id": "category-returning-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "category",
+      "exact_url": "http://127.0.0.1:3000/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 4,
+      "principal_content_selector": "category listing article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 1358,
+      "lcp_ms": 1380,
+      "cls": 0.0002,
+      "wall_ms": 2582,
+      "request_failures": [
+        {
+          "requestId": "53011.577",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 49248,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.6,
+        "load_5m": 1.8
+      },
+      "captured_at": "2026-10-15T23:32:22.909Z"
+    },
+    {
+      "sample_id": "category-returning-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "category",
+      "exact_url": "http://127.0.0.1:3000/categories/%D8%AA%D8%AC%D9%87%DB%8C%D8%B2%D8%A7%D8%AA-%DA%A9%D8%A7%D9%85%D9%BE%DB%8C%D9%88%D8%AA%D8%B1-%D9%88-%D9%84%D8%A8%D8%AA%D8%A7%D8%A8",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 5,
+      "principal_content_selector": "category listing article.product-card",
+      "usable_condition": "a real product card is visible with a loaded principal image and rendered Toman price",
+      "content_ready_ms": 1340,
+      "lcp_ms": 1524,
+      "cls": 0.0002,
+      "wall_ms": 3528,
+      "request_failures": [
+        {
+          "requestId": "53011.577",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 49296,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/baseline/traces/category-returning-r5.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/baseline/category-returning-r5.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 2.03,
+        "load_5m": 1.89
+      },
+      "captured_at": "2026-10-15T23:32:27.940Z"
+    },
+    {
+      "sample_id": "product-fresh-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "product",
+      "exact_url": "http://127.0.0.1:3000/shop/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%B4%DB%8C%D8%A7%D8%A6%D9%88%D9%85%DB%8C-%D9%85%D8%AF%D9%84-poco-x7-pro-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-512-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-12-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%DA%AF%D9%84%D9%88%D8%A8%D8%A7%D9%84",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 1,
+      "principal_content_selector": "ProductGallery principal image + h1 title + TomanPrice block",
+      "usable_condition": "principal image loaded (naturalWidth>0), title and price text visible",
+      "content_ready_ms": 2158,
+      "lcp_ms": 2612,
+      "cls": 0.0013,
+      "wall_ms": 4909,
+      "request_failures": [],
+      "transfer_bytes_total": 770781,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/baseline/traces/product-fresh-r1.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/baseline/product-fresh-r1.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 2.27,
+        "load_5m": 1.94
+      },
+      "captured_at": "2026-10-15T23:32:34.476Z"
+    },
+    {
+      "sample_id": "product-fresh-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "product",
+      "exact_url": "http://127.0.0.1:3000/shop/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%B4%DB%8C%D8%A7%D8%A6%D9%88%D9%85%DB%8C-%D9%85%D8%AF%D9%84-poco-x7-pro-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-512-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-12-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%DA%AF%D9%84%D9%88%D8%A8%D8%A7%D9%84",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 2,
+      "principal_content_selector": "ProductGallery principal image + h1 title + TomanPrice block",
+      "usable_condition": "principal image loaded (naturalWidth>0), title and price text visible",
+      "content_ready_ms": 1803,
+      "lcp_ms": 2420,
+      "cls": 0.0016,
+      "wall_ms": 3346,
+      "request_failures": [],
+      "transfer_bytes_total": 626613,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 2.17,
+        "load_5m": 1.92
+      },
+      "captured_at": "2026-10-15T23:32:39.893Z"
+    },
+    {
+      "sample_id": "product-fresh-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "product",
+      "exact_url": "http://127.0.0.1:3000/shop/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%B4%DB%8C%D8%A7%D8%A6%D9%88%D9%85%DB%8C-%D9%85%D8%AF%D9%84-poco-x7-pro-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-512-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-12-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%DA%AF%D9%84%D9%88%D8%A8%D8%A7%D9%84",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 3,
+      "principal_content_selector": "ProductGallery principal image + h1 title + TomanPrice block",
+      "usable_condition": "principal image loaded (naturalWidth>0), title and price text visible",
+      "content_ready_ms": 2110,
+      "lcp_ms": 2400,
+      "cls": 0.0016,
+      "wall_ms": 3581,
+      "request_failures": [],
+      "transfer_bytes_total": 656887,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.99,
+        "load_5m": 1.89
+      },
+      "captured_at": "2026-10-15T23:32:45.084Z"
+    },
+    {
+      "sample_id": "product-fresh-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "product",
+      "exact_url": "http://127.0.0.1:3000/shop/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%B4%DB%8C%D8%A7%D8%A6%D9%88%D9%85%DB%8C-%D9%85%D8%AF%D9%84-poco-x7-pro-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-512-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-12-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%DA%AF%D9%84%D9%88%D8%A8%D8%A7%D9%84",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 4,
+      "principal_content_selector": "ProductGallery principal image + h1 title + TomanPrice block",
+      "usable_condition": "principal image loaded (naturalWidth>0), title and price text visible",
+      "content_ready_ms": 2115,
+      "lcp_ms": 2520,
+      "cls": 0.0013,
+      "wall_ms": 3701,
+      "request_failures": [],
+      "transfer_bytes_total": 660875,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.83,
+        "load_5m": 1.86
+      },
+      "captured_at": "2026-10-15T23:32:50.427Z"
+    },
+    {
+      "sample_id": "product-fresh-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "product",
+      "exact_url": "http://127.0.0.1:3000/shop/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%B4%DB%8C%D8%A7%D8%A6%D9%88%D9%85%DB%8C-%D9%85%D8%AF%D9%84-poco-x7-pro-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-512-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-12-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%DA%AF%D9%84%D9%88%D8%A8%D8%A7%D9%84",
+      "access": "public",
+      "visit_state": "fresh",
+      "repetition": 5,
+      "principal_content_selector": "ProductGallery principal image + h1 title + TomanPrice block",
+      "usable_condition": "principal image loaded (naturalWidth>0), title and price text visible",
+      "content_ready_ms": 2117,
+      "lcp_ms": 2392,
+      "cls": 0.0022,
+      "wall_ms": 3581,
+      "request_failures": [],
+      "transfer_bytes_total": 656888,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.77,
+        "load_5m": 1.84
+      },
+      "captured_at": "2026-10-15T23:32:55.643Z"
+    },
+    {
+      "sample_id": "product-returning-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "product",
+      "exact_url": "http://127.0.0.1:3000/shop/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%B4%DB%8C%D8%A7%D8%A6%D9%88%D9%85%DB%8C-%D9%85%D8%AF%D9%84-poco-x7-pro-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-512-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-12-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%DA%AF%D9%84%D9%88%D8%A8%D8%A7%D9%84",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 1,
+      "principal_content_selector": "ProductGallery principal image + h1 title + TomanPrice block",
+      "usable_condition": "principal image loaded (naturalWidth>0), title and price text visible",
+      "content_ready_ms": 1707,
+      "lcp_ms": 1704,
+      "cls": 0.0011,
+      "wall_ms": 2930,
+      "request_failures": [
+        {
+          "requestId": "53280.959",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 67594,
+      "in_page_errors": [
+        "Uncaught Error: Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful wa"
+      ],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.57,
+        "load_5m": 1.8
+      },
+      "captured_at": "2026-10-15T23:33:04.315Z"
+    },
+    {
+      "sample_id": "product-returning-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "product",
+      "exact_url": "http://127.0.0.1:3000/shop/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%B4%DB%8C%D8%A7%D8%A6%D9%88%D9%85%DB%8C-%D9%85%D8%AF%D9%84-poco-x7-pro-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-512-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-12-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%DA%AF%D9%84%D9%88%D8%A8%D8%A7%D9%84",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 2,
+      "principal_content_selector": "ProductGallery principal image + h1 title + TomanPrice block",
+      "usable_condition": "principal image loaded (naturalWidth>0), title and price text visible",
+      "content_ready_ms": 1557,
+      "lcp_ms": 1572,
+      "cls": 0.0011,
+      "wall_ms": 2783,
+      "request_failures": [
+        {
+          "requestId": "53280.959",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 61541,
+      "in_page_errors": [
+        "Uncaught Error: Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful wa"
+      ],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.53,
+        "load_5m": 1.79
+      },
+      "captured_at": "2026-10-15T23:33:08.599Z"
+    },
+    {
+      "sample_id": "product-returning-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "product",
+      "exact_url": "http://127.0.0.1:3000/shop/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%B4%DB%8C%D8%A7%D8%A6%D9%88%D9%85%DB%8C-%D9%85%D8%AF%D9%84-poco-x7-pro-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-512-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-12-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%DA%AF%D9%84%D9%88%D8%A8%D8%A7%D9%84",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 3,
+      "principal_content_selector": "ProductGallery principal image + h1 title + TomanPrice block",
+      "usable_condition": "principal image loaded (naturalWidth>0), title and price text visible",
+      "content_ready_ms": 1488,
+      "lcp_ms": 1504,
+      "cls": 0.0011,
+      "wall_ms": 2720,
+      "request_failures": [
+        {
+          "requestId": "53280.959",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 61556,
+      "in_page_errors": [
+        "Uncaught Error: Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful wa"
+      ],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.65,
+        "load_5m": 1.81
+      },
+      "captured_at": "2026-10-15T23:33:12.819Z"
+    },
+    {
+      "sample_id": "product-returning-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "product",
+      "exact_url": "http://127.0.0.1:3000/shop/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%B4%DB%8C%D8%A7%D8%A6%D9%88%D9%85%DB%8C-%D9%85%D8%AF%D9%84-poco-x7-pro-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-512-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-12-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%DA%AF%D9%84%D9%88%D8%A8%D8%A7%D9%84",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 4,
+      "principal_content_selector": "ProductGallery principal image + h1 title + TomanPrice block",
+      "usable_condition": "principal image loaded (naturalWidth>0), title and price text visible",
+      "content_ready_ms": 1546,
+      "lcp_ms": 1568,
+      "cls": 0.0011,
+      "wall_ms": 2779,
+      "request_failures": [
+        {
+          "requestId": "53280.959",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 61533,
+      "in_page_errors": [
+        "Uncaught Error: Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful wa"
+      ],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 1.67,
+        "load_5m": 1.81
+      },
+      "captured_at": "2026-10-15T23:33:17.098Z"
+    },
+    {
+      "sample_id": "product-returning-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "product",
+      "exact_url": "http://127.0.0.1:3000/shop/%DA%AF%D9%88%D8%B4%DB%8C-%D9%85%D9%88%D8%A8%D8%A7%DB%8C%D9%84-%D8%B4%DB%8C%D8%A7%D8%A6%D9%88%D9%85%DB%8C-%D9%85%D8%AF%D9%84-poco-x7-pro-%D8%AF%D9%88-%D8%B3%DB%8C%D9%85-%DA%A9%D8%A7%D8%B1%D8%AA-%D8%B8%D8%B1%D9%81%DB%8C%D8%AA-512-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%D9%88-%D8%B1%D9%85-12-%DA%AF%DB%8C%DA%AF%D8%A7%D8%A8%D8%A7%DB%8C%D8%AA-%DA%AF%D9%84%D9%88%D8%A8%D8%A7%D9%84",
+      "access": "public",
+      "visit_state": "returning",
+      "repetition": 5,
+      "principal_content_selector": "ProductGallery principal image + h1 title + TomanPrice block",
+      "usable_condition": "principal image loaded (naturalWidth>0), title and price text visible",
+      "content_ready_ms": 1516,
+      "lcp_ms": 1848,
+      "cls": 0.0011,
+      "wall_ms": 4182,
+      "request_failures": [
+        {
+          "requestId": "53280.959",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 61490,
+      "in_page_errors": [
+        "Uncaught Error: Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors and additional helpful wa"
+      ],
+      "trace_path": "specs/039-storefront-performance/evidence/baseline/traces/product-returning-r5.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/baseline/product-returning-r5.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 1.62,
+        "load_5m": 1.8
+      },
+      "captured_at": "2026-10-15T23:33:22.782Z"
+    }
+  ]
+}

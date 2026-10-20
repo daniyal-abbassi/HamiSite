@@ -1,0 +1,98 @@
+{
+  "browser": {
+    "version": "150.0.7871.181",
+    "channel": "chrome",
+    "headless": true
+  },
+  "framing": {
+    "innerWidth": 390,
+    "innerHeight": 844,
+    "dpr": 3,
+    "scrollbarGutter": 0,
+    "requested": {
+      "width": 390,
+      "height": 844,
+      "dsf": 3
+    }
+  },
+  "cpuSlowdown": {
+    "requested": 4,
+    "workload_ms_unthrottled": 36.7,
+    "workload_ms_at_4x": 145.1,
+    "observed_ratio": 3.95,
+    "same_result": true
+  },
+  "networkThrottle": {
+    "requested": {
+      "download_kbps": 1600,
+      "upload_kbps": 750,
+      "latency_ms": 150
+    },
+    "asset": {
+      "url": "/_next/static/chunks/dc07ed8c-d87a7b3e63f2262c.js",
+      "on_disk_bytes": 458774
+    },
+    "wire": {
+      "big_unthrottled": {
+        "bytes": 103322,
+        "ms": 201,
+        "mbps": 4.11
+      },
+      "big_throttled": {
+        "bytes": 103322,
+        "ms": 675,
+        "mbps": 1.23
+      },
+      "small_unthrottled": {
+        "bytes": 2418,
+        "ms": 69
+      },
+      "small_throttled": {
+        "bytes": 2418,
+        "ms": 168
+      }
+    },
+    "decoded_ms": {
+      "big_unthrottled": 201,
+      "big_throttled": 675
+    },
+    "content_encoding": "gzip",
+    "note": "wire_bytes from CDP Network.loadingFinished.encodedDataLength (gzip transfer size)"
+  },
+  "screenshotMobile": {
+    "path": "specs/039-storefront-performance/evidence/probe-390x844.png",
+    "width": 1170,
+    "height": 2532
+  },
+  "screenshotDesktop": {
+    "path": "specs/039-storefront-performance/evidence/probe-1280x800.png",
+    "width": 1280,
+    "height": 800
+  },
+  "traceCdp": {
+    "path": "/tmp/opencode/probe-039/trace-cdp.json",
+    "bytes": 1392516,
+    "parsed_events": 5141
+  },
+  "tracePlaywright": {
+    "path": "/tmp/opencode/probe-039/trace-playwright.zip",
+    "bytes": 636591
+  },
+  "hydration": {
+    "cartDrawerOpened": true,
+    "open_to_visible_ms_untrottled": 1293,
+    "markerSurvived": true,
+    "drawerClosedOnEscapeOrButton": true,
+    "routerClientSide": true
+  },
+  "emulation": {
+    "reducedMotion_emulated": true,
+    "reducedMotion_requested": "reduce",
+    "reducedMotionControl_false_in_primary_context": false,
+    "mobileEmulation": {
+      "maxTouchPoints": 1,
+      "ontouchstart": true,
+      "ua_is_mobile": false
+    }
+  }
+}

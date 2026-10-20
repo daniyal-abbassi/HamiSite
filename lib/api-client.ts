@@ -8,13 +8,15 @@ export class ApiClientError extends Error {
   readonly code: string;
   readonly status: number;
   readonly details?: unknown;
+  readonly retryAfterSeconds?: number;
 
-  constructor(code: string, status: number, message: string, details?: unknown) {
+  constructor(code: string, status: number, message: string, details?: unknown, retryAfterSeconds?: number) {
     super(message);
     this.name = "ApiClientError";
     this.code = code;
     this.status = status;
     this.details = details;
+    this.retryAfterSeconds = retryAfterSeconds;
   }
 }
 
@@ -27,7 +29,8 @@ async function unwrap<T>(response: Response): Promise<T> {
   }
 
   if (!body.success) {
-    throw new ApiClientError(body.error.code, response.status, body.error.message, body.error.details);
+    const retryHeader = Number(response.headers.get("retry-after"));
+    throw new ApiClientError(body.error.code, response.status, body.error.message, body.error.details, Number.isFinite(retryHeader) && retryHeader > 0 ? retryHeader : undefined);
   }
   return body.data;
 }
@@ -53,7 +56,8 @@ export async function apiGetWithMeta<T>(
     throw new ApiClientError("INTERNAL_ERROR", response.status, "پاسخ سرور قابل خواندن نبود.");
   }
   if (!body.success) {
-    throw new ApiClientError(body.error.code, response.status, body.error.message, body.error.details);
+    const retryHeader = Number(response.headers.get("retry-after"));
+    throw new ApiClientError(body.error.code, response.status, body.error.message, body.error.details, Number.isFinite(retryHeader) && retryHeader > 0 ? retryHeader : undefined);
   }
   return { data: body.data, meta: body.meta };
 }

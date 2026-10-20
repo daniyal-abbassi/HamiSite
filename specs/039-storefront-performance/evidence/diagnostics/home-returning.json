@@ -1,0 +1,320 @@
+{
+  "route": "home",
+  "visit": "returning",
+  "reps": 3,
+  "captured_at": "2026-10-15T22:15:12.273Z",
+  "runs": [
+    {
+      "rep": 1,
+      "content_ready_ms": 4488,
+      "milestones": {
+        "card_dom_ms": 4488,
+        "price_text_ms": 4488,
+        "image_decoded_ms": 4488,
+        "dcl_ms": 5309,
+        "load_ms": 5338,
+        "hydration_proxy_ms": 1847
+      },
+      "bytes_before_ready": {
+        "total_kb": 113,
+        "requests": 44,
+        "image_kb": 1,
+        "image_requests": 8,
+        "next_image_requests": 7,
+        "js_kb": 0,
+        "js_requests": 26
+      },
+      "latest_requests_before_ready": [
+        {
+          "url": "/_next/image?url=https%3A%2F%2Fhamihamrah-shop.com%2Fshop-resources%2FnjfnfXo2n8",
+          "type": "Image",
+          "finished_at_ms": 1874,
+          "kb": 0
+        },
+        {
+          "url": "/_next/image?url=https%3A%2F%2Fhamihamrah-shop.com%2Fshop-resources%2FnjfnfXo2n8",
+          "type": "Image",
+          "finished_at_ms": 1874,
+          "kb": 0
+        },
+        {
+          "url": "/_next/image?url=%2Fimages%2Fcatalog%2F394.jpg&w=1080&q=75",
+          "type": "Image",
+          "finished_at_ms": 1873,
+          "kb": 0
+        },
+        {
+          "url": "/_next/image?url=https%3A%2F%2Fhamihamrah-shop.com%2Fshop-resources%2FnjfnfXo2n8",
+          "type": "Image",
+          "finished_at_ms": 1781,
+          "kb": 0
+        },
+        {
+          "url": "/_next/image?url=%2Fimages%2Fcatalog%2F379.jpg&w=1200&q=75",
+          "type": "Image",
+          "finished_at_ms": 1780,
+          "kb": 0
+        }
+      ],
+      "largest_requests_before_ready": [
+        {
+          "url": "/",
+          "type": "Document",
+          "kb": 112
+        },
+        {
+          "url": "/images/hero/home-mobile-960.webp",
+          "type": "Image",
+          "kb": 1
+        },
+        {
+          "url": "/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F%D9%82%D8%B3%D9%85%D8%AA-%D9%81%D8%A7%D8%B1%D",
+          "type": "Image",
+          "kb": 0
+        },
+        {
+          "url": "/_next/static/css/ccad25d93ac68539.css",
+          "type": "Stylesheet",
+          "kb": 0
+        },
+        {
+          "url": "/_next/static/css/a3f99580a987671e.css",
+          "type": "Stylesheet",
+          "kb": 0
+        },
+        {
+          "url": "/_next/static/css/6060b5da2422e733.css",
+          "type": "Stylesheet",
+          "kb": 0
+        },
+        {
+          "url": "/_next/static/css/244347670d5c63c0.css",
+          "type": "Stylesheet",
+          "kb": 0
+        },
+        {
+          "url": "/_next/static/css/6b5e8b0e5b805884.css",
+          "type": "Stylesheet",
+          "kb": 0
+        }
+      ],
+      "resource_entries_in_page": 63,
+      "document": {
+        "ttfb_ms": 79,
+        "download_ms": 978,
+        "response_end_ms": 1059,
+        "dom_interactive_ms": 5309,
+        "transfer_kb": 111
+      },
+      "wall_ms": 7312
+    },
+    {
+      "rep": 2,
+      "content_ready_ms": 4003,
+      "milestones": {
+        "card_dom_ms": 4003,
+        "price_text_ms": 4003,
+        "image_decoded_ms": 4003,
+        "dcl_ms": 5454,
+        "load_ms": 5477,
+        "hydration_proxy_ms": 4436
+      },
+      "bytes_before_ready": {
+        "total_kb": 113,
+        "requests": 44,
+        "image_kb": 1,
+        "image_requests": 8,
+        "next_image_requests": 7,
+        "js_kb": 0,
+        "js_requests": 26
+      },
+      "latest_requests_before_ready": [
+        {
+          "url": "/_next/image?url=https%3A%2F%2Fhamihamrah-shop.com%2Fshop-resources%2FnjfnfXo2n8",
+          "type": "Image",
+          "finished_at_ms": 1574,
+          "kb": 0
+        },
+        {
+          "url": "/_next/image?url=https%3A%2F%2Fhamihamrah-shop.com%2Fshop-resources%2FnjfnfXo2n8",
+          "type": "Image",
+          "finished_at_ms": 1487,
+          "kb": 0
+        },
+        {
+          "url": "/_next/image?url=%2Fimages%2Fcatalog%2F394.jpg&w=1080&q=75",
+          "type": "Image",
+          "finished_at_ms": 1487,
+          "kb": 0
+        },
+        {
+          "url": "/_next/image?url=https%3A%2F%2Fhamihamrah-shop.com%2Fshop-resources%2FnjfnfXo2n8",
+          "type": "Image",
+          "finished_at_ms": 1487,
+          "kb": 0
+        },
+        {
+          "url": "/_next/image?url=%2Fimages%2Fcatalog%2F379.jpg&w=1200&q=75",
+          "type": "Image",
+          "finished_at_ms": 1486,
+          "kb": 0
+        }
+      ],
+      "largest_requests_before_ready": [
+        {
+          "url": "/",
+          "type": "Document",
+          "kb": 112
+        },
+        {
+          "url": "/images/hero/home-mobile-960.webp",
+          "type": "Image",
+          "kb": 1
+        },
+        {
+          "url": "/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F%D9%82%D8%B3%D9%85%D8%AA-%D9%81%D8%A7%D8%B1%D",
+          "type": "Image",
+          "kb": 0
+        },
+        {
+          "url": "/_next/static/css/ccad25d93ac68539.css",
+          "type": "Stylesheet",
+          "kb": 0
+        },
+        {
+          "url": "/_next/static/css/a3f99580a987671e.css",
+          "type": "Stylesheet",
+          "kb": 0
+        },
+        {
+          "url": "/_next/static/css/6060b5da2422e733.css",
+          "type": "Stylesheet",
+          "kb": 0
+        },
+        {
+          "url": "/_next/static/css/244347670d5c63c0.css",
+          "type": "Stylesheet",
+          "kb": 0
+        },
+        {
+          "url": "/_next/static/css/6b5e8b0e5b805884.css",
+          "type": "Stylesheet",
+          "kb": 0
+        }
+      ],
+      "resource_entries_in_page": 63,
+      "document": {
+        "ttfb_ms": 127,
+        "download_ms": 1097,
+        "response_end_ms": 1226,
+        "dom_interactive_ms": 5454,
+        "transfer_kb": 111
+      },
+      "wall_ms": 7322
+    },
+    {
+      "rep": 3,
+      "content_ready_ms": 4069,
+      "milestones": {
+        "card_dom_ms": 4069,
+        "price_text_ms": 4069,
+        "image_decoded_ms": 4069,
+        "dcl_ms": 5995,
+        "load_ms": 6066,
+        "hydration_proxy_ms": 5095
+      },
+      "bytes_before_ready": {
+        "total_kb": 115,
+        "requests": 51,
+        "image_kb": 4,
+        "image_requests": 14,
+        "next_image_requests": 8,
+        "js_kb": 0,
+        "js_requests": 27
+      },
+      "latest_requests_before_ready": [
+        {
+          "url": "/images/shapes/categories-ivory-wave.webp",
+          "type": "Image",
+          "finished_at_ms": 4068,
+          "kb": 1
+        },
+        {
+          "url": "/images/shapes/brands-burgundy-satin.webp",
+          "type": "Image",
+          "finished_at_ms": 4068,
+          "kb": 1
+        },
+        {
+          "url": "/store/featured-products-burgundy.webp",
+          "type": "Image",
+          "finished_at_ms": 4067,
+          "kb": 0
+        },
+        {
+          "url": "/store/discounted-products-silk.jpg",
+          "type": "Image",
+          "finished_at_ms": 4067,
+          "kb": 0
+        },
+        {
+          "url": "/images/shapes/hami-burgundy-silk.webp",
+          "type": "Image",
+          "finished_at_ms": 4067,
+          "kb": 1
+        }
+      ],
+      "largest_requests_before_ready": [
+        {
+          "url": "/",
+          "type": "Document",
+          "kb": 111
+        },
+        {
+          "url": "/images/hero/home-mobile-960.webp",
+          "type": "Image",
+          "kb": 1
+        },
+        {
+          "url": "/images/shapes/hami-burgundy-silk.webp",
+          "type": "Image",
+          "kb": 1
+        },
+        {
+          "url": "/images/shapes/categories-ivory-wave.webp",
+          "type": "Image",
+          "kb": 1
+        },
+        {
+          "url": "/images/shapes/brands-burgundy-satin.webp",
+          "type": "Image",
+          "kb": 1
+        },
+        {
+          "url": "/_next/image?url=%2F_next%2Fstatic%2Fmedia%2F%D9%82%D8%B3%D9%85%D8%AA-%D9%81%D8%A7%D8%B1%D",
+          "type": "Image",
+          "kb": 0
+        },
+        {
+          "url": "/_next/static/css/ccad25d93ac68539.css",
+          "type": "Stylesheet",
+          "kb": 0
+        },
+        {
+          "url": "/_next/static/css/a3f99580a987671e.css",
+          "type": "Stylesheet",
+          "kb": 0
+        }
+      ],
+      "resource_entries_in_page": 63,
+      "document": {
+        "ttfb_ms": 72,
+        "download_ms": 1050,
+        "response_end_ms": 1124,
+        "dom_interactive_ms": 5995,
+        "transfer_kb": 110
+      },
+      "wall_ms": 7788
+    }
+  ]
+}

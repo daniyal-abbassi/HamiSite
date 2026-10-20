@@ -25,7 +25,7 @@ export default async function ComponentPreviewPage({ searchParams }: PreviewPage
       data-testid="preview-container"
       data-style={styleKey}
       data-embed={isEmbed ? "true" : "false"}
-      className={`min-h-[300px] w-full p-6 transition-colors duration-200 ${
+      className={`min-h-72 w-full p-6 transition-colors duration-200 ${
         isEmbed ? "bg-transparent" : "container mx-auto py-12"
       }`}
     >

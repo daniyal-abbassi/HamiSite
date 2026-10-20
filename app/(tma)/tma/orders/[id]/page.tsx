@@ -90,14 +90,15 @@ export default function TMAOrderDetailPage({
   return (
     <div className="flex flex-col min-h-screen">
       {/* Top Header */}
-      <header className="sticky top-0 z-40 bg-[#0B0204]/90 backdrop-blur-md border-b border-stone-800/80 px-4 py-3 flex items-center justify-between">
+      <header className="sticky top-0 z-40 bg-ink/90 backdrop-blur-md border-b border-stone-800/80 px-4 py-3 flex items-center justify-between">
         <div className="flex items-center gap-2">
           <button
             onClick={() => {
               haptic.selection();
               router.back();
             }}
-            className="p-1 rounded-full text-stone-400 hover:text-stone-200"
+            className="p-2 rounded-full text-stone-400 hover:text-stone-200 extend-touch-target"
+            aria-label="بازگشت"
           >
             <ArrowRight className="w-5 h-5" />
           </button>
@@ -105,7 +106,7 @@ export default function TMAOrderDetailPage({
             <h1 className="text-sm font-bold text-stone-100 font-mono">
               {toFaDigits(order.orderNumber)}
             </h1>
-            <p className="text-[11px] text-stone-400">{formatFaDate(order.createdAt)}</p>
+            <p className="text-xs text-stone-400">{formatFaDate(order.createdAt)}</p>
           </div>
         </div>
         <OrderStatusBadge status={order.status} />
@@ -160,7 +161,7 @@ export default function TMAOrderDetailPage({
               {[order.province, order.city, order.addressText].filter(Boolean).join("، ")}
             </p>
             {order.postalCode && (
-              <div className="text-[11px] text-stone-400 font-mono mt-1">
+              <div className="text-xs text-stone-400 font-mono mt-1">
                 کد پستی: {toFaDigits(order.postalCode)}
               </div>
             )}
@@ -204,11 +205,11 @@ export default function TMAOrderDetailPage({
                     {item.productName}
                   </div>
                   {item.variantDesc && (
-                    <div className="text-[11px] text-stone-400 mt-0.5">
+                    <div className="text-xs text-stone-400 mt-0.5">
                       {item.variantDesc}
                     </div>
                   )}
-                  <div className="text-[11px] text-stone-400 mt-1">
+                  <div className="text-xs text-stone-400 mt-1">
                     {toFaDigits(item.quantity)} عدد × <TomanPrice amount={item.unitPrice} />
                   </div>
                 </div>

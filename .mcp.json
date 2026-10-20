@@ -34,6 +34,13 @@
         "PIXEL_BRIDGE_BROWSER_CHANNEL": "chrome",
         "DISPLAY": ":0"
       }
+    },
+    "uiverify": {
+      "type": "http",
+      "url": "https://uiverify.ai/api/mcp",
+      "headers": {
+        "Authorization": "Bearer ${UIVERIFY_API_KEY}"
+      }
     }
   }
 }

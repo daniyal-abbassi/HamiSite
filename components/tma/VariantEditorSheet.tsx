@@ -121,7 +121,7 @@ export function VariantEditorSheet({
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 transition-opacity" />
-        <Drawer.Content className="fixed bottom-0 inset-x-0 z-50 bg-[#12070A] border-t border-stone-800 rounded-t-3xl max-h-[85vh] flex flex-col focus:outline-hidden text-stone-100">
+        <Drawer.Content className="fixed bottom-0 inset-x-0 z-50 bg-ink-2 border-t border-stone-800 rounded-t-3xl max-h-[85vh] flex flex-col focus:outline-hidden text-stone-100">
           {/* Handle */}
           <div className="w-12 h-1.5 bg-stone-700/60 rounded-full mx-auto my-3" />
 
@@ -200,7 +200,7 @@ export function VariantEditorSheet({
                       <div className="mt-2.5 text-end">
                         <button
                           onClick={() => handleSelectVariant(v)}
-                          className="text-[11px] text-amber-400 hover:text-amber-300 font-medium underline-offset-4 hover:underline"
+                          className="text-xs text-amber-400 hover:text-amber-300 font-medium underline-offset-4 hover:underline py-1.5 extend-touch-target"
                         >
                           ویرایش قیمت و تخفیف
                         </button>
@@ -208,7 +208,7 @@ export function VariantEditorSheet({
                     ) : (
                       <div className="mt-3 pt-3 border-t border-stone-800/80 space-y-2.5">
                         <div>
-                          <label className="block text-[11px] text-stone-400 mb-1">
+                          <label className="block text-xs text-stone-400 mb-1">
                             قیمت فروش (تومان):
                           </label>
                           <input
@@ -221,7 +221,7 @@ export function VariantEditorSheet({
                         </div>
 
                         <div>
-                          <label className="block text-[11px] text-stone-400 mb-1">
+                          <label className="block text-xs text-stone-400 mb-1">
                             قیمت خط‌خورده / قبل از تخفیف (اختیاری):
                           </label>
                           <input

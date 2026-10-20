@@ -46,26 +46,23 @@ function loginRequest(identifier: string, password: string) {
 }
 
 describe("legacy-imported customer login", () => {
-  it("logs in by NORMALIZED +98 phone number with the imported password", async () => {
+  it("rejects the imported shared password for a normalized legacy customer", async () => {
     const stored = await prisma.user.findUniqueOrThrow({ where: { id: userId } });
     expect(stored.phoneNumber).toBe("+989923286434");
     // Proves the phone branch is the only thing that can match below.
     expect(stored.username).not.toBe(stored.phoneNumber);
 
     const res = await login(loginRequest("+989923286434", IMPORTED_CUSTOMER_PASSWORD));
-    expect(res.status).toBe(200);
-
-    const { data } = await res.json();
-    expect(data.id).toBe(userId);
-    expect(data.role).toBe("RETAIL");
-    expect(res.headers.get("set-cookie")).toContain("session_token=");
-    expect(await prisma.session.count({ where: { userId } })).toBe(1);
+    expect(res.status).toBe(401);
+    expect((await res.json()).error.code).toBe("INVALID_CREDENTIALS");
+    expect(res.headers.get("set-cookie")).toBeNull();
+    expect(await prisma.session.count({ where: { userId } })).toBe(0);
   });
 
-  it("also accepts the raw 099… form the customer actually remembers", async () => {
+  it("rejects the imported password through the remembered raw phone form too", async () => {
     const res = await login(loginRequest("09923286434", IMPORTED_CUSTOMER_PASSWORD));
-    expect(res.status).toBe(200);
-    expect((await res.json()).data.id).toBe(userId);
+    expect(res.status).toBe(401);
+    expect((await res.json()).error.code).toBe("INVALID_CREDENTIALS");
   });
 
   it("rejects a wrong password with the same 401 as any other account", async () => {

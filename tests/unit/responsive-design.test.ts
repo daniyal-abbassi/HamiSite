@@ -17,7 +17,7 @@ describe("Responsive Design Standards", () => {
     it("ensures mobile navigation dock provides minimum 44px hit height", () => {
       const dockPath = path.resolve(process.cwd(), "components/layout/MobileDock.tsx");
       const content = fs.readFileSync(dockPath, "utf-8");
-      expect(content).toContain("min-h-[44px]");
+      expect(content.includes("min-h-[44px]") || content.includes("min-h-11")).toBe(true);
     });
 
     it("ensures header CartButton provides size-11 (44px) hit area", () => {

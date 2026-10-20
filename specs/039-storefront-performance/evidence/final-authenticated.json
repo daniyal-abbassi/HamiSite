@@ -1,0 +1,1526 @@
+{
+  "phase": "final",
+  "access": "authenticated routes only; no guest substitution",
+  "sessions": {
+    "alias-customer-A": {
+      "account_alias": "alias-customer-A",
+      "login_http": 200,
+      "me_http": 200,
+      "role_observed": "RETAIL",
+      "verified_authenticated": true
+    },
+    "alias-partner-A": {
+      "account_alias": "alias-partner-A",
+      "login_http": 200,
+      "me_http": 200,
+      "role_observed": "WHOLESALE",
+      "verified_authenticated": true
+    }
+  },
+  "profile": {
+    "profile_id": "prof-mobile-4x-2026-10-15",
+    "viewport": {
+      "width": 390,
+      "height": 844,
+      "device_scale_factor": 3
+    },
+    "desktop_visual_viewport": {
+      "width": 1280,
+      "height": 800,
+      "device_scale_factor": 1
+    },
+    "cpu_slowdown": 4,
+    "network": {
+      "download_kbps": 1600,
+      "upload_kbps": 750,
+      "latency_ms": 150
+    },
+    "browser_cache_policy": "fresh = new context (empty HTTP cache) + reused session state; returning = same context, cache warm, same session"
+  },
+  "base_url": "http://127.0.0.1:3000",
+  "server_build_id": "0lvkXYL5zsKP7QJGOG3P2",
+  "captured_at": "2026-10-18T00:42:57.450Z",
+  "samples_expected": 30,
+  "samples": [
+    {
+      "sample_id": "cart-fresh-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "cart",
+      "exact_url": "http://127.0.0.1:3000/cart",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "cart_items": "18 (product 1832 @115,000,000), 19 (product 1939 @3,500,000)",
+        "subtotal_toman": 118500000
+      },
+      "visit_state": "fresh",
+      "repetition": 1,
+      "principal_content_selector": "CartPageClient item list with designated test lines + totals",
+      "usable_condition": "both designated test products visible with quantity controls and Toman totals",
+      "content_ready_ms": 5166,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "115000000",
+          "3500000",
+          "118500000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 5376,
+      "cls": 0.2155,
+      "wall_ms": 7937,
+      "request_failures": [],
+      "transfer_bytes_total": 1368654,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/final-authenticated/traces/cart-fresh-r1.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/final-authenticated/cart-fresh-r1.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 4.78,
+        "load_5m": 3.76
+      },
+      "captured_at": "2026-10-18T00:39:10.102Z"
+    },
+    {
+      "sample_id": "cart-fresh-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "cart",
+      "exact_url": "http://127.0.0.1:3000/cart",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "cart_items": "18 (product 1832 @115,000,000), 19 (product 1939 @3,500,000)",
+        "subtotal_toman": 118500000
+      },
+      "visit_state": "fresh",
+      "repetition": 2,
+      "principal_content_selector": "CartPageClient item list with designated test lines + totals",
+      "usable_condition": "both designated test products visible with quantity controls and Toman totals",
+      "content_ready_ms": 5007,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "115000000",
+          "3500000",
+          "118500000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 5160,
+      "cls": 0.2155,
+      "wall_ms": 6352,
+      "request_failures": [],
+      "transfer_bytes_total": 647071,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 4.96,
+        "load_5m": 3.83
+      },
+      "captured_at": "2026-10-18T00:39:18.362Z"
+    },
+    {
+      "sample_id": "cart-fresh-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "cart",
+      "exact_url": "http://127.0.0.1:3000/cart",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "cart_items": "18 (product 1832 @115,000,000), 19 (product 1939 @3,500,000)",
+        "subtotal_toman": 118500000
+      },
+      "visit_state": "fresh",
+      "repetition": 3,
+      "principal_content_selector": "CartPageClient item list with designated test lines + totals",
+      "usable_condition": "both designated test products visible with quantity controls and Toman totals",
+      "content_ready_ms": 4907,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "115000000",
+          "3500000",
+          "118500000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 5048,
+      "cls": 0.2155,
+      "wall_ms": 6230,
+      "request_failures": [],
+      "transfer_bytes_total": 647160,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 5.52,
+        "load_5m": 3.97
+      },
+      "captured_at": "2026-10-18T00:39:26.428Z"
+    },
+    {
+      "sample_id": "cart-fresh-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "cart",
+      "exact_url": "http://127.0.0.1:3000/cart",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "cart_items": "18 (product 1832 @115,000,000), 19 (product 1939 @3,500,000)",
+        "subtotal_toman": 118500000
+      },
+      "visit_state": "fresh",
+      "repetition": 4,
+      "principal_content_selector": "CartPageClient item list with designated test lines + totals",
+      "usable_condition": "both designated test products visible with quantity controls and Toman totals",
+      "content_ready_ms": 4905,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "115000000",
+          "3500000",
+          "118500000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 5056,
+      "cls": 0.2155,
+      "wall_ms": 6221,
+      "request_failures": [],
+      "transfer_bytes_total": 647127,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 5.38,
+        "load_5m": 3.99
+      },
+      "captured_at": "2026-10-18T00:39:34.496Z"
+    },
+    {
+      "sample_id": "cart-fresh-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "cart",
+      "exact_url": "http://127.0.0.1:3000/cart",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "cart_items": "18 (product 1832 @115,000,000), 19 (product 1939 @3,500,000)",
+        "subtotal_toman": 118500000
+      },
+      "visit_state": "fresh",
+      "repetition": 5,
+      "principal_content_selector": "CartPageClient item list with designated test lines + totals",
+      "usable_condition": "both designated test products visible with quantity controls and Toman totals",
+      "content_ready_ms": 4883,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "115000000",
+          "3500000",
+          "118500000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 5044,
+      "cls": 0.2155,
+      "wall_ms": 6221,
+      "request_failures": [],
+      "transfer_bytes_total": 647126,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 5.26,
+        "load_5m": 4
+      },
+      "captured_at": "2026-10-18T00:39:42.478Z"
+    },
+    {
+      "sample_id": "cart-returning-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "cart",
+      "exact_url": "http://127.0.0.1:3000/cart",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "cart_items": "18 (product 1832 @115,000,000), 19 (product 1939 @3,500,000)",
+        "subtotal_toman": 118500000
+      },
+      "visit_state": "returning",
+      "repetition": 1,
+      "principal_content_selector": "CartPageClient item list with designated test lines + totals",
+      "usable_condition": "both designated test products visible with quantity controls and Toman totals",
+      "content_ready_ms": 2937,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "115000000",
+          "3500000",
+          "118500000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 3132,
+      "cls": 0.2155,
+      "wall_ms": 4277,
+      "request_failures": [],
+      "transfer_bytes_total": 53349,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 5.37,
+        "load_5m": 4.07
+      },
+      "captured_at": "2026-10-18T00:39:52.335Z"
+    },
+    {
+      "sample_id": "cart-returning-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "cart",
+      "exact_url": "http://127.0.0.1:3000/cart",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "cart_items": "18 (product 1832 @115,000,000), 19 (product 1939 @3,500,000)",
+        "subtotal_toman": 118500000
+      },
+      "visit_state": "returning",
+      "repetition": 2,
+      "principal_content_selector": "CartPageClient item list with designated test lines + totals",
+      "usable_condition": "both designated test products visible with quantity controls and Toman totals",
+      "content_ready_ms": 2686,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "115000000",
+          "3500000",
+          "118500000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 2844,
+      "cls": 0.2155,
+      "wall_ms": 4004,
+      "request_failures": [],
+      "transfer_bytes_total": 35936,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 5.66,
+        "load_5m": 4.15
+      },
+      "captured_at": "2026-10-18T00:39:57.840Z"
+    },
+    {
+      "sample_id": "cart-returning-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "cart",
+      "exact_url": "http://127.0.0.1:3000/cart",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "cart_items": "18 (product 1832 @115,000,000), 19 (product 1939 @3,500,000)",
+        "subtotal_toman": 118500000
+      },
+      "visit_state": "returning",
+      "repetition": 3,
+      "principal_content_selector": "CartPageClient item list with designated test lines + totals",
+      "usable_condition": "both designated test products visible with quantity controls and Toman totals",
+      "content_ready_ms": 2551,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "115000000",
+          "3500000",
+          "118500000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 2680,
+      "cls": 0.2155,
+      "wall_ms": 3851,
+      "request_failures": [],
+      "transfer_bytes_total": 35942,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 5.61,
+        "load_5m": 4.17
+      },
+      "captured_at": "2026-10-18T00:40:03.192Z"
+    },
+    {
+      "sample_id": "cart-returning-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "cart",
+      "exact_url": "http://127.0.0.1:3000/cart",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "cart_items": "18 (product 1832 @115,000,000), 19 (product 1939 @3,500,000)",
+        "subtotal_toman": 118500000
+      },
+      "visit_state": "returning",
+      "repetition": 4,
+      "principal_content_selector": "CartPageClient item list with designated test lines + totals",
+      "usable_condition": "both designated test products visible with quantity controls and Toman totals",
+      "content_ready_ms": 2882,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "115000000",
+          "3500000",
+          "118500000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 3044,
+      "cls": 0.2155,
+      "wall_ms": 4221,
+      "request_failures": [],
+      "transfer_bytes_total": 35914,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 5.4,
+        "load_5m": 4.15
+      },
+      "captured_at": "2026-10-18T00:40:08.915Z"
+    },
+    {
+      "sample_id": "cart-returning-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "cart",
+      "exact_url": "http://127.0.0.1:3000/cart",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "cart_items": "18 (product 1832 @115,000,000), 19 (product 1939 @3,500,000)",
+        "subtotal_toman": 118500000
+      },
+      "visit_state": "returning",
+      "repetition": 5,
+      "principal_content_selector": "CartPageClient item list with designated test lines + totals",
+      "usable_condition": "both designated test products visible with quantity controls and Toman totals",
+      "content_ready_ms": 3486,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "115000000",
+          "3500000",
+          "118500000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 3628,
+      "cls": 0.2155,
+      "wall_ms": 5923,
+      "request_failures": [],
+      "transfer_bytes_total": 35970,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/final-authenticated/traces/cart-returning-r5.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/final-authenticated/cart-returning-r5.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 5.45,
+        "load_5m": 4.18
+      },
+      "captured_at": "2026-10-18T00:40:16.342Z"
+    },
+    {
+      "sample_id": "checkout-fresh-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "checkout",
+      "exact_url": "http://127.0.0.1:3000/checkout",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "same_cart_as": "cart",
+        "stop_before": "payment initiation"
+      },
+      "visit_state": "fresh",
+      "repetition": 1,
+      "principal_content_selector": "CheckoutClient order review totals + shipping selection",
+      "usable_condition": "order-review block with totals and shipping radios visible; no payment initiated",
+      "content_ready_ms": 5318,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "65000",
+          "30000",
+          "115000000",
+          "3500000",
+          "118500000",
+          "65000",
+          "118565000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 5572,
+      "cls": 0.2697,
+      "wall_ms": 7974,
+      "request_failures": [],
+      "transfer_bytes_total": 1355626,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/final-authenticated/traces/checkout-fresh-r1.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/final-authenticated/checkout-fresh-r1.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 5.77,
+        "load_5m": 4.29
+      },
+      "captured_at": "2026-10-18T00:40:26.221Z"
+    },
+    {
+      "sample_id": "checkout-fresh-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "checkout",
+      "exact_url": "http://127.0.0.1:3000/checkout",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "same_cart_as": "cart",
+        "stop_before": "payment initiation"
+      },
+      "visit_state": "fresh",
+      "repetition": 2,
+      "principal_content_selector": "CheckoutClient order review totals + shipping selection",
+      "usable_condition": "order-review block with totals and shipping radios visible; no payment initiated",
+      "content_ready_ms": 4859,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "65000",
+          "30000",
+          "115000000",
+          "3500000",
+          "118500000",
+          "65000",
+          "118565000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 5104,
+      "cls": 0.2697,
+      "wall_ms": 6292,
+      "request_failures": [],
+      "transfer_bytes_total": 634091,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 5.27,
+        "load_5m": 4.23
+      },
+      "captured_at": "2026-10-18T00:40:34.326Z"
+    },
+    {
+      "sample_id": "checkout-fresh-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "checkout",
+      "exact_url": "http://127.0.0.1:3000/checkout",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "same_cart_as": "cart",
+        "stop_before": "payment initiation"
+      },
+      "visit_state": "fresh",
+      "repetition": 3,
+      "principal_content_selector": "CheckoutClient order review totals + shipping selection",
+      "usable_condition": "order-review block with totals and shipping radios visible; no payment initiated",
+      "content_ready_ms": 5180,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "65000",
+          "30000",
+          "115000000",
+          "3500000",
+          "118500000",
+          "65000",
+          "118565000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 5352,
+      "cls": 0.2697,
+      "wall_ms": 6518,
+      "request_failures": [],
+      "transfer_bytes_total": 634066,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 5.21,
+        "load_5m": 4.25
+      },
+      "captured_at": "2026-10-18T00:40:42.637Z"
+    },
+    {
+      "sample_id": "checkout-fresh-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "checkout",
+      "exact_url": "http://127.0.0.1:3000/checkout",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "same_cart_as": "cart",
+        "stop_before": "payment initiation"
+      },
+      "visit_state": "fresh",
+      "repetition": 4,
+      "principal_content_selector": "CheckoutClient order review totals + shipping selection",
+      "usable_condition": "order-review block with totals and shipping radios visible; no payment initiated",
+      "content_ready_ms": 5210,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "65000",
+          "30000",
+          "115000000",
+          "3500000",
+          "118500000",
+          "65000",
+          "118565000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 5408,
+      "cls": 0.2697,
+      "wall_ms": 6598,
+      "request_failures": [],
+      "transfer_bytes_total": 634037,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 5.12,
+        "load_5m": 4.25
+      },
+      "captured_at": "2026-10-18T00:40:51.052Z"
+    },
+    {
+      "sample_id": "checkout-fresh-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "checkout",
+      "exact_url": "http://127.0.0.1:3000/checkout",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "same_cart_as": "cart",
+        "stop_before": "payment initiation"
+      },
+      "visit_state": "fresh",
+      "repetition": 5,
+      "principal_content_selector": "CheckoutClient order review totals + shipping selection",
+      "usable_condition": "order-review block with totals and shipping radios visible; no payment initiated",
+      "content_ready_ms": 5203,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "65000",
+          "30000",
+          "115000000",
+          "3500000",
+          "118500000",
+          "65000",
+          "118565000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 5468,
+      "cls": 0.2697,
+      "wall_ms": 6612,
+      "request_failures": [],
+      "transfer_bytes_total": 634083,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 4.79,
+        "load_5m": 4.21
+      },
+      "captured_at": "2026-10-18T00:40:59.481Z"
+    },
+    {
+      "sample_id": "checkout-returning-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "checkout",
+      "exact_url": "http://127.0.0.1:3000/checkout",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "same_cart_as": "cart",
+        "stop_before": "payment initiation"
+      },
+      "visit_state": "returning",
+      "repetition": 1,
+      "principal_content_selector": "CheckoutClient order review totals + shipping selection",
+      "usable_condition": "order-review block with totals and shipping radios visible; no payment initiated",
+      "content_ready_ms": 3617,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "65000",
+          "30000",
+          "115000000",
+          "3500000",
+          "118500000",
+          "65000",
+          "118565000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 752,
+      "cls": 0.2697,
+      "wall_ms": 5040,
+      "request_failures": [],
+      "transfer_bytes_total": 40526,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 5,
+        "load_5m": 4.27
+      },
+      "captured_at": "2026-10-18T00:41:10.088Z"
+    },
+    {
+      "sample_id": "checkout-returning-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "checkout",
+      "exact_url": "http://127.0.0.1:3000/checkout",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "same_cart_as": "cart",
+        "stop_before": "payment initiation"
+      },
+      "visit_state": "returning",
+      "repetition": 2,
+      "principal_content_selector": "CheckoutClient order review totals + shipping selection",
+      "usable_condition": "order-review block with totals and shipping radios visible; no payment initiated",
+      "content_ready_ms": 2764,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "65000",
+          "30000",
+          "115000000",
+          "3500000",
+          "118500000",
+          "65000",
+          "118565000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 460,
+      "cls": 0.2697,
+      "wall_ms": 4094,
+      "request_failures": [],
+      "transfer_bytes_total": 34454,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 4.68,
+        "load_5m": 4.21
+      },
+      "captured_at": "2026-10-18T00:41:15.686Z"
+    },
+    {
+      "sample_id": "checkout-returning-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "checkout",
+      "exact_url": "http://127.0.0.1:3000/checkout",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "same_cart_as": "cart",
+        "stop_before": "payment initiation"
+      },
+      "visit_state": "returning",
+      "repetition": 3,
+      "principal_content_selector": "CheckoutClient order review totals + shipping selection",
+      "usable_condition": "order-review block with totals and shipping radios visible; no payment initiated",
+      "content_ready_ms": 2981,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "65000",
+          "30000",
+          "115000000",
+          "3500000",
+          "118500000",
+          "65000",
+          "118565000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 620,
+      "cls": 0.2697,
+      "wall_ms": 4376,
+      "request_failures": [],
+      "transfer_bytes_total": 34429,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 4.46,
+        "load_5m": 4.18
+      },
+      "captured_at": "2026-10-18T00:41:21.563Z"
+    },
+    {
+      "sample_id": "checkout-returning-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "checkout",
+      "exact_url": "http://127.0.0.1:3000/checkout",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "same_cart_as": "cart",
+        "stop_before": "payment initiation"
+      },
+      "visit_state": "returning",
+      "repetition": 4,
+      "principal_content_selector": "CheckoutClient order review totals + shipping selection",
+      "usable_condition": "order-review block with totals and shipping radios visible; no payment initiated",
+      "content_ready_ms": 2622,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "65000",
+          "30000",
+          "115000000",
+          "3500000",
+          "118500000",
+          "65000",
+          "118565000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 464,
+      "cls": 0.2697,
+      "wall_ms": 3952,
+      "request_failures": [],
+      "transfer_bytes_total": 34432,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 4.16,
+        "load_5m": 4.12
+      },
+      "captured_at": "2026-10-18T00:41:27.019Z"
+    },
+    {
+      "sample_id": "checkout-returning-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "checkout",
+      "exact_url": "http://127.0.0.1:3000/checkout",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "same_cart_as": "cart",
+        "stop_before": "payment initiation"
+      },
+      "visit_state": "returning",
+      "repetition": 5,
+      "principal_content_selector": "CheckoutClient order review totals + shipping selection",
+      "usable_condition": "order-review block with totals and shipping radios visible; no payment initiated",
+      "content_ready_ms": 3031,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "65000",
+          "30000",
+          "115000000",
+          "3500000",
+          "118500000",
+          "65000",
+          "118565000"
+        ],
+        "bundle_cards_visible": 0,
+        "cart_lines_seen": [
+          "Poco",
+          "نوکیا"
+        ]
+      },
+      "lcp_ms": 484,
+      "cls": 0.2697,
+      "wall_ms": 5387,
+      "request_failures": [],
+      "transfer_bytes_total": 34426,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/final-authenticated/traces/checkout-returning-r5.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/final-authenticated/checkout-returning-r5.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 4.7,
+        "load_5m": 4.23
+      },
+      "captured_at": "2026-10-18T00:41:33.910Z"
+    },
+    {
+      "sample_id": "partner-fresh-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "partner",
+      "exact_url": "http://127.0.0.1:3000/partners/bundles",
+      "access": "approved-account",
+      "session_alias": "alias-partner-A",
+      "frozen_ids": {
+        "bundle_ids": [
+          1,
+          2
+        ],
+        "listed_price_toman": 195264000
+      },
+      "visit_state": "fresh",
+      "repetition": 1,
+      "principal_content_selector": "PartnerBundleCard articles in the bundles grid",
+      "usable_condition": "≥1 real bundle card visible with title and Toman price (authenticated view, not the sign-in card)",
+      "content_ready_ms": 5004,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "171100000",
+          "153990000",
+          "216960000",
+          "195264000"
+        ],
+        "bundle_cards_visible": 2,
+        "cart_lines_seen": []
+      },
+      "lcp_ms": 5200,
+      "cls": 0.7341,
+      "wall_ms": 7263,
+      "request_failures": [],
+      "transfer_bytes_total": 686751,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/final-authenticated/traces/partner-fresh-r1.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/final-authenticated/partner-fresh-r1.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 4.29,
+        "load_5m": 4.16
+      },
+      "captured_at": "2026-10-18T00:41:43.017Z"
+    },
+    {
+      "sample_id": "partner-fresh-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "partner",
+      "exact_url": "http://127.0.0.1:3000/partners/bundles",
+      "access": "approved-account",
+      "session_alias": "alias-partner-A",
+      "frozen_ids": {
+        "bundle_ids": [
+          1,
+          2
+        ],
+        "listed_price_toman": 195264000
+      },
+      "visit_state": "fresh",
+      "repetition": 2,
+      "principal_content_selector": "PartnerBundleCard articles in the bundles grid",
+      "usable_condition": "≥1 real bundle card visible with title and Toman price (authenticated view, not the sign-in card)",
+      "content_ready_ms": 4677,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "171100000",
+          "153990000",
+          "216960000",
+          "195264000"
+        ],
+        "bundle_cards_visible": 2,
+        "cart_lines_seen": []
+      },
+      "lcp_ms": 4824,
+      "cls": 0.7341,
+      "wall_ms": 6013,
+      "request_failures": [],
+      "transfer_bytes_total": 628312,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 4.51,
+        "load_5m": 4.21
+      },
+      "captured_at": "2026-10-18T00:41:50.857Z"
+    },
+    {
+      "sample_id": "partner-fresh-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "partner",
+      "exact_url": "http://127.0.0.1:3000/partners/bundles",
+      "access": "approved-account",
+      "session_alias": "alias-partner-A",
+      "frozen_ids": {
+        "bundle_ids": [
+          1,
+          2
+        ],
+        "listed_price_toman": 195264000
+      },
+      "visit_state": "fresh",
+      "repetition": 3,
+      "principal_content_selector": "PartnerBundleCard articles in the bundles grid",
+      "usable_condition": "≥1 real bundle card visible with title and Toman price (authenticated view, not the sign-in card)",
+      "content_ready_ms": 4665,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "171100000",
+          "153990000",
+          "216960000",
+          "195264000"
+        ],
+        "bundle_cards_visible": 2,
+        "cart_lines_seen": []
+      },
+      "lcp_ms": 4824,
+      "cls": 0.7341,
+      "wall_ms": 6022,
+      "request_failures": [],
+      "transfer_bytes_total": 628281,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 4.53,
+        "load_5m": 4.22
+      },
+      "captured_at": "2026-10-18T00:41:58.737Z"
+    },
+    {
+      "sample_id": "partner-fresh-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "partner",
+      "exact_url": "http://127.0.0.1:3000/partners/bundles",
+      "access": "approved-account",
+      "session_alias": "alias-partner-A",
+      "frozen_ids": {
+        "bundle_ids": [
+          1,
+          2
+        ],
+        "listed_price_toman": 195264000
+      },
+      "visit_state": "fresh",
+      "repetition": 4,
+      "principal_content_selector": "PartnerBundleCard articles in the bundles grid",
+      "usable_condition": "≥1 real bundle card visible with title and Toman price (authenticated view, not the sign-in card)",
+      "content_ready_ms": 4612,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "171100000",
+          "153990000",
+          "216960000",
+          "195264000"
+        ],
+        "bundle_cards_visible": 2,
+        "cart_lines_seen": []
+      },
+      "lcp_ms": 4756,
+      "cls": 0.7341,
+      "wall_ms": 5960,
+      "request_failures": [],
+      "transfer_bytes_total": 628286,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 4.4,
+        "load_5m": 4.2
+      },
+      "captured_at": "2026-10-18T00:42:06.511Z"
+    },
+    {
+      "sample_id": "partner-fresh-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "partner",
+      "exact_url": "http://127.0.0.1:3000/partners/bundles",
+      "access": "approved-account",
+      "session_alias": "alias-partner-A",
+      "frozen_ids": {
+        "bundle_ids": [
+          1,
+          2
+        ],
+        "listed_price_toman": 195264000
+      },
+      "visit_state": "fresh",
+      "repetition": 5,
+      "principal_content_selector": "PartnerBundleCard articles in the bundles grid",
+      "usable_condition": "≥1 real bundle card visible with title and Toman price (authenticated view, not the sign-in card)",
+      "content_ready_ms": 4756,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "171100000",
+          "153990000",
+          "216960000",
+          "195264000"
+        ],
+        "bundle_cards_visible": 2,
+        "cart_lines_seen": []
+      },
+      "lcp_ms": 4924,
+      "cls": 0.7341,
+      "wall_ms": 6108,
+      "request_failures": [],
+      "transfer_bytes_total": 628245,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 4.03,
+        "load_5m": 4.12
+      },
+      "captured_at": "2026-10-18T00:42:14.412Z"
+    },
+    {
+      "sample_id": "partner-returning-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "partner",
+      "exact_url": "http://127.0.0.1:3000/partners/bundles",
+      "access": "approved-account",
+      "session_alias": "alias-partner-A",
+      "frozen_ids": {
+        "bundle_ids": [
+          1,
+          2
+        ],
+        "listed_price_toman": 195264000
+      },
+      "visit_state": "returning",
+      "repetition": 1,
+      "principal_content_selector": "PartnerBundleCard articles in the bundles grid",
+      "usable_condition": "≥1 real bundle card visible with title and Toman price (authenticated view, not the sign-in card)",
+      "content_ready_ms": 3177,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "171100000",
+          "153990000",
+          "216960000",
+          "195264000"
+        ],
+        "bundle_cards_visible": 2,
+        "cart_lines_seen": []
+      },
+      "lcp_ms": 3360,
+      "cls": 0.7341,
+      "wall_ms": 4565,
+      "request_failures": [
+        {
+          "requestId": "46058.509",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "46058.511",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "46058.482",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 59568,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 4.36,
+        "load_5m": 4.19
+      },
+      "captured_at": "2026-10-18T00:42:24.241Z"
+    },
+    {
+      "sample_id": "partner-returning-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "partner",
+      "exact_url": "http://127.0.0.1:3000/partners/bundles",
+      "access": "approved-account",
+      "session_alias": "alias-partner-A",
+      "frozen_ids": {
+        "bundle_ids": [
+          1,
+          2
+        ],
+        "listed_price_toman": 195264000
+      },
+      "visit_state": "returning",
+      "repetition": 2,
+      "principal_content_selector": "PartnerBundleCard articles in the bundles grid",
+      "usable_condition": "≥1 real bundle card visible with title and Toman price (authenticated view, not the sign-in card)",
+      "content_ready_ms": 3024,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "171100000",
+          "153990000",
+          "216960000",
+          "195264000"
+        ],
+        "bundle_cards_visible": 2,
+        "cart_lines_seen": []
+      },
+      "lcp_ms": 3152,
+      "cls": 0.7341,
+      "wall_ms": 4337,
+      "request_failures": [
+        {
+          "requestId": "46058.509",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "46058.511",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "46058.482",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 52254,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 4.17,
+        "load_5m": 4.15
+      },
+      "captured_at": "2026-10-18T00:42:30.078Z"
+    },
+    {
+      "sample_id": "partner-returning-r3",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "partner",
+      "exact_url": "http://127.0.0.1:3000/partners/bundles",
+      "access": "approved-account",
+      "session_alias": "alias-partner-A",
+      "frozen_ids": {
+        "bundle_ids": [
+          1,
+          2
+        ],
+        "listed_price_toman": 195264000
+      },
+      "visit_state": "returning",
+      "repetition": 3,
+      "principal_content_selector": "PartnerBundleCard articles in the bundles grid",
+      "usable_condition": "≥1 real bundle card visible with title and Toman price (authenticated view, not the sign-in card)",
+      "content_ready_ms": 2521,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "171100000",
+          "153990000",
+          "216960000",
+          "195264000"
+        ],
+        "bundle_cards_visible": 2,
+        "cart_lines_seen": []
+      },
+      "lcp_ms": 2704,
+      "cls": 0.7341,
+      "wall_ms": 3871,
+      "request_failures": [
+        {
+          "requestId": "46058.509",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "46058.511",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "46058.482",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 36239,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 4.39,
+        "load_5m": 4.2
+      },
+      "captured_at": "2026-10-18T00:42:35.449Z"
+    },
+    {
+      "sample_id": "partner-returning-r4",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "partner",
+      "exact_url": "http://127.0.0.1:3000/partners/bundles",
+      "access": "approved-account",
+      "session_alias": "alias-partner-A",
+      "frozen_ids": {
+        "bundle_ids": [
+          1,
+          2
+        ],
+        "listed_price_toman": 195264000
+      },
+      "visit_state": "returning",
+      "repetition": 4,
+      "principal_content_selector": "PartnerBundleCard articles in the bundles grid",
+      "usable_condition": "≥1 real bundle card visible with title and Toman price (authenticated view, not the sign-in card)",
+      "content_ready_ms": 2375,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "171100000",
+          "153990000",
+          "216960000",
+          "195264000"
+        ],
+        "bundle_cards_visible": 2,
+        "cart_lines_seen": []
+      },
+      "lcp_ms": 2516,
+      "cls": 0.7341,
+      "wall_ms": 3701,
+      "request_failures": [
+        {
+          "requestId": "46058.509",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "46058.511",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "46058.482",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 36253,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": "shares the group artifact: mobile screenshot + trace on the first fresh and last returning sample of this route",
+      "machine_load": {
+        "load_1m": 4.52,
+        "load_5m": 4.23
+      },
+      "captured_at": "2026-10-18T00:42:40.649Z"
+    },
+    {
+      "sample_id": "partner-returning-r5",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "route_key": "partner",
+      "exact_url": "http://127.0.0.1:3000/partners/bundles",
+      "access": "approved-account",
+      "session_alias": "alias-partner-A",
+      "frozen_ids": {
+        "bundle_ids": [
+          1,
+          2
+        ],
+        "listed_price_toman": 195264000
+      },
+      "visit_state": "returning",
+      "repetition": 5,
+      "principal_content_selector": "PartnerBundleCard articles in the bundles grid",
+      "usable_condition": "≥1 real bundle card visible with title and Toman price (authenticated view, not the sign-in card)",
+      "content_ready_ms": 3241,
+      "predicate_evidence": {
+        "amounts_seen": [
+          "171100000",
+          "153990000",
+          "216960000",
+          "195264000"
+        ],
+        "bundle_cards_visible": 2,
+        "cart_lines_seen": []
+      },
+      "lcp_ms": 3468,
+      "cls": 0.7341,
+      "wall_ms": 5681,
+      "request_failures": [
+        {
+          "requestId": "46058.509",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "46058.511",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        },
+        {
+          "requestId": "46058.482",
+          "error": "net::ERR_ABORTED",
+          "blocked": null
+        }
+      ],
+      "transfer_bytes_total": 36243,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/final-authenticated/traces/partner-returning-r5.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/final-authenticated/partner-returning-r5.png",
+      "verification_status": "valid",
+      "limitation_reason": null,
+      "artifact_policy": null,
+      "machine_load": {
+        "load_1m": 4.21,
+        "load_5m": 4.17
+      },
+      "captured_at": "2026-10-18T00:42:47.834Z"
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
 import { apiGet, apiPost } from "@/lib/api-client";
 import type { PublicUser } from "@/types/auth";
 
@@ -19,14 +19,18 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [user, setUser] = useState<PublicUser | null>(null);
   const [status, setStatus] = useState<AuthStatus>("loading");
+  const activeReqId = useRef(0);
 
   const refresh = useCallback(async () => {
+    const reqId = ++activeReqId.current;
     try {
       const me = await apiGet<PublicUser>("/api/auth/me");
+      if (activeReqId.current !== reqId) return null;
       setUser(me);
       setStatus("authenticated");
       return me;
     } catch {
+      if (activeReqId.current !== reqId) return null;
       // 401 (no/expired session) or a transient failure — both render as guest;
       // the storefront is fully browsable without an account.
       setUser(null);
@@ -37,14 +41,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     void refresh();
+    return () => {
+      activeReqId.current++;
+    };
   }, [refresh]);
 
   const logout = useCallback(async () => {
+    const reqId = ++activeReqId.current;
     try {
       await apiPost("/api/auth/logout");
     } catch {
       // Session was already gone server-side — clearing locally is still correct.
     }
+    if (activeReqId.current !== reqId) return;
     setUser(null);
     setStatus("guest");
   }, []);

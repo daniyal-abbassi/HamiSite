@@ -44,6 +44,8 @@ export default function DiscoverButton() {
   const router = useRouter();
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["id"]>(TABS[0].id);
   const [isSearching, setIsSearching] = useState(false);
+  const [isSearchPending, setIsSearchPending] = useState(false);
+  const [isMenuPending, setIsMenuPending] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const routeTab = TABS.find((tab) => pathname === tab.href || pathname.startsWith(`${tab.href}/`));
 
@@ -64,6 +66,11 @@ export default function DiscoverButton() {
         action="/shop"
         role="search"
         aria-label="جست‌وجوی محصولات"
+        aria-busy={isSearchPending ? "true" : undefined}
+        onSubmit={(e) => {
+          setIsSearchPending(true);
+          e.currentTarget.setAttribute("aria-busy", "true");
+        }}
         initial={false}
         animate={{ width: isSearching ? "clamp(108px, 18vw, 248px)" : 42 }}
         transition={spring}
@@ -134,7 +141,7 @@ export default function DiscoverButton() {
                 aria-current={pathname === tab.href ? "page" : undefined}
                 tabIndex={isSearching ? -1 : 0}
                 onClick={() => setActiveTab(tab.id)}
-                className={`relative flex h-8 items-center gap-1 rounded-full px-2 text-[11px] font-bold transition-colors sm:px-2.5 sm:text-xs ${selected ? tab.color : "text-slate-500 hover:text-slate-900"}`}
+                className={`relative flex h-8 min-h-11 extend-touch-target items-center gap-1 rounded-full px-2 text-xs font-bold transition-colors sm:px-2.5 ${selected ? tab.color : "text-slate-500 hover:text-slate-900"}`}
               >
                 {selected && (
                   <motion.span
@@ -161,14 +168,14 @@ export default function DiscoverButton() {
             aria-label="بستن جست‌وجو"
             tabIndex={isSearching ? 0 : -1}
             onClick={() => setIsSearching(false)}
-            className="grid size-full place-items-center text-slate-700 hover:text-[#640211]"
+            className="grid size-full place-items-center text-slate-700 hover:text-oxblood"
           >
             <X className="size-5" aria-hidden="true" />
           </button>
         </motion.div>
       </motion.div>
 
-      <div className="relative sm:hidden">
+      <div className="relative sm:hidden" aria-busy={isMenuPending ? "true" : undefined}>
         {isSearching ? (
           <button
             type="button"
@@ -189,7 +196,8 @@ export default function DiscoverButton() {
               const tab = TABS.find((item) => item.id === id);
               if (!tab) return;
               setActiveTab(tab.id);
-              window.setTimeout(() => router.push(tab.href), 350);
+              setIsMenuPending(true);
+              router.push(tab.href);
             }}
           />
         )}

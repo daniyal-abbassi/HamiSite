@@ -39,7 +39,7 @@ export async function CategoryHub() {
                   className="cat-card"
                   aria-describedby={department.showsCount ? countId : undefined}
                 >
-                  <span className="cat-card__art">
+                  <span className="cat-card__art relative block aspect-square">
                     <Image
                       src={department.image}
                       alt=""

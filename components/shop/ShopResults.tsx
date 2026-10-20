@@ -83,8 +83,20 @@ export function ShopResults({
       )}
 
       {!unknownFilter && products === null && (
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-5" aria-busy="true">
-          {Array.from({ length: 6 }, (_, index) => <div key={index} className="aspect-square animate-pulse rounded-xl bg-foreground/5" />)}
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-3" aria-busy="true">
+          {Array.from({ length: 6 }, (_, index) => (
+            <div key={index} className="rounded-2xl border border-line/60 bg-ink-2/40 p-4 space-y-3 animate-pulse" aria-hidden="true">
+              <div className="aspect-square w-full rounded-xl bg-foreground/5" />
+              <div className="space-y-2 pt-2">
+                <div className="h-3 w-16 rounded bg-foreground/10" />
+                <div className="h-4 w-3/4 rounded bg-foreground/10" />
+                <div className="mt-4 flex items-center justify-between pt-2">
+                  <div className="h-5 w-24 rounded bg-foreground/10" />
+                  <div className="size-11 rounded-full bg-foreground/10" />
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       )}
 
@@ -103,8 +115,8 @@ export function ShopResults({
             <div className="shop-product-list mt-6 space-y-4">{products.map((product) => <ProductListRow key={product.id} product={product} />)}</div>
           ) : (
             <div className="shop-product-grid mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-2 2xl:grid-cols-3">
-              {products.map((product) => (
-                <ProductCard key={product.id} product={product} variant={cardVariant} frame="plinth" imageSizes="(max-width: 767px) calc((100vw - 44px) / 2), (max-width: 1023px) calc((100vw - 68px) / 2), (max-width: 1535px) calc((100vw - 356px) / 2), 350px" />
+              {products.map((product, index) => (
+                <ProductCard key={product.id} product={product} variant={cardVariant} frame="plinth" priorityImage={index === 0} imageSizes="(max-width: 767px) calc((100vw - 44px) / 2), (max-width: 1023px) calc((100vw - 68px) / 2), (max-width: 1535px) calc((100vw - 356px) / 2), 350px" />
               ))}
             </div>
           )}

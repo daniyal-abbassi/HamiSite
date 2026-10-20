@@ -112,3 +112,36 @@ excerpts — use it for behavior questions across unfamiliar files, grep for exa
    locally patched. **After any `npm install --global @dzhng/jevgrep@latest`** — which the installed
    skill tells you to run — re-apply it with `node tools/jev/jevgrep-compat.mjs`. Symptom of a missing
    patch: `discovery incomplete`, `Issue: "provider"`, files marked *locations only*. Healthy = exit 0.
+
+## UI Verify visual testing
+
+Before changing any component, page, or styles, read the making-ui-changes skill and follow it - reuse before you create, add/update the story or capture in the same change, check the blast radius on shared components, and prove the change with a visual test.
+
+## UI Craft Rules (FarsiUI / ui-craft-rules)
+
+Design system first, screens second. Treat these rules as strict constraints:
+
+- Do not add arbitrary Tailwind values when existing tokens cover the need (`p-[13px]`, `text-[15px]`, hardcoded hex colors, one-off radii).
+- Use existing design tokens and components before creating new ones.
+- Keep spacing and sizes on a consistent scale (4px grid).
+- Every tappable control MUST have a target of at least 44×44px.
+- Keep the interface within a deliberate ~6-step type scale. Avoid one-off font sizes.
+- Use line-height by typography role (Persian body ~1.7–1.9, headings ~1.2–1.4, buttons ~1.4–1.6) and keep letter-spacing at 0.
+- Keep the color palette limited and semantic (`bg-background`, `text-foreground`, `border-border`, `bg-card`, etc.).
+- Use one consistent icon system (Lucide). Match icon size and stroke weight to nearby typography.
+- Reserve space for asynchronous content. Images MUST use `aspect-ratio` or explicit dimensions to keep CLS <= 0.05.
+- Loading states should match the final layout. Prefer layout-matched `Skeleton` components over isolated spinners.
+- Use named motion patterns (cross-fade, stagger 30–60ms, scale, slide) with durations 150–300ms, respecting `prefers-reduced-motion`.
+- Test responsive layouts at narrow mobile widths (360px–390px) before considering a screen complete.
+- Do not use lorem ipsum or fake placeholder stats in visible UI.
+- Keep development-only debugging UI strictly outside production builds (`process.env.NODE_ENV !== "production"`).
+
+## Host Deployment & Production Readiness
+
+Deploying to a Linux host (VPS / dedicated) follows a strict non-destructive, staged workflow:
+
+1. **Host Preflight**: Run `npm run deploy:preflight` (or `node tools/deploy/preflight.mjs --skip-build-check` during initial setup). Validates Node.js >= 20, environment variables in `.env`, and database connectivity.
+2. **Database Schema**: Mandatory `npm run db:push` (`npx prisma db push`). **NEVER run `prisma migrate reset` or blind reseeding.**
+3. **Standalone Production Build**: Run `npm run deploy:build` (`next build && node tools/deploy/copy-standalone-assets.mjs`). This prepares the standalone bundle in `.next/standalone/` with `public/` and `.next/static/`.
+4. **Process Management**: Start with PM2 using `tools/deploy/ecosystem.config.cjs` or systemd using `tools/deploy/hami-storefront.service`. Graceful shutdown (`SIGTERM`, `SIGINT`) is supported with a 5-second drain window.
+5. **Health & Observability**: Deep probe at `/api/health` reports status, database connectivity & latency, and memory footprint. Lightweight liveness at `/api/health?mode=live`.

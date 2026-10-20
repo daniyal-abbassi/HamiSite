@@ -21,7 +21,7 @@ export default async function TMALayout({ children }: { children: React.ReactNod
         nonce={nonce}
         strategy="afterInteractive"
       />
-      <div className="min-h-screen bg-[#0B0204] text-stone-100 flex flex-col font-sans antialiased selection:bg-amber-500/20">
+      <div className="min-h-screen bg-ink text-stone-100 flex flex-col font-sans antialiased selection:bg-amber-500/20">
         <SkipLink />
         <TelegramProvider>
           <main id="main" tabIndex={-1} className="flex-1 pb-24 overflow-x-hidden focus:outline-none">

@@ -81,7 +81,7 @@ export default function SmoothDropdown() {
               <Link
                 href="/shop"
                 onClick={() => setOpen(false)}
-                className="inline-flex shrink-0 items-center gap-2 rounded-full border border-champagne/35 bg-champagne px-4 py-2.5 text-xs font-bold text-[#310711] transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(229,211,179,.2)]"
+                className="inline-flex min-h-11 extend-touch-target shrink-0 items-center gap-2 rounded-full border border-champagne/35 bg-champagne px-4 py-2.5 text-xs font-bold text-oxblood-deep transition hover:-translate-y-0.5 hover:shadow-[0_8px_24px_rgba(229,211,179,.2)]"
               >
                 مشاهدهٔ فروشگاه
                 <ArrowLeft className="size-3.5" aria-hidden="true" />
@@ -96,14 +96,14 @@ export default function SmoothDropdown() {
                     key={category.key}
                     href={category.href}
                     onClick={() => setOpen(false)}
-                    className="group flex min-h-[72px] items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.025] px-3 py-3 transition hover:border-champagne/25 hover:bg-champagne/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/70"
+                    className="group flex min-h-20 items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.025] px-3 py-3 transition hover:border-champagne/25 hover:bg-champagne/[0.08] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne/70"
                   >
                     <span className="grid size-10 shrink-0 place-items-center rounded-xl border border-champagne/15 bg-champagne/[0.07] text-champagne transition group-hover:bg-champagne/15">
-                      <Icon className="size-[18px]" aria-hidden="true" />
+                      <Icon className="size-4.5" aria-hidden="true" />
                     </span>
                     <span className="min-w-0">
                       <span className="block text-sm font-semibold text-foreground/90">{category.title}</span>
-                      <span className="mt-1 block truncate text-[10px] text-muted-foreground">{category.eyebrow}</span>
+                      <span className="mt-1 block truncate text-xs text-muted-foreground">{category.eyebrow}</span>
                     </span>
                   </Link>
                 );

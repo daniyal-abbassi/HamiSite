@@ -85,7 +85,7 @@ export function OrderStatusSheet({
     <Drawer.Root open={open} onOpenChange={onOpenChange}>
       <Drawer.Portal>
         <Drawer.Overlay className="fixed inset-0 bg-black/60 backdrop-blur-xs z-50 transition-opacity" />
-        <Drawer.Content className="fixed bottom-0 inset-x-0 z-50 bg-[#12070A] border-t border-stone-800 rounded-t-3xl max-h-[85vh] flex flex-col focus:outline-hidden text-stone-100">
+        <Drawer.Content className="fixed bottom-0 inset-x-0 z-50 bg-ink-2 border-t border-stone-800 rounded-t-3xl max-h-[85vh] flex flex-col focus:outline-hidden text-stone-100">
           {/* Grab Handle */}
           <div className="w-12 h-1.5 bg-stone-700/60 rounded-full mx-auto my-3" />
 
@@ -162,7 +162,7 @@ export function OrderStatusSheet({
                         </div>
                         <span className="text-xs font-semibold">تغییر به {label}</span>
                       </div>
-                      <span className="text-[11px] opacity-80">ثبت فوری</span>
+                      <span className="text-xs opacity-80">ثبت فوری</span>
                     </button>
                   );
                 })

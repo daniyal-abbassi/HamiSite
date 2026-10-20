@@ -62,12 +62,12 @@ export function UserMenu() {
           onClick={() => setMobileOpen((open) => !open)}
           className="grid size-11 shrink-0 place-items-center rounded-full text-foreground/75 transition-colors hover:bg-foreground/10 hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
         >
-          <UserRound className="size-[18px]" aria-hidden="true" />
+          <UserRound className="size-4.5" aria-hidden="true" />
         </button>
         {mobileOpen && (
           <div
             id="mobile-account-menu"
-            className="absolute end-0 top-full z-50 mt-2 min-w-36 rounded-2xl border border-champagne/25 bg-[#350713]/95 p-1.5 text-foreground shadow-xl backdrop-blur-xl"
+            className="absolute end-0 top-full z-50 mt-2 min-w-36 rounded-2xl border border-champagne/25 bg-oxblood-deep/95 p-1.5 text-foreground shadow-xl backdrop-blur-xl"
           >
             <Link
               href="/account"

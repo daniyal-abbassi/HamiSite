@@ -1,0 +1,165 @@
+{
+  "$schema_note": "MeasurementProfile + frozen RouteSamples per specs/039-storefront-performance/data-model.md. Baseline and final profiles must match except build identity. No secrets, session tokens, or customer-identifying data recorded.",
+  "captured_at": "2026-10-15T20:40:00+03:30",
+  "profiles": {
+    "mobile-primary": {
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "source_commit": "b1fa09ba2d1f906557d9a48b99bbd460cc6adb32",
+      "dirty_diff_identity": "clean tree; untracked specs/039-storefront-performance/ evidence only",
+      "dirty_diff_identity_note_2026-10-16": "SUPERSEDED. A concurrent tool install (UI Verify: @playwright/test 1.64.1 + @uiverify/playwright 1.3.0 devDeps, playwright.config.ts, e2e/uiverify-home.spec.ts, .mcp.json, skills-lock.json, AGENTS.md/CLAUDE.md rule text) dirtied the tree during the T003 session. NO application source was touched (git status over app/, components/, lib/, prisma/, middleware.ts, next.config.mjs, tailwind.config.ts is empty), and the running build is unchanged, so the baseline build identity still holds. Freeze required before T004: the identity recorded here must be restated against the tree as it actually is when the first baseline sample is taken, and must stay fixed through the final capture except for build identity.",
+      "build_identity_baseline": "SI5JalMD_PFquWP7kYRc (next build 2026-10-15 12:35:58 +0330, served by next-server pid 25813)",
+      "build_identity_final": "TO-BE-RECORDED after selected changes; may differ from baseline ONLY in build identity",
+      "runtime": {
+        "node": "v22.17.0",
+        "next": "15.5.25",
+        "react": "19.2.8",
+        "browser": "Chromium via Playwright MCP — exact version to be recorded at first capture in measurement-procedure.md"
+      },
+      "base_url": "http://127.0.0.1:3000",
+      "viewport": {
+        "width_px": 390,
+        "height_px": 844,
+        "device_scale_factor": 3
+      },
+      "cpu_slowdown": 4,
+      "network": {
+        "download_kbps": 1600,
+        "upload_kbps": 750,
+        "latency_ms": 150,
+        "units": "kilobits/sec, one-way RTT added latency"
+      },
+      "reduced_motion": "no-preference for primary runs; reduced-motion pass recorded separately (T025)",
+      "theme": "default storefront theme from root layout body class (app/layout.tsx); theme switch is a visual-review check, not a timing variant",
+      "server_warm_state_policy": "Baseline: warm production server (uptime since 2026-10-15 12:36, route caches at revalidate=60 maturity ≥1 sample). Primary comparison requires matching warm state baseline vs final; a cold server start invalidates comparison and must be re-warmed identically: after restart, one throwaway visit per route before the first counted sample, at least 90s after start. Cold-start behavior recorded separately if observed.",
+      "browser_cache_policy": "fresh = HTTP cache cleared per visit (new context), session cookie preserved for authenticated routes; returning = normal browser cache, same session",
+      "machine": {
+        "cpu_cores": 4,
+        "ram_gib": 7.6,
+        "note": "Owner apps concurrently resident (Chrome :9222, code servers, ollama). All timing captures serialized; no parallel measurement streams; machine load noted per run block."
+      }
+    },
+    "desktop-visual": {
+      "profile_id": "prof-desktop-visual-2026-10-15",
+      "viewport": {
+        "width_px": 1280,
+        "height_px": 800,
+        "device_scale_factor": 1
+      },
+      "purpose": "visual comparison only (SC-006 / FR-007); NOT a timing acceptance profile",
+      "inherits": "mobile-primary except viewport and no CPU/network throttling judgment applied to timing claims"
+    }
+  },
+  "routes": {
+    "home": {
+      "route_key": "home",
+      "exact_url": "http://127.0.0.1:3000/",
+      "access": "public",
+      "principal_content_selector": "first visible home product rail section with real product cards (not HomeRailSkeleton placeholders)",
+      "usable_condition": "≥1 product card with loaded principal image and Persian price text rendered"
+    },
+    "shop": {
+      "route_key": "shop",
+      "exact_url": "http://127.0.0.1:3000/shop",
+      "access": "public",
+      "principal_content_selector": "ShopResults product grid first row",
+      "usable_condition": "product cards with names + TomanPrice visible; count text rendered"
+    },
+    "category": {
+      "route_key": "category",
+      "exact_url": "http://127.0.0.1:3000/categories/تجهیزات-کامپیوتر-و-لبتاب",
+      "frozen_ids": {
+        "category_id": 318,
+        "slug": "تجهیزات-کامپیوتر-و-لبتاب",
+        "name": "تجهیزات کامپیوتر و لبتاب",
+        "main_product_count": 4
+      },
+      "secondary_categories": [
+        {
+          "id": 317,
+          "slug": "سیمکارت",
+          "products": 3
+        },
+        {
+          "id": 315,
+          "slug": "خدمات-آنلاین",
+          "products": 1
+        }
+      ],
+      "principal_content_selector": "category listing product grid",
+      "usable_condition": "≥1 product card visible for this category"
+    },
+    "product": {
+      "route_key": "product",
+      "exact_url": "http://127.0.0.1:3000/shop/گوشی-موبایل-شیائومی-مدل-poco-x7-pro-دو-سیم-کارت-ظرفیت-512-گیگابایت-و-رم-12-گیگابایت-گلوبال",
+      "frozen_ids": {
+        "product_id": 1832,
+        "variants": 3,
+        "images": 6,
+        "base_price_toman": 115000000,
+        "name": "گوشی موبایل شیائومی مدل Poco X7 Pro دو سیم کارت ظرفیت 512 گیگابایت و رم 12 گیگابایت - گلوبال"
+      },
+      "supplementary_examples": {
+        "low_price_variant_product": {
+          "id": 1939,
+          "slug": "گوشی-موبایل-نوکیا-مدل-105-2023-دو-سیم-کارت-مونتاژ-ایران-تحت-لیسانس-نوکیا",
+          "note": "price/variant coverage"
+        },
+        "missing_slug_404": "/shop/این-محصول-وجود-ندارد-039-check (expected 404, behavior guard not a timing sample)"
+      },
+      "principal_content_selector": "ProductGallery principal image + product title + TomanPrice block",
+      "usable_condition": "image loaded (naturalWidth>0), title and price text visible, variant controls present"
+    },
+    "cart": {
+      "route_key": "cart",
+      "exact_url": "http://127.0.0.1:3000/cart",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "designated_test_contents": "frozen 2026-10-16: cart item 18 = product 1832 (Poco X7 Pro 512/12) qty 1 @ 115,000,000; cart item 19 = product 1939 (Nokia 105 2023) qty 1 @ 3,500,000; subtotal 118,500,000",
+        "cart_id_note": "cart id recorded at capture time; contents must not change between baseline and final"
+      },
+      "principal_content_selector": "CartPageClient item list with ≥1 designated test line item and totals block",
+      "usable_condition": "line item quantity controls and confirmed totals visible"
+    },
+    "checkout": {
+      "route_key": "checkout",
+      "exact_url": "http://127.0.0.1:3000/checkout",
+      "access": "approved-account",
+      "session_alias": "alias-customer-A",
+      "frozen_ids": {
+        "designated_test_contents": "same account and same frozen cart as the cart route; capture stops before payment initiation"
+      },
+      "principal_content_selector": "CheckoutClient order review totals + shipping selection",
+      "usable_condition": "totals matching cart visible; NO payment request is ever initiated"
+    },
+    "partner": {
+      "route_key": "partner",
+      "exact_url": "http://127.0.0.1:3000/partners/bundles",
+      "access": "approved-account",
+      "session_alias": "alias-partner-A",
+      "frozen_ids": {
+        "bundle_id": 1,
+        "slug": "پکیج-note-15-pro-2568-4g-realme-note-50-1284",
+        "title": "سبد Note 15 pro 256/8 4G + REALME NOTE 50 128/4",
+        "listed_price_toman": 195264000,
+        "items": 3,
+        "stock": 10,
+        "second_bundle_id": 2
+      },
+      "principal_content_selector": "PartnerBundleCard for bundle_id=1 with price and quantity controls",
+      "usable_condition": "bundle card rendered with partner price visible"
+    }
+  },
+  "sessions": {
+    "alias-customer-A": {
+      "kind": "customer",
+      "provisioning": "Verified seeded fixture session for baseline; credentials provided at runtime through PERF_* environment variables and not stored in evidence."
+    },
+    "alias-partner-A": {
+      "kind": "partner",
+      "provisioning": "Verified seeded fixture session for baseline; credentials provided at runtime through PERF_* environment variables and not stored in evidence."
+    }
+  },
+  "content_stability_plan": "Catalog data is live; revalidate=60 means price/stock edits can appear between samples. Route IDs above are frozen; before each run block, a content-shape check (product count on shop, presence of frozen product/category/bundle) is recorded in the run notes and any live-data change is explained, not silently compared.",
+  "interaction_catalog_ref": "contracts/performance-validation.md §Route and interaction coverage; repetition and p95 rules in data-model.md InteractionSample"
+}

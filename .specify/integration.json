@@ -4,7 +4,8 @@
   "installed_integrations": [
     "cline",
     "qodercli",
-    "agy"
+    "agy",
+    "opencode"
   ],
   "integration_settings": {
     "cline": {
@@ -18,6 +19,10 @@
     "agy": {
       "script": "sh",
       "invoke_separator": "-"
+    },
+    "opencode": {
+      "script": "sh",
+      "invoke_separator": "."
     }
   },
   "integration": "agy",

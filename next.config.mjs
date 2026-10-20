@@ -4,6 +4,8 @@ import { fileURLToPath } from "node:url";
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Standalone output bundles a minimal server and only traced dependencies for host deployment.
+  output: "standalone",
   // Keep tracing rooted at this app when a parent workspace also has a lockfile.
   outputFileTracingRoot: path.dirname(fileURLToPath(import.meta.url)),
   // Keep metadata in <head> for SEO and social crawlers that do not execute
@@ -49,6 +51,12 @@ const nextConfig = {
     ];
 
     return [
+      {
+        source: "/_next/static/:path*",
+        headers: [
+          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+        ],
+      },
       {
         source: "/:path*",
         headers: securityHeaders,

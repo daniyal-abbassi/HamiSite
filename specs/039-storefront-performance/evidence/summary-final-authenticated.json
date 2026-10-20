@@ -1,0 +1,48 @@
+{
+  "phase": "final",
+  "build": "0lvkXYL5zsKP7QJGOG3P2",
+  "captured_at": "2026-10-18T00:42:57.450Z",
+  "routes": [
+    {
+      "route": "cart",
+      "fresh_median_ms": 4907,
+      "fresh_lcp_ms": 5056,
+      "fresh_cls": 0.2155,
+      "fresh_kb": 632,
+      "returning_median_ms": 2882,
+      "returning_kb": 35,
+      "SC_001": "FAIL",
+      "SC_003": "FAIL",
+      "n_fresh": 5,
+      "n_returning": 5
+    },
+    {
+      "route": "checkout",
+      "fresh_median_ms": 5203,
+      "fresh_lcp_ms": 5408,
+      "fresh_cls": 0.2697,
+      "fresh_kb": 619,
+      "returning_median_ms": 2981,
+      "returning_kb": 34,
+      "SC_001": "FAIL",
+      "SC_003": "FAIL",
+      "n_fresh": 5,
+      "n_returning": 5
+    },
+    {
+      "route": "partner",
+      "fresh_median_ms": 4677,
+      "fresh_lcp_ms": 4824,
+      "fresh_cls": 0.7341,
+      "fresh_kb": 614,
+      "returning_median_ms": 3024,
+      "returning_kb": 35,
+      "SC_001": "FAIL",
+      "SC_003": "FAIL",
+      "n_fresh": 5,
+      "n_returning": 5
+    }
+  ],
+  "problems": [],
+  "p95_note": "p95 = sorted[ceil(0.95*n)-1]"
+}

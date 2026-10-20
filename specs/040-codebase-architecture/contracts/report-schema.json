@@ -1,0 +1,78 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "ArchitecturalReviewReport",
+  "type": "object",
+  "required": [
+    "report_id",
+    "repository_name",
+    "generated_at",
+    "candidates",
+    "top_recommendation"
+  ],
+  "properties": {
+    "report_id": { "type": "string" },
+    "repository_name": { "type": "string" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "hotspots": {
+      "type": "array",
+      "items": { "type": "string" }
+    },
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "id",
+          "title",
+          "recommendation_strength",
+          "dependency_category",
+          "affected_files",
+          "problem",
+          "solution",
+          "wins",
+          "diagrams"
+        ],
+        "properties": {
+          "id": { "type": "string" },
+          "title": { "type": "string" },
+          "recommendation_strength": {
+            "type": "string",
+            "enum": ["Strong", "Worth exploring", "Speculative"]
+          },
+          "dependency_category": {
+            "type": "string",
+            "enum": ["in-process", "local-substitutable", "ports & adapters", "mock"]
+          },
+          "affected_files": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "problem": { "type": "string" },
+          "solution": { "type": "string" },
+          "wins": {
+            "type": "array",
+            "items": { "type": "string" }
+          },
+          "diagrams": {
+            "type": "object",
+            "required": ["before_mermaid", "after_mermaid"],
+            "properties": {
+              "before_mermaid": { "type": "string" },
+              "after_mermaid": { "type": "string" }
+            }
+          },
+          "adr_note": { "type": "string" }
+        }
+      }
+    },
+    "top_recommendation": {
+      "type": "object",
+      "required": ["candidate_id", "rationale"],
+      "properties": {
+        "candidate_id": { "type": "string" },
+        "rationale": { "type": "string" }
+      }
+    }
+  }
+}
+

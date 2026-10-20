@@ -53,8 +53,8 @@ const trustFactShortLabels: Record<(typeof trustFacts)[number]["key"], string> =
 
 function Hero() {
   return (
-    <section id="top" className="band-paper homepage-hero" aria-labelledby="hero-title" data-ground="paper">
-      <picture className="homepage-hero__art" aria-hidden="true">
+    <section id="top" className="band-paper homepage-hero relative" aria-labelledby="hero-title" data-ground="paper">
+      <picture className="homepage-hero__art absolute inset-0 block h-full w-full" aria-hidden="true">
         <source
           media="(max-width: 1023px)"
           srcSet="/images/hero/home-mobile-640.webp 640w, /images/hero/home-mobile-960.webp 941w"
@@ -150,9 +150,15 @@ export default function HomePage() {
           a row of route chips straight into the catalogue. */}
       <MobileQuickRoutes />
       {/* A strict sellability shelf: every item here can actually be purchased. */}
-      <ObtainableNow />
-      <CategoryHub />
-      <BrandShowcase />
+      <Suspense fallback={null}>
+        <ObtainableNow />
+      </Suspense>
+      <Suspense fallback={null}>
+        <CategoryHub />
+      </Suspense>
+      <Suspense fallback={null}>
+        <BrandShowcase />
+      </Suspense>
       <Suspense fallback={<HomeRailSkeleton />}>
         <AdditionalProductsSection />
       </Suspense>

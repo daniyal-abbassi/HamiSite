@@ -1,0 +1,99 @@
+{
+  "phase": "baseline",
+  "profile": {
+    "profile_id": "prof-mobile-4x-2026-10-15",
+    "viewport": {
+      "width": 390,
+      "height": 844,
+      "device_scale_factor": 3
+    },
+    "cpu_slowdown": 4,
+    "network": {
+      "download_kbps": 1600,
+      "upload_kbps": 750,
+      "latency_ms": 150
+    },
+    "cache_policy": "one warm-up visit per action before counting, so every repetition is measured warm (an already-browsing user)",
+    "poll_granularity_ms": 50
+  },
+  "base_url": "http://127.0.0.1:3000",
+  "server_build_id": "PAbFfUnpIwnbmI_t76o-K",
+  "captured_at": "2026-10-17T23:58:43.356Z",
+  "reps_per_action": 2,
+  "actions_expected": 1,
+  "actions_unverifiable": 0,
+  "summary": [
+    {
+      "action": "cart",
+      "label": "add a purchasable product to the cart from its product page",
+      "repetitions": 2,
+      "valid": 2,
+      "failed": 0,
+      "unverified": 0,
+      "completion_median_ms": 633,
+      "completion_p95_ms": 633,
+      "feedback_median_ms": 352,
+      "feedback_p95_ms": 352,
+      "failure_reasons": []
+    }
+  ],
+  "unverified": [],
+  "samples": [
+    {
+      "sample_id": "cart-r1",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "action": "cart",
+      "action_label": "add a purchasable product to the cart from its product page",
+      "route_url": "http://127.0.0.1:3000/shop",
+      "session_alias": "alias-customer-A",
+      "repetition": 1,
+      "input_ms": 0,
+      "feedback_ms": 319,
+      "feedback_kind": "aria-busy",
+      "completion_ms": 591,
+      "wall_ms": 6130,
+      "final_state_assertion": "pass",
+      "baseline_value": 2,
+      "action_error": null,
+      "verification_status": "valid",
+      "failure_reason": null,
+      "mutation_restored": true,
+      "in_page_errors": [],
+      "trace_path": "specs/039-storefront-performance/evidence/baseline-interactions/traces/cart-r1.zip",
+      "screenshot_path": "specs/039-storefront-performance/evidence/baseline-interactions/cart-r1.png",
+      "machine_load": {
+        "load_1m": 4.99,
+        "load_5m": 4.43
+      },
+      "captured_at": "2026-10-17T23:58:16.414Z"
+    },
+    {
+      "sample_id": "cart-r2",
+      "profile_id": "prof-mobile-4x-2026-10-15",
+      "action": "cart",
+      "action_label": "add a purchasable product to the cart from its product page",
+      "route_url": "http://127.0.0.1:3000/shop",
+      "session_alias": "alias-customer-A",
+      "repetition": 2,
+      "input_ms": 0,
+      "feedback_ms": 352,
+      "feedback_kind": "aria-busy",
+      "completion_ms": 633,
+      "wall_ms": 4507,
+      "final_state_assertion": "pass",
+      "baseline_value": 2,
+      "action_error": null,
+      "verification_status": "valid",
+      "failure_reason": null,
+      "mutation_restored": true,
+      "in_page_errors": [],
+      "trace_path": null,
+      "screenshot_path": null,
+      "machine_load": {
+        "load_1m": 4.52,
+        "load_5m": 4.35
+      },
+      "captured_at": "2026-10-17T23:58:42.422Z"
+    }
+  ]
+}

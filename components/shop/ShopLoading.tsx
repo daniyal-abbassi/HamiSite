@@ -24,7 +24,7 @@ export function ShopLoading() {
         <Skeleton className="mt-2 h-9 w-56" />
       </div>
       <div className="shop-browse-layout mt-8 flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8" aria-hidden="true">
-        <div className="hidden w-[248px] shrink-0 space-y-5 border border-line p-5 lg:block">
+        <div className="hidden w-72 shrink-0 space-y-5 border border-line p-5 lg:block">
           <Skeleton className="h-10 w-full" />
           {Array.from({ length: 6 }, (_, index) => <Skeleton key={index} className="h-7 w-full" />)}
         </div>

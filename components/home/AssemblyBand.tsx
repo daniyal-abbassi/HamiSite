@@ -115,7 +115,7 @@ export function AssemblyBand() {
                 <TrustGlyph name={feature.key} />
               </span>
               <h3 className="m-0 text-sm font-black leading-6">{feature.title}</h3>
-              <p className="m-0 text-[11px] leading-5 text-foreground/60">{feature.description}</p>
+              <p className="m-0 text-xs leading-5 text-foreground/60">{feature.description}</p>
             </li>
           ))}
         </ul>

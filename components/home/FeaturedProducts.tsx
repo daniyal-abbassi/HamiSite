@@ -7,7 +7,7 @@ import { Reveal } from "@/components/home/Reveal";
 import { type ProductCardData } from "@/components/shop/ProductCard";
 import { ProductCard } from "@/components/shop/ProductCard";
 import type { RailProduct } from "@/lib/home-rails-db";
-import { toFaDigits } from "@/lib/utils";
+import { cn, toFaDigits } from "@/lib/utils";
 
 const CARD_STEP = 292;
 
@@ -102,6 +102,7 @@ export function FeaturedProducts({ products }: { products: RailProduct[] }) {
                   selectedVariantId={selectedVariantIds[product.id]}
                   onVariantChange={(variantId) => selectVariant(product.id, variantId)}
                   imageSizes="292px"
+                  priorityImage={index === 0}
                 />
               ))}
               {products.length === 0 && (
@@ -113,7 +114,7 @@ export function FeaturedProducts({ products }: { products: RailProduct[] }) {
             </div>
 
             {products.length > 0 && (
-              <button type="button" className="featured-products__next" onClick={nextPage} aria-label="محصولات بعدی">
+              <button type="button" className="featured-products__next extend-touch-target" onClick={nextPage} aria-label="محصولات بعدی">
                 <ArrowRight aria-hidden="true" />
               </button>
             )}
@@ -127,7 +128,7 @@ export function FeaturedProducts({ products }: { products: RailProduct[] }) {
                   type="button"
                   aria-label={`صفحه ${toFaDigits(index + 1)}`}
                   aria-current={page === index ? "page" : undefined}
-                  className={page === index ? "is-active" : undefined}
+                  className={cn("extend-touch-target", page === index && "is-active")}
                   onClick={() => scrollToPage(index)}
                 />
               ))}
@@ -136,7 +137,7 @@ export function FeaturedProducts({ products }: { products: RailProduct[] }) {
         </Reveal>
 
         <div className="featured-products__footer-cta">
-          <Link href="/shop" className="featured-products__all">مشاهده فروشگاه <ArrowLeft aria-hidden="true" /></Link>
+          <Link href="/shop" className="featured-products__all extend-touch-target">مشاهده فروشگاه <ArrowLeft aria-hidden="true" /></Link>
         </div>
       </div>
     </section>

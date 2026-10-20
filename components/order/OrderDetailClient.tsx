@@ -122,7 +122,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
 
         {canPay && (
           <div className="mt-5 rounded-xl border border-aqua/40 bg-aqua/10 p-4">
-            <p className="text-[13px] leading-6">این سفارش هنوز پرداخت نشده است. برای ادامه فرایند، پرداخت را انجام دهید.</p>
+            <p className="text-sm leading-6">این سفارش هنوز پرداخت نشده است. برای ادامه فرایند، پرداخت را انجام دهید.</p>
             <Button className="mt-3" loading={paying} onClick={() => void pay()}>
               <CreditCard className="size-4" />
               پرداخت سفارش
@@ -145,7 +145,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
         <div className="brand-hairline my-4" />
         <ul className="divide-y divide-line">
           {order.items.map((item) => (
-            <li key={item.id} className="flex items-start justify-between gap-3 py-3 text-[13px]">
+            <li key={item.id} className="flex items-start justify-between gap-3 py-3 text-sm">
               <span className="min-w-0">
                 <span className="block font-bold">{item.productName}</span>
                 {item.variantName && <span className="block text-xs text-muted-foreground">{item.variantName}</span>}
@@ -159,7 +159,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
         </ul>
 
         <div className="brand-hairline my-4" />
-        <dl className="space-y-2 text-[13px]">
+        <dl className="space-y-2 text-sm">
           <div className="flex justify-between">
             <dt className="text-muted-foreground">جمع کالاها</dt>
             <dd><TomanPrice amount={order.totals.subtotal} /></dd>
@@ -190,40 +190,40 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
           </h3>
           <div className="brand-hairline my-3.5" />
           {order.address ? (
-            <address className="text-[13px] not-italic leading-7 text-muted-foreground">
+            <address className="text-sm not-italic leading-7 text-muted-foreground">
               <strong className="block text-foreground">
                 {order.address.firstName} {order.address.lastName}
               </strong>
-              {order.address.phoneNumber && <span className="block font-mono text-[12px]">{order.address.phoneNumber}</span>}
+              {order.address.phoneNumber && <span className="block font-mono text-xs">{order.address.phoneNumber}</span>}
               <span className="block">
                 {order.address.province ? `${order.address.province}، ` : ""}
                 {order.address.city}، {order.address.address}
               </span>
-              {order.address.postalCode && <span className="block font-mono text-[12px]">کد پستی: {order.address.postalCode}</span>}
+              {order.address.postalCode && <span className="block font-mono text-xs">کد پستی: {order.address.postalCode}</span>}
             </address>
           ) : (
-            <p className="text-[13px] leading-7 text-muted-foreground">
+            <p className="text-sm leading-7 text-muted-foreground">
               {order.customer.username ? `${order.customer.username} — ` : ""}
               تحویل حضوری / بدون آدرس ذخیره‌شده
             </p>
           )}
           {order.shipping.trackingCode && (
-            <p className="mt-3 rounded-lg bg-ink/50 px-3 py-2 font-mono text-[12px] text-aqua">
+            <p className="mt-3 rounded-lg bg-ink/50 px-3 py-2 font-mono text-xs text-aqua">
               کد رهگیری پستی: {order.shipping.trackingCode}
             </p>
           )}
-          {order.customerNote && <p className="mt-3 text-[12px] leading-6 text-muted-foreground">یادداشت: {order.customerNote}</p>}
+          {order.customerNote && <p className="mt-3 text-xs leading-6 text-muted-foreground">یادداشت: {order.customerNote}</p>}
         </div>
 
         <div className="glass rounded-2xl p-6">
           <h3 className="text-sm font-black">تاریخچه پرداخت</h3>
           <div className="brand-hairline my-3.5" />
           {order.payments.length === 0 ? (
-            <p className="text-[13px] text-muted-foreground">هنوز پرداختی ثبت نشده است.</p>
+            <p className="text-xs text-muted-foreground">هنوز پرداختی ثبت نشده است.</p>
           ) : (
             <ul className="space-y-3">
               {order.payments.map((payment) => (
-                <li key={payment.id} className="flex items-start justify-between gap-2 text-[12px]">
+                <li key={payment.id} className="flex items-start justify-between gap-2 text-xs">
                   <span>
                     <span className="block font-mono">{payment.transactionNumber}</span>
                     <span className="block text-xs text-muted-foreground">{formatFaDate(payment.createdAt)}</span>
@@ -240,7 +240,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
       </div>
 
       <div className="mt-8 text-center">
-        <Link href="/shop" className="text-xs font-bold text-aqua underline-offset-4 hover:underline">
+        <Link href="/shop" className="inline-flex min-h-11 items-center extend-touch-target text-xs font-bold text-aqua underline-offset-4 hover:underline">
           ادامه خرید از فروشگاه ←
         </Link>
       </div>

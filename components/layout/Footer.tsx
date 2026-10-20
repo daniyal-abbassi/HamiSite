@@ -61,7 +61,7 @@ export function Footer() {
       <div className="container grid gap-7 py-10 md:gap-10 md:py-16 md:grid-cols-[1.4fr_repeat(3,1fr)]">
         <div>
           <div className="flex items-center gap-3">
-            <Image src={hamiMark} alt="حامی همراه" sizes="40px" className="size-10 rounded-xl bg-gradient-to-br from-[#FFFDF9] to-[#E5D3B3] p-1 ring-1 ring-champagne/40 shadow-sm" />
+            <Image src={hamiMark} alt="حامی همراه" sizes="40px" className="size-10 rounded-xl bg-gradient-to-br from-champagne-lite to-champagne p-1 ring-1 ring-champagne/40 shadow-sm" />
             <span className="text-base font-black text-foreground">
               حامی همراه
               <span className="block font-mono text-xs font-medium text-champagne/80">
@@ -69,7 +69,7 @@ export function Footer() {
               </span>
             </span>
           </div>
-          <p className="mt-4 max-w-xs text-[13px] leading-7 text-muted-foreground">
+          <p className="mt-4 max-w-xs text-sm leading-7 text-muted-foreground">
             فروش و پخش تلفن همراه، ساعت‌های هوشمند و اکسسوری در مشهد؛ با {storeWarranty.label}.
           </p>
           <div className="mt-5 flex flex-wrap gap-2">

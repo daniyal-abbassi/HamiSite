@@ -24,6 +24,12 @@
       "skillPath": "skills/browser-testing-with-devtools/SKILL.md",
       "computedHash": "639950ea71851d9c4919608cba8b6276cd1ba30cd82acdc4949c701537eed661"
     },
+    "check-visual-changes": {
+      "source": "uiverify/uiverify",
+      "sourceType": "github",
+      "skillPath": "packages/skills/skills/check-visual-changes/SKILL.md",
+      "computedHash": "4b8b62ce19f17fc3f3fb4b675d7536a1e3531af6d6f08135df0c29ef2c855baa"
+    },
     "ci-cd-and-automation": {
       "source": "addyosmani/agent-skills",
       "sourceType": "github",
@@ -88,6 +94,12 @@
       "sourceType": "github",
       "skillPath": "skills/doubt-driven-development/SKILL.md",
       "computedHash": "b13f18a68abf2a1fd0c30adeac9bec0ee551adec9f2a1dc2700f1a6e3eb48092"
+    },
+    "economical-visual-tests": {
+      "source": "uiverify/uiverify",
+      "sourceType": "github",
+      "skillPath": "packages/skills/skills/economical-visual-tests/SKILL.md",
+      "computedHash": "6dcf84486a480d04041e068a744a43f73758a4ec46693d36a96a7e94c84b7fbe"
     },
     "frontend-ui-engineering": {
       "source": "addyosmani/agent-skills",
@@ -171,6 +183,12 @@
       "skillPath": "skills/jevgrep/SKILL.md",
       "computedHash": "7ed07871ff94d07cd6763b9b28142528eeaa55f79afd3642d8d5436b8abd55e5"
     },
+    "making-ui-changes": {
+      "source": "uiverify/uiverify",
+      "sourceType": "github",
+      "skillPath": "packages/skills/skills/making-ui-changes/SKILL.md",
+      "computedHash": "33d135d556bc4e198f1622389afd610f2ce9a7814afe7fa0427ed91fe724b5b6"
+    },
     "next-best-practices": {
       "source": "vercel-labs/next-skills",
       "sourceType": "autoskills-registry",
@@ -213,6 +231,12 @@
       "sourceType": "github",
       "skillPath": "skills/planning-and-task-breakdown/SKILL.md",
       "computedHash": "0dc14a1402cdabd376f2d81d2225fcb4a18ee63d58b945ff83affeb024285b8f"
+    },
+    "playwright-visual-testing": {
+      "source": "uiverify/uiverify",
+      "sourceType": "github",
+      "skillPath": "packages/skills/skills/playwright-visual-testing/SKILL.md",
+      "computedHash": "db13644ea127dd3bdb055d7411dae9929f642467d5e61223453b82937b52bbc6"
     },
     "prisma-cli": {
       "source": "prisma/skills",
@@ -284,6 +308,12 @@
       "sourceType": "github",
       "skillPath": "skills/engineering/to-spec/SKILL.md",
       "computedHash": "3fa1a0695d4ea242fae9e569e4d22aa1788623197abb33bfadafae7315789bbf"
+    },
+    "triage-visual-changes": {
+      "source": "uiverify/uiverify",
+      "sourceType": "github",
+      "skillPath": "packages/skills/skills/triage-visual-changes/SKILL.md",
+      "computedHash": "94c016a954738e54707eb344011c416f8d098ba632113fa5bb5d02b3642370a8"
     },
     "typescript-advanced-types": {
       "source": "wshobson/agents",

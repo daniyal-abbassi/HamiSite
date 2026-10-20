@@ -59,6 +59,10 @@ export function MobileDock() {
   const pathname = usePathname();
   const { status } = useAuth();
 
+  // Authentication screens are focused forms; the fixed dock otherwise sits
+  // over recovery and registration copy on short mobile viewports.
+  if (pathname === "/login" || pathname === "/register") return null;
+
   const items: DockItem[] = [
     { href: "/", label: "خانه", Icon: House },
     { href: "/shop", label: "فروشگاه", Icon: Store, prefix: true },
@@ -92,7 +96,7 @@ export function MobileDock() {
     >
       <LiquidSelection
         className="w-full"
-        itemClassName="flex-1 flex-col items-center justify-center gap-0.5 rounded-full min-h-[44px] py-1 text-xs font-bold active:scale-95"
+        itemClassName="flex-1 flex-col items-center justify-center gap-0.5 rounded-full min-h-11 py-1 text-xs font-bold active:scale-95"
         equalWidth
         markerInset={6}
         value={current}
@@ -101,7 +105,7 @@ export function MobileDock() {
           label: (
             <>
               <span className="relative">
-                <item.Icon className="size-[18px]" aria-hidden="true" />
+                <item.Icon className="size-4.5" aria-hidden="true" />
               </span>
               <span>{item.label}</span>
             </>

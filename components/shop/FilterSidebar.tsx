@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useTransition } from "react";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { Search, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -21,6 +21,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
+  const [isPending, startTransition] = useTransition();
 
   const activeCategory = searchParams.get("category");
   const activeBrand = searchParams.get("brand");
@@ -43,7 +44,9 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
     mutate(params);
     params.delete("page");
     const queryString = params.toString();
-    router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+    startTransition(() => {
+      router.push(queryString ? `${pathname}?${queryString}` : pathname, { scroll: false });
+    });
   }
 
   /*
@@ -63,6 +66,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
     <aside
       className="shop-filter-sidebar w-full shrink-0 space-y-6 rounded-xl glass p-5 lg:sticky lg:top-24 lg:w-72"
       aria-label="فیلتر محصولات"
+      aria-busy={isPending ? "true" : undefined}
     >
       <div className="shop-filter-heading"><h2>انتخاب را دقیق‌تر کنید</h2><span>فیلتر محصولات</span></div>
       {/* Search */}
@@ -107,7 +111,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
                     })
                   }
                   className={cn(
-                    "type-label rounded-full border px-3.5 py-1 font-bold transition-colors",
+                    "type-label rounded-full border px-3.5 py-1.5 font-bold transition-colors extend-touch-target",
                     active
                       ? "border-aqua bg-aqua/10 text-aqua"
                       : "border-line text-foreground/70 hover:border-aqua/50 hover:text-foreground",
@@ -148,7 +152,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
                     })
                   }
                   className={cn(
-                    "type-label rounded-full border px-3.5 py-1 font-bold transition-colors",
+                    "type-label rounded-full border px-3.5 py-1.5 font-bold transition-colors extend-touch-target",
                     active
                       ? "border-aqua bg-aqua/10 text-aqua"
                       : "border-line text-foreground/70 hover:border-aqua/50 hover:text-foreground",
@@ -187,7 +191,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
             onChange={(event) => setMin(event.target.value)}
             placeholder="از"
             aria-label="کمترین قیمت"
-            className="bg-background/40"
+            className="h-11 bg-background/40"
           />
           <span className="text-foreground/40" aria-hidden="true">—</span>
           <Input
@@ -198,10 +202,10 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
             onChange={(event) => setMax(event.target.value)}
             placeholder="تا"
             aria-label="بیشترین قیمت"
-            className="bg-background/40"
+            className="h-11 bg-background/40"
           />
         </div>
-        <Button type="submit" variant="outline" className="w-full">
+        <Button type="submit" variant="outline" className="h-11 w-full">
           اعمال قیمت
         </Button>
       </form>
@@ -218,7 +222,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
             })
           }
           aria-label="وضعیت موجودی"
-          className="w-full rounded-xl border border-input bg-background/40 px-3 py-2 text-xs font-bold"
+          className="h-11 w-full rounded-xl border border-input bg-background/40 px-3 py-2 text-xs font-bold"
         >
           {stockOptions.map((option) => (
             <option key={option.key} value={option.key}>
@@ -229,7 +233,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
       </div>
 
       {/* Special offer */}
-      <label className="flex cursor-pointer items-center gap-2.5 text-xs font-bold">
+      <label className="flex min-h-11 cursor-pointer items-center gap-2.5 text-xs font-bold">
         <input
           type="checkbox"
           checked={activeSpecial}
@@ -252,7 +256,7 @@ export function FilterSidebar({ categoryFacets, brands }: { categoryFacets: Cate
             FILTER_KEYS.forEach((key) => params.delete(key));
           })
         }
-        className="flex w-full items-center justify-center gap-1.5 border-t border-line pt-4 text-xs font-bold text-foreground/60 transition-colors hover:text-aqua"
+        className="flex min-h-11 w-full items-center justify-center gap-1.5 border-t border-line pt-4 text-xs font-bold text-foreground/60 transition-colors hover:text-aqua extend-touch-target"
       >
         <X className="size-3.5" /> حذف همه فیلترها
       </button>

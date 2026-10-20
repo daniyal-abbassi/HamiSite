@@ -1,0 +1,41 @@
+VISIT=returning
+   t   ready       cards vis reveals pulse | firstCard
+ 2090 complete       24   0      15    45 | rect=0x0 opacity=0 vis=visible disp=flex inReveal=false revealVisible=null price=true img=true
+ 2433 complete       24  24      15     0 | rect=257x433 opacity=0 vis=visible disp=flex inReveal=true revealVisible=true price=true img=true
+ 3422 complete       24  24      15     0 | rect=260x438 opacity=0.536023 vis=visible disp=flex inReveal=true revealVisible=true price=true img=true
+ 3735 complete       24  24      15     0 | rect=262x442 opacity=0.935052 vis=visible disp=flex inReveal=true revealVisible=true price=true img=true
+ 4307 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=true price=true img=true
+ 4771 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=true price=true img=true
+ 5107 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=true price=true img=true
+ 5420 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=true price=true img=true
+ 5734 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=true price=true img=true
+ 6041 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=true price=true img=true
+ 6368 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=true price=true img=true
+ 6674 complete       24  24      15     0 | rect=257x433 opacity=0 vis=visible disp=flex inReveal=true revealVisible=true price=true img=true
+ 7200 complete       24  24      15     0 | rect=259x438 opacity=0.492038 vis=visible disp=flex inReveal=true revealVisible=true price=true img=true
+ 7522 complete       24  24      15     0 | rect=262x442 opacity=0.943708 vis=visible disp=flex inReveal=true revealVisible=true price=true img=true
+ 7842 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+ 8212 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+ 8512 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+ 8826 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+ 9124 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+ 9422 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+ 9716 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+10009 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+10297 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+10590 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+10879 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+11174 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+11462 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+11760 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+12055 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+12341 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+12628 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+12922 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+13208 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+13495 complete       24  24      15     0 | rect=262x442 opacity=1 vis=visible disp=flex inReveal=true revealVisible=false price=true img=true
+page errors: [
+  'Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors a',
+  'Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors a',
+  'Minified React error #418; visit https://react.dev/errors/418?args[]=text&args[]= for the full message or use the non-minified dev environment for full errors a'
+]

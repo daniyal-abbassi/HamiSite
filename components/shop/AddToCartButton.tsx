@@ -159,7 +159,7 @@ export function AddToCartButton({ productId, variantId, disabled = false, iconOn
       {failed && failure && (
         <span
           role="alert"
-          className="pointer-events-none absolute bottom-2.5 start-2.5 z-20 max-w-[calc(100%-1.25rem)] rounded-lg bg-[#8E1B10] px-2.5 py-1.5 text-[11px] font-bold leading-5 text-white"
+          className="pointer-events-none absolute bottom-2.5 start-2.5 z-20 max-w-[calc(100%-1.25rem)] rounded-lg bg-red-800 px-2.5 py-1.5 text-xs font-bold leading-5 text-white"
         >
           {failure}
         </span>

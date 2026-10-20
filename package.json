@@ -22,7 +22,10 @@
     "test:watch": "dotenv -e .env.test -- vitest",
     "test:unit": "vitest run --config vitest.frontend.config.ts",
     "test:unit:watch": "vitest --config vitest.frontend.config.ts",
-    "db:test:reset": "dotenv -e .env.test -- prisma db push --force-reset --accept-data-loss"
+    "db:test:reset": "dotenv -e .env.test -- prisma db push --force-reset --accept-data-loss",
+    "deploy:preflight": "node tools/deploy/preflight.mjs",
+    "deploy:build": "next build && node tools/deploy/copy-standalone-assets.mjs",
+    "deploy:start-standalone": "node tools/deploy/server-runner.mjs"
   },
   "prisma": {
     "seed": "ts-node --transpile-only --compiler-options \"{\\\"module\\\":\\\"CommonJS\\\",\\\"moduleResolution\\\":\\\"node\\\"}\" prisma/seed.ts"
@@ -50,12 +53,14 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@playwright/test": "^1.64.1",
     "@tailwindcss/postcss": "^4.3.3",
     "@types/bcryptjs": "^2.4.6",
     "@types/dompurify": "^3.0.5",
     "@types/node": "^20.14.9",
     "@types/react": "19.2.18",
     "@types/telegram-web-app": "^10.1.0",
+    "@uiverify/playwright": "^1.3.0",
     "agentation": "^3.1.2",
     "autoprefixer": "^10.5.4",
     "dotenv": "^17.4.2",

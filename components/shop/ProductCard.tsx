@@ -125,6 +125,7 @@ export function ProductCard({
   selectedVariantId,
   onVariantChange,
   imageSizes,
+  priorityImage = false,
 }: {
   product: ProductCardData;
   /** Position in its grid, used only to stagger the entrance. */
@@ -139,6 +140,7 @@ export function ProductCard({
   selectedVariantId?: number;
   onVariantChange?: (variantId: number) => void;
   imageSizes?: string;
+  priorityImage?: boolean;
 }) {
   const onDark = DARK_GROUND[variant];
   const accent = brandAccent(product.brand?.name, onDark ? "dark" : "light");
@@ -230,18 +232,23 @@ export function ProductCard({
           aria-label={wished ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
           aria-pressed={wished}
           onClick={() => onWish(product.id)}
-          className={cn("featured-source-card__wish", wished && "is-wished")}
+          className={cn("featured-source-card__wish extend-touch-target", wished && "is-wished")}
         >
           <Heart aria-hidden="true" fill={wished ? "currentColor" : "none"} />
         </button>
       )}
-      <Link href={href} className="lux-stage block" aria-label={product.name}>
+      <Link
+        href={href}
+        className="lux-stage block aspect-square relative"
+        aria-label={product.name}
+      >
         <Image
           src={productImage}
           alt={isPlaceholderImage(productImage) ? PLACEHOLDER_ALT : product.name}
           width={720}
           height={720}
           sizes={imageSizes ?? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 33vw, 390px"}
+          priority={priorityImage}
         />
         {sourceStyle && outOfStock && (
           <span className="featured-source-card__unavailable"><span>ناموجود</span></span>
@@ -251,7 +258,7 @@ export function ProductCard({
       {/* FR-001: an absent product photograph is stated, not papered over by a
             brand tile in the same slot at the same size. */}
       {noImage && (
-        <span className="absolute end-3 top-3 z-10 rounded-full border border-champagne/25 bg-ink/80 px-2.5 py-1 font-mono text-[10px] tracking-normal text-foreground/70">
+        <span className="absolute end-3 top-3 z-10 rounded-full border border-champagne/25 bg-ink/80 px-2.5 py-1 font-mono text-xs tracking-normal text-foreground/70">
           {PLACEHOLDER_LABEL}
         </span>
       )}

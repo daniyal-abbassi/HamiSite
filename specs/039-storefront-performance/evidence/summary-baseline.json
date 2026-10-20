@@ -1,0 +1,61 @@
+{
+  "phase": "baseline",
+  "build": "SI5JalMD_PFquWP7kYRcV",
+  "captured_at": "2026-10-15T23:33:34.201Z",
+  "routes": [
+    {
+      "route": "home",
+      "fresh_median_ms": 6352,
+      "fresh_lcp_ms": 1872,
+      "fresh_cls": 0.0022,
+      "fresh_kb": 1243,
+      "returning_median_ms": 2785,
+      "returning_kb": 122,
+      "SC_001": "FAIL",
+      "SC_003": "PASS",
+      "n_fresh": 5,
+      "n_returning": 5
+    },
+    {
+      "route": "shop",
+      "fresh_median_ms": 3298,
+      "fresh_lcp_ms": 2848,
+      "fresh_cls": 0,
+      "fresh_kb": 730,
+      "returning_median_ms": 1621,
+      "returning_kb": 63,
+      "SC_001": "FAIL",
+      "SC_003": "PASS",
+      "n_fresh": 5,
+      "n_returning": 5
+    },
+    {
+      "route": "category",
+      "fresh_median_ms": 2468,
+      "fresh_lcp_ms": 2696,
+      "fresh_cls": 0.098,
+      "fresh_kb": 613,
+      "returning_median_ms": 1358,
+      "returning_kb": 48,
+      "SC_001": "PASS",
+      "SC_003": "PASS",
+      "n_fresh": 5,
+      "n_returning": 5
+    },
+    {
+      "route": "product",
+      "fresh_median_ms": 2115,
+      "fresh_lcp_ms": 2420,
+      "fresh_cls": 0.0016,
+      "fresh_kb": 641,
+      "returning_median_ms": 1546,
+      "returning_kb": 60,
+      "SC_001": "PASS",
+      "SC_003": "PASS",
+      "n_fresh": 5,
+      "n_returning": 5
+    }
+  ],
+  "problems": [],
+  "p95_note": "p95 = sorted[ceil(0.95*n)-1]"
+}

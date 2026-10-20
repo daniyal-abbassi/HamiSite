@@ -1,7 +1,6 @@
-import { queryProducts } from "@/lib/catalog-db";
+import { queryDiscountedRailProducts, queryProducts } from "@/lib/catalog-db";
 import { findProductBySlug } from "@/lib/catalog";
 import mirroredImages from "@/data/catalog-images.json";
-import { isPurchasable } from "@/lib/product-identity";
 
 const catalogImageMirror = mirroredImages as Record<string, string>;
 
@@ -104,46 +103,9 @@ export async function homepageProductsRail(): Promise<RailProduct[]> {
 
 export type DiscountRailProduct = RailProduct & { initialVariantId?: number };
 
-function hasPriceReduction(price: number | null | undefined, compareAtPrice: number | null | undefined) {
-  return price != null && price > 0 && compareAtPrice != null && compareAtPrice > price;
-}
-
-function purchasableVariant(product: RailProduct, variant: NonNullable<RailProduct["variants"]>[number]) {
-  return isPurchasable({ available: product.available, stockType: variant.stockType })
-    && !(variant.stockType === "limited" && variant.stock <= 0);
-}
-
 /** Real, currently purchasable reductions for the homepage discount shelf. */
 export async function discountedProductsRail(limit = 5): Promise<DiscountRailProduct[]> {
-  const result = await queryProducts({ sort: "special", includeVariants: true, page: 1, pageSize: 1_000 });
-  const products = result.data as unknown as RailProduct[];
-  const candidates = products.flatMap((product) => {
-    if (!product.available) return [];
-
-    if (product.variants?.length) {
-      const eligibleVariants = product.variants.filter((variant) =>
-        purchasableVariant(product, variant)
-        && hasPriceReduction(variant.price, variant.compareAtPrice),
-      );
-      if (!eligibleVariants.length) return [];
-      const featuredVariant = eligibleVariants.reduce((best, variant) => {
-        const bestRate = (best.compareAtPrice! - best.price) / best.compareAtPrice!;
-        const rate = (variant.compareAtPrice! - variant.price) / variant.compareAtPrice!;
-        return rate > bestRate ? variant : best;
-      });
-      const rate = (featuredVariant.compareAtPrice! - featuredVariant.price) / featuredVariant.compareAtPrice!;
-      return [{ product: { ...product, initialVariantId: featuredVariant.id }, rate }];
-    }
-
-    if (!isPurchasable(product) || !hasPriceReduction(product.displayPrice, product.compareAtPrice)) return [];
-    const rate = (product.compareAtPrice! - product.displayPrice) / product.compareAtPrice!;
-    return [{ product, rate }];
-  });
-
-  return candidates
-    .sort((a, b) => b.rate - a.rate)
-    .slice(0, limit)
-    .map(({ product }) => product);
+  return (await queryDiscountedRailProducts(limit)) as unknown as DiscountRailProduct[];
 }
 
 /** Six of the merchant's own special offers, in default (buyable-first) order. */

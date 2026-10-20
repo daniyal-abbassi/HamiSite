@@ -9,10 +9,10 @@ export function MobileQuickRoutes() {
         <Link
           key={route.key}
           href={route.href}
-          className="flex shrink-0 items-center gap-2 rounded-full bg-white px-4 py-2.5 text-xs font-bold text-[#3b1020] shadow-sm"
+          className="flex min-h-11 shrink-0 items-center gap-2 rounded-full bg-champagne-lite px-4 py-2.5 text-xs font-bold text-oxblood-deep shadow-sm extend-touch-target"
         >
           {route.label}
-          <ArrowLeft className="size-3.5 text-[#74132d]" />
+          <ArrowLeft className="size-3.5 text-oxblood" />
         </Link>
       ))}
     </nav>

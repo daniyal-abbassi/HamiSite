@@ -35,7 +35,7 @@ export default function PartnersPage() {
               <div className="partners-hero-note"><span className="partners-note-line" aria-hidden="true" /><p>از بازار موبایل مشهد،<br /><strong>برای همکاران این بازار.</strong></p></div>
             </div>
             <div className="partners-editorial">
-              <figure className="partners-store-photo">
+              <figure className="partners-store-photo relative aspect-[4/5] overflow-hidden">
                 <Image src="/store/shop-upright.jpg" alt="فروشگاه حامی همراه در مشهد؛ نشان حامی همراه روی دیوار زرشکی و محصولات موبایل روی پیشخوان" fill priority sizes="(min-width: 1024px) 42vw, (min-width: 768px) 60vw, 94vw" />
                 <figcaption><span>حامی همراه</span><span>مشهد، ایران</span></figcaption>
               </figure>

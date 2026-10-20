@@ -2307,6 +2307,11 @@
 }
 @media (max-width: 639px) {
   .online-services-visual {
+    /* The desktop 16:10 ratio combined with the phone's 24rem min-height
+       forced this card to 614px wide at 390px, widening the whole RTL page. */
+    width: 100%;
+    max-width: 100%;
+    aspect-ratio: auto;
     min-height: 24rem;
     border-radius: 1.2rem;
     padding: 1rem;

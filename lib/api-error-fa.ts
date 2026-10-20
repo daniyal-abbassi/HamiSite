@@ -16,6 +16,18 @@ export function apiErrorToFa(error: unknown, fallback = "خطایی رخ داد.
       return "برای ادامه ابتدا وارد حساب خود شوید.";
     case "INVALID_CREDENTIALS":
       return "نام کاربری یا رمز عبور اشتباه است.";
+    case "OTP_INVALID":
+      return "کد واردشده نادرست یا منقضی شده است.";
+    case "OTP_ATTEMPTS_EXCEEDED":
+      return "تعداد تلاش‌ها بیش از حد مجاز است؛ کد تازه‌ای درخواست کنید.";
+    case "OTP_RATE_LIMITED":
+      return error.retryAfterSeconds
+        ? `برای ارسال دوباره ${error.retryAfterSeconds.toLocaleString("fa-IR")} ثانیه صبر کنید.`
+        : "درخواست‌های پیاپی؛ کمی بعد دوباره تلاش کنید.";
+    case "OTP_DELIVERY_FAILED":
+      return "ارسال پیامک انجام نشد. کمی بعد دوباره تلاش کنید.";
+    case "REGISTRATION_PROOF_REQUIRED":
+      return "برای ادامه، شماره موبایل خود را تأیید کنید.";
     case "ACCOUNT_DEACTIVATED":
       return "حساب شما غیرفعال شده است. با پشتیبانی تماس بگیرید.";
     case "DUPLICATE_ACCOUNT":

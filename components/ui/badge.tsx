@@ -26,7 +26,7 @@ const TONES = {
 // height (3px of padding inside the 1px border).
 const SIZES = {
   sm: "h-6 gap-1 px-2 text-xs [--badge-icon:--spacing(3.5)] [--badge-media:--spacing(4)]",
-  md: "h-7 gap-1.5 px-2.5 text-[13px] [--badge-icon:--spacing(4)] [--badge-media:--spacing(5)]",
+  md: "h-7 gap-1.5 px-2.5 text-xs [--badge-icon:--spacing(4)] [--badge-media:--spacing(5)]",
   lg: "h-8 gap-1.5 px-3 text-sm [--badge-icon:--spacing(4.5)] [--badge-media:--spacing(6)]",
 } as const;
 

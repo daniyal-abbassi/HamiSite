@@ -76,7 +76,7 @@ export function CustomSelect({
       </button>
 
       {open && (
-        <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-line bg-[#160c10] p-1 shadow-2xl backdrop-blur-md">
+        <div className="absolute z-50 mt-1 max-h-60 w-full overflow-y-auto rounded-xl border border-line bg-ink-2 p-1 shadow-2xl backdrop-blur-md">
           {options.length === 0 ? (
             <div className="p-3 text-center text-xs text-muted-foreground">موردی برای انتخاب نیست</div>
           ) : (
@@ -91,7 +91,7 @@ export function CustomSelect({
                     setOpen(false);
                   }}
                   className={cn(
-                    "flex w-full items-center justify-between rounded-lg px-3 py-2 text-start text-xs transition-colors hover:bg-foreground/10",
+                    "flex w-full items-center justify-between rounded-lg px-3 py-2 min-h-11 extend-touch-target text-start text-xs transition-colors hover:bg-foreground/10",
                     isSelected ? "bg-primary/20 font-bold text-primary" : "text-foreground"
                   )}
                 >

@@ -42,12 +42,16 @@ export function ProductGallery({ product, variantImageUrl }: { product: CatalogP
   const shownViews = views.filter((url) => !failedViews.includes(url));
   const current = Math.min(viewIndex, Math.max(0, shownViews.length - 1));
   const activeView = shownViews[current];
+  const [isChanging, setIsChanging] = useState(false);
 
   return (
     <div>
-      <div className="relative aspect-square overflow-hidden rounded-3xl glass-smoked border border-champagne/25 shadow-monolith">
+      <div
+        className="relative aspect-square overflow-hidden rounded-3xl glass-smoked border border-champagne/25 shadow-monolith"
+        aria-busy={isChanging ? "true" : undefined}
+      >
         {noImage && (
-          <span className="absolute end-4 top-4 z-20 rounded-full border border-champagne/25 bg-ink/80 px-3 py-1.5 font-mono text-[11px] text-foreground/75">
+          <span className="absolute end-4 top-4 z-20 rounded-full border border-champagne/25 bg-ink/80 px-3 py-1.5 font-mono text-xs text-foreground/75">
             {PLACEHOLDER_LABEL}
           </span>
         )}
@@ -71,7 +75,9 @@ export function ProductGallery({ product, variantImageUrl }: { product: CatalogP
             className="object-contain p-8 transition-transform duration-700 hover:scale-105"
             priority
             unoptimized={!activeView.startsWith("/")}
+            onLoad={() => setIsChanging(false)}
             onError={() => {
+              setIsChanging(false);
               if (activeView === productImage) return;
               setFailedViews((previous) => (previous.includes(activeView) ? previous : [...previous, activeView]));
               setViewIndex(0);
@@ -96,11 +102,16 @@ export function ProductGallery({ product, variantImageUrl }: { product: CatalogP
             groupRole="group"
             label="نمای دیگر این محصول"
             markerInset={4}
-            onChange={(url) => setViewIndex(shownViews.indexOf(url))}
+            onChange={(url) => {
+              setIsChanging(true);
+              setViewIndex(shownViews.indexOf(url));
+            }}
             items={shownViews.map((url, index) => ({
               id: url,
               label: (
-                <Image src={url} alt="" fill sizes="64px" className="object-contain p-1" unoptimized={!url.startsWith("/")} />
+                <span className="relative block aspect-square size-full">
+                  <Image src={url} alt="" fill sizes="64px" className="object-contain p-1" unoptimized={!url.startsWith("/")} />
+                </span>
               ),
               // The accessible name is passed as `name` because the label is an image:
               // the component only sets `aria-label` for a non-string label, and the

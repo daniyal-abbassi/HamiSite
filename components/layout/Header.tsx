@@ -89,7 +89,7 @@ export function Header() {
          */}
         <Link
           href="/"
-          className="flex shrink-0 items-center px-1 md:ps-1 md:pe-0 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
+          className="flex shrink-0 items-center px-1 md:ps-1 md:pe-0 rounded-md extend-touch-target focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
           aria-label="حامی همراه — صفحه اصلی"
         >
           <Image
@@ -97,7 +97,7 @@ export function Header() {
             alt="حامی همراه"
             priority
             sizes="(min-width: 768px) 100px, 92px"
-            className="h-8 w-[92px] rounded-md object-contain md:h-9 md:w-[100px]"
+            className="h-8 w-24 rounded-md object-contain md:h-9 md:w-28"
           />
         </Link>
 
@@ -144,7 +144,7 @@ export function Header() {
            */}
           <Link
             href="/partners"
-            className="lightbeam-cta hidden h-9 md:h-10 items-center gap-1.5 rounded-full px-5 text-xs md:text-sm font-bold text-[#300710] transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 xl:inline-flex shrink-0"
+            className="lightbeam-cta hidden h-9 md:h-10 items-center gap-1.5 rounded-full px-5 text-xs md:text-sm font-bold text-wine-950 transition-transform hover:-translate-y-0.5 active:scale-95 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400 xl:inline-flex shrink-0"
           >
             شروع همکاری
             <ArrowLeft className="size-3.5 md:size-4" aria-hidden="true" />

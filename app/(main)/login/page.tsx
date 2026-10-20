@@ -23,7 +23,7 @@ export default function LoginPage() {
         eyebrow="حساب کاربری"
         title="ورود به"
         accent="حامی همراه."
-        description="برای ادامه خرید یا پیگیری سفارش‌های ثبت‌شده وارد حساب خود شوید."
+        description="مشتریان با کد پیامکی وارد حساب می‌شوند؛ کارکنان می‌توانند ورود با رمز را انتخاب کنند."
       />
       <div className="flex justify-center">
         {/* useSearchParams inside LoginForm requires a Suspense boundary */}

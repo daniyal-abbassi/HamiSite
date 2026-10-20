@@ -31,14 +31,14 @@ export function Dialog({ open, onClose, title, description, children, className 
         <div className="flex items-start justify-between gap-4">
           <div>
             <h2 className="text-base font-black">{title}</h2>
-            {description && <p className="mt-1 text-[13px] leading-6 text-muted-foreground">{description}</p>}
+            {description && <p className="mt-1 text-sm leading-6 text-muted-foreground">{description}</p>}
           </div>
           <button
             type="button"
             onClick={onClose}
             aria-label="بستن"
             autoFocus
-            className="grid size-9 shrink-0 place-items-center rounded-full transition-colors duration-fast hover:bg-foreground/10"
+            className="grid size-9 extend-touch-target shrink-0 place-items-center rounded-full transition-colors duration-fast hover:bg-foreground/10"
           >
             <X className="size-5" />
           </button>

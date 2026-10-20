@@ -37,6 +37,11 @@ output: `{ formErrors: string[], fieldErrors: Record<string, string[]> }` — us
 | `INVALID_CURRENT_PASSWORD` | 400 | change-password only: the submitted current password is wrong. |
 | `BAD_REQUEST` | 400 | Generic 400 fallback. |
 | `INVALID_CREDENTIALS` | 401 | login only: unknown identifier **or** wrong password (deliberately indistinguishable). |
+| `OTP_INVALID` | 400 | OTP is incorrect, expired, consumed, or cannot authenticate a customer. |
+| `OTP_ATTEMPTS_EXCEEDED` | 429 | Challenge attempt limit reached. |
+| `OTP_RATE_LIMITED` | 429 | Phone or trusted-source request limit reached; includes `details.retryAfterSeconds` and a matching `Retry-After` header. |
+| `OTP_DELIVERY_FAILED` | 503 | SMS delivery could not be confirmed; provider details are withheld. |
+| `REGISTRATION_PROOF_REQUIRED` | 401 | Registration proof is missing, expired, or already consumed. |
 | `AUTH_REQUIRED` | 401 | No session, or the session is expired/revoked. |
 | `ACCOUNT_DEACTIVATED` | 403 | `isActive` is false. |
 | `FORBIDDEN_ROLE` | 403 | Authenticated, but the wrong role for this endpoint. |
@@ -71,10 +76,9 @@ await fetch("/api/auth/me", { credentials: "same-origin" }); // the default; sta
 > `Access-Control-Allow-Credentials`, `SameSite=None; Secure`, and a real CSRF
 > strategy. Do not deploy the frontend cross-origin without revisiting this.
 
-### 401 means exactly one thing
+### Session-protected endpoints use 401 for missing sessions
 
-**A 401 always means "your session is gone; re-authenticate."** Nothing else
-returns 401. That makes a global interceptor safe:
+On session-protected endpoints, `AUTH_REQUIRED` means the session is gone and the user should re-authenticate. OTP and registration endpoints use their own 4xx codes and must not be treated as expired sessions by a global interceptor:
 
 ```ts
 if (res.status === 401) { clearUser(); redirect("/login"); }
@@ -89,33 +93,48 @@ A wrong *current* password in change-password is deliberately a **400**, not a
 
 ### `POST /api/auth/register`
 
-Body: `RegisterRequest`. Only `username`, `password`, `phoneNumber` are required.
+Requires the single-use `registration_proof` HttpOnly cookie issued after a successful REGISTER OTP verification. The request body contains profile fields; `phoneNumber` and `password` are not accepted as registration credentials.
 `role` accepts `RETAIL` or `WHOLESALE` **only** — `AGENT` and `ADMIN` are
 provisioned out-of-band and are rejected as validation errors.
 `shopName` / `businessLicenseNumber` are silently dropped unless the role is
 `WHOLESALE`. `agentId` is only valid on `WHOLESALE` and must reference an
 active `AGENT`.
 
-Succeeds with **200** (not 201), returns `PublicUser`, **and logs the user in** —
-the session cookie is set on the response.
+The server binds the account phone to the proof, assigns an unusable random password hash, and creates a session atomically. Succeeds with **200** and clears the proof cookie.
 
 | Status | Code |
 |---|---|
 | 200 | — `data: PublicUser`, `meta.message: "Account created"` |
-| 400 | `VALIDATION_FAILED` (incl. bad role, password < 6, bad agentId), `MALFORMED_JSON` |
-| 409 | `DUPLICATE_ACCOUNT` — message names the field: username, phoneNumber or email |
+| 400 | `VALIDATION_FAILED` (incl. bad role / bad agentId), `MALFORMED_JSON` |
+| 401 | `REGISTRATION_PROOF_REQUIRED` — missing, expired, or replayed proof |
+| 409 | `DUPLICATE_ACCOUNT` — username, phone, or email already taken |
+
+### `POST /api/auth/otp/request`
+
+Body: `{ phoneNumber: string, purpose: "LOGIN" | "REGISTER" }`. Iranian phone values are canonicalized. A valid request returns the same generic confirmation regardless of account existence: `{ challengeId, maskedPhone, expiresInSeconds: 300, resendAfterSeconds: 60 }`. Delivery errors do not include provider details. Rate limits return `OTP_RATE_LIMITED` and `Retry-After`.
+
+### `POST /api/auth/otp/verify`
+
+Body: `{ challengeId: string, code: string }`; Persian digits are accepted. Challenges expire after five minutes and allow at most five attempts. LOGIN consumes the challenge once and creates a session only for an active RETAIL/WHOLESALE account. REGISTER consumes the challenge and sets a 10-minute, single-use `registration_proof` HttpOnly, SameSite=Lax cookie; it does not create an account or session. Neither response contains the code or provider payload.
+
+The SMS.ir integration is server-only. Configure `SMS_IR_API_KEY`,
+`SMS_IR_TEMPLATE_ID`, and optionally `SMS_IR_CODE_PARAMETER`; use separate
+Sandbox and production credentials/templates. `OTP_HASH_SECRET` and
+`OTP_SOURCE_HASH_SECRET` must each contain at least 32 bytes. The optional
+`OTP_TRUSTED_PROXY_HEADER` is trusted only when a proxy overwrites it;
+source throttling defaults to 20 requests per 600 seconds and can be tuned with
+`OTP_SOURCE_REQUEST_LIMIT` and `OTP_SOURCE_WINDOW_SECONDS`.
 
 ### `POST /api/auth/login`
 
-Body: `{ identifier: string, password: string }`. `identifier` is a **username
-or a phone number** (see §5).
+Body: `{ identifier: string, password: string }`. This endpoint is staff-only: ADMIN and AGENT retain password login; RETAIL/WHOLESALE always receive generic `INVALID_CREDENTIALS` after password comparison. Customers use OTP.
 
 | Status | Code |
 |---|---|
-| 200 | — `data: PublicUser`, `meta.message: "Login successful"`, sets the cookie |
+| 200 | — `data: PublicUser`, `meta.message: "Login successful"`, sets the cookie for staff |
 | 400 | `VALIDATION_FAILED`, `MALFORMED_JSON` |
 | 401 | `INVALID_CREDENTIALS` — identical for unknown account and wrong password, in both body *and* response time |
-| 403 | `ACCOUNT_DEACTIVATED` — only reachable with otherwise-valid credentials |
+| 403 | `ACCOUNT_DEACTIVATED` — only reachable with otherwise-valid staff credentials |
 
 ### `GET /api/auth/me`
 
@@ -195,7 +214,7 @@ The only user shape any endpoint returns. `passwordHash` is never present.
 | `email` | `string \| null` | unique when set |
 | `firstName`, `lastName` | `string \| null` | |
 | `phoneNumber` | `string` | E.164, login identifier |
-| `phoneVerified` | `boolean` | **not enforced at login today** |
+| `phoneVerified` | `boolean` | Set only after successful SMS proof or trusted import. |
 | `nationalNumber`, `city` | `string \| null` | |
 | `shopName`, `businessLicenseNumber` | `string \| null` | WHOLESALE only |
 | `businessVerified` | `boolean` | admin-asserted |
@@ -216,15 +235,13 @@ cannot silently go stale.
 `09121112233`, `9121112233`, `0912 111 2233` and `+989121112233` all normalize
 to **`+989121112233`**.
 
-- On **register**, normalization happens before the uniqueness check, so the two
-  spellings can never become two accounts.
-- On **login**, the identifier is normalized too, so a user stored as `+98912…`
-  can type `0912…` and still get in.
-- Anything not recognisable as an Iranian mobile passes through untouched, which
-  is what lets a username share the field.
+- OTP requests normalize before lookup or challenge creation, so the two
+  spellings address the same account and cannot create duplicate challenges.
+- Registration binds the new account number to the canonical phone held by its
+  verified proof; the request body cannot substitute another number.
 
-Legacy-imported customers are the main users of the phone branch: their
-`username` is their raw pre-normalization phone number, so both forms work.
+Legacy-imported customers may still have a raw phone as their username, but
+customer access now uses the canonical `phoneNumber` and SMS verification.
 
 ---
 
@@ -235,12 +252,12 @@ Legacy-imported customers are the main users of the phone branch: their
   exist; a case-insensitive lookup would pick one arbitrarily and could sign a
   user into the wrong account. Fixing it properly needs a citext or
   normalized-username column.
-- **No rate limiting.** The server does not throttle login attempts — do not
-  assume it does. Client-side backoff is not a security control.
-- **No password reset / forgot-password, and no OTP.** A user who forgets their
+- OTP request routes throttle by HMAC-derived phone and trusted source identifiers. Configure `OTP_TRUSTED_PROXY_HEADER` only when a trusted proxy overwrites that header.
+- **No password reset / forgot-password.** A user who forgets their
   password currently has no self-service path.
-- **`phoneVerified` is never checked at login.** It is set by the importer and
-  the seed script and is otherwise decorative today.
+- A successful customer OTP login sets `phoneVerified` and `phoneVerifiedAt`;
+  the account role, profile, business fields, cart, and order history remain
+  unchanged.
 - **No CSRF token** — see the same-origin warning in §2.
 - Expired session rows are never deleted. They are correctly rejected at read
   time, so this is a storage concern, not a security one.
@@ -250,28 +267,16 @@ Legacy-imported customers are the main users of the phone branch: their
 
 ---
 
-## 7. Open decision: legacy password cutover — BLOCKER
+## 7. Legacy password cutover
 
 Every customer imported from the old shop currently shares one password,
 `IMPORTED_CUSTOMER_PASSWORD = "Imported@12345"`, a constant living in a tracked
 source file (`prisma/legacy-import/customers.ts`).
 
-This is fine for a dev database and **catastrophic against production data.**
-
-It is not laziness — it is forced. The old site is a SaaS storefront platform
-whose API authenticates *shops* via a single `Authorization: Api-Key` header,
-not end users. It has **no login endpoint** and exposes **no password hashes** on
-any read schema. There is nothing to migrate.
-
-Options, none chosen:
-
-1. **Forced OTP-based first login** — needs SMS/OTP, currently out of scope.
-2. **Password reset at cutover** — needs a reset flow, currently out of scope.
-3. **One-time random per-user password delivered by SMS** — needs SMS.
-4. **Push new credentials into the legacy system** via that API's
-   `CustomerUpdateSchema.new_password` field — requires write calls against the
-   live production shop.
-
-Since options 1–3 all depend on capabilities that do not exist yet, **this is a
-hard prerequisite for any production cutover, not a nice-to-have.** Resolve it
-before pointing this backend at real customer data.
+The legacy importer still assigns a shared placeholder password because the
+source system does not expose customer password hashes. The customer login API
+now rejects password authentication for RETAIL/WHOLESALE accounts, including
+that shared value. Customers prove the original phone through SMS.ir and retain
+their original account ID and associated data. ADMIN/AGENT password login stays
+available. Production release still requires production SMS.ir credentials,
+approved template configuration, and an end-to-end delivery acceptance check.

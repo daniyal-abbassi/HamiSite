@@ -3,6 +3,7 @@ import { ApiError, ok, parseJsonBody, withErrorHandling } from "@/lib/http";
 import { normalizeIranianMobile } from "@/lib/phone";
 import { prisma } from "@/lib/prisma";
 import { loginSchema } from "@/lib/schemas/auth";
+import { Role } from "@prisma/client";
 import type { LoginResponse } from "@/types/auth";
 
 export async function POST(request: Request) {
@@ -26,6 +27,10 @@ export async function POST(request: Request) {
     // Same status, message and code for both failures.
     // `!user ||` is redundant at runtime but required for TS to narrow below.
     if (!user || !passwordMatches) {
+      throw ApiError.coded(401, "INVALID_CREDENTIALS", "Invalid credentials");
+    }
+
+    if (user.role !== Role.ADMIN && user.role !== Role.AGENT) {
       throw ApiError.coded(401, "INVALID_CREDENTIALS", "Invalid credentials");
     }
 

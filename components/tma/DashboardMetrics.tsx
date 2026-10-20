@@ -27,12 +27,12 @@ export function DashboardMetrics({
             <TrendingUp className="w-4 h-4 text-amber-400" />
             فروش تایید شده امروز
           </span>
-          <span className="text-[10px] px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 border border-amber-400/20 font-medium">
+          <span className="text-xs px-2 py-0.5 rounded-full bg-amber-400/10 text-amber-300 border border-amber-400/20 font-medium">
             زنده
           </span>
         </div>
         <TomanPrice className="type-price mt-2 text-amber-300" amount={metrics.todayRevenue} />
-        <p className="text-[11px] text-stone-400 mt-1">
+        <p className="text-xs text-stone-400 mt-1">
           {toFaDigits(metrics.todayCompletedCount)} سفارش موفق ثبت شده در طول روز
         </p>
       </div>
@@ -66,7 +66,7 @@ export function DashboardMetrics({
             <AlertTriangle className="w-4 h-4" />
           </div>
           {metrics.lowStockAlerts > 0 && (
-            <span className="text-[10px] px-1.5 py-0.2 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+            <span className="text-xs px-1.5 py-0.5 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
               هشدار
             </span>
           )}

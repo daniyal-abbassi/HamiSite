@@ -50,7 +50,7 @@ function CopyPhoneButton() {
         setCopied(true);
         window.setTimeout(() => setCopied(false), 1800);
       }}
-      className="inline-flex items-center gap-1.5 rounded-xl border border-champagne/25 px-4 py-3 text-xs font-bold text-foreground/80 transition-colors hover:border-champagne/50"
+      className="inline-flex min-h-11 extend-touch-target items-center gap-1.5 rounded-xl border border-champagne/25 px-4 py-3 text-xs font-bold text-foreground/80 transition-colors hover:border-champagne/50"
     >
       {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
       {copied ? "کپی شد" : "کپی شماره"}
@@ -154,7 +154,8 @@ export function ProductDetail({ product, generatedAt }: Props) {
     sellableRecord && stockType === "limited" && selectedVariant != null && (selectedVariant.stock ?? 0) <= 0;
   const purchasable = sellableRecord && !variantSoldOut;
 
-  async function handleAddToCart() {
+  async function handleAddToCart(e?: React.MouseEvent<HTMLButtonElement>) {
+    if (e) e.currentTarget.setAttribute("aria-busy", "true");
     setAddState("loading");
     setActionError(null);
     try {
@@ -204,11 +205,14 @@ export function ProductDetail({ product, generatedAt }: Props) {
     return (
       <button
         type="button"
-        onClick={onClick}
+        onClick={(e) => {
+          e.currentTarget.setAttribute("aria-busy", "true");
+          onClick();
+        }}
         aria-pressed={active}
         aria-label={label}
         className={cn(
-          "rounded-full border px-4 py-2 text-xs font-bold transition-all duration-fast",
+          "rounded-full border px-4 py-2 min-h-11 extend-touch-target text-xs font-bold transition-all duration-fast",
           active
             ? "border-aqua bg-aqua/15 text-aqua shadow-glow-cta"
             : "border-line bg-foreground/5 text-foreground/75 hover:border-aqua/40 hover:text-foreground",
@@ -314,7 +318,7 @@ export function ProductDetail({ product, generatedAt }: Props) {
                   */}
                   <LiquidSelection
                     className="!gap-2"
-                    itemClassName="rounded-full border border-line bg-foreground/5 px-4 py-2 text-xs font-bold hover:border-aqua/40"
+                    itemClassName="rounded-full border border-line bg-foreground/5 px-4 py-2 min-h-11 extend-touch-target text-xs font-bold hover:border-aqua/40"
                     value={selectedVariant?.options?.find((option) => option.label === label)?.value ?? null}
                     announce="pressed"
                     markerInset={4}
@@ -412,7 +416,7 @@ export function ProductDetail({ product, generatedAt }: Props) {
               className="min-w-52 flex-1"
               loading={addState === "loading"}
               disabled={!purchasable || addState === "done"}
-              onClick={() => void handleAddToCart()}
+              onClick={(e) => void handleAddToCart(e)}
             >
               {addState === "done" ? (
                 <>
@@ -521,7 +525,7 @@ export function ProductDetail({ product, generatedAt }: Props) {
             className="h-12 min-w-[9.5rem] shrink-0"
             loading={addState === "loading"}
             disabled={!purchasable || addState === "done"}
-            onClick={() => void handleAddToCart()}
+            onClick={(e) => void handleAddToCart(e)}
           >
             {addState === "done" ? (
               <>
@@ -531,7 +535,7 @@ export function ProductDetail({ product, generatedAt }: Props) {
             ) : (
               <>
                 <ShoppingBag className="size-5" />
-                {purchasable ? "افزودن به سبد" : "ناموجود"}
+                {purchasable ? "افزودن به سبد خرید" : "ناموجود"}
               </>
             )}
           </Button>

@@ -1,0 +1,34 @@
+[Unit]
+Description=Hami Hamrah Next.js Standalone Storefront Service
+After=network.target postgresql.service
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/hami-storefront
+Environment=NODE_ENV=production
+Environment=PORT=3000
+Environment=HOSTNAME=127.0.0.1
+EnvironmentFile=-/var/www/hami-storefront/.env
+
+# Executable: run via node pointing to the standalone server
+ExecStart=/usr/bin/node /var/www/hami-storefront/.next/standalone/server.js
+
+# Restart policy
+Restart=always
+RestartSec=5s
+
+# Process limits & signals
+KillSignal=SIGTERM
+TimeoutStopSec=10s
+LimitNOFILE=65536
+
+# Security sandbox flags
+NoNewPrivileges=true
+ProtectSystem=full
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
+

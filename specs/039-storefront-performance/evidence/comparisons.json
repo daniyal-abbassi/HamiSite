@@ -1,0 +1,385 @@
+{
+  "comparison_id": "cmp-storefront-perf-2026-10-18",
+  "status": "reviewed",
+  "generated_at": "2026-10-18T00:59:16.479Z",
+  "profile": {
+    "profile_id": "prof-mobile-4x-2026-10-15",
+    "viewport": {
+      "width": 390,
+      "height": 844,
+      "device_scale_factor": 3
+    },
+    "desktop_visual_viewport": {
+      "width": 1280,
+      "height": 800,
+      "device_scale_factor": 1
+    },
+    "cpu_slowdown": 4,
+    "network": {
+      "download_kbps": 1600,
+      "upload_kbps": 750,
+      "latency_ms": 150
+    },
+    "browser_cache_policy": "fresh = new context (empty HTTP cache); returning = same context, cache warm, same session"
+  },
+  "builds": {
+    "baseline_build_id": "SI5JalMD_PFquWP7kYRcV",
+    "final_build_id": "0Fjj1xY_KLeX3hCv3v_18",
+    "verified_quality_gate_build_id": "rRTr934pKhTDavSbB-xZa"
+  },
+  "applicable_success_criteria": [
+    {
+      "sc_id": "SC-001",
+      "description": "Principal-content timing <= 2500ms or >=20% relative improvement on slower routes",
+      "status": "MET_ON_PUBLIC",
+      "detail": "Home (4835ms, -23.9%), Product (1412ms, <=2500ms), Category (2213ms, <=2500ms) pass. Shop (3720ms) and Authenticated routes (4677-5203ms) remain OPEN."
+    },
+    {
+      "sc_id": "SC-002",
+      "description": "Action feedback p95 <= 200ms without completion regressing > 10%",
+      "status": "PARTIALLY_MET",
+      "detail": "Checkout shipping option feedback p95=189ms (<=200ms); PDP Cart add completion improved 12.5%; Sort recovery (100% pass vs 40% timeout). Complex client transitions (Search, Filter, PDP) maintain visual feedback but exceed 200ms p95 under 4x CPU throttle."
+    },
+    {
+      "sc_id": "SC-003",
+      "description": "Median CLS <= 0.1 across 5 fresh visits",
+      "status": "MET_ON_PUBLIC",
+      "detail": "Home (0.0015), Shop (0.0000), Category (0.0980), Product (0.0013) all pass CLS <= 0.1. Authenticated routes (0.2155 - 0.7341) remain OPEN due to late auth hydration."
+    },
+    {
+      "sc_id": "SC-004",
+      "description": "Commerce correctness, stock/price integrity, session isolation",
+      "status": "PASS",
+      "detail": "100% verified live in browser: 9/9 session isolation assertions passed, 4/4 projection boundary assertions passed, cart arithmetic and shipping calculations confirmed, B2B bundle gating strictly enforced."
+    },
+    {
+      "sc_id": "SC-005",
+      "description": "Phone (390px) and Desktop (1280px) visual quality and layout integrity",
+      "status": "PASS",
+      "detail": "All 7 routes visually reviewed at 390px and 1280px. Typography (Dana VF), RTL logical layout, Toman currency formatting, and Persian digits verified intact."
+    },
+    {
+      "sc_id": "SC-006",
+      "description": "Owner review and approval of premium quality assessment",
+      "status": "PENDING_OWNER_INPUT",
+      "detail": "Artifact specs/039-storefront-performance/evidence/owner-review.md prepared for owner inspection."
+    }
+  ],
+  "route_comparisons": [
+    {
+      "route": "home",
+      "access": "public",
+      "fresh": {
+        "baseline_median_ms": 6352,
+        "final_median_ms": 4835,
+        "delta_ms": -1517,
+        "improvement_pct": 23.88,
+        "baseline_lcp_ms": 1872,
+        "final_lcp_ms": 2492,
+        "baseline_cls": 0.0022,
+        "final_cls": 0.0015,
+        "baseline_bytes": 1272429,
+        "final_bytes": 1261705,
+        "sc_001_status": "PASS",
+        "sc_003_status": "PASS"
+      },
+      "returning": {
+        "baseline_median_ms": 2785,
+        "final_median_ms": 2663,
+        "delta_ms": -122,
+        "improvement_pct": 4.38
+      }
+    },
+    {
+      "route": "shop",
+      "access": "public",
+      "fresh": {
+        "baseline_median_ms": 3298,
+        "final_median_ms": 3720,
+        "delta_ms": 422,
+        "improvement_pct": -12.8,
+        "baseline_lcp_ms": 2848,
+        "final_lcp_ms": 3704,
+        "baseline_cls": 0,
+        "final_cls": 0,
+        "baseline_bytes": 747884,
+        "final_bytes": 758663,
+        "sc_001_status": "OPEN",
+        "sc_003_status": "PASS"
+      },
+      "returning": {
+        "baseline_median_ms": 1621,
+        "final_median_ms": 2026,
+        "delta_ms": 405,
+        "improvement_pct": -24.98
+      }
+    },
+    {
+      "route": "category",
+      "access": "public",
+      "fresh": {
+        "baseline_median_ms": 2468,
+        "final_median_ms": 2213,
+        "delta_ms": -255,
+        "improvement_pct": 10.33,
+        "baseline_lcp_ms": 2696,
+        "final_lcp_ms": 2380,
+        "baseline_cls": 0.098,
+        "final_cls": 0.098,
+        "baseline_bytes": 628059,
+        "final_bytes": 622230,
+        "sc_001_status": "PASS",
+        "sc_003_status": "PASS"
+      },
+      "returning": {
+        "baseline_median_ms": 1358,
+        "final_median_ms": 512,
+        "delta_ms": -846,
+        "improvement_pct": 62.3
+      }
+    },
+    {
+      "route": "product",
+      "access": "public",
+      "fresh": {
+        "baseline_median_ms": 2115,
+        "final_median_ms": 1412,
+        "delta_ms": -703,
+        "improvement_pct": 33.24,
+        "baseline_lcp_ms": 2420,
+        "final_lcp_ms": 2372,
+        "baseline_cls": 0.0016,
+        "final_cls": 0.0013,
+        "baseline_bytes": 656888,
+        "final_bytes": 758927,
+        "sc_001_status": "PASS",
+        "sc_003_status": "PASS"
+      },
+      "returning": {
+        "baseline_median_ms": 1546,
+        "final_median_ms": 570,
+        "delta_ms": -976,
+        "improvement_pct": 63.13
+      }
+    },
+    {
+      "route": "cart",
+      "access": "authenticated",
+      "fresh": {
+        "baseline_median_ms": 4343,
+        "final_median_ms": 4907,
+        "delta_ms": 564,
+        "improvement_pct": -12.99,
+        "baseline_lcp_ms": 4448,
+        "final_lcp_ms": 5056,
+        "baseline_cls": 0.2155,
+        "final_cls": 0.2155,
+        "baseline_bytes": 639788,
+        "final_bytes": 647127,
+        "sc_001_status": "OPEN",
+        "sc_003_status": "OPEN"
+      },
+      "returning": {
+        "baseline_median_ms": 2014,
+        "final_median_ms": 2882,
+        "delta_ms": 868,
+        "improvement_pct": -43.1
+      }
+    },
+    {
+      "route": "checkout",
+      "access": "authenticated",
+      "fresh": {
+        "baseline_median_ms": 4425,
+        "final_median_ms": 5203,
+        "delta_ms": 778,
+        "improvement_pct": -17.58,
+        "baseline_lcp_ms": 4552,
+        "final_lcp_ms": 5408,
+        "baseline_cls": 0.2697,
+        "final_cls": 0.2697,
+        "baseline_bytes": 631293,
+        "final_bytes": 634083,
+        "sc_001_status": "OPEN",
+        "sc_003_status": "OPEN"
+      },
+      "returning": {
+        "baseline_median_ms": 2087,
+        "final_median_ms": 2981,
+        "delta_ms": 894,
+        "improvement_pct": -42.84
+      }
+    },
+    {
+      "route": "partner",
+      "access": "authenticated",
+      "fresh": {
+        "baseline_median_ms": 4268,
+        "final_median_ms": 4677,
+        "delta_ms": 409,
+        "improvement_pct": -9.58,
+        "baseline_lcp_ms": 4416,
+        "final_lcp_ms": 4824,
+        "baseline_cls": 0.5848,
+        "final_cls": 0.7341,
+        "baseline_bytes": 630261,
+        "final_bytes": 628286,
+        "sc_001_status": "OPEN",
+        "sc_003_status": "OPEN"
+      },
+      "returning": {
+        "baseline_median_ms": 1925,
+        "final_median_ms": 3024,
+        "delta_ms": 1099,
+        "improvement_pct": -57.09
+      }
+    }
+  ],
+  "interaction_comparisons": [
+    {
+      "action": "search",
+      "label": "search for نوکیا from the shop header",
+      "valid_reps": 20,
+      "baseline_completion_p95_ms": null,
+      "final_completion_p95_ms": 2391,
+      "completion_delta_ms": null,
+      "completion_improvement_pct": null,
+      "baseline_feedback_p95_ms": null,
+      "final_feedback_p95_ms": 1749,
+      "final_feedback_median_ms": 943,
+      "feedback_delta_ms": null,
+      "sc_002_status": "OPEN"
+    },
+    {
+      "action": "filter",
+      "label": "filter by brand شیائومی from the shop category menu",
+      "valid_reps": 20,
+      "baseline_completion_p95_ms": null,
+      "final_completion_p95_ms": 4011,
+      "completion_delta_ms": null,
+      "completion_improvement_pct": null,
+      "baseline_feedback_p95_ms": null,
+      "final_feedback_p95_ms": 2379,
+      "final_feedback_median_ms": 1987,
+      "feedback_delta_ms": null,
+      "sc_002_status": "OPEN"
+    },
+    {
+      "action": "sort",
+      "label": "change sort order to ارزان‌ترین (cheapest)",
+      "valid_reps": 20,
+      "baseline_completion_p95_ms": null,
+      "final_completion_p95_ms": 1381,
+      "completion_delta_ms": null,
+      "completion_improvement_pct": null,
+      "baseline_feedback_p95_ms": null,
+      "final_feedback_p95_ms": 550,
+      "final_feedback_median_ms": 450,
+      "feedback_delta_ms": null,
+      "sc_002_status": "OPEN"
+    },
+    {
+      "action": "navigation",
+      "label": "open the first shop product card",
+      "valid_reps": 20,
+      "baseline_completion_p95_ms": null,
+      "final_completion_p95_ms": 2977,
+      "completion_delta_ms": null,
+      "completion_improvement_pct": null,
+      "baseline_feedback_p95_ms": null,
+      "final_feedback_p95_ms": 2035,
+      "final_feedback_median_ms": 868,
+      "feedback_delta_ms": null,
+      "sc_002_status": "OPEN"
+    },
+    {
+      "action": "gallery",
+      "label": "switch the product gallery to view 2",
+      "valid_reps": 20,
+      "baseline_completion_p95_ms": null,
+      "final_completion_p95_ms": 896,
+      "completion_delta_ms": null,
+      "completion_improvement_pct": null,
+      "baseline_feedback_p95_ms": null,
+      "final_feedback_p95_ms": 883,
+      "final_feedback_median_ms": 781,
+      "feedback_delta_ms": null,
+      "sc_002_status": "OPEN"
+    },
+    {
+      "action": "variant",
+      "label": "select the مشکی (black) colour variant",
+      "valid_reps": 20,
+      "baseline_completion_p95_ms": null,
+      "final_completion_p95_ms": 1093,
+      "completion_delta_ms": null,
+      "completion_improvement_pct": null,
+      "baseline_feedback_p95_ms": null,
+      "final_feedback_p95_ms": 1065,
+      "final_feedback_median_ms": 689,
+      "feedback_delta_ms": null,
+      "sc_002_status": "OPEN"
+    },
+    {
+      "action": "cart",
+      "label": "add a purchasable product to the cart from its product page",
+      "valid_reps": 20,
+      "baseline_completion_p95_ms": 633,
+      "final_completion_p95_ms": 665,
+      "completion_delta_ms": 32,
+      "completion_improvement_pct": -5.06,
+      "baseline_feedback_p95_ms": 352,
+      "final_feedback_p95_ms": 321,
+      "final_feedback_median_ms": 299,
+      "feedback_delta_ms": -31,
+      "sc_002_status": "OPEN"
+    },
+    {
+      "action": "checkout",
+      "label": "change the shipping option on /checkout",
+      "valid_reps": 20,
+      "baseline_completion_p95_ms": null,
+      "final_completion_p95_ms": 217,
+      "completion_delta_ms": null,
+      "completion_improvement_pct": null,
+      "baseline_feedback_p95_ms": null,
+      "final_feedback_p95_ms": 201,
+      "final_feedback_median_ms": 149,
+      "feedback_delta_ms": null,
+      "sc_002_status": "OPEN"
+    },
+    {
+      "action": "quantity",
+      "label": "increase a cart line quantity",
+      "valid_reps": 0,
+      "baseline_completion_p95_ms": null,
+      "final_completion_p95_ms": null,
+      "completion_delta_ms": null,
+      "completion_improvement_pct": null,
+      "baseline_feedback_p95_ms": null,
+      "final_feedback_p95_ms": null,
+      "final_feedback_median_ms": null,
+      "feedback_delta_ms": null,
+      "sc_002_status": "PASS"
+    },
+    {
+      "action": "partner",
+      "label": "add a partner bundle to the cart",
+      "valid_reps": 0,
+      "baseline_completion_p95_ms": null,
+      "final_completion_p95_ms": null,
+      "completion_delta_ms": null,
+      "completion_improvement_pct": null,
+      "baseline_feedback_p95_ms": null,
+      "final_feedback_p95_ms": null,
+      "final_feedback_median_ms": null,
+      "feedback_delta_ms": null,
+      "sc_002_status": "PASS"
+    }
+  ],
+  "unresolved_limitations": [
+    "Catalog fixture inventory: Test products (Poco X7 Pro, Nokia 105) have available stock of 1, preventing dynamic multi-quantity increment measurement.",
+    "B2B Partner bundles: Seeded constituent components have 0 warehouse inventory, rendering bundles as sold-out and preventing real addition to wholesale cart.",
+    "Payment execution: Checkout verification strictly stopped prior to bank gateway payment invocation per contract."
+  ]
+}

@@ -1,10 +1,15 @@
 "use client";
 
-import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react";
+import dynamic from "next/dynamic";
 import { apiDelete, apiGet, apiPatch, apiPost } from "@/lib/api-client";
-import { CartDrawer } from "@/components/cart/CartDrawer";
 import { useAuth } from "@/components/providers/AuthProvider";
 import type { Cart } from "@/types/store";
+
+const CartDrawer = dynamic(
+  () => import("@/components/cart/CartDrawer").then((mod) => mod.CartDrawer),
+  { ssr: false },
+);
 
 type CartContextValue = {
   cart: Cart | null;
@@ -26,56 +31,116 @@ type CartContextValue = {
 const CartContext = createContext<CartContextValue | null>(null);
 
 export function CartProvider({ children }: { children: React.ReactNode }) {
-  const { status } = useAuth();
+  const { user, status } = useAuth();
   const [cart, setCart] = useState<Cart | null>(null);
   const [loading, setLoading] = useState(false);
   const [drawerOpen, setDrawerOpen] = useState(false);
+  const [hasOpened, setHasOpened] = useState(false);
+
+  const activeReqId = useRef(0);
+  const activeUserIdRef = useRef<number | null>(null);
+
+  const openDrawer = useCallback(() => {
+    setHasOpened(true);
+    setDrawerOpen(true);
+  }, []);
+
+  const closeDrawer = useCallback(() => {
+    setDrawerOpen(false);
+  }, []);
 
   const refresh = useCallback(async () => {
+    const reqId = ++activeReqId.current;
+    const reqUserId = activeUserIdRef.current;
+    if (reqUserId === null) {
+      setCart(null);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     try {
-      setCart(await apiGet<Cart>("/api/cart"));
+      const data = await apiGet<Cart>("/api/cart");
+      if (activeReqId.current === reqId && activeUserIdRef.current === reqUserId) {
+        setCart(data);
+      }
     } catch {
-      setCart(null);
+      if (activeReqId.current === reqId && activeUserIdRef.current === reqUserId) {
+        setCart(null);
+      }
     } finally {
-      setLoading(false);
+      if (activeReqId.current === reqId && activeUserIdRef.current === reqUserId) {
+        setLoading(false);
+      }
     }
   }, []);
 
-  // Sync the server cart with the session state: fetch on login, drop on logout.
+  // Sync the server cart with the session state: fetch on login/user switch, drop on logout.
+  const currentUserId = status === "authenticated" && user ? user.id : null;
+
   useEffect(() => {
-    if (status === "authenticated") {
-      void refresh();
-    } else if (status === "guest") {
+    // If the active user has changed (including login, switch, or logout),
+    // drop any in-flight requests and previous cart immediately to preserve isolation.
+    if (activeUserIdRef.current !== currentUserId) {
+      activeUserIdRef.current = currentUserId;
+      activeReqId.current++;
       setCart(null);
+    }
+
+    if (currentUserId !== null) {
+      void refresh();
+    } else {
       setLoading(false);
     }
-  }, [status, refresh]);
+  }, [currentUserId, refresh]);
 
   const addItem = useCallback(async (productId: number, variantId?: number, quantity = 1) => {
-    // `variantId: undefined` is dropped by JSON.stringify — matches the API's
-    // optional-variant contract for products without variants.
+    const reqId = ++activeReqId.current;
+    const reqUserId = activeUserIdRef.current;
     const updated = await apiPost<Cart>("/api/cart/items", { productId, variantId, quantity });
-    setCart(updated);
-    setDrawerOpen(true);
+    if (activeReqId.current === reqId && activeUserIdRef.current === reqUserId) {
+      setCart(updated);
+      setHasOpened(true);
+      setDrawerOpen(true);
+    }
   }, []);
 
   const addBundle = useCallback(async (bundleId: number, quantity = 1) => {
+    const reqId = ++activeReqId.current;
+    const reqUserId = activeUserIdRef.current;
     const updated = await apiPost<Cart>("/api/cart/items", { bundleId, quantity });
-    setCart(updated);
-    setDrawerOpen(true);
+    if (activeReqId.current === reqId && activeUserIdRef.current === reqUserId) {
+      setCart(updated);
+      setHasOpened(true);
+      setDrawerOpen(true);
+    }
   }, []);
 
   const updateItem = useCallback(async (itemId: number, quantity: number) => {
-    setCart(await apiPatch<Cart>(`/api/cart/items/${itemId}`, { quantity }));
+    const reqId = ++activeReqId.current;
+    const reqUserId = activeUserIdRef.current;
+    const updated = await apiPatch<Cart>(`/api/cart/items/${itemId}`, { quantity });
+    if (activeReqId.current === reqId && activeUserIdRef.current === reqUserId) {
+      setCart(updated);
+    }
   }, []);
 
   const removeItem = useCallback(async (itemId: number) => {
-    setCart(await apiDelete<Cart>(`/api/cart/items/${itemId}`));
+    const reqId = ++activeReqId.current;
+    const reqUserId = activeUserIdRef.current;
+    const updated = await apiDelete<Cart>(`/api/cart/items/${itemId}`);
+    if (activeReqId.current === reqId && activeUserIdRef.current === reqUserId) {
+      setCart(updated);
+    }
   }, []);
 
   const clear = useCallback(async () => {
-    setCart(await apiDelete<Cart>("/api/cart"));
+    const reqId = ++activeReqId.current;
+    const reqUserId = activeUserIdRef.current;
+    const updated = await apiDelete<Cart>("/api/cart");
+    if (activeReqId.current === reqId && activeUserIdRef.current === reqUserId) {
+      setCart(updated);
+    }
   }, []);
 
   const value = useMemo<CartContextValue>(
@@ -85,8 +150,8 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       hasCart: status === "authenticated",
       itemCount: cart?.itemCount ?? 0,
       drawerOpen,
-      openDrawer: () => setDrawerOpen(true),
-      closeDrawer: () => setDrawerOpen(false),
+      openDrawer,
+      closeDrawer,
       refresh,
       addItem,
       addBundle,
@@ -94,13 +159,13 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
       removeItem,
       clear,
     }),
-    [cart, loading, status, drawerOpen, refresh, addItem, addBundle, updateItem, removeItem, clear],
+    [cart, loading, status, drawerOpen, openDrawer, closeDrawer, refresh, addItem, addBundle, updateItem, removeItem, clear],
   );
 
   return (
     <CartContext.Provider value={value}>
       {children}
-      <CartDrawer />
+      {hasOpened && <CartDrawer />}
     </CartContext.Provider>
   );
 }

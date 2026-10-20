@@ -93,6 +93,15 @@ enum OtpPurpose {
   PASSWORD_RESET
 }
 
+enum OtpChallengeStatus {
+  PENDING
+  SENT
+  CONSUMED
+  SUPERSEDED
+  FAILED
+  LOCKED
+}
+
 /// Product/variant audit-log action type (mirrors ProductHistoryItemSchema's
 /// "+" / "~" / "-" history_type, spelled out for readability).
 enum HistoryAction {
@@ -170,18 +179,47 @@ model User {
 }
 
 model OtpCode {
-  id          Int        @id @default(autoincrement())
-  userId      Int?
-  user        User?      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  phoneNumber String
-  code        String
-  purpose     OtpPurpose @default(LOGIN)
-  consumed    Boolean    @default(false)
-  expiresAt   DateTime
-  createdAt   DateTime   @default(now())
+  id                Int                @id @default(autoincrement())
+  publicId          String             @unique @default(cuid())
+  userId            Int?
+  user              User?              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  phoneNumber       String
+  codeDigest        String
+  purpose           OtpPurpose         @default(LOGIN)
+  status            OtpChallengeStatus @default(PENDING)
+  attemptCount      Int                @default(0)
+  expiresAt         DateTime
+  providerMessageId String?
+  requesterHash     String?
+  createdAt         DateTime           @default(now())
 
-  @@index([phoneNumber, purpose])
+  @@index([phoneNumber, purpose, createdAt])
+  @@index([requesterHash, createdAt])
+  @@index([status, expiresAt])
   @@map("otp_codes")
+}
+
+model OtpRequestBucket {
+  key             String   @id
+  count           Int      @default(0)
+  windowStartedAt DateTime @default(now())
+  expiresAt       DateTime
+  updatedAt       DateTime @updatedAt
+
+  @@index([expiresAt])
+  @@map("otp_request_buckets")
+}
+
+model RegistrationProof {
+  id          Int      @id @default(autoincrement())
+  tokenHash   String   @unique
+  phoneNumber String
+  expiresAt   DateTime
+  consumedAt  DateTime?
+  createdAt   DateTime @default(now())
+
+  @@index([expiresAt])
+  @@map("registration_proofs")
 }
 
 model Address {
@@ -878,4 +916,3 @@ model PartnerBundleItem {
   @@index([productId])
   @@map("partner_bundle_items")
 }
-
