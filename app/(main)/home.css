@@ -3,10 +3,10 @@
    muted aqua, full rounded geometry) — see the direction contract at the
    top of app/layout.tsx. */
 
-/* One generated silk artwork carries the brand's visual language through every
-   chapter below the hero. Full-bleed pseudo layers let the section content keep
+/* Four coordinated generated artworks carry the brand's visual language through
+   the chapters below the hero. Full-bleed pseudo layers let section content keep
    its measured max-width while the canvas reaches both viewport edges. Paper
-   chapters use a warm veil for contrast; dark chapters keep the oxblood visible. */
+   chapters use a warm veil; dark chapters keep enough oxblood shade for contrast. */
 .home-section-ground {
   position: relative;
   isolation: isolate;
@@ -37,13 +37,13 @@
   background-image: var(--section-ground-overlay, linear-gradient(110deg, rgb(50 2 14 / 16%), rgb(76 3 21 / 24%) 54%, rgb(40 1 10 / 30%))), var(--section-ground-image);
 }
 .home-section-ground > :not(style) { position: relative; z-index: 0; }
-#obtainable-now { --section-ground-image: url("/images/shapes/hami-burgundy-silk.webp"); --section-ground-position: 50% 42%; --section-ground-mobile-position: 56% 52%; }
-#categories { --section-ground-image: url("/images/shapes/categories-ivory-wave.webp"); --section-ground-position: 50% 82%; --section-ground-mobile-position: 50% 72%; }
-#brands { --section-ground-image: url("/images/shapes/brands-burgundy-satin.webp"); --section-ground-position: 50% 45%; --section-ground-mobile-position: 59% 49%; }
-#new-arrivals { --section-ground-image: url("/images/shapes/new-arrivals-warm-paper.webp"); --section-ground-position: 50% 88%; --section-ground-mobile-position: 24% 82%; --section-ground-overlay: linear-gradient(112deg, rgb(248 244 237 / 28%), rgb(248 244 237 / 22%) 58%, rgb(248 244 237 / 28%)); }
-#b2b { --section-ground-image: url("/images/shapes/b2b-ai-oxblood-silk.webp"); --section-ground-position: 48% 52%; --section-ground-mobile-position: 55% 53%; --section-ground-overlay: linear-gradient(110deg, rgb(35 1 10 / 50%), rgb(76 3 21 / 54%) 54%, rgb(30 1 9 / 58%)); }
-#online-services { --section-ground-image: url("/images/shapes/online-services-ivory-champagne.webp"); --section-ground-position: 50% 75%; --section-ground-mobile-position: 24% 80%; }
-#store-experience { --section-ground-image: url("/images/shapes/store-experience-burgundy.webp"); --section-ground-position: 50% 45%; --section-ground-mobile-position: 55% 50%; --section-ground-overlay: linear-gradient(110deg, rgb(35 1 10 / 54%), rgb(76 3 21 / 58%) 54%, rgb(30 1 9 / 62%)); }
+#obtainable-now { --section-ground-image: url("/images/backgrounds/hami-background-01.webp"); --section-ground-position: 50% 42%; --section-ground-mobile-position: 56% 52%; --section-ground-overlay: linear-gradient(110deg, rgb(35 1 10 / 58%), rgb(76 3 21 / 62%) 54%, rgb(30 1 9 / 66%)); }
+#categories { --section-ground-image: url("/images/backgrounds/hami-background-02.webp"); --section-ground-position: 50% 82%; --section-ground-mobile-position: 50% 72%; }
+#brands { --section-ground-image: url("/images/backgrounds/hami-background-02.webp"); --section-ground-position: 50% 82%; --section-ground-mobile-position: 50% 72%; --section-ground-overlay: linear-gradient(110deg, rgb(35 1 10 / 68%), rgb(76 3 21 / 72%) 54%, rgb(30 1 9 / 76%)); }
+#new-arrivals { --section-ground-image: url("/images/backgrounds/hami-background-03.webp"); --section-ground-position: 50% 88%; --section-ground-mobile-position: 24% 82%; --section-ground-overlay: linear-gradient(112deg, rgb(248 244 237 / 28%), rgb(248 244 237 / 22%) 58%, rgb(248 244 237 / 28%)); }
+#b2b { --section-ground-image: url("/images/backgrounds/hami-background-04.webp"); --section-ground-position: 48% 72%; --section-ground-mobile-position: 55% 68%; --section-ground-overlay: linear-gradient(110deg, rgb(35 1 10 / 50%), rgb(76 3 21 / 54%) 54%, rgb(30 1 9 / 58%)); }
+#online-services { --section-ground-image: url("/images/backgrounds/hami-background-03.webp"); --section-ground-position: 50% 75%; --section-ground-mobile-position: 24% 80%; }
+#store-experience { --section-ground-image: url("/images/backgrounds/hami-background-04.webp"); --section-ground-position: 50% 45%; --section-ground-mobile-position: 55% 50%; --section-ground-overlay: linear-gradient(110deg, rgb(35 1 10 / 54%), rgb(76 3 21 / 58%) 54%, rgb(30 1 9 / 62%)); }
 
 @media (min-width: 768px) {
   .home-section-ground::before { background-position: center, var(--section-ground-position, center); }
@@ -1482,7 +1482,7 @@
   background-color: #4a0012;
   /* The generated artwork makes oxblood the canvas; the ivory showroom curves stay
      at the perimeter so the transition from the bright Hero still has a brand cue. */
-  background-image: url("/store/featured-products-burgundy.webp");
+  background-image: url("/images/backgrounds/hami-background-01.webp");
   background-position: center;
   background-size: cover;
 }
@@ -1494,7 +1494,7 @@
      reveal the same ivory showroom curves in the section artwork. */
   background:
     linear-gradient(180deg, #4a0012 0, rgb(74 0 18 / 82%) 2.5rem, transparent 10rem),
-    linear-gradient(180deg, transparent 46%, rgb(35 0 8 / 18%) 100%),
+    linear-gradient(180deg, transparent 28%, rgb(35 0 8 / 48%) 100%),
     linear-gradient(90deg, rgb(35 0 8 / 10%), transparent 24%, transparent 78%, rgb(35 0 8 / 12%));
   content: "";
   pointer-events: none;
