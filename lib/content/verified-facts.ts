@@ -25,6 +25,13 @@ export const storeWarranty = {
 export const trustFacts = [
   { key: "history", label: "بیست سال سابقه در بازار موبایل مشهد" },
   { key: "store", label: "فروشگاه حضوری در مشهد" },
-  { key: "redmi", label: "نمایندگی رسمی ردمی با ضمانت رادمان پج" },
+  { key: "redmi", label: "نماینده‌ی فروش برند ریلمی" },
   { key: "tch", label: "نماینده رسمی تی سی اچ در منطقه" },
+  /**
+   * Confirmed by the owner on 2026-10-25 (chose «Adopt mockup labels» for the
+   * 044 mobile first screen; recorded in
+   * `specs/044-mobile-first-redesign/spec.md` FR-007).
+   */
+  { key: "priceMatch", label: "قیمت برد به برد" },
+  { key: "officialDealership", label: "نمایندگی رسمی" },
 ] as const;

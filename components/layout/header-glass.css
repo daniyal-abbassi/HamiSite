@@ -27,10 +27,145 @@
 }
 
 .site-header-glass {
+  /* The wordmark is a separate fixed element at the page's top-right corner, so
+     the bar has to start after it. The reserve is the brand's own box plus its
+     inset plus a breathing gap — applied as padding on the bar, never as padding
+     inside the pill: an inner inset left ~11rem of dead glass on the right of the
+     pill at desktop widths, which is what made «فروشگاه» float mid-bar. */
+  --brand-reserve: 16px;
   isolation: isolate;
   padding: 16px 16px 0;
+  padding-inline-start: var(--brand-reserve);
   transition: translate 340ms cubic-bezier(0.22, 1, 0.36, 1), padding 280ms ease;
   will-change: translate;
+}
+
+.site-sticky-brand {
+  position: fixed;
+  z-index: 60;
+  /* Vertically centered against the glass pill: the pill spans 16px inset +
+     8px nav padding + 44px controls at phone widths (center at 46), so a
+     40px brand box starts at 26. Before this the brand sat at 12 and read
+     as a detached tile floating above the bar. */
+  inset-block-start: 26px;
+  inset-inline-start: 12px;
+  display: none;
+  inline-size: 96px;
+  min-block-size: 40px;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgb(229 211 179 / 52%);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 8px 24px -14px rgb(27 0 8 / 60%);
+  transition: transform 220ms ease, box-shadow 220ms ease;
+}
+
+.site-sticky-brand__image {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  object-fit: contain;
+}
+
+.site-bar-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-block-size: 44px;
+}
+
+/* The official alpha files are oxblood on transparent; on the solid oxblood
+   bar they invert to white (presentation only — no redraw of supplied files). */
+.site-bar-brand__mark {
+  display: block;
+  block-size: 38px;
+  inline-size: auto;
+  filter: brightness(0) invert(1);
+}
+
+.site-bar-brand__wordmark {
+  display: block;
+  block-size: 20px;
+  inline-size: auto;
+  filter: brightness(0) invert(1);
+}
+
+/* --- Mobile: solid brand bar (spec 044 mockup) -----------------------------
+   The glass pill is a desktop treatment; on phones the mockup puts the four
+   actions and the white lockup directly on the brand's oxblood. The bar keeps
+   the hide-on-scroll behavior and a compressed scrolled state. */
+@media (max-width: 767px) {
+  .site-header-glass {
+    --brand-reserve: 0px;
+    padding: 0;
+    /* The owner's wide silk banner as the bar's own surface (044 feedback):
+       a cover-cropped strip of it reads as the reference's brushed-oxblood
+       bar. The oxblood tint keeps the white actions at contrast. */
+    background-image:
+      linear-gradient(rgb(100 2 17 / 42%), rgb(100 2 17 / 42%)),
+      url("/images/hero/home-silk-wide.png");
+    background-size: cover, cover;
+    background-position: center 30%, center 30%;
+    border-end-start-radius: 26px;
+    border-end-end-radius: 26px;
+    box-shadow: 0 14px 34px -22px rgb(27 0 8 / 65%);
+  }
+
+  .site-header-glass::before,
+  .site-header-glass > nav::before {
+    opacity: 0;
+  }
+
+  .site-header-glass > nav {
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+    padding: 4px 12px;
+    min-block-size: 44px;
+  }
+
+  .site-header-glass--scrolled {
+    padding: 0;
+  }
+
+  .site-header-glass--scrolled > nav {
+    min-block-size: 40px;
+  }
+
+  /* Bare white search trigger; the expanded field keeps working over the bar. */
+  .site-header-glass .site-header-search {
+    border-color: transparent;
+    background: transparent;
+    box-shadow: none;
+  }
+
+  .site-header-glass .site-header-search > button {
+    color: rgb(255 255 255 / 95%);
+  }
+
+  .site-header-glass .site-header-search input {
+    color: rgb(255 255 255 / 95%);
+  }
+
+  /* Bare white category trigger: the closed glass pill duplicates a surface
+     that is already solid. The open panel keeps its glass presentation. */
+  .site-header-glass .site-header-category > div:first-child {
+    display: none;
+  }
+
+  /* The mockup spreads the four actions across the bar's left half. */
+  .site-header-glass > nav > .ms-auto {
+    gap: 1.25rem;
+  }
+}
+
+.site-sticky-brand--scrolled {
+  /* The docked bar is 64px tall (10px padding + 44px controls), centered at 32. */
+  inset-block-start: 12px;
+  transform: scale(.94);
+  box-shadow: 0 5px 16px -12px rgb(27 0 8 / 50%);
 }
 
 .site-header-glass::before {
@@ -59,6 +194,7 @@
 
 .site-header-glass--scrolled {
   padding: 10px 16px;
+  padding-inline-start: var(--brand-reserve);
 }
 
 .site-header-glass--scrolled::before {
@@ -76,6 +212,23 @@
 }
 
 @media (min-width: 768px) {
+  .site-sticky-brand {
+    display: grid;
+    inset-block-start: 26px;
+    inset-inline-start: 20px;
+    inline-size: 144px;
+    min-block-size: 56px;
+    border-radius: 14px;
+  }
+
+  .site-sticky-brand--scrolled {
+    inset-block-start: 4px;
+  }
+
+  .site-header-glass {
+    --brand-reserve: 180px;
+  }
+
   .site-header-glass:not(.site-header-glass--scrolled) {
     padding-top: 24px;
   }
@@ -86,6 +239,10 @@
   .site-header-glass::before,
   .site-header-glass > nav,
   .site-header-glass > nav::before {
+    transition-duration: 0.01ms;
+  }
+
+  .site-sticky-brand {
     transition-duration: 0.01ms;
   }
 }

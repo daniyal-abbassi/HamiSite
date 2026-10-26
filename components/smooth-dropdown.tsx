@@ -7,6 +7,7 @@ import {
   ArrowLeft,
   BatteryCharging,
   Cable,
+  ChevronDown,
   Headphones,
   Smartphone,
   Watch,
@@ -43,21 +44,25 @@ export default function SmoothDropdown() {
     <div
       ref={rootRef}
       className="relative hidden shrink-0 lg:block"
-      onMouseEnter={() => setOpen(true)}
-      onMouseLeave={() => setOpen(false)}
     >
       <button
         type="button"
         aria-expanded={open}
         aria-controls="store-category-menu"
+        aria-haspopup="true"
         aria-label="دسته‌بندی‌های فروشگاه"
         onClick={() => setOpen((value) => !value)}
-        onFocus={() => setOpen(true)}
-        className={`relative z-20 rounded-full px-5 py-3 text-sm font-bold transition-colors ${
-          open ? "bg-champagne/15 text-champagne" : "text-foreground/75 hover:text-foreground"
+        className={`relative z-20 inline-flex min-h-11 items-center gap-1.5 rounded-full border px-4 text-sm font-bold transition-colors ${
+          open
+            ? "border-champagne/45 bg-champagne/15 text-champagne"
+            : "border-white/10 bg-white/[0.04] text-foreground/80 hover:border-champagne/30 hover:text-foreground"
         }`}
       >
         فروشگاه
+        <ChevronDown
+          className={`size-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        />
       </button>
 
       <AnimatePresence>
@@ -70,9 +75,17 @@ export default function SmoothDropdown() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.985 }}
             transition={{ duration: 0.18, ease: [0.23, 1, 0.32, 1] }}
-            className="absolute start-1/2 top-full z-50 mt-3 w-[min(760px,calc(100vw-2rem))] -translate-x-1/2 rounded-[1.6rem] border border-champagne/20 bg-[linear-gradient(145deg,#260b12_0%,#14060a_72%)] p-5 text-start shadow-[0_24px_80px_rgba(0,0,0,.55)]"
+            /* Anchored to the «فروشگاه» trigger, not to the bar: the panel's
+               inline-start edge lines up with the button's edge in RTL, so the
+               menu reads as that button's menu instead of floating mid-bar. */
+            className="absolute start-0 top-full z-50 mt-3 w-[min(45rem,calc(100vw-2rem))] rounded-[1.6rem] border border-champagne/20 bg-[linear-gradient(145deg,#260b12_0%,#14060a_72%)] p-5 text-start shadow-[0_24px_80px_rgba(0,0,0,.55)]"
             dir="rtl"
           >
+            {/* Pointer tying the panel to the trigger's centre. */}
+            <span
+              aria-hidden="true"
+              className="absolute -top-[7px] start-[3.35rem] size-3 rotate-45 rounded-[2px] border-s border-t border-champagne/20 bg-[#260b12]"
+            />
             <div className="mb-4 flex items-center justify-between gap-4 border-b border-champagne/10 pb-3">
               <div>
                 <p className="text-xs font-medium text-champagne/65">ویترین حامی همراه</p>

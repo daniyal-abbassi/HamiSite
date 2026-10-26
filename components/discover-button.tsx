@@ -75,7 +75,7 @@ export default function DiscoverButton() {
         animate={{ width: isSearching ? "clamp(108px, 18vw, 248px)" : 42 }}
         transition={spring}
         onClick={() => !isSearching && setIsSearching(true)}
-        className="flex h-full min-w-0 items-center overflow-hidden rounded-full border border-champagne/25 bg-ink/70 px-3 text-foreground shadow-[0_5px_18px_rgba(0,0,0,.2)]"
+        className="site-header-search flex h-full min-w-0 items-center overflow-hidden rounded-full border border-champagne/25 bg-ink/70 px-3 text-foreground shadow-[0_5px_18px_rgba(0,0,0,.2)]"
       >
         <button
           type={isSearching ? "submit" : "button"}
@@ -189,8 +189,10 @@ export default function DiscoverButton() {
           <GlassMenu
             items={mobileItems}
             label="دسته‌بندی‌های گوشی"
-            triggerIcon={<Menu className="size-5" strokeWidth={1.8} />}
+            triggerIcon={<Menu className="size-5 text-white/95" strokeWidth={1.8} />}
             expandDirection="down"
+            pillHeight={40}
+            className="extend-touch-target site-header-category"
             transparency={0.72}
             onSelect={(id) => {
               const tab = TABS.find((item) => item.id === id);

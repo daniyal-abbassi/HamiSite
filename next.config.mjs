@@ -54,7 +54,12 @@ const nextConfig = {
       {
         source: "/_next/static/:path*",
         headers: [
-          { key: "Cache-Control", value: "public, max-age=31536000, immutable" },
+          // Dev chunk URLs are unhashed and their content changes under the
+          // same URL, so `immutable` pins stale code in every browser for a
+          // year. Only production (content-hashed URLs) may cache forever.
+          process.env.NODE_ENV === "production"
+            ? { key: "Cache-Control", value: "public, max-age=31536000, immutable" }
+            : { key: "Cache-Control", value: "no-store, must-revalidate" },
         ],
       },
       {

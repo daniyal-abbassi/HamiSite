@@ -3,15 +3,19 @@ import Image from "next/image";
 import { pageMetadata } from "@/lib/seo-metadata";
 import {
   ArrowLeft,
-  BadgeCheck,
+  Clock,
   House,
+  MapPin,
+  Medal,
   PackageCheck,
+  ShieldCheck,
   Smartphone,
   type LucideIcon,
 } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { trustFacts } from "@/lib/content/verified-facts";
+import storePhoto from "@/public/store/shop-ai-relight.png";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { additionalProductsRail, discountedProductsRail, homepageProductsRail } from "@/lib/home-rails-db";
 import { AdditionalProducts } from "@/components/home/AdditionalProducts";
@@ -38,18 +42,36 @@ export const metadata = pageMetadata({
 export const revalidate = 60;
 
 const trustFactIcons: Record<(typeof trustFacts)[number]["key"], LucideIcon> = {
-  history: BadgeCheck,
-  store: House,
+  history: Clock,
+  store: MapPin,
   redmi: Smartphone,
   tch: PackageCheck,
+  priceMatch: Medal,
+  officialDealership: ShieldCheck,
 };
+
+// The mockup's four: the first screen renders this subset, not every fact in
+// the verified source.
+const heroTrustKeys = ["history", "store", "priceMatch", "officialDealership"] as const;
+
+const heroTrustFacts = heroTrustKeys.map(
+  (key) => trustFacts.find((fact) => fact.key === key)!,
+);
 
 const trustFactShortLabels: Record<(typeof trustFacts)[number]["key"], string> = {
   history: "۲۰ سال سابقه",
   store: "فروشگاه حضوری در مشهد",
-  redmi: "نمایندگی رسمی ردمی",
+  redmi: "نماینده‌ی فروش برند ریلمی",
   tch: "نماینده رسمی تی‌سی‌اچ در منطقه",
+  priceMatch: "قیمت برد به برد",
+  officialDealership: "نمایندگی رسمی",
 };
+
+/* The marquee loops by translating exactly half the track, so one half must
+   always cover the widest viewport — otherwise the bar empties out on desktop
+   (2 copies = 712px against a 1466px window). Six copies = 2136px covers every
+   width the ticker is allowed to take, desktop pill included. */
+const TICKER_TEXT_COPIES = Array.from({ length: 6 }, (_, i) => i);
 
 function Hero() {
   return (
@@ -70,23 +92,61 @@ function Hero() {
           className="homepage-hero__image"
         />
       </picture>
+      <a
+        href="https://t.me/HAMI_HAMRAH_ABBASI"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="hero-ticker"
+        aria-label="کانال تلگرام حامی همراه؛ دریافت فهرست روزانهٔ قیمت و موجودی"
+      >
+        <span className="hero-ticker__icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false">
+            <path d="M9.78 18.65l.28-4.23 7.68-6.92c.34-.31-.07-.46-.52-.19L7.74 13.3 3.64 12c-.88-.25-.89-.86.2-1.3l15.97-6.16c.73-.33 1.43.18 1.15 1.3l-2.72 12.81c-.19.91-.74 1.13-1.5.71L12.6 16.3l-1.99 1.93c-.23.23-.42.42-.83.42z" />
+          </svg>
+        </span>
+        <span className="hero-ticker__viewport" aria-hidden="true">
+          <span className="hero-ticker__track">
+            {TICKER_TEXT_COPIES.map((i) => (
+              <span key={i} className="hero-ticker__copy">
+                کانال تلگرام — دریافت لیست روزانهٔ قیمت و موجودی
+              </span>
+            ))}
+          </span>
+        </span>
+        <ArrowLeft className="hero-ticker__arrow" aria-hidden="true" />
+      </a>
       <div className="wrap container homepage-hero__inner">
         <div className="homepage-hero__scene" aria-hidden="true" />
+
+        {/* The real shop, not a render (spec 044 US2): the approved interior
+            photograph occupies the left column on phones, bleeding to the
+            screen edge per the mockup. Desktop keeps its approved artwork. */}
+        <figure className="homepage-hero__photo">
+          <Image
+            src={storePhoto}
+            alt="نمای داخل فروشگاه حامی همراه در مشهد"
+            fill
+            priority
+            fetchPriority="high"
+            sizes="(max-width: 767px) 55vw, 0px"
+            className="homepage-hero__photo-image"
+          />
+        </figure>
 
         <div className="homepage-hero__content">
           <span className="eyebrow homepage-hero__eyebrow">
             <span className="homepage-hero__eyebrow-dot" aria-hidden="true" />
-            موبایل و لوازم جانبی در مشهد
+            ۲۰ سال اعتماد
           </span>
 
           <h1 id="hero-title" className="homepage-hero__title">
-            <span className="homepage-hero__title-line">موبایل و لوازم جانبی</span>
-            <span className="homepage-hero__title-emphasis">برای هر روز شما.</span>
+            <span className="homepage-hero__title-line">حامی همراه،</span>
+            <span className="homepage-hero__title-emphasis">
+              فروش عمده و تکی
+              <br />
+              تلفن همراه و لوازم جانبی
+            </span>
           </h1>
-
-          <p className="homepage-hero__description">
-            برای خرید تکی یا همکاری عمده، قیمت روز و موجودی را از کارشناس فروش حامی همراه بپرسید.
-          </p>
 
           <nav className="homepage-hero__actions" aria-label="مسیرهای اصلی">
             <Link
@@ -103,7 +163,7 @@ function Hero() {
           </nav>
 
           <ul className="homepage-hero__trust" aria-label="واقعیت‌های تأییدشده درباره حامی همراه">
-            {trustFacts.map((fact) => {
+            {heroTrustFacts.map((fact) => {
               const Icon = trustFactIcons[fact.key];
 
               return (

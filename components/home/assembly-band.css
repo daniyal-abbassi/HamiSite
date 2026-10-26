@@ -76,3 +76,14 @@
     position: static;
   }
 }
+
+/* Spec 044 (US3): the owner's wide silk banner becomes the closing band's
+   ground on desktop, through the same section-ground system every other band
+   paints with — one background treatment across the homepage, not a new one.
+   The dark ground overlay keeps the copy legible over the silk. */
+@media (min-width: 1024px) {
+  #store-experience {
+    --section-ground-image: url("/images/hero/home-silk-wide.png");
+    --section-ground-position: 50% 78%;
+  }
+}

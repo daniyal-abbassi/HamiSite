@@ -23,6 +23,33 @@ test("featured rail keeps its first product visible on a phone", async ({ page }
   await page.waitForLoadState("networkidle");
 });
 
+test("desktop ticker is a compact pill whose marquee fills the bar", async ({ page }) => {
+  await page.setViewportSize({ width: 1600, height: 752 });
+  await page.goto("/");
+
+  const ticker = page.locator(".hero-ticker");
+  await expect(ticker).toBeVisible();
+  const box = (await ticker.boundingBox())!;
+
+  // Compact and docked: a full-bleed stadium beside the 1152px nav pill read as
+  // shapeless, so the desktop bar is capped and centred under the nav.
+  expect(box.width).toBeLessThanOrEqual(600);
+  expect(box.height).toBeGreaterThanOrEqual(44);
+
+  const navBox = (await page.locator(".header-glass-surface").boundingBox())!;
+  expect(Math.abs(box.x + box.width / 2 - (navBox.x + navBox.width / 2))).toBeLessThan(2);
+
+  // The loop translates half the track, so half the track must span the visible
+  // window — below that the bar empties out as the text slides away.
+  const marquee = await page.evaluate(() => ({
+    halfTrack: document.querySelector(".hero-ticker__track")!.getBoundingClientRect().width / 2,
+    window: document.querySelector(".hero-ticker__viewport")!.getBoundingClientRect().width,
+  }));
+  expect(marquee.halfTrack).toBeGreaterThanOrEqual(marquee.window);
+
+  await page.waitForLoadState("networkidle");
+});
+
 test("homepage stays inside a narrow 360px phone viewport", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/");

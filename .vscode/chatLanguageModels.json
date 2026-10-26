@@ -1,0 +1,20 @@
+[
+  {
+    "name": "9router (local :20128)",
+    "vendor": "customendpoint",
+    "apiKey": "",
+    "apiType": "chat-completions",
+    "models": [
+      {
+        "id": "fable-5",
+        "name": "fable-5 (9router :20128)",
+        "url": "http://127.0.0.1:20128/v1/chat/completions",
+        "toolCalling": true,
+        "vision": false,
+        "streaming": true,
+        "maxInputTokens": 131072,
+        "maxOutputTokens": 16384
+      }
+    ]
+  }
+]

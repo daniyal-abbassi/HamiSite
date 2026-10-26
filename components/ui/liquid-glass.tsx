@@ -824,6 +824,9 @@ export interface GlassMenuProps extends Omit<DivProps, "onSelect"> {
   triggerIcon?: React.ReactNode;
   /** Grow below the trigger when it sits near the top edge of the page. */
   expandDirection?: "center" | "down";
+  /** Closed-pill height; matches the 48 default but shrinks to fit a row of
+   *  smaller controls (e.g. the phone header). */
+  pillHeight?: number;
   /** 0 is ultra clear glass, 1 fully tinted, like the iOS 27 setting. */
   transparency?: number;
   disabled?: boolean;
@@ -840,6 +843,7 @@ export function GlassMenu({
   label = "Menu",
   triggerIcon,
   expandDirection = "center",
+  pillHeight = H,
   transparency = 0.05,
   disabled = false,
   className,
@@ -847,6 +851,10 @@ export function GlassMenu({
   onKeyDown,
   ...rest
 }: GlassMenuProps) {
+  // Shadow the module pill metrics for this component only, so every H/R use
+  // below tracks the requested pillHeight.
+  const H = pillHeight;
+  const R = H / 2;
   const [openState, setOpen] = useControllableState({
     value: openProp,
     defaultValue: defaultOpen,
@@ -1022,11 +1030,21 @@ export function GlassMenu({
         onKeyDown?.(e);
         onMenuKey(e);
       }}
+      onClick={(e) => {
+        rest.onClick?.(e);
+        // An `extend-touch-target` root paints its 44px ::after hit zone above
+        // the absolutely-positioned trigger, so taps meant for the trigger land
+        // here with the root as their target. Route them to the same open path.
+        if (!open && !disabled && e.target === e.currentTarget) {
+          focusNext.current = "first";
+          setOpen(true);
+        }
+      }}
       className={cn(
-        "relative z-10 inline-block h-12 shrink-0 align-middle text-sm whitespace-nowrap select-none",
+        "relative z-10 inline-block shrink-0 align-middle text-sm whitespace-nowrap select-none",
         className,
       )}
-      style={{ ...style, width: size.pill, scale: jelly.scale }}
+      style={{ ...style, width: size.pill, height: H, scale: jelly.scale }}
     >
       <motion.div
         className="absolute"

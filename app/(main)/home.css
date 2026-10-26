@@ -1836,7 +1836,11 @@
   isolation: isolate;
   overflow: hidden;
   width: 100%;
-  min-block-size: clamp(34rem, 49.7vw, 55.25rem);
+  /* 54vw made the section 864px tall at 1600 — taller than a 752px laptop
+     viewport, so the two hero buttons fell below the fold and the first screen
+     ended on cut-off controls. 47vw keeps the artwork's proportion while
+     letting the whole hero fit the first screen. */
+  min-block-size: clamp(34rem, 47vw, 52rem);
   margin-block-start: 0;
   padding-block-start: 6rem;
   background-color: var(--paper, #f4f1ea);
@@ -1866,7 +1870,10 @@
   position: relative;
   z-index: 1;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  /* The copy gets the larger share: at an even split the headline broke into
+     four lines inside 576px while the right half of the section held nothing but
+     the artwork's empty wall. */
+  grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
   grid-template-rows: minmax(0, 1fr);
   align-items: center;
   min-inline-size: 0;
@@ -1881,19 +1888,25 @@
   align-self: stretch;
 }
 
+/* The real store photograph is a mobile-only column (044): desktop keeps its
+   approved artwork, so the figure must not join the desktop grid. */
+.homepage-hero__photo {
+  display: none;
+}
+
 .homepage-hero__content {
   grid-column: 1;
   grid-row: 1;
   justify-self: end;
   inline-size: 100%;
-  max-inline-size: 44rem;
+  max-inline-size: 46rem;
   min-inline-size: 0;
   text-align: start;
 }
 
 .homepage-hero__eyebrow {
   gap: 0.55rem;
-  margin-block-end: 1.1rem;
+  margin-block-end: 1.3rem;
   font-family: var(--font-vazirmatn), Tahoma, sans-serif;
   font-size: 0.82rem;
   font-weight: 600;
@@ -1912,9 +1925,11 @@
   max-inline-size: 100%;
   margin: 0;
   color: rgb(var(--paper-ink));
-  font-size: var(--type-display);
+  /* Was clamp(2.75rem, 4.1vw, 4.25rem): 68px at 1600, which broke the headline
+     into four lines and pushed the buttons off the first screen. */
+  font-size: clamp(2.5rem, 3.5vw, 3.75rem);
   font-weight: var(--type-heading-weight);
-  line-height: 1.28;
+  line-height: 1.3;
   letter-spacing: 0;
   text-wrap: balance;
 }
@@ -1946,7 +1961,7 @@
 
 .homepage-hero__description {
   max-inline-size: 44ch;
-  margin-block: 1.2rem 0;
+  margin-block: 1.4rem 0;
   color: rgb(var(--paper-muted));
   font-size: var(--type-body);
   line-height: 1.8;
@@ -1954,12 +1969,95 @@
   text-wrap: pretty;
 }
 
+/* Telegram ticker — the hero's one outbound route, moved out of the copy
+   column into a slim announcement bar docked under the top navigation.
+   Full-bleed so it reads as a channel banner, not a third CTA. */
+.hero-ticker {
+  position: absolute;
+  z-index: 2;
+  inset-inline: 12px;
+  inset-block-start: 84px;
+  display: flex;
+  min-block-size: 44px;
+  align-items: center;
+  gap: 0.6rem;
+  padding-block: 0.35rem;
+  padding-inline: 0.6rem 0.85rem;
+  border-radius: 9999px;
+  background: #229ed9;
+  color: #fff;
+  text-decoration: none;
+  box-shadow: 0 12px 28px -16px rgb(34 158 217 / 95%);
+  transition: background-color 180ms ease;
+}
+
+.hero-ticker:hover {
+  background: #1b8bc1;
+}
+
+.hero-ticker:focus-visible {
+  outline: 3px solid #0878d1;
+  outline-offset: 3px;
+}
+
+.hero-ticker__icon {
+  display: grid;
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  flex: 0 0 auto;
+  place-items: center;
+  border-radius: 50%;
+  background: #fff;
+  color: #229ed9;
+}
+
+.hero-ticker__icon svg {
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
+}
+
+.hero-ticker__viewport {
+  flex: 1 1 auto;
+  min-inline-size: 0;
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(to left, transparent, #000 8%, #000 92%, transparent);
+  mask-image: linear-gradient(to left, transparent, #000 8%, #000 92%, transparent);
+}
+
+.hero-ticker__track {
+  display: inline-flex;
+  white-space: nowrap;
+  animation: hero-ticker-scroll 16s linear infinite;
+  will-change: transform;
+}
+
+.hero-ticker__copy {
+  padding-inline-end: 4rem;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+@keyframes hero-ticker-scroll {
+  from { transform: translateX(0); }
+  to { transform: translateX(50%); }
+}
+
+.hero-ticker__arrow {
+  inline-size: 1rem;
+  block-size: 1rem;
+  flex: 0 0 auto;
+  opacity: 0.9;
+}
+
+/* Room to breathe around the pair of hero buttons: at 1rem the two pills read as
+   one wide block, and the row sat flush against the section's bottom edge. */
 .homepage-hero__actions {
   display: flex;
   flex-wrap: wrap;
   align-items: stretch;
-  gap: 0.75rem;
-  margin-block-start: 1.75rem;
+  gap: 1.25rem;
+  margin-block-start: 2.5rem;
 }
 
 .homepage-hero__action {
@@ -1970,7 +2068,7 @@
   justify-content: center;
   gap: 0.7rem;
   border-radius: 9999px;
-  padding-inline: 1.5rem;
+  padding-inline: 1.9rem;
   font-size: 0.95rem;
   font-weight: 800;
   line-height: 1.5;
@@ -2001,7 +2099,7 @@
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.8rem 1rem;
-  margin: 1.6rem 0 0;
+  margin: 2rem 0 0;
   padding: 0;
   list-style: none;
 }
@@ -2042,6 +2140,11 @@
   .homepage-hero {
     padding-block-start: 7rem;
   }
+
+  .hero-ticker {
+    inset-inline: 24px;
+    inset-block-start: 96px;
+  }
 }
 
 @media (min-width: 1280px) {
@@ -2075,7 +2178,7 @@
     /* Let the showroom stay visible while starting the headline around the
        image midpoint, where the right side opens up. The soft canvas veil above
        keeps the live copy readable without making the first screen image-only. */
-    grid-template-rows: minmax(12rem, 38vw) auto;
+    grid-template-rows: minmax(8.5rem, 28vw) auto;
     align-content: start;
     align-items: start;
     padding-block-end: 2rem;
@@ -2097,29 +2200,125 @@
 }
 
 @media (max-width: 767px) {
+  /* Spec 044 first screen: the owner's silk artwork is the surface (cream field,
+     oxblood waves framing the top corners and the bottom edge), the real store
+     photograph sits top-left beside the headline, and CTAs + facts run
+     full-width beneath it — matching the approved mockup. */
+  .homepage-hero {
+    padding-block-start: 5.75rem;
+    scroll-margin-block-start: 5.75rem;
+    min-block-size: 100svh;
+    background: var(--paper) url("/images/hero/home-silk-mobile.png") center top / cover no-repeat;
+  }
+
+  /* The generated artwork and its gradient overlays belong to desktop only — the
+     silk carries its own waves. */
+  .homepage-hero__art,
+  .homepage-hero__scene,
+  .homepage-hero::before,
+  .homepage-hero::after {
+    display: none;
+  }
+
+  .homepage-hero__inner {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+    grid-template-rows: auto auto auto auto;
+    grid-template-areas:
+      "eyebrow photo"
+      "title   photo"
+      "actions actions"
+      "trust   trust";
+    row-gap: 0.5rem;
+    column-gap: 0.75rem;
+    align-items: start;
+    padding-inline: 1rem;
+    padding-block-end: 4.5rem;
+    min-block-size: auto;
+  }
+
+  /* Content dissolves so its children take the mockup's grid areas. */
+  .homepage-hero__content {
+    display: contents;
+  }
+
   .homepage-hero__eyebrow {
-    margin-block-end: 0.9rem;
-    font-size: var(--type-caption);
+    grid-area: eyebrow;
+    grid-column: 1;
+    align-self: end;
+    justify-self: start;
+    margin-block-start: 0.35rem;
+    margin-block-end: 0.2rem;
+    font-size: 0.72rem;
+    padding: 0.25rem 0.65rem;
+    inline-size: fit-content;
+    border-radius: 999px;
+    border: 1px solid rgba(100, 2, 17, 0.22);
+    background: rgba(244, 241, 234, 0.85);
+    color: var(--oxblood);
+  }
+
+  .homepage-hero__title {
+    grid-area: title;
+    grid-column: 1;
+    position: relative;
+    z-index: 1;
+    font-size: clamp(1.2rem, 4.2vw, 1.45rem);
+    line-height: 1.35;
+    margin: 0;
+    align-self: start;
+  }
+
+  .homepage-hero__title::before {
+    display: none;
+  }
+
+  .homepage-hero__title-line {
+    display: block;
+    font-size: 1.15em;
+    font-weight: 900;
+    color: #110408;
+    margin-block-end: 0.15rem;
+  }
+
+  .homepage-hero__title-emphasis {
+    display: block;
+    font-size: 0.9em;
+    font-weight: 800;
+    color: var(--oxblood);
+    line-height: 1.35;
+    position: relative;
+  }
+
+  .homepage-hero__title-emphasis::after {
+    content: "";
+    display: block;
+    inline-size: 85%;
+    block-size: 2px;
+    background: #c29b62;
+    margin-block-start: 0.35rem;
   }
 
   .homepage-hero__description {
-    margin-block-start: 1rem;
-    font-size: var(--type-support);
-    line-height: 1.8;
+    display: none;
   }
 
   .homepage-hero__actions {
+    grid-area: actions;
+    grid-column: 1 / -1;
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.65rem;
-    margin-block-start: 1.35rem;
+    gap: 0.75rem;
+    margin-block-start: 0.75rem;
   }
 
   .homepage-hero__action {
-    min-block-size: 3.25rem;
-    gap: 0.45rem;
-    padding-inline: 0.8rem;
-    font-size: 0.85rem;
+    min-block-size: 3.125rem;
+    gap: 0.5rem;
+    padding-inline: 0.85rem;
+    font-size: 0.82rem;
+    font-weight: 800;
+    border-radius: 9999px;
   }
 
   .homepage-hero__action svg {
@@ -2127,13 +2326,91 @@
     block-size: 1.1rem;
   }
 
+  .homepage-hero__action--primary {
+    border: 1px solid var(--paper-brand);
+    background: var(--paper-brand);
+    color: #ffffff;
+    box-shadow: 0 8px 20px -8px rgba(100, 2, 17, 0.45);
+  }
+
+  .homepage-hero__action--secondary {
+    border: 1.5px solid rgba(194, 155, 98, 0.75);
+    background: #fbf7ef;
+    color: var(--oxblood);
+    box-shadow: 0 4px 14px -6px rgba(100, 2, 17, 0.12);
+  }
+
   .homepage-hero__trust {
-    gap: 0.65rem 0.8rem;
-    margin-block-start: 1.25rem;
+    grid-area: trust;
+    grid-column: 1 / -1;
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.85rem 1rem;
+    margin-block-start: 1.1rem;
+  }
+
+  /* The real shop (US2): compact photo top-left beside the headline.
+     Rounded on inner corners, bleeding to the left screen edge. */
+  .homepage-hero__photo {
+    display: block;
+    grid-area: photo;
+    grid-column: 2;
+    grid-row: 1 / 3;
+    position: relative;
+    z-index: 0;
+    align-self: start;
+    inline-size: calc(100% + 1rem);
+    margin-inline-end: -1rem;
+    aspect-ratio: 4 / 4.4;
+    max-block-size: 32svh;
+    margin-block-start: 0.35rem;
+    border-start-start-radius: 24px;
+    border-end-start-radius: 24px;
+    border-start-end-radius: 0;
+    border-end-end-radius: 0;
+    overflow: hidden;
+    box-shadow: 0 16px 36px -18px rgb(74 0 18 / 40%);
+  }
+
+  .homepage-hero__photo-image {
+    object-fit: cover;
+    object-position: center 32%;
+  }
+
+  /* Mockup's 2×2 facts: outlined circular ring icons on the reading start of
+     each label, hairline divider between the columns. */
+  .homepage-hero__trust::before {
+    content: "";
+    position: absolute;
+    inset-inline-start: 50%;
+    inset-block: 0.25rem;
+    inline-size: 1px;
+    background: rgb(100 2 17 / 16%);
   }
 
   .homepage-hero__trust-item {
-    font-size: 0.7rem;
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: #110408;
+  }
+
+  .homepage-hero__trust-item > svg {
+    inline-size: 36px;
+    block-size: 36px;
+    padding: 7px;
+    flex: 0 0 auto;
+    border: 1.5px solid rgb(100 2 17 / 38%);
+    border-radius: 50%;
+    color: var(--oxblood);
+  }
+
+  /* Ticker clears the 44px bar; the hero's top padding clears the ticker. */
+  .hero-ticker {
+    inset-block-start: 56px;
   }
 }
 
@@ -2150,6 +2427,10 @@
     transition: none;
   }
 
+  .hero-ticker__track {
+    animation: none;
+  }
+
 }
 
 @media (forced-colors: active) {
@@ -2159,6 +2440,35 @@
   }
 
 }
+/* Desktop: the ticker stops competing with the hero art. It docks centred under
+   the nav pill (the nav is a max-w-6xl pill, so a full-bleed stadium beside it
+   read as shapeless), at a compact width with the brand's champagne hairline and
+   a deeper blue — jewellery under the bar, not a banner across the photo. The
+   gradient keeps hover from flattening it back to a solid. */
+@media (min-width: 1024px) {
+  .hero-ticker {
+    inset-inline: 0;
+    inset-block-start: 104px;
+    max-inline-size: 36rem;
+    margin-inline: auto;
+    min-block-size: 44px;
+    padding-inline: 0.5rem 0.75rem;
+    border: 1px solid rgb(229 211 179 / 55%);
+    background: linear-gradient(180deg, #269fdb 0%, #17739f 100%);
+    box-shadow:
+      0 16px 32px -20px rgb(6 42 64 / 90%),
+      inset 0 1px rgb(255 255 255 / 30%);
+  }
+
+  .hero-ticker:hover {
+    background: linear-gradient(180deg, #1f8ec9 0%, #125f85 100%);
+  }
+
+  .hero-ticker__copy {
+    font-weight: 600;
+  }
+}
+
 /* ==== end 018 homepage hero ==== */
 
 /* Online services: visual taxonomy first, supporting copy second. */

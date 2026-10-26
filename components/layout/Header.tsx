@@ -10,13 +10,14 @@ import { UserMenu } from "@/components/layout/UserMenu";
 import { PillNav, type PillNavItem } from "@/components/layout/PillNav";
 import SmoothDropdown from "@/components/smooth-dropdown";
 import hamiWordmark from "@/public/brand/قسمت-فارسی-لوگو-زمینه-سفید.png";
+import hamiMarkAlpha from "@/public/brand/hami-mark-alpha.png";
+import hamiWordmarkFa from "@/public/brand/hami-wordmark-fa.png";
 import { cn } from "@/lib/utils";
 import { nextHeaderScrollState, type HeaderScrollState } from "./header-scroll";
 import "./header-glass.css";
 
 const navItems: PillNavItem[] = [
   { href: "/", label: "خانه" },
-  { href: "/partners", label: "همکاری عمده" },
 ];
 
 /**
@@ -67,6 +68,20 @@ export function Header() {
   }, []);
 
   return (
+    <>
+    <Link
+      href="/"
+      className={cn("site-sticky-brand", scrolled && "site-sticky-brand--scrolled")}
+      aria-label="حامی همراه — صفحه اصلی"
+    >
+      <Image
+        src={hamiWordmark}
+        alt=""
+        priority
+        sizes="(min-width: 768px) 144px, 112px"
+        className="site-sticky-brand__image"
+      />
+    </Link>
     <header
       className={cn(
         "site-header-glass fixed inset-x-0 top-0 z-50",
@@ -77,30 +92,25 @@ export function Header() {
       <nav
         className="header-glass-surface header-glass-surface--pill mx-auto flex max-w-6xl items-center gap-1 rounded-full pe-1.5 md:pe-2 md:gap-3"
       >
-        {/*
-         * T082: the identity is the shop's own supplied wordmark, not a redrawn
-         * derivative. This used to be `hami-mark.png` — a 1254×1254 source file
-         * scaled into a 36px square, with the name it stands for hidden below `sm`,
-         * so at 360 and 390 the header carried a shape no shopper could read as a
-         * shop name. The Assumption is that the official files are used as supplied
-         * and not redrawn, and `قسمت-فارسی-لوگو.png` is exactly that: the Persian
-         * lockup on the brand's own oxblood, which is why it needs no plate, no
-         * ring and no gradient behind it. It is the name, so nothing repeats it.
-         */}
-        <Link
-          href="/"
-          className="flex shrink-0 items-center px-1 md:ps-1 md:pe-0 rounded-md extend-touch-target focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-amber-400"
-          aria-label="حامی همراه — صفحه اصلی"
-        >
+        {/* On phones the brand is the mockup's white lockup — mark and wordmark
+            from the official alpha files, inverted white over the solid oxblood
+            bar. No tile: the bar itself is the brand surface. */}
+        <Link href="/" aria-label="حامی همراه — صفحه اصلی" className="site-bar-brand shrink-0 md:hidden">
           <Image
-            src={hamiWordmark}
-            alt="حامی همراه"
+            src={hamiMarkAlpha}
+            alt=""
             priority
-            sizes="(min-width: 768px) 100px, 92px"
-            className="h-8 w-24 rounded-md object-contain md:h-9 md:w-28"
+            sizes="40px"
+            className="site-bar-brand__mark"
+          />
+          <Image
+            src={hamiWordmarkFa}
+            alt=""
+            priority
+            sizes="110px"
+            className="site-bar-brand__wordmark"
           />
         </Link>
-
         <PillNav
           className="hidden shrink-0 lg:block"
           showLogo={false}
@@ -152,5 +162,6 @@ export function Header() {
         </div>
       </nav>
     </header>
+    </>
   );
 }

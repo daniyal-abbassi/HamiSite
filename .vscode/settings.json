@@ -1,0 +1,28 @@
+{
+  // =========================================================================
+  // HamiSite — VS Code AI agent / language-model workspace config
+  // =========================================================================
+  // Custom agent: 9router (fable-5) -> .vscode/prompts/9router-agent.prompt.md
+  // Custom model endpoint: .vscode/chatLanguageModels.json
+  //
+  // The model is registered as a VS Code "customendpoint" language model:
+  //   vendor: customendpoint
+  //   model id: fable-5
+  //   url: http://127.0.0.1:20128/v1/chat/completions
+  //
+  // HOW TO ACTIVATE THE MODEL (one-time):
+  //   1. Open VS Code in this workspace.
+  //   2. Command Palette -> "Chat: Manage Language Models".
+  //   3. Confirm "9router (local :20128)" / "fable-5" appears; if not,
+  //      paste the contents of .vscode/chatLanguageModels.json via
+  //      "Add Models" -> "Custom Endpoint" (or "Update API Key" to set apiKey).
+  //   4. In Chat, open the model picker and select "fable-5 (9router :20128)".
+  //
+  // TO USE THE CUSTOM AGENT:
+  //   Chat -> select "Local" harness -> run "/9router — fable-5" or use
+  //   "Chat: Run Prompt" and choose .vscode/prompts/9router-agent.prompt.md.
+  //
+  // NOTE: If your 9router listens on a path other than /v1/chat/completions,
+  // update the "url" in .vscode/chatLanguageModels.json accordingly.
+  // =========================================================================
+}
