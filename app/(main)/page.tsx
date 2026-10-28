@@ -1,20 +1,9 @@
 import Link from "next/link";
 import Image from "next/image";
 import { pageMetadata } from "@/lib/seo-metadata";
-import {
-  ArrowLeft,
-  Clock,
-  House,
-  MapPin,
-  Medal,
-  PackageCheck,
-  ShieldCheck,
-  Smartphone,
-  type LucideIcon,
-} from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { trustFacts } from "@/lib/content/verified-facts";
 import storePhoto from "@/public/store/shop-ai-relight.png";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { additionalProductsRail, discountedProductsRail, homepageProductsRail } from "@/lib/home-rails-db";
@@ -40,32 +29,6 @@ export const metadata = pageMetadata({
 // Keep the homepage fast and statically served while refreshing catalogue-backed
 // sections shortly after an import or an inventory change.
 export const revalidate = 60;
-
-const trustFactIcons: Record<(typeof trustFacts)[number]["key"], LucideIcon> = {
-  history: Clock,
-  store: MapPin,
-  redmi: Smartphone,
-  tch: PackageCheck,
-  priceMatch: Medal,
-  officialDealership: ShieldCheck,
-};
-
-// The mockup's four: the first screen renders this subset, not every fact in
-// the verified source.
-const heroTrustKeys = ["history", "store", "priceMatch", "officialDealership"] as const;
-
-const heroTrustFacts = heroTrustKeys.map(
-  (key) => trustFacts.find((fact) => fact.key === key)!,
-);
-
-const trustFactShortLabels: Record<(typeof trustFacts)[number]["key"], string> = {
-  history: "۲۰ سال سابقه",
-  store: "فروشگاه حضوری در مشهد",
-  redmi: "نماینده‌ی فروش برند ریلمی",
-  tch: "نماینده رسمی تی‌سی‌اچ در منطقه",
-  priceMatch: "قیمت برد به برد",
-  officialDealership: "نمایندگی رسمی",
-};
 
 /* The marquee loops by translating exactly half the track, so one half must
    always cover the widest viewport — otherwise the bar empties out on desktop
@@ -128,7 +91,7 @@ function Hero() {
             fill
             priority
             fetchPriority="high"
-            sizes="(max-width: 767px) 55vw, 0px"
+            sizes="(max-width: 767px) 100vw, 0px"
             className="homepage-hero__photo-image"
           />
         </figure>
@@ -161,19 +124,6 @@ function Hero() {
               <ArrowLeft aria-hidden="true" />
             </Link>
           </nav>
-
-          <ul className="homepage-hero__trust" aria-label="واقعیت‌های تأییدشده درباره حامی همراه">
-            {heroTrustFacts.map((fact) => {
-              const Icon = trustFactIcons[fact.key];
-
-              return (
-                <li key={fact.key} className="homepage-hero__trust-item" aria-label={fact.label}>
-                  <Icon aria-hidden="true" />
-                  <span>{trustFactShortLabels[fact.key]}</span>
-                </li>
-              );
-            })}
-          </ul>
         </div>
       </div>
     </section>

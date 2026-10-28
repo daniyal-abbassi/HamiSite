@@ -1973,51 +1973,96 @@
   text-wrap: pretty;
 }
 
-/* Telegram ticker — the hero's one outbound route, moved out of the copy
+/* Telegram ticker — a neon sign: the hero's one outbound route, moved out of the copy
    column into a slim announcement bar docked under the top navigation.
    Full-bleed so it reads as a channel banner, not a third CTA. */
 .hero-ticker {
+  --neon-core: #fff6dc;
+  --neon-glow: 255 205 110;
   position: absolute;
   z-index: 2;
   inset-inline: 12px;
   inset-block-start: 84px;
   display: flex;
-  min-block-size: 44px;
+  min-block-size: 46px;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.65rem;
   padding-block: 0.35rem;
-  padding-inline: 0.6rem 0.85rem;
+  padding-inline: 0.55rem 0.9rem;
+  border: 1.5px solid var(--neon-core);
   border-radius: 9999px;
-  background: #229ed9;
-  color: #fff;
+  /* A dark smoked-glass plate, so the tube reads as lit rather than painted. */
+  background: linear-gradient(180deg, rgb(22 2 8 / 80%), rgb(38 3 13 / 80%));
+  -webkit-backdrop-filter: blur(10px) saturate(130%);
+  backdrop-filter: blur(10px) saturate(130%);
+  color: #fff3d0;
   text-decoration: none;
-  box-shadow: 0 12px 28px -16px rgb(34 158 217 / 95%);
-  transition: background-color 180ms ease;
+  box-shadow:
+    0 0 3px rgb(255 246 220 / 95%),
+    0 0 11px rgb(var(--neon-glow) / 80%),
+    0 0 26px rgb(var(--neon-glow) / 48%),
+    inset 0 0 9px rgb(var(--neon-glow) / 38%),
+    inset 0 0 22px rgb(var(--neon-glow) / 14%);
+  transition: box-shadow 200ms ease;
+  animation: hero-neon-flicker 8s linear infinite;
+}
+
+/* The second, fainter line of a double-tube sign. */
+.hero-ticker::before {
+  content: "";
+  position: absolute;
+  inset: 3px;
+  border: 1px solid rgb(var(--neon-glow) / 28%);
+  border-radius: inherit;
+  pointer-events: none;
 }
 
 .hero-ticker:hover {
-  background: #1b8bc1;
+  box-shadow:
+    0 0 4px rgb(255 246 220 / 100%),
+    0 0 15px rgb(var(--neon-glow) / 95%),
+    0 0 34px rgb(var(--neon-glow) / 62%),
+    inset 0 0 12px rgb(var(--neon-glow) / 48%),
+    inset 0 0 26px rgb(var(--neon-glow) / 20%);
 }
 
 .hero-ticker:focus-visible {
-  outline: 3px solid #0878d1;
-  outline-offset: 3px;
+  outline: 3px solid #fff6dc;
+  outline-offset: 4px;
 }
 
+/* The Telegram mark keeps its own blue, lit as a second tube. */
 .hero-ticker__icon {
+  position: relative;
   display: grid;
-  inline-size: 1.75rem;
-  block-size: 1.75rem;
+  inline-size: 1.9rem;
+  block-size: 1.9rem;
   flex: 0 0 auto;
   place-items: center;
+  border: 1.5px solid #cfeeff;
   border-radius: 50%;
-  background: #fff;
-  color: #229ed9;
+  background: radial-gradient(circle at 35% 30%, #4fb9ec, #1b8fcb 70%);
+  color: #fff;
+  box-shadow:
+    0 0 4px #bfeaff,
+    0 0 12px rgb(34 158 217 / 95%),
+    0 0 26px rgb(34 158 217 / 55%);
+}
+
+.hero-ticker__icon::after {
+  content: "";
+  position: absolute;
+  inset: -2px;
+  border: 1.5px solid rgb(127 214 255 / 70%);
+  border-radius: 50%;
+  animation: hero-neon-ping 2.6s ease-out infinite;
+  pointer-events: none;
 }
 
 .hero-ticker__icon svg {
-  inline-size: 1.1rem;
-  block-size: 1.1rem;
+  inline-size: 1.05rem;
+  block-size: 1.05rem;
+  filter: drop-shadow(0 0 2px rgb(255 255 255 / 80%));
 }
 
 .hero-ticker__viewport {
@@ -2031,15 +2076,21 @@
 .hero-ticker__track {
   display: inline-flex;
   white-space: nowrap;
-  animation: hero-ticker-scroll 16s linear infinite;
+  animation: hero-ticker-scroll 18s linear infinite;
   will-change: transform;
 }
 
+/* Lit lettering: a white-hot core inside a warm champagne halo. */
 .hero-ticker__copy {
   padding-inline-end: 4rem;
-  font-size: 0.85rem;
-  font-weight: 700;
+  font-size: 0.88rem;
+  font-weight: 800;
   letter-spacing: 0;
+  color: #fff6dc;
+  text-shadow:
+    0 0 2px rgb(255 246 220 / 90%),
+    0 0 8px rgb(var(--neon-glow) / 95%),
+    0 0 18px rgb(var(--neon-glow) / 65%);
 }
 
 @keyframes hero-ticker-scroll {
@@ -2047,11 +2098,30 @@
   to { transform: translateX(50%); }
 }
 
+/* A real tube does not blink on a clock: it stutters. Short dips at irregular
+   points, never below 55% so the lettering stays readable. */
+@keyframes hero-neon-flicker {
+  0%, 17%, 21%, 23%, 61%, 63%, 79%, 100% { opacity: 1; }
+  18% { opacity: 0.55; }
+  19% { opacity: 0.95; }
+  20% { opacity: 0.62; }
+  22% { opacity: 0.8; }
+  62% { opacity: 0.6; }
+  80% { opacity: 0.9; }
+}
+
+@keyframes hero-neon-ping {
+  0% { transform: scale(1); opacity: 0.9; }
+  70%, 100% { transform: scale(1.7); opacity: 0; }
+}
+
 .hero-ticker__arrow {
-  inline-size: 1rem;
-  block-size: 1rem;
+  inline-size: 1.1rem;
+  block-size: 1.1rem;
   flex: 0 0 auto;
-  opacity: 0.9;
+  color: #fff6dc;
+  filter: drop-shadow(0 0 5px rgb(var(--neon-glow) / 95%));
+  animation: hero-cta-nudge 1.8s ease-in-out infinite;
 }
 
 /* Room to breathe around the pair of hero buttons: at 1rem the two pills read as
@@ -2099,35 +2169,6 @@
   outline-offset: 3px;
 }
 
-.homepage-hero__trust {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.8rem 1rem;
-  margin: 2rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.homepage-hero__trust-item {
-  display: flex;
-  min-inline-size: 0;
-  align-items: flex-start;
-  gap: 0.45rem;
-  color: rgb(var(--paper-muted));
-  font-size: 0.75rem;
-  font-weight: 500;
-  line-height: 1.7;
-  letter-spacing: 0;
-}
-
-.homepage-hero__trust-item svg {
-  inline-size: 1rem;
-  block-size: 1rem;
-  flex: 0 0 auto;
-  margin-block-start: 0.18rem;
-  color: var(--paper-brand);
-}
-
 @media (hover: hover) and (pointer: fine) {
   .homepage-hero__action--primary:hover {
     background: #75040f;
@@ -2148,18 +2189,6 @@
   .hero-ticker {
     inset-inline: 24px;
     inset-block-start: 96px;
-  }
-}
-
-@media (min-width: 1280px) {
-  .homepage-hero__trust {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 0.65rem;
-  }
-
-  .homepage-hero__trust-item:not(:last-child) {
-    border-inline-end: 1px solid var(--line);
-    padding-inline-end: 0.65rem;
   }
 }
 
@@ -2204,19 +2233,19 @@
 }
 
 @media (max-width: 767px) {
-  /* Spec 044 first screen: the owner's silk artwork is the surface (cream field,
-     oxblood waves framing the top corners and the bottom edge), the real store
-     photograph sits top-left beside the headline, and CTAs + facts run
-     full-width beneath it — matching the approved mockup. */
+  /* The store photograph is the hero. It runs edge to edge directly beneath the
+     bar, the headline is set on it over a deep-burgundy fade that starts well
+     below the shop interior (so the interior itself stays untouched), and the
+     two actions sit on the cream below. Eyebrow, headline and photo share one
+     grid cell so the type is layered on the image, not stacked beside it. */
   .homepage-hero {
-    padding-block-start: 5.75rem;
-    scroll-margin-block-start: 5.75rem;
-    min-block-size: 100svh;
+    padding-block-start: 3.75rem;
+    scroll-margin-block-start: 3.75rem;
+    min-block-size: auto;
     background: var(--paper) url("/images/hero/home-silk-mobile.png") center top / cover no-repeat;
   }
 
-  /* The generated artwork and its gradient overlays belong to desktop only — the
-     silk carries its own waves. */
+  /* The generated artwork and its gradient overlays belong to desktop only. */
   .homepage-hero__art,
   .homepage-hero__scene,
   .homepage-hero::before,
@@ -2226,51 +2255,91 @@
 
   .homepage-hero__inner {
     display: grid;
-    grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-    grid-template-rows: auto auto auto auto;
-    grid-template-areas:
-      "eyebrow photo"
-      "title   photo"
-      "actions actions"
-      "trust   trust";
-    row-gap: 0.5rem;
-    column-gap: 0.75rem;
-    align-items: start;
-    padding-inline: 1rem;
-    padding-block-end: 4.5rem;
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) auto auto auto;
+    row-gap: 0;
+    padding-inline: 0;
+    padding-block-end: 5.5rem;
     min-block-size: auto;
   }
 
-  /* Content dissolves so its children take the mockup's grid areas. */
+  /* Content dissolves so its children take the grid areas. */
   .homepage-hero__content {
     display: contents;
   }
 
-  .homepage-hero__eyebrow {
-    grid-area: eyebrow;
+  .homepage-hero__photo {
+    display: block;
     grid-column: 1;
+    grid-row: 1 / 4;
+    position: relative;
+    z-index: 0;
+    inline-size: 100%;
+    min-block-size: min(66svh, 30rem);
+    overflow: hidden;
+    border-end-start-radius: 34px;
+    border-end-end-radius: 34px;
+    box-shadow: 0 26px 44px -24px rgb(74 0 18 / 60%);
+    isolation: isolate;
+  }
+
+  .homepage-hero__photo-image {
+    object-fit: cover;
+    object-position: center 30%;
+    transform-origin: 50% 40%;
+    animation: hero-photo-drift 18s ease-out both;
+  }
+
+  /* Two fades: a light one under the bar and ticker so they sit on the photo,
+     and the deep burgundy one the headline is set on. */
+  .homepage-hero__photo::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+      linear-gradient(to bottom, rgb(40 2 10 / 52%) 0%, rgb(40 2 10 / 0%) 24%),
+      linear-gradient(to top, rgb(38 2 10 / 96%) 0%, rgb(60 3 17 / 86%) 30%, rgb(70 3 20 / 38%) 52%, rgb(70 3 20 / 0%) 70%);
+  }
+
+  .band-paper .homepage-hero__eyebrow {
+    grid-column: 1;
+    grid-row: 2;
     align-self: end;
     justify-self: start;
-    margin-block-start: 0.35rem;
-    margin-block-end: 0.2rem;
-    font-size: 0.72rem;
-    padding: 0.25rem 0.65rem;
-    inline-size: fit-content;
+    z-index: 2;
+    position: relative;
+    margin-inline-start: 1.25rem;
+    margin-block-end: 0.85rem;
+    padding: 0.3rem 0.8rem;
+    font-size: 0.78rem;
     border-radius: 999px;
-    border: 1px solid rgba(100, 2, 17, 0.22);
-    background: rgba(244, 241, 234, 0.85);
-    color: var(--oxblood);
+    border: 1px solid rgb(229 211 179 / 60%);
+    background: rgb(40 2 10 / 58%);
+    color: #e5d3b3;
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+  }
+
+  .band-paper .homepage-hero__eyebrow-dot {
+    background: #e5d3b3;
   }
 
   .homepage-hero__title {
-    grid-area: title;
     grid-column: 1;
+    grid-row: 3;
+    align-self: end;
+    z-index: 2;
     position: relative;
-    z-index: 1;
-    font-size: clamp(1.2rem, 4.2vw, 1.45rem);
-    line-height: 1.35;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.15rem;
     margin: 0;
-    align-self: start;
+    padding: 0 1.25rem 1.6rem;
+    font-size: clamp(1.7rem, 7.4vw, 2.15rem);
+    line-height: 1.3;
+    text-shadow: 0 2px 22px rgb(20 0 6 / 55%);
   }
 
   .homepage-hero__title::before {
@@ -2279,28 +2348,34 @@
 
   .homepage-hero__title-line {
     display: block;
-    font-size: 1.15em;
+    font-size: 1.3em;
     font-weight: 900;
-    color: #110408;
-    margin-block-end: 0.15rem;
+    line-height: 1.15;
+    color: #e5d3b3;
+    letter-spacing: 0;
+    animation: hero-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.05s both;
   }
 
   .homepage-hero__title-emphasis {
     display: block;
-    font-size: 0.9em;
-    font-weight: 800;
-    color: var(--oxblood);
-    line-height: 1.35;
+    font-size: 0.86em;
+    font-weight: 900;
+    line-height: 1.4;
+    color: #ffffff;
     position: relative;
+    animation: hero-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) 0.18s both;
   }
 
   .homepage-hero__title-emphasis::after {
     content: "";
     display: block;
-    inline-size: 85%;
-    block-size: 2px;
-    background: #c29b62;
-    margin-block-start: 0.35rem;
+    inline-size: 4.5rem;
+    block-size: 3px;
+    border-radius: 3px;
+    background: linear-gradient(to left, #e5d3b3, #c29b62);
+    margin-block-start: 0.7rem;
+    transform-origin: right center;
+    animation: hero-rule 0.9s cubic-bezier(0.22, 1, 0.36, 1) 0.55s both;
   }
 
   .homepage-hero__description {
@@ -2308,113 +2383,118 @@
   }
 
   .homepage-hero__actions {
-    grid-area: actions;
-    grid-column: 1 / -1;
+    grid-column: 1;
+    grid-row: 4;
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
     gap: 0.75rem;
-    margin-block-start: 0.75rem;
+    margin: 1.25rem 1rem 0;
   }
 
   .homepage-hero__action {
-    min-block-size: 3.125rem;
-    gap: 0.5rem;
-    padding-inline: 0.85rem;
-    font-size: 0.82rem;
-    font-weight: 800;
+    position: relative;
+    overflow: hidden;
+    min-block-size: 3.5rem;
+    gap: 0.6rem;
+    padding-inline: 0.9rem;
+    font-size: 0.9rem;
+    font-weight: 900;
     border-radius: 9999px;
+    transition: transform 160ms ease, box-shadow 160ms ease;
+  }
+
+  .homepage-hero__action:active {
+    transform: scale(0.96);
   }
 
   .homepage-hero__action svg {
-    inline-size: 1.1rem;
-    block-size: 1.1rem;
+    inline-size: 1.7rem;
+    block-size: 1.7rem;
+    padding: 0.4rem;
+    border-radius: 50%;
+    flex: 0 0 auto;
+    animation: hero-cta-nudge 1.8s ease-in-out infinite;
   }
 
+  /* Primary: deep oxblood with a champagne rim, a lit top edge and a glow that
+     reads from across the room; a slow sheen crosses it every few seconds. */
   .homepage-hero__action--primary {
-    border: 1px solid var(--paper-brand);
-    background: var(--paper-brand);
+    border: 1.5px solid rgb(229 211 179 / 70%);
+    background: linear-gradient(160deg, #9a1d33 0%, #6e0415 48%, #3f010b 100%);
     color: #ffffff;
-    box-shadow: 0 8px 20px -8px rgba(100, 2, 17, 0.45);
+    box-shadow:
+      0 16px 30px -10px rgb(100 2 17 / 80%),
+      0 0 0 4px rgb(100 2 17 / 12%),
+      inset 0 1px 0 rgb(255 255 255 / 30%);
   }
 
-  .homepage-hero__action--secondary {
-    border: 1.5px solid rgba(194, 155, 98, 0.75);
-    background: #fbf7ef;
-    color: var(--oxblood);
-    box-shadow: 0 4px 14px -6px rgba(100, 2, 17, 0.12);
+  .homepage-hero__action--primary svg {
+    background: rgb(255 255 255 / 18%);
+    color: #fff;
   }
 
-  .homepage-hero__trust {
-    grid-area: trust;
-    grid-column: 1 / -1;
-    position: relative;
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.85rem 1rem;
-    margin-block-start: 1.1rem;
-  }
-
-  /* The real shop (US2): compact photo top-left beside the headline.
-     Rounded on inner corners, bleeding to the left screen edge. */
-  .homepage-hero__photo {
-    display: block;
-    grid-area: photo;
-    grid-column: 2;
-    grid-row: 1 / 3;
-    position: relative;
-    z-index: 0;
-    align-self: start;
-    inline-size: calc(100% + 1rem);
-    margin-inline-end: -1rem;
-    aspect-ratio: 4 / 4.4;
-    max-block-size: 32svh;
-    margin-block-start: 0.35rem;
-    border-start-start-radius: 24px;
-    border-end-start-radius: 24px;
-    border-start-end-radius: 0;
-    border-end-end-radius: 0;
-    overflow: hidden;
-    box-shadow: 0 16px 36px -18px rgb(74 0 18 / 40%);
-  }
-
-  .homepage-hero__photo-image {
-    object-fit: cover;
-    object-position: center 32%;
-  }
-
-  /* Mockup's 2×2 facts: outlined circular ring icons on the reading start of
-     each label, hairline divider between the columns. */
-  .homepage-hero__trust::before {
+  .homepage-hero__action--primary::after {
     content: "";
     position: absolute;
-    inset-inline-start: 50%;
-    inset-block: 0.25rem;
-    inline-size: 1px;
-    background: rgb(100 2 17 / 16%);
+    inset-block: 0;
+    left: 0;
+    inline-size: 38%;
+    background: linear-gradient(105deg, transparent, rgb(255 255 255 / 38%), transparent);
+    transform: translateX(-130%) skewX(-20deg);
+    animation: hero-cta-sheen 5s ease-in-out 1.4s infinite;
+    pointer-events: none;
   }
 
-  .homepage-hero__trust-item {
-    display: flex;
-    align-items: center;
-    gap: 0.55rem;
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: #110408;
+  /* Secondary: the store's gold beam (the same lightbeam-cta the desktop uses),
+     not a plain outlined chip. */
+  .homepage-hero__action--secondary {
+    color: #300710;
   }
 
-  .homepage-hero__trust-item > svg {
-    inline-size: 36px;
-    block-size: 36px;
-    padding: 7px;
-    flex: 0 0 auto;
-    border: 1.5px solid rgb(100 2 17 / 38%);
-    border-radius: 50%;
-    color: var(--oxblood);
+  .homepage-hero__action--secondary svg {
+    background: rgb(48 7 16 / 14%);
+    color: #300710;
   }
 
-  /* Ticker clears the 44px bar; the hero's top padding clears the ticker. */
+  /* The ticker floats on the photo, 16px clear of the 60px bar. */
   .hero-ticker {
-    inset-block-start: 56px;
+    inset-block-start: 76px;
+  }
+}
+
+@keyframes hero-photo-drift {
+  from { transform: scale(1.08); }
+  to { transform: scale(1); }
+}
+
+@keyframes hero-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes hero-rule {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes hero-cta-sheen {
+  0% { transform: translateX(-130%) skewX(-20deg); }
+  35%, 100% { transform: translateX(520%) skewX(-20deg); }
+}
+
+@keyframes hero-cta-nudge {
+  0%, 100% { transform: translateX(0); }
+  50% { transform: translateX(-4px); }
+}
+
+@media (max-width: 767px) and (prefers-reduced-motion: reduce) {
+  .homepage-hero__photo-image,
+  .homepage-hero__title-line,
+  .homepage-hero__title-emphasis,
+  .homepage-hero__title-emphasis::after,
+  .homepage-hero__action svg,
+  .homepage-hero__action--primary::after {
+    animation: none;
   }
 }
 
@@ -2431,7 +2511,10 @@
     transition: none;
   }
 
-  .hero-ticker__track {
+  .hero-ticker,
+  .hero-ticker__track,
+  .hero-ticker__icon::after,
+  .hero-ticker__arrow {
     animation: none;
   }
 
@@ -2446,9 +2529,8 @@
 }
 /* Desktop: the ticker stops competing with the hero art. It docks centred under
    the nav pill (the nav is a max-w-6xl pill, so a full-bleed stadium beside it
-   read as shapeless), at a compact width with the brand's champagne hairline and
-   a deeper blue — jewellery under the bar, not a banner across the photo. The
-   gradient keeps hover from flattening it back to a solid. */
+   read as shapeless), at a compact width — a lit sign under the bar, not a banner
+   across the photo. */
 @media (min-width: 1024px) {
   .hero-ticker {
     inset-inline: 0;
@@ -2457,19 +2539,10 @@
     margin-inline: auto;
     min-block-size: 44px;
     padding-inline: 0.5rem 0.75rem;
-    border: 1px solid rgb(229 211 179 / 55%);
-    background: linear-gradient(180deg, #269fdb 0%, #17739f 100%);
-    box-shadow:
-      0 16px 32px -20px rgb(6 42 64 / 90%),
-      inset 0 1px rgb(255 255 255 / 30%);
-  }
-
-  .hero-ticker:hover {
-    background: linear-gradient(180deg, #1f8ec9 0%, #125f85 100%);
   }
 
   .hero-ticker__copy {
-    font-weight: 600;
+    font-weight: 700;
   }
 }
 
