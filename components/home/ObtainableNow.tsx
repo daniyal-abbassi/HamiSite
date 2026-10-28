@@ -23,13 +23,13 @@ export async function ObtainableNow() {
           </h2>
           <DataCurrencyNote generatedAt={generatedAt} dateOnly className="mt-2 text-xs" />
         </div>
-        <Link href="/shop?stock=purchasable" className="inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
+        <Link href="/shop?stock=purchasable" className="inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
           مشاهده همه <ArrowLeft className="size-4" />
         </Link>
       </div>
 
       <div className="mt-8">
-        <ProductRail products={products as unknown as ProductCardData[]} label="محصولات قابل سفارش" />
+        <ProductRail products={products as unknown as ProductCardData[]} label="محصولات قابل سفارش" className="-mx-6 px-6 scroll-px-6 sm:mx-0 sm:px-0 sm:scroll-px-0" />
       </div>
     </section>
   );

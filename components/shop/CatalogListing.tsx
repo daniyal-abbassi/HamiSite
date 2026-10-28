@@ -56,11 +56,11 @@ export function CatalogListing({
   return (
     <div className="container py-10">
       <nav aria-label="مسیر صفحه" className="type-label mb-6 flex flex-wrap items-center gap-1.5 text-muted-foreground/70">
-        <Link href="/" className="transition-colors hover:text-aqua">خانه</Link>
+        <Link href="/" className="inline-flex min-h-11 items-center transition-colors hover:text-aqua">خانه</Link>
         {breadcrumb.map((crumb) => (
           <span key={crumb.href} className="flex items-center gap-1.5">
             <span aria-hidden="true">/</span>
-            <Link href={crumb.href} className="transition-colors hover:text-aqua">
+            <Link href={crumb.href} className="inline-flex min-h-11 items-center transition-colors hover:text-aqua">
               {crumb.label}
             </Link>
           </span>
@@ -73,7 +73,6 @@ export function CatalogListing({
         <div className="section-label">
           <span>{eyebrow}</span>
           <i />
-          <p>{title}</p>
         </div>
         <h1 className="type-page mt-4 tracking-normal text-foreground">{title}</h1>
         <p className="type-support mt-2 max-w-xl text-muted-foreground">{description}</p>
@@ -91,7 +90,7 @@ export function CatalogListing({
             href={viewHref({ obtainable: false })}
             aria-pressed={!view.obtainable}
             className={cn(
-              "type-label rounded-full border px-3.5 py-1.5 font-bold transition-colors",
+              "type-label inline-flex min-h-11 items-center rounded-full border px-3.5 font-bold transition-colors",
               !view.obtainable ? "border-champagne/60 text-champagne" : "border-line text-foreground/70 hover:border-champagne/40",
             )}
           >
@@ -101,7 +100,7 @@ export function CatalogListing({
             href={viewHref({ obtainable: true })}
             aria-pressed={view.obtainable}
             className={cn(
-              "type-label rounded-full border px-3.5 py-1.5 font-bold transition-colors",
+              "type-label inline-flex min-h-11 items-center rounded-full border px-3.5 font-bold transition-colors",
               view.obtainable ? "border-champagne/60 text-champagne" : "border-line text-foreground/70 hover:border-champagne/40",
             )}
           >
@@ -126,7 +125,7 @@ export function CatalogListing({
               }
               aria-pressed={view.sort === "price-asc" && view.obtainable}
               className={cn(
-                "type-label rounded-full border px-3.5 py-1.5 font-bold transition-colors",
+                "type-label inline-flex min-h-11 items-center rounded-full border px-3.5 font-bold transition-colors",
                 view.sort === "price-asc" && view.obtainable
                   ? "border-aqua text-aqua"
                   : "border-line text-foreground/70 hover:border-aqua/40",
@@ -151,7 +150,7 @@ export function CatalogListing({
               href={viewHref({ sort: view.sort === option.key ? "" : option.key })}
               aria-pressed={view.sort === option.key}
               className={cn(
-                "type-label rounded-full border px-3.5 py-1.5 font-bold transition-colors",
+                "type-label inline-flex min-h-11 items-center rounded-full border px-3.5 font-bold transition-colors",
                 view.sort === option.key ? "border-aqua text-aqua" : "border-line text-foreground/70 hover:border-aqua/40",
               )}
             >
@@ -184,7 +183,7 @@ export function CatalogListing({
       <div className="mt-10 flex flex-wrap gap-3">
         <Link
           href="/shop"
-          className="inline-flex items-center gap-2 rounded-full border border-champagne/25 px-5 py-2.5 text-xs font-bold text-foreground/80 transition-colors hover:border-champagne/60"
+          className="inline-flex min-h-11 items-center gap-2 rounded-full border border-champagne/25 px-5 text-xs font-bold text-foreground/80 transition-colors hover:border-champagne/60"
         >
           همه محصولات فروشگاه
         </Link>

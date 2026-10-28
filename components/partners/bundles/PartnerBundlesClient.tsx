@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Lock, ShieldAlert, Sparkles, Store } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
 import { apiGet, apiPost } from "@/lib/api-client";
@@ -64,9 +66,10 @@ export function PartnerBundlesClient() {
   // 1. Loading state
   if (status === "loading" || (isPartner && loading)) {
     return (
-      <div className="py-16 text-center">
-        <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-amber-500 border-t-transparent" />
-        <p className="mt-4 text-sm text-zinc-400">در حال دریافت سبدهای ویژه همکاران...</p>
+      <div className="mx-auto grid max-w-3xl gap-4" aria-busy="true" aria-label="در حال دریافت سبدهای ویژه همکاران">
+        {[0, 1, 2].map((i) => (
+          <Skeleton key={i} className="h-28 rounded-xl" />
+        ))}
       </div>
     );
   }
@@ -74,26 +77,18 @@ export function PartnerBundlesClient() {
   // 2. Guest state (not logged in)
   if (status === "guest" || !user) {
     return (
-      <div className="mx-auto max-w-lg rounded-3xl bg-zinc-900/80 border border-zinc-800 p-8 text-center my-12 shadow-2xl">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-amber-500/10 text-amber-400 mb-5">
-          <Lock size={28} />
-        </div>
-        <h2 className="text-xl font-black text-zinc-100 mb-2">ورود به پنل همکاران</h2>
-        <p className="text-sm text-zinc-400 leading-relaxed mb-6">
+      <div className="glass mx-auto my-12 flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
+        <Lock className="size-10 text-aqua/60" />
+        <h2 className="text-lg font-black">ورود به پنل همکاران</h2>
+        <p className="text-sm leading-7 text-muted-foreground">
           مشاهده سبدهای تخفیف‌دار اختصاصی تنها برای همکاران عمده و نمایندگان حامی همراه امکان‌پذیر است.
         </p>
-        <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
-          <Link
-            href="/login"
-            className="w-full sm:w-auto rounded-xl bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-6 py-2.5 text-xs transition-colors"
-          >
-            ورود به حساب کاربری
+        <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row">
+          <Link href={`/login?next=${encodeURIComponent("/partners/bundles")}`}>
+            <Button variant="oxblood" className="w-full">ورود به حساب کاربری</Button>
           </Link>
-          <Link
-            href="/partners"
-            className="w-full sm:w-auto rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold px-6 py-2.5 text-xs transition-colors"
-          >
-            درخواست همکاری عمده
+          <Link href="/partners">
+            <Button variant="ghost" className="w-full">درخواست همکاری عمده</Button>
           </Link>
         </div>
       </div>
@@ -103,26 +98,18 @@ export function PartnerBundlesClient() {
   // 3. Logged in as regular retail customer (access forbidden)
   if (!isPartner) {
     return (
-      <div className="mx-auto max-w-lg rounded-3xl bg-zinc-900/80 border border-red-950/80 p-8 text-center my-12 shadow-2xl">
-        <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-2xl bg-red-500/10 text-red-400 mb-5">
-          <ShieldAlert size={28} />
-        </div>
-        <h2 className="text-xl font-black text-zinc-100 mb-2">دسترسی اختصاصی همکاران</h2>
-        <p className="text-sm text-zinc-400 leading-relaxed mb-6">
+      <div className="glass mx-auto my-12 flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
+        <ShieldAlert className="size-10 text-aqua/60" />
+        <h2 className="text-lg font-black">دسترسی اختصاصی همکاران</h2>
+        <p className="text-sm leading-7 text-muted-foreground">
           حساب کاربری فعلی شما عادی است. سبدهای عمده تنها برای فروشگاه‌ها و شرکت‌های همکار فعال می‌باشند.
         </p>
-        <div className="flex items-center justify-center gap-3">
-          <Link
-            href="/partners"
-            className="rounded-xl bg-amber-500 hover:bg-amber-400 text-zinc-950 font-bold px-6 py-2.5 text-xs transition-colors"
-          >
-            ارتقای حساب به همکاری عمده
+        <div className="flex w-full flex-col items-stretch gap-3 sm:w-auto sm:flex-row">
+          <Link href="/partners">
+            <Button variant="oxblood" className="w-full">ارتقای حساب به همکاری عمده</Button>
           </Link>
-          <Link
-            href="/shop"
-            className="rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-200 font-bold px-6 py-2.5 text-xs transition-colors"
-          >
-            بازگشت به فروشگاه
+          <Link href="/shop">
+            <Button variant="ghost" className="w-full">بازگشت به فروشگاه</Button>
           </Link>
         </div>
       </div>

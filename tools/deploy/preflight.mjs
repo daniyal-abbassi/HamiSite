@@ -139,10 +139,12 @@ async function runPreflight() {
 
   const appBaseUrl = mergedEnv.APP_BASE_URL?.trim();
   let isAppUrlValid = false;
+  let isLocalHost = false;
   if (appBaseUrl) {
     try {
-      new URL(appBaseUrl);
-      isAppUrlValid = true;
+      const { hostname } = new URL(appBaseUrl);
+      isLocalHost = ["localhost", "127.0.0.1", "[::1]"].includes(hostname);
+      isAppUrlValid = !isLocalHost;
     } catch {
       isAppUrlValid = false;
     }
@@ -155,7 +157,9 @@ async function runPreflight() {
     passed: isAppUrlValid,
     message: isAppUrlValid
       ? `APP_BASE_URL is set: ${appBaseUrl}`
-      : "APP_BASE_URL is missing or invalid in environment.",
+      : isLocalHost
+        ? `APP_BASE_URL points at ${appBaseUrl}; robots.txt, the sitemap and canonical links would publish localhost URLs.`
+        : "APP_BASE_URL is missing or invalid in environment.",
     durationMs: 1,
     remedy: isAppUrlValid ? undefined : "Set APP_BASE_URL=https://your-domain.com in .env or environment.",
   });

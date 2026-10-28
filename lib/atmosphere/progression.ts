@@ -200,7 +200,7 @@ export const INTERIOR_GROUNDS = {
   "/account": "#130104",
   "/login": "#130104",
   "/register": "#130104",
-  "/partners": "#0E1122",
+  "/partners": "#2A0713",
 } as const satisfies Record<string, string>;
 
 /**

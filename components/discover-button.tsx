@@ -60,7 +60,7 @@ export default function DiscoverButton() {
   }, [isSearching]);
 
   return (
-    <div className="relative flex h-10 w-max max-w-full shrink items-center gap-1.5 md:h-9" dir="rtl">
+    <div className="relative flex h-11 w-max max-w-full shrink items-center gap-1.5 md:h-9" dir="rtl">
       <motion.form
         layout
         action="/shop"
@@ -72,7 +72,7 @@ export default function DiscoverButton() {
           e.currentTarget.setAttribute("aria-busy", "true");
         }}
         initial={false}
-        animate={{ width: isSearching ? "clamp(108px, 18vw, 248px)" : 42 }}
+        animate={{ width: isSearching ? "clamp(108px, 18vw, 248px)" : 44 }}
         transition={spring}
         onClick={() => !isSearching && setIsSearching(true)}
         className="site-header-search flex h-full min-w-0 items-center overflow-hidden rounded-full border border-champagne/25 bg-ink/70 px-3 text-foreground shadow-[0_5px_18px_rgba(0,0,0,.2)]"
@@ -86,7 +86,7 @@ export default function DiscoverButton() {
               setIsSearching(true);
             }
           }}
-          className="grid size-5 shrink-0 place-items-center text-champagne"
+          className="extend-touch-target grid size-5 shrink-0 place-items-center text-champagne"
         >
           <Search className="size-5" aria-hidden="true" />
         </button>
@@ -191,7 +191,7 @@ export default function DiscoverButton() {
             label="دسته‌بندی‌های گوشی"
             triggerIcon={<Menu className="size-5 text-white/95" strokeWidth={1.8} />}
             expandDirection="down"
-            pillHeight={40}
+            pillHeight={44}
             className="extend-touch-target site-header-category"
             transparency={0.72}
             onSelect={(id) => {

@@ -95,7 +95,7 @@ export function LoginForm() {
           <button type="button" className="min-h-11 w-full text-sm font-bold text-muted-foreground underline-offset-4 hover:underline" onClick={() => { setChallenge(null); setCode(""); }}>تغییر شماره</button>
         </form>
       )}
-      <p className="type-label mt-5 text-center text-muted-foreground">حساب ندارید؟ <Link href={nextPath !== "/" ? `/register?next=${encodeURIComponent(nextPath)}` : "/register"} className="font-bold text-aqua underline-offset-4 hover:underline">ثبت‌نام کنید</Link></p>
+      <p className="type-label mt-5 text-center text-muted-foreground">حساب ندارید؟ <Link href={nextPath !== "/" ? `/register?next=${encodeURIComponent(nextPath)}` : "/register"} className="inline-flex min-h-11 items-center font-bold text-aqua underline-offset-4 hover:underline">ثبت‌نام کنید</Link></p>
     </div>
   );
 }

@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { UserRound } from "lucide-react";
 import { useEffect, useState, type FormEvent } from "react";
+import { Button } from "@/components/ui/button";
 import { ApiClientError, apiGet, apiPatch, apiPost } from "@/lib/api-client";
 import type { PublicUser } from "@/types/auth";
 
@@ -20,6 +22,7 @@ function message(error: unknown) {
 export function AccountClient() {
   const [profile, setProfile] = useState<ProfileForm>(emptyProfile);
   const [loading, setLoading] = useState(true);
+  const [guest, setGuest] = useState(false);
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
   const [error, setError] = useState("");
@@ -31,7 +34,11 @@ export function AccountClient() {
     let active = true;
     apiGet<PublicUser>("/api/auth/me").then((user) => {
       if (active) setProfile({ firstName: user.firstName, lastName: user.lastName, email: user.email, city: user.city, receiveNewsletters: user.receiveNewsletters });
-    }).catch((reason: unknown) => { if (active) setError(message(reason)); })
+    }).catch((reason: unknown) => {
+      if (!active) return;
+      if (reason instanceof ApiClientError && reason.status === 401) setGuest(true);
+      else setError(message(reason));
+    })
       .finally(() => { if (active) setLoading(false); });
     return () => { active = false; };
   }, []);
@@ -58,6 +65,16 @@ export function AccountClient() {
   const inputClass = "mt-1.5 w-full rounded-xl border border-line bg-background px-3.5 py-3 text-sm outline-none transition focus:border-aqua";
 
   if (loading) return <p className="mt-8 rounded-2xl border border-line p-5 text-sm text-muted-foreground" aria-live="polite">در حال دریافت اطلاعات حساب…</p>;
+  if (guest) return (
+    <div className="glass mx-auto mt-8 flex max-w-md flex-col items-center gap-4 rounded-2xl p-10 text-center">
+      <UserRound className="size-10 text-aqua/60" />
+      <h2 className="text-lg font-black">وارد حساب خود شوید</h2>
+      <p className="text-sm leading-7 text-muted-foreground">برای مشاهده و ویرایش اطلاعات حساب، ابتدا وارد شوید یا ثبت‌نام کنید.</p>
+      <Link href={`/login?next=${encodeURIComponent("/account")}`}>
+        <Button>ورود / ثبت‌نام</Button>
+      </Link>
+    </div>
+  );
   if (error && !profile.email && !profile.firstName && !profile.lastName) return (
     <section className="mt-8 rounded-2xl border border-line p-5" role="alert">
       <p className="text-sm leading-7">{error}</p>

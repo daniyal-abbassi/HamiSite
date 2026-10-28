@@ -88,6 +88,9 @@ export function validateEnvironment(
       if (isProd && parsedUrl.protocol !== "https:") {
         warnings.push("APP_BASE_URL in production should use https:// protocol.");
       }
+      if (isProd && ["localhost", "127.0.0.1", "[::1]"].includes(parsedUrl.hostname)) {
+        warnings.push("APP_BASE_URL points at localhost; robots.txt, sitemap and canonical links will publish local URLs.");
+      }
     } catch {
       errors.push("APP_BASE_URL must be a valid absolute URL (e.g. https://hamihamrah.com).");
     }

@@ -6,6 +6,7 @@
 .shop-luxury :is(h1,h2,h3,p) { letter-spacing: 0; }
 .shop-luxury :is(a,button,input,select):focus-visible { outline: 2px solid rgb(var(--primary)); outline-offset: 4px; }
 .shop-breadcrumb { display: flex; gap: 12px; align-items: center; padding-block: 12px 22px; font-size: var(--type-label); color: rgb(var(--primary) / .7); }
+.shop-breadcrumb a { display: inline-flex; min-height: 44px; align-items: center; }
 .shop-breadcrumb a:hover { color: rgb(var(--primary)); }
 .shop-catalog-heading .shop-kicker { color: rgb(var(--primary)); font-size: var(--type-label); line-height: 1.9; font-weight: 600; }
 .shop-catalog { --foreground: 45 26 28; --background: 244 241 234; --card: 255 253 249; --primary: 100 2 17; --primary-foreground: 244 241 234; --muted-foreground: 106 91 91; --ring: 100 2 17; --input: 210 200 187; --border: 210 200 187; --line: rgb(var(--shop-rule)); color: rgb(var(--foreground)); background: rgb(var(--background)); padding-block: 34px 72px; scroll-margin-block-start: 100px; }
@@ -80,7 +81,7 @@
   .shop-results-toolbar > p { font-size: var(--type-label); }
   .shop-results-toolbar > div { gap: 6px; }
   .shop-results-toolbar select { max-width: 145px; padding-inline: 7px; font-size: var(--type-control); }
-  .shop-results-toolbar button { width: 36px; }
+  .shop-results-toolbar button { width: 44px; }
   .shop-luxury .shop-product-grid { gap: 10px; margin-block-start: 14px; }
   .shop-luxury .shop-pagination { gap: 3px; }
   .shop-luxury .shop-pagination button { width: 34px !important; min-width: 34px; min-height: 44px; padding-inline: 0; }

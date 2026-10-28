@@ -2,7 +2,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { PartnersAdminClient } from "@/components/admin/partners/PartnersAdminClient";
 
 export const metadata = {
-  title: "درخواست‌های همکاری عمده | پنل مدیریت حامی همراه",
+  title: "درخواست‌های همکاری عمده | پنل مدیریت",
 };
 
 export default function AdminPartnersPage() {

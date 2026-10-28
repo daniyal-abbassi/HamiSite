@@ -272,7 +272,7 @@ export function RegisterForm() {
         قبلاً ثبت‌نام کرده‌اید؟{" "}
         <Link
           href={nextPath !== "/" ? `/login?next=${encodeURIComponent(nextPath)}` : "/login"}
-          className="font-bold text-aqua underline-offset-4 hover:underline"
+          className="inline-flex min-h-11 items-center font-bold text-aqua underline-offset-4 hover:underline"
         >
           وارد شوید
         </Link>

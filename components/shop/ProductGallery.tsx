@@ -47,7 +47,7 @@ export function ProductGallery({ product, variantImageUrl }: { product: CatalogP
   return (
     <div>
       <div
-        className="relative aspect-square overflow-hidden rounded-3xl glass-smoked border border-champagne/25 shadow-monolith"
+        className="relative aspect-square overflow-hidden rounded-3xl bg-contrastBackground border border-champagne/25 shadow-monolith"
         aria-busy={isChanging ? "true" : undefined}
       >
         {noImage && (
@@ -72,7 +72,7 @@ export function ProductGallery({ product, variantImageUrl }: { product: CatalogP
             }
             fill
             sizes="(min-width: 1024px) 40vw, 90vw"
-            className="object-contain p-8 transition-transform duration-700 hover:scale-105"
+            className="object-contain p-8 mix-blend-multiply transition-transform duration-700 hover:scale-105"
             priority
             unoptimized={!activeView.startsWith("/")}
             onLoad={() => setIsChanging(false)}

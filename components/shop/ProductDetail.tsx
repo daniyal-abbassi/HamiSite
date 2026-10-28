@@ -228,16 +228,16 @@ export function ProductDetail({ product, generatedAt }: Props) {
   return (
     /* pb clears the sticky mobile buy bar *and* the dock under it. Without it
        the tags row at the bottom of this page sits behind both. */
-    <div className="pb-[calc(7.5rem+env(safe-area-inset-bottom))] md:pb-0">
+    <div className="pb-[calc(9.5rem+env(safe-area-inset-bottom))] md:pb-0">
       {/* Breadcrumb */}
       <nav aria-label="مسیر صفحه" className="type-label mb-6 flex flex-wrap items-center gap-1.5 text-muted-foreground/70">
-        <Link href="/" className="transition-colors hover:text-aqua">خانه</Link>
+        <Link href="/" className="inline-flex min-h-11 items-center transition-colors hover:text-aqua">خانه</Link>
         <span aria-hidden="true">/</span>
-        <Link href="/shop" className="transition-colors hover:text-aqua">فروشگاه</Link>
+        <Link href="/shop" className="inline-flex min-h-11 items-center transition-colors hover:text-aqua">فروشگاه</Link>
         {product.mainCategory && (
           <>
             <span aria-hidden="true">/</span>
-            <Link href={`/categories/${encodeURIComponent(product.mainCategory.slug)}`} className="transition-colors hover:text-aqua">
+            <Link href={`/categories/${encodeURIComponent(product.mainCategory.slug)}`} className="inline-flex min-h-11 items-center transition-colors hover:text-aqua">
               {product.mainCategory.name}
             </Link>
           </>
@@ -508,7 +508,7 @@ export function ProductDetail({ product, generatedAt }: Props) {
           Sticky buy bar — mobile only. Opaque, not glass: T074 took the
           backdrop-filter off it, and a bar that must be readable over any
           product photograph has no business being translucent. */}
-      <div className="fixed inset-x-0 bottom-[calc(3.75rem+env(safe-area-inset-bottom))] z-40 border-t border-champagne/25 bg-ink px-4 py-3 shadow-monolith md:hidden">
+      <div className="fixed inset-x-0 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-40 border-t border-champagne/25 bg-ink px-4 py-3 shadow-monolith md:hidden">
         <div className="flex items-center gap-3">
           <div className="min-w-0 flex-1">
             {unitPrice !== null ? (

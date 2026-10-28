@@ -17,6 +17,7 @@
 .partners-page a { text-decoration: none; }
 .partners-hero { background: rgb(var(--partners-wine)); padding-block: 10px 0; overflow: clip; }
 .partners-breadcrumb { display: flex; gap: 12px; align-items: center; font-size: 11px; color: rgb(var(--primary) / .72); padding-block: 12px 32px; }
+.partners-breadcrumb a { display: inline-flex; min-height: 44px; align-items: center; }
 .partners-breadcrumb a:hover { color: rgb(var(--foreground)); }
 .partners-hero-grid { display: grid; grid-template-columns: 1.05fr 1fr; align-items: center; gap: 70px; padding-block: 10px 68px; }
 .partners-kicker { display: flex; align-items: center; gap: 10px; font-size: 12px; font-weight: 550; line-height: 1.9; color: rgb(var(--primary)); }
@@ -52,7 +53,7 @@
 .partners-hero-footer strong { color: rgb(var(--primary)); font-size: 26px; font-weight: 500; }
 .partners-hero-footer p > span, .partners-footer-note { font-size: 11px; color: rgb(var(--foreground) / .68); }
 .partners-footer-note { margin-inline-start: auto; }
-.partners-hero-footer > a { display: grid; place-items: center; border: 1px solid rgb(var(--primary) / .3); width: 40px; height: 40px; border-radius: 50%; }
+.partners-hero-footer > a { display: grid; place-items: center; border: 1px solid rgb(var(--primary) / .3); width: 44px; height: 44px; border-radius: 50%; }
 .partners-paper { --foreground: var(--partners-ink); --background: var(--partners-cream); --card: 255 253 249; --primary: 100 2 17; --primary-foreground: 244 241 234; --muted-foreground: var(--partners-muted); --ring: 100 2 17; --input: 210 200 187; --border: 210 200 187; --aqua: #640211; --line: rgb(var(--partners-rule)); color: rgb(var(--foreground)); background: rgb(var(--background)); }
 .partners-path { padding-block: 76px 64px; scroll-margin-block-start: 110px; }
 .partners-section-heading { display: flex; justify-content: space-between; align-items: end; gap: 40px; }
@@ -85,7 +86,7 @@
 .partners-closing .partners-wrap { display: flex; align-items: center; justify-content: space-between; gap: 24px; }
 .partners-closing p { font-weight: 650; font-size: 22px; }
 .partners-closing p span { display: block; margin-block-start: 6px; font-size: 12px; font-weight: 350; color: rgb(var(--primary)); }
-.partners-closing a { display: inline-flex; gap: 18px; align-items: center; font-size: 12px; color: rgb(var(--primary)); }
+.partners-closing a { display: inline-flex; min-height: 44px; gap: 18px; align-items: center; font-size: 12px; color: rgb(var(--primary)); }
 
 /* A paper application with clearly grouped fields and native controls. */
 .partner-form { background: rgb(var(--card)); border: 1px solid rgb(var(--partners-rule)); border-radius: 8px; padding: 34px; min-width: 0; }

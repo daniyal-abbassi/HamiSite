@@ -75,6 +75,12 @@
   min-block-size: 44px;
 }
 
+/* The unlayered `display` above beats Tailwind's `md:hidden`, so without this the phone
+   lockup also renders inside the desktop pill next to the fixed brand tile. */
+@media (min-width: 768px) {
+  .site-bar-brand { display: none; }
+}
+
 /* The official alpha files are oxblood on transparent; on the solid oxblood
    bar they invert to white (presentation only — no redraw of supplied files). */
 .site-bar-brand__mark {

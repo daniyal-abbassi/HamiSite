@@ -51,7 +51,7 @@ export function AdditionalProducts({ products }: { products: AdditionalProduct[]
             </p>
           </div>
           <div className="flex items-center gap-3">
-            <Link href="/shop" className="inline-flex items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
+            <Link href="/shop" className="inline-flex min-h-11 items-center gap-1.5 text-sm font-bold text-aqua hover:underline">
               مشاهده همه <ArrowLeft className="size-4" />
             </Link>
             {/* Paired prev/next. The rail used to ship a next-only button:

@@ -24,7 +24,7 @@ async function findBrand(slug: string) {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const brand = await findBrand(slug);
-  if (!brand) return { title: "برند یافت نشد | حامی همراه", robots: { index: false, follow: false } };
+  if (!brand) return { title: "برند یافت نشد", robots: { index: false, follow: false } };
   const name = brandLabel(brand.name);
   return pageMetadata({
     title: `محصولات ${name}`,
@@ -66,7 +66,7 @@ export default async function BrandPage({
 
   return (
     <CatalogListing
-      eyebrow="BRAND"
+      eyebrow="برند"
       title={`محصولات ${brandLabel(brand.name)}`}
       description={destinationDescription({ total, name: brandLabel(brand.name), kind: "brand" })}
       total={total}

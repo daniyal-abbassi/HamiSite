@@ -2,7 +2,7 @@ import { AdminPageHeader } from "@/components/admin/AdminPageHeader";
 import { BundlesAdminClient } from "@/components/admin/bundles/BundlesAdminClient";
 
 export const metadata = {
-  title: "مدیریت سبدهای همکار | پنل مدیریت حامی همراه",
+  title: "مدیریت سبدهای همکار | پنل مدیریت",
 };
 
 export default function AdminBundlesPage() {

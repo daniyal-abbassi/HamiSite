@@ -286,10 +286,9 @@ export function ProductCard({
         <h3 className="mt-2.5 type-body">
           <Link
             href={href}
-            /* The painted text is 28px tall per line; the ::after inset grows
-               the *hit area* to 44+ without repainting anything (WCAG 2.5.8).
-               The overlap lands on the non-interactive spec line below. */
-            className="relative line-clamp-3 font-bold leading-7 after:absolute after:inset-x-[-8px] after:inset-y-[-8px] after:content-['']"
+            /* line-clamp sets overflow:hidden, which clips any ::after hit-area
+               extension — so the 44px target is real height (min-h-11) instead. */
+            className="relative line-clamp-3 min-h-11 font-bold leading-7"
             dir={sourceStyle ? "ltr" : undefined}
           >
             {title}

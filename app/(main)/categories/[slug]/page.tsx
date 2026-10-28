@@ -25,7 +25,7 @@ async function findCategory(slug: string) {
 export async function generateMetadata({ params }: { params: Params }): Promise<Metadata> {
   const { slug } = await params;
   const category = await findCategory(slug);
-  if (!category) return { title: "دسته یافت نشد | حامی همراه", robots: { index: false, follow: false } };
+  if (!category) return { title: "دسته یافت نشد", robots: { index: false, follow: false } };
   return pageMetadata({
     title: category.name,
     description: `خرید و بررسی ${category.name} از حامی همراه در مشهد؛ فهرست محصولات، مشخصات و وضعیت عرضه این دسته را ببینید و برای قیمت روز با فروشگاه تماس بگیرید.`,
@@ -83,7 +83,7 @@ export default async function CategoryPage({
 
   return (
     <CatalogListing
-      eyebrow="CATEGORY"
+      eyebrow="دسته‌بندی"
       title={category.name}
       description={destinationDescription({ total, name: category.name, subCategories: subCount, kind: "category" })}
       total={total}

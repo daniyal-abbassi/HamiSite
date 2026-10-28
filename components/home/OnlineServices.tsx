@@ -32,7 +32,7 @@ export function OnlineServices() {
                 title={<>خدمات دیجیتال،<br />یک نگاه.</>}
                 description="حساب اپل، رجیستری، اتصال امن و پیام‌رسان‌ها؛ خدمات آنلاین حامی همراه."
                 action={
-                  <Link href={categoryLinks.services} className="inline-flex items-center gap-2 text-sm font-bold text-aqua transition-colors hover:text-primary">
+                  <Link href={categoryLinks.services} className="inline-flex min-h-11 items-center gap-2 text-sm font-bold text-aqua transition-colors hover:text-primary">
                     مشاهده خدمات آنلاین <ArrowLeft className="size-4" />
                   </Link>
                 }

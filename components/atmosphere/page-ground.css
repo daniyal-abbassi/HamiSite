@@ -48,15 +48,6 @@
 
 .hami-page-ground--home ~ main > #store-experience { background-color: #111114; }
 
-.hami-page-ground--home ~ footer.site-footer {
-  background-color: #30080f;
-  background-image:
-    linear-gradient(110deg, rgb(35 1 10 / 48%), rgb(50 2 14 / 56%) 54%, rgb(30 1 9 / 62%)),
-    url("/images/backgrounds/hami-background-04.webp");
-  background-position: center, 50% 72%;
-  background-size: cover;
-}
-
 /* Keep the opening actions inside the canvas on the narrowest phones. */
 @media (max-width: 359px) {
   .hami-page-ground--home ~ main #top [aria-label="مسیرهای اصلی"] {

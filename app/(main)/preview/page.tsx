@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { resolveDesignSystem, DESIGN_SYSTEM_MAP } from "@/lib/design-system";
 
 export const metadata: Metadata = {
@@ -15,6 +16,7 @@ interface PreviewPageProps {
 }
 
 export default async function ComponentPreviewPage({ searchParams }: PreviewPageProps) {
+  if (process.env.NODE_ENV === "production") notFound();
   const params = await searchParams;
   const styleKey = resolveDesignSystem(params.style);
   const isEmbed = params.embed === "1" || params.embed === "true";

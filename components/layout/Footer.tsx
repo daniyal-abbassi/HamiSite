@@ -86,7 +86,7 @@ export function Footer() {
           <a
             href={storeContact.phoneHref}
             dir="ltr"
-            className="mt-4 inline-flex items-center gap-2 font-mono text-sm font-bold text-foreground/85 transition-colors hover:text-champagne"
+            className="mt-4 inline-flex min-h-11 items-center gap-2 font-mono text-sm font-bold text-foreground/85 transition-colors hover:text-champagne"
           >
             <Phone className="size-4 text-champagne" aria-hidden="true" />
             {storeContact.phoneDisplay}
@@ -111,7 +111,7 @@ export function Footer() {
                   <li key={link.href + link.label}>
                     <Link
                       href={link.href}
-                      className="flex items-center text-[13.5px] text-muted-foreground/85 transition-colors hover:text-foreground md:block"
+                      className="flex min-h-11 items-center text-[13.5px] text-muted-foreground/85 transition-colors hover:text-foreground md:block md:min-h-0"
                     >
                       {link.label}
                     </Link>
@@ -131,7 +131,7 @@ export function Footer() {
         <div className="container flex flex-col items-center justify-between gap-4 py-5 text-[12.5px] text-muted-foreground/45 sm:flex-row">
           <p className="m-0">© ۱۴۰۵ حامی همراه — تمامی حقوق محفوظ است.</p>
           <div className="flex items-center gap-3">
-            <DesignSystemPicker />
+            {process.env.NODE_ENV !== "production" && <DesignSystemPicker />}
             <p className="m-0">مشهد</p>
           </div>
         </div>
