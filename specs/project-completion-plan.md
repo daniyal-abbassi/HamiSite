@@ -28,3 +28,7 @@ The checkout contains substantial pre-existing edits. Preserve them; do not rest
 - Feature 007 `.2`/`.3`/`.4`: foundation and negative-control drift checks, heading-arrival behavior, responsive composition, comma wrapping fix, print/forced-colours visibility, authored ground, and mobile dock clearance verified. SC-008 historical comparison and SC-010 human judgement remain explicitly unavailable.
 - Feature 007 `.5`: phone and shop links verified by keyboard and mobile touch; 184px of clearance above the dock at 360/390.
 - Feature 007 `.6`: production build and final cross-cutting browser checks pass; 43 focused tests, typecheck, and diff check pass. The drift guard's negative control is detected. Historical SC-008 comparison and human SC-010 judgement remain explicitly unavailable; see the Beads close note and `specs/007-motion-assembly-band/notes/contrast-sweep.md`.
+
+## Historical finding: R0 — Lenis scroller detector bug
+
+A browser gate's Lenis-scroll detector tested `/(^|\s)lenis(\s|-)/` against `documentElement.className`, which never matches the bare class `lenis` that Lenis actually sets — so headless probes reported "native scroll" on pages where the eased scroller was in fact loaded (compiled on first dev request, landing ~5.4s after navigation). Fixed by correcting the regex to `/(^|\s)lenis\b/` and making `surface-separation.mjs` wait for `html.lenis` (up to 15s), failing the run if it never appears, instead of silently measuring the wrong page.
