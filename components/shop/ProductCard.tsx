@@ -1,8 +1,7 @@
 import type React from "react";
 import Image from "next/image";
+import { AdaptiveProductImage } from "@/components/shop/AdaptiveProductImage";
 import Link from "next/link";
-import { ArrowLeft, BadgePercent, Heart, Star } from "lucide-react";
-import { Badge } from "@/components/ui/badge";
 import { TomanPrice } from "@/components/ui/TomanPrice";
 import hamiWordmark from "@/public/brand/hami-wordmark-fa.png";
 import { AddToCartButton } from "@/components/shop/AddToCartButton";
@@ -119,11 +118,6 @@ export function ProductCard({
   index,
   variant = "obsidian",
   frame = "bleed",
-  sourceStyle = false,
-  wished = false,
-  onWish,
-  selectedVariantId,
-  onVariantChange,
   imageSizes,
   priorityImage = false,
 }: {
@@ -133,20 +127,13 @@ export function ProductCard({
   /** Defaults to the shipping look: obsidian, full-bleed. */
   variant?: CardVariant;
   frame?: CardFrame;
-  /** Matches the owner-supplied SHOP SECTION product card art direction. */
-  sourceStyle?: boolean;
-  wished?: boolean;
-  onWish?: (id: number) => void;
-  selectedVariantId?: number;
-  onVariantChange?: (variantId: number) => void;
   imageSizes?: string;
   priorityImage?: boolean;
 }) {
   const onDark = DARK_GROUND[variant];
   const accent = brandAccent(product.brand?.name, onDark ? "dark" : "light");
   const { label, model, specs } = splitProductName(product.name);
-  const activeVariant = product.variants?.find((variant) => variant.id === selectedVariantId)
-    ?? product.variants?.find((variant) => variant.isDefault)
+  const activeVariant = product.variants?.find((variant) => variant.isDefault)
     ?? product.variants?.[0]
     ?? null;
   const displayPrice = activeVariant ? unitPriceOf(activeVariant.price, product.displayPrice) ?? 0 : product.displayPrice;
@@ -170,31 +157,7 @@ export function ProductCard({
   const productImage = variantImage ?? resolveProductImage(product);
   const noImage = isPlaceholderImage(productImage);
   const href = `/shop/${product.slug}`;
-  const englishModel = (product.englishName || model || "")
-    .replace(/\s+\d+\s*\/\s*\d+.*$/i, "")
-    .replace(/\s+(?:vietnam|global|سامسونگ).*$/i, "")
-    .trim();
-  const title = sourceStyle
-    ? (/^(?:A\d{2}|S\d{1,2}|Z\s?(?:flip|fold)|buds)/i.test(englishModel) && !/^galaxy/i.test(englishModel)
-      ? `Galaxy ${englishModel}`
-      : englishModel || label)
-    : label;
-
-  const colorValue = (name: string) => {
-    const normalized = name.trim().toLowerCase();
-    if (/^#[0-9a-f]{3,8}$/i.test(normalized)) return normalized;
-    const colors: Record<string, string> = {
-      "مشکی": "#292526", "سفید": "#f7f5f2", "نقره‌ای": "#b9bdc3", "نقره ای": "#b9bdc3",
-      "خاکستری": "#8d9298", "طوسی": "#8d9298", "آبی": "#566b82", "سرمه‌ای": "#303c58",
-      "سرمه ای": "#303c58", "صورتی": "#dfabb8", "بنفش": "#8376c8", "سبز": "#617660",
-      "کرم": "#d7c6ae", "طلایی": "#b99a58", black: "#292526", white: "#f7f5f2",
-      graphite: "#494c50", gray: "#8d9298", grey: "#8d9298", blue: "#566b82", pink: "#dfabb8",
-      violet: "#8376c8", purple: "#8376c8", green: "#617660", cream: "#d7c6ae",
-    };
-    const direct = colors[name.trim()] ?? colors[normalized];
-    if (direct) return direct;
-    return Object.entries(colors).find(([label]) => normalized.includes(label))?.[1] ?? "#a9a4a4";
-  };
+  const title = label;
 
   return (
     <article
@@ -203,46 +166,15 @@ export function ProductCard({
         "lux-card product-card group/card",
         `card-${variant}`,
         `frame-${frame}`,
-        sourceStyle && "featured-source-card",
-        sourceStyle && product.specialOffer && "featured-source-card--special",
       )}
     >
-      {sourceStyle && off != null ? (
-        <Badge
-          tone="danger"
-          size="sm"
-          icon={<BadgePercent aria-hidden="true" />}
-          className="featured-source-card__badge featured-source-card__badge--discount"
-        >
-          {toFaDigits(off)}٪ تخفیف
-        </Badge>
-      ) : sourceStyle && product.specialOffer ? (
-        <Badge
-          tone="warning"
-          size="sm"
-          icon={<Star aria-hidden="true" fill="currentColor" />}
-          className="featured-source-card__badge"
-        >
-          پیشنهاد ویژه
-        </Badge>
-      ) : null}
-      {sourceStyle && onWish && (
-        <button
-          type="button"
-          aria-label={wished ? "حذف از علاقه‌مندی‌ها" : "افزودن به علاقه‌مندی‌ها"}
-          aria-pressed={wished}
-          onClick={() => onWish(product.id)}
-          className={cn("featured-source-card__wish extend-touch-target", wished && "is-wished")}
-        >
-          <Heart aria-hidden="true" fill={wished ? "currentColor" : "none"} />
-        </button>
-      )}
       <Link
         href={href}
         className="lux-stage block aspect-square relative"
+        data-photo-plate=""
         aria-label={product.name}
       >
-        <Image
+        <AdaptiveProductImage
           src={productImage}
           alt={isPlaceholderImage(productImage) ? PLACEHOLDER_ALT : product.name}
           width={720}
@@ -250,9 +182,6 @@ export function ProductCard({
           sizes={imageSizes ?? "(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1536px) 33vw, 390px"}
           priority={priorityImage}
         />
-        {sourceStyle && outOfStock && (
-          <span className="featured-source-card__unavailable"><span>ناموجود</span></span>
-        )}
       </Link>
 
       {/* FR-001: an absent product photograph is stated, not papered over by a
@@ -266,12 +195,12 @@ export function ProductCard({
       <div className="lux-body">
         {/* Brand and model, together and quiet — they identify, they do not
             announce. */}
-        <div className={cn("flex items-baseline justify-between gap-3", sourceStyle && "featured-source-card__brand")}>
+        <div className="flex items-baseline justify-between gap-3">
           <span
             className="type-label font-bold tracking-normal"
             style={{ color: accent }}
           >
-            {sourceStyle && product.brand?.name === "سامسونگ" ? "SAMSUNG" : brandLabel(product.brand?.name)}
+            {brandLabel(product.brand?.name)}
           </span>
           {model && (
             <span
@@ -289,39 +218,10 @@ export function ProductCard({
             /* line-clamp sets overflow:hidden, which clips any ::after hit-area
                extension — so the 44px target is real height (min-h-11) instead. */
             className="relative line-clamp-3 min-h-11 font-bold leading-7"
-            dir={sourceStyle ? "ltr" : undefined}
           >
             {title}
           </Link>
         </h3>
-
-        {sourceStyle && onVariantChange && product.variants && product.variants.some((item) => item.color) && (
-          <div className="featured-source-card__swatches" role="group" aria-label="انتخاب رنگ">
-            {[...new Set(product.variants.flatMap((item) => item.color ? [item.color] : []))].map((color) => {
-              const colorVariant = product.variants?.find((item) => item.color === color && item.storage === activeVariant?.storage)
-                ?? product.variants?.find((item) => item.color === color);
-              if (!colorVariant) return null;
-              return (
-                <button
-                  key={color}
-                  type="button"
-                  title={color}
-                  aria-label={`رنگ ${color}`}
-                  aria-pressed={activeVariant?.color === color}
-                  onPointerDown={(event) => {
-                    event.stopPropagation();
-                    onVariantChange(colorVariant.id);
-                  }}
-                  onClick={(event) => {
-                    event.stopPropagation();
-                    onVariantChange(colorVariant.id);
-                  }}
-                  style={{ backgroundColor: colorValue(color) }}
-                />
-              );
-            })}
-          </div>
-        )}
 
         {specs && (
           <p className="type-support mt-1 line-clamp-2 text-muted-foreground">{specs}</p>
@@ -330,7 +230,7 @@ export function ProductCard({
         {/* Everything below is the transaction, held to the bottom so cards in a
             row align on their prices however long the names run. */}
         <div className="mt-auto pt-5">
-          <div className={cn("lux-stock flex items-center justify-between gap-2 type-label font-bold tracking-normal", sourceStyle && "featured-source-card__stock")}>
+          <div className="lux-stock flex items-center justify-between gap-2 type-label font-bold tracking-normal">
             <div className="flex items-center gap-2">
               <span
                 className="inline-flex items-center gap-1.5"
@@ -364,7 +264,7 @@ export function ProductCard({
               card this row stacks (see the mobile block in globals.css), because
               a 44px button beside the price leaves too little room for a
               nine-figure toman figure and the price wraps to three lines. */}
-          <div className={cn("lux-buy mt-2 flex items-end justify-between gap-3", sourceStyle && "featured-source-card__actions")}>
+          <div className="lux-buy mt-2 flex items-end justify-between gap-3">
             <div className="min-w-0">
               {state === "sale" && product.compareAtPrice != null && (
                 <del className="type-caption block text-muted-foreground">
@@ -389,25 +289,14 @@ export function ProductCard({
               productId={product.id}
               variantId={activeVariant?.id}
               disabled={!buyable || state === "unavailable"}
-              iconOnly={!sourceStyle}
-              label={sourceStyle ? "افزودن به سبد" : undefined}
-              cartIcon={sourceStyle}
-              className={cn(
-                sourceStyle
-                  ? "featured-source-card__cart"
-                  : "size-11 shrink-0 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95",
-              )}
+              iconOnly
+              className="size-11 shrink-0 rounded-xl transition-all duration-300 hover:scale-105 active:scale-95"
               style={{
                 background: onDark ? "rgba(229, 211, 179, 0.08)" : "rgb(var(--foreground) / 0.06)",
                 color: onDark ? "#E5D3B3" : "#640211",
                 boxShadow: "inset 0 0 0 1px var(--lux-rule)",
               }}
             />
-            {sourceStyle && (
-              <Link href={href} className="featured-source-card__detail" aria-label={`مشاهده ${product.name}`}>
-                <ArrowLeft aria-hidden="true" />
-              </Link>
-            )}
           </div>
         </div>
       </div>

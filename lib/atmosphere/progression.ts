@@ -40,7 +40,7 @@
  * id="store-experience">` carrying three statements, and the closing anchor moved onto a `div` inside
  * that band. The id survives on the band rather than being renamed so that three existing consumers keep
  * resolving with no edit: the `counter` stage below, `components/layout/Footer.tsx`'s «درباره ما», and
- * `mobileQuickRoutes`.
+ * the (removed) mobile quick-route chips.
  */
 export const HOMEPAGE_SECTIONS = [
   "top",

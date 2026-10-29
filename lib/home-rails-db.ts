@@ -1,5 +1,6 @@
 import { queryDiscountedRailProducts, queryProducts } from "@/lib/catalog-db";
 import { findProductBySlug } from "@/lib/catalog";
+import { isPurchasable } from "@/lib/product-identity";
 import mirroredImages from "@/data/catalog-images.json";
 
 const catalogImageMirror = mirroredImages as Record<string, string>;
@@ -40,16 +41,30 @@ export type RailProduct = {
   }>;
 };
 
-/** The twelve most recently added live catalog products for the homepage shelf. */
+/** The twelve most recently added products the shop can actually sell, with a price on the record. */
 export async function homepageProductsRail(): Promise<RailProduct[]> {
   const result = await queryProducts({
     sort: "newest",
+    purchasableOnly: true,
     includeVariants: true,
     page: 1,
-    pageSize: 12,
+    pageSize: 24,
   });
 
-  return result.data.map((product) => {
+  /* Product-level `purchasable` is not enough: a product can be sellable while its default variant is
+     sold out. A card whose cart button is disabled is the one thing this shelf must not show, so the
+     shelf keeps only products that have at least one variant a shopper can actually buy. */
+  const sellable = result.data.filter((product) => {
+    if (!(product.displayPrice > 0)) return false;
+    if (!product.variants?.length) return isPurchasable(product);
+    return product.variants.some((variant) =>
+      isPurchasable({ available: product.available, stockType: variant.stockType })
+      && !(variant.stockType === "limited" && variant.stock <= 0)
+      && variant.price > 0,
+    );
+  });
+
+  return sellable.slice(0, 12).map((product) => {
     // The database query is authoritative for product, price, stock, and order.
     // Some imported DB variants have no ProductVariant.imageId even though the
     // catalog snapshot still has the merchant's explicit image_url per variant.
@@ -118,32 +133,4 @@ export async function featuredOfferRail(): Promise<RailProduct[]> {
 export async function featuredSpecialRail(): Promise<RailProduct[]> {
   return (await queryProducts({ specialOffer: true, sort: "special", includeVariants: false, page: 1, pageSize: 6 }))
     .data as unknown as RailProduct[];
-}
-
-/**
- * Six more products after the twelve shown in the main homepage shelf.
- */
-export async function additionalProductsRail(): Promise<RailProduct[]> {
-  return (await queryProducts({ sort: "newest", includeVariants: false, page: 3, pageSize: 6 }))
-    .data as unknown as RailProduct[];
-}
-
-/**
- * Everything the merchant currently says can be bought, cheapest first.
- *
- * This is the only homepage rail whose heading is an availability claim, so the
- * predicate is the strict one: the `purchasable` flag *and* a price on the record.
- * A price-less product is not buyable however the stock field reads, and a shelf
- * that listed it would be selling «تماس بگیرید» under a promise of «قابل خرید».
- *
- * `total` is the whole count rather than the rendered count, so the section can say
- * how many there really are when the export grows past what the rail displays.
- */
-export async function obtainableNowRail(limit = 6): Promise<{ products: RailProduct[]; total: number }> {
-  const all = (await queryProducts({ purchasableOnly: true, sort: "price-asc", page: 1, pageSize: 1_000 }))
-    .data.filter((p) => p.displayPrice > 0);
-  return {
-    products: all.slice(0, limit) as unknown as RailProduct[],
-    total: all.length,
-  };
 }

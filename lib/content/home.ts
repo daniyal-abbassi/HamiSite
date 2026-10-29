@@ -22,13 +22,6 @@ export const trustFeatures = [
 
 export type TrustFeatureKey = (typeof trustFeatures)[number]["key"];
 
-export const mobileQuickRoutes = [
-  { key: "shop", label: "فروشگاه", href: "/shop" },
-  { key: "categories", label: "دسته‌بندی‌ها", href: "#categories" },
-  { key: "partners", label: "همکاری", href: "#b2b" },
-  { key: "store", label: "فروشگاه حضوری", href: "#store-experience" },
-] as const;
-
 /**
  * The only six catalogue category slugs the homepage is allowed to link to. Each
  * resolves through lib/shop-filters to a real id with products behind it; the drift
@@ -198,12 +191,6 @@ export const storeExperiencePoints = [
   { index: "۰۳", title: "پشتیبانی پس از خرید", description: "همراه شما بعد از خرید." },
 ] as const;
 
-export const storeExperienceSlots = [
-  { key: "product-interaction", label: "تعامل با محصول", intendedUse: "انتخاب محصول یا گفت‌وگوی طبیعی مشاوره" },
-  { key: "store-detail", label: "جزئیات فروشگاه", intendedUse: "بسته‌بندی، میز فروش یا نشانهٔ بصری مجموعه" },
-] as const;
-
-export const storeExperienceStatement = "از صفحه نمایش تا فروشگاه، همراه شما هستیم.";
 export const finalConversionCopy = {
   eyebrow: "HAMI HAMRAH / FINAL NOTE",
   titleLead: "همراه شما",

@@ -24,15 +24,263 @@
   }
 }
 
-/* The primary actions stay in normal flow at the end of the composition. Dock clearance keeps them visible
-   and reachable on phones; the persistent dock also provides its own contact action. */
+/* The actions stay in normal flow at the very end. The dock clearance lives on the container (not on the
+   actions) so the closing panel keeps its own padding and the dock never covers the last button. */
+.assembly-band > .container {
+  padding-block-end: calc(3.5rem + var(--band-dock-clearance));
+}
+
 .assembly-band__actions {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block-start: 1.75rem;
+}
+
+/* Four verified facts as lit medallions on a hairline grid. */
+.assembly-trust {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.75rem 1rem;
+  margin: 2.5rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.assembly-trust__item {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.6rem;
+}
+
+.assembly-trust__medal {
+  display: grid;
+  place-items: center;
+  inline-size: 3.25rem;
+  block-size: 3.25rem;
+  border: 1px solid rgb(229 211 179 / 48%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 28%, rgb(229 211 179 / 22%), rgb(229 211 179 / 4%) 70%);
+  color: #e5d3b3;
+  box-shadow: 0 0 24px -6px rgb(229 211 179 / 45%), inset 0 1px 0 rgb(255 255 255 / 18%);
+}
+
+.assembly-trust__medal svg {
+  inline-size: 1.65rem;
+  block-size: 1.65rem;
+}
+
+/* The shop visit: one card, three steps, two hard facts. */
+.assembly-visit {
+  position: relative;
+  margin-block-start: 2.5rem;
+  padding: 1.6rem 1.35rem 1.35rem;
+  border: 1px solid rgb(229 211 179 / 22%);
+  border-radius: 28px;
+  background: linear-gradient(160deg, rgb(22 2 8 / 82%), rgb(44 4 15 / 70%));
+  box-shadow: 0 28px 50px -30px rgb(0 0 0 / 85%), inset 0 1px 0 rgb(229 211 179 / 22%);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+}
+
+.assembly-visit::before {
+  content: "";
+  position: absolute;
+  inset-inline: 2rem;
+  inset-block-start: -1px;
+  block-size: 2px;
+  border-radius: 2px;
+  background: linear-gradient(to left, transparent, #e5d3b3, transparent);
+}
+
+.assembly-visit__steps {
+  display: grid;
+  margin: 1.1rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.assembly-visit__steps > li {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.9rem;
+  padding-block: 0.85rem;
+  border-block-start: 1px solid rgb(229 211 179 / 14%);
+}
+
+.assembly-visit__index {
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  inline-size: 2.1rem;
+  block-size: 2.1rem;
+  border: 1px solid rgb(229 211 179 / 45%);
+  border-radius: 50%;
+  color: #e5d3b3;
+  font-size: 0.8rem;
+  font-weight: 900;
+}
+
+.assembly-visit__facts {
+  display: flex;
   flex-wrap: wrap;
+  gap: 0.6rem 1.25rem;
+  margin: 0.35rem 0 0;
+  padding-block-start: 0.95rem;
+  border-block-start: 1px dashed rgb(229 211 179 / 28%);
+  color: #e5d3b3;
+  font-size: 0.78rem;
+  font-weight: 800;
+}
+
+.assembly-visit__facts > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+/* The close: a framed panel with its own light, so the final ask is the brightest thing on the page. */
+.assembly-close {
+  position: relative;
+  margin-block-start: 3rem;
+  padding: 2.4rem 1.25rem 2.1rem;
+  border: 1px solid rgb(229 211 179 / 32%);
+  border-radius: 32px;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgb(229 211 179 / 16%), transparent 62%),
+    rgb(20 2 7 / 52%);
+  text-align: center;
+  box-shadow: 0 30px 60px -34px rgb(0 0 0 / 90%), inset 0 1px 0 rgb(229 211 179 / 26%);
+  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(12px);
+}
+
+.assembly-close__ghost {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-block-size: 2.75rem;
+  padding-inline: 0.5rem;
+  color: #e5d3b3;
+  font-size: 0.85rem;
+  font-weight: 800;
+  text-decoration: none;
+  border-block-end: 1px solid rgb(229 211 179 / 40%);
+}
+
+/* Shared premium CTA: the call button is lit oxblood with a champagne rim and a slow sheen; the shop button
+   is the store's gold beam (`lightbeam-cta`). */
+.cta-lux {
+  position: relative;
+  overflow: hidden;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 0.75rem;
-  padding-block-end: var(--band-dock-clearance);
+  gap: 0.7rem;
+  inline-size: 100%;
+  max-inline-size: 22rem;
+  min-block-size: 3.5rem;
+  padding-inline: 1.4rem;
+  border-radius: 9999px;
+  font-size: 0.95rem;
+  font-weight: 900;
+  text-decoration: none;
+  transition: transform 160ms ease;
+}
+
+.cta-lux:active {
+  transform: scale(0.97);
+}
+
+.cta-lux svg {
+  inline-size: 1.75rem;
+  block-size: 1.75rem;
+  padding: 0.4rem;
+  flex: 0 0 auto;
+  border-radius: 50%;
+}
+
+.cta-lux--call {
+  border: 1.5px solid rgb(229 211 179 / 70%);
+  background: linear-gradient(160deg, #9a1d33 0%, #6e0415 48%, #3f010b 100%);
+  color: #fff;
+  box-shadow: 0 16px 30px -10px rgb(100 2 17 / 80%), 0 0 0 4px rgb(100 2 17 / 14%), inset 0 1px 0 rgb(255 255 255 / 30%);
+}
+
+.cta-lux--call svg {
+  background: rgb(255 255 255 / 18%);
+}
+
+.cta-lux--call::after {
+  content: "";
+  position: absolute;
+  inset-block: 0;
+  left: 0;
+  inline-size: 38%;
+  background: linear-gradient(105deg, transparent, rgb(255 255 255 / 38%), transparent);
+  transform: translateX(-130%) skewX(-20deg);
+  animation: band-cta-sheen 5s ease-in-out 1.4s infinite;
+  pointer-events: none;
+}
+
+.cta-lux--gold {
+  color: #300710;
+}
+
+.cta-lux--gold svg {
+  background: rgb(48 7 16 / 14%);
+}
+
+@keyframes band-cta-sheen {
+  0% { transform: translateX(-130%) skewX(-20deg); }
+  35%, 100% { transform: translateX(520%) skewX(-20deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cta-lux--call::after { animation: none; }
+}
+
+@media (min-width: 768px) {
+  .assembly-trust {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.5rem;
+    max-inline-size: 60rem;
+    margin-inline: auto;
+  }
+
+  .assembly-visit {
+    max-inline-size: 46rem;
+    margin-inline: auto;
+  }
+
+  .assembly-visit__steps {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+  }
+
+  .assembly-visit__steps > li {
+    border-block-start: 0;
+    padding-block: 0.5rem 0;
+  }
+
+  .assembly-close {
+    max-inline-size: 48rem;
+    margin-inline: auto;
+    padding: 3rem 2rem 2.5rem;
+  }
+
+  .assembly-band__actions {
+    flex-direction: row;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  .cta-lux {
+    inline-size: auto;
+    min-inline-size: 14rem;
+  }
 }
 
 /* Heading arrival (HeadingArrival.tsx): word units only — Persian letters change shape by joining, so the

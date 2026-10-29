@@ -19,9 +19,53 @@
   padding-inline: max(24px, calc((100% - 1232px) / 2));
 }
 
-.hami-page-ground--home ~ main > #top { background-color: #30080f; }
-.hami-page-ground--home ~ main > #obtainable-now { background-color: #211b20; }
-.hami-page-ground--home ~ main > #featured { background-color: #09090b; }
+/* SEAMS — one deep burgundy every dark chapter dissolves into at its edges.
+   Dark chapters paint different silk artworks; laid edge to edge they met on a
+   hard line through the middle of a highlight, which read as a rendering fault.
+   Each dark ground now fades to --seam-dark over its first and last
+   --seam-fade, and the section itself is painted --seam-dark underneath, so two
+   dark chapters always meet on the same solid colour. Dark↔ivory boundaries stay
+   deliberately hard: the dark side simply arrives at that edge as solid colour. */
+.hami-page-ground--home ~ * {
+  --seam-dark: #2a050d;
+  --seam-fade: 6rem;
+}
+
+.hami-page-ground--home ~ main > #top { background-color: var(--seam-dark); }
+.hami-page-ground--home ~ main > #featured { background-color: var(--seam-dark); }
+
+.hami-page-ground--home ~ main > .home-section-ground.home-section-ground--dark {
+  background-color: var(--seam-dark) !important;
+}
+
+.hami-page-ground--home ~ main > .home-section-ground--dark::before {
+  -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--seam-fade), #000 calc(100% - var(--seam-fade)), transparent 100%);
+  mask-image: linear-gradient(to bottom, transparent 0, #000 var(--seam-fade), #000 calc(100% - var(--seam-fade)), transparent 100%);
+}
+
+/* The discount panel floats on the seam colour edge to edge, instead of on
+   whatever happened to be behind a width-limited section. */
+.hami-page-ground--home ~ main > #discounted {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+  padding-block: clamp(2rem, 5vw, 4rem);
+  padding-inline: max(1rem, calc((100% - 1280px) / 2));
+  background-color: var(--seam-dark);
+}
+
+/* The footer joins the closing band with no gap, no hairline, and the same fade. */
+.hami-page-ground--home ~ footer.site-footer {
+  margin-top: 0;
+  border-top-color: transparent;
+  background-color: var(--seam-dark);
+  background-image:
+    linear-gradient(to bottom, var(--seam-dark) 0, rgb(42 5 13 / 0%) var(--seam-fade)),
+    linear-gradient(110deg, rgb(35 1 10 / 68%), rgb(50 2 14 / 74%) 54%, rgb(30 1 9 / 78%)),
+    url("/images/backgrounds/hami-background-04.webp");
+  background-position: center, center, 50% 72%;
+  background-size: cover;
+}
 
 .hami-page-ground--home ~ main > #categories {
   background-color: #f4f1ea;
@@ -30,7 +74,6 @@
 }
 
 .hami-page-ground--home ~ main > #brands {
-  background-color: #14161c;
   padding-top: clamp(48px, 6vw, 88px);
 }
 
@@ -39,14 +82,14 @@
   box-shadow: none;
 }
 
-.hami-page-ground--home ~ main > #b2b { background-color: #30080f; }
+
 
 .hami-page-ground--home ~ main > #online-services {
   background-color: #f4f1ea;
   box-shadow: none;
 }
 
-.hami-page-ground--home ~ main > #store-experience { background-color: #111114; }
+
 
 /* Keep the opening actions inside the canvas on the narrowest phones. */
 @media (max-width: 359px) {

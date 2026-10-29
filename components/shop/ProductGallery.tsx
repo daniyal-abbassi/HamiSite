@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import { AdaptiveProductImage } from "@/components/shop/AdaptiveProductImage";
 import { Sparkles } from "lucide-react";
 import { PLACEHOLDER_ALT, PLACEHOLDER_LABEL, isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
 import { LiquidSelection } from "@/components/liquid/LiquidSelection";
@@ -47,7 +48,8 @@ export function ProductGallery({ product, variantImageUrl }: { product: CatalogP
   return (
     <div>
       <div
-        className="relative aspect-square overflow-hidden rounded-3xl bg-contrastBackground border border-champagne/25 shadow-monolith"
+        className="pdp-plate relative aspect-square overflow-hidden rounded-3xl bg-contrastBackground border border-champagne/25 shadow-monolith"
+        data-photo-plate=""
         aria-busy={isChanging ? "true" : undefined}
       >
         {noImage && (
@@ -62,7 +64,7 @@ export function ProductGallery({ product, variantImageUrl }: { product: CatalogP
           </span>
         )}
         {activeView && (
-          <Image
+          <AdaptiveProductImage
             key={activeView}
             src={activeView}
             alt={

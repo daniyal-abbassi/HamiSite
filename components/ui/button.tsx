@@ -7,7 +7,7 @@ const buttonVariants = cva(
   [
     "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-full type-control font-semibold",
     "transition-[transform,box-shadow,background,color]",
-    "active:translate-y-px",
+    "active:translate-y-px active:scale-[0.98]",
     /*
      * The ring is declared here rather than inherited.
      *
@@ -47,12 +47,10 @@ const buttonVariants = cva(
       variant: {
         // Gold pill — the "money" CTA (signup, submit, place order). Maps to
         // --primary, which resolves to aqua in this world.
-        default:
-          "bg-gradient-to-b from-aqua-lite to-aqua text-primary-foreground shadow-glow-cta hover:-translate-y-0.5 hover:shadow-glow-brass",
+        default: "btn-gold hover:-translate-y-0.5",
         // Oxblood pill — the general primary action, used more often than
         // aqua in the reference world (e.g. the hero's main CTA).
-        oxblood:
-          "bg-gradient-to-b from-oxblood-lite to-oxblood text-white shadow-glow-oxblood hover:-translate-y-0.5 hover:shadow-[0_16px_42px_rgba(100,2,17,0.65)]",
+        oxblood: "btn-oxblood hover:-translate-y-0.5",
         outline: "border border-aqua/60 bg-transparent text-aqua hover:bg-aqua/10",
         secondary: "bg-secondary text-secondary-foreground hover:bg-accent",
         ghost: "border border-line bg-foreground/5 text-foreground hover:bg-foreground/10",

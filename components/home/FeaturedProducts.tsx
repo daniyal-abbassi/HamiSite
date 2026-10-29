@@ -2,34 +2,115 @@
 
 import { useCallback, useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, ArrowRight, Heart } from "lucide-react";
+import { ArrowLeft, ArrowRight, PackageCheck, ShieldCheck, Sparkles, Store } from "lucide-react";
 import { Reveal } from "@/components/home/Reveal";
-import { type ProductCardData } from "@/components/shop/ProductCard";
-import { ProductCard } from "@/components/shop/ProductCard";
+import { AddToCartButton } from "@/components/shop/AddToCartButton";
+import { AdaptiveProductImage } from "@/components/shop/AdaptiveProductImage";
+import { TomanPrice } from "@/components/ui/TomanPrice";
 import type { RailProduct } from "@/lib/home-rails-db";
+import { storeWarranty } from "@/lib/content/verified-facts";
+import { isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
+import {
+  brandLabel,
+  discountPercent,
+  isPurchasable,
+  priceState,
+  splitProductName,
+  unitPriceOf,
+} from "@/lib/product-identity";
 import { cn, toFaDigits } from "@/lib/utils";
 
-const CARD_STEP = 292;
+/** Card width + gap, in px, for one swipe step on a phone. */
+const CARD_STEP = 204;
 
-function pageStep(element: HTMLDivElement) {
-  return element.clientWidth < 768 ? CARD_STEP : Math.max(CARD_STEP, element.clientWidth - CARD_STEP);
+function FeaturedCard({ product, index }: { product: RailProduct; index: number }) {
+  const variants = product.variants ?? [];
+  const canBuy = (variant: (typeof variants)[number]) =>
+    isPurchasable({ available: product.available, stockType: variant.stockType })
+    && !(variant.stockType === "limited" && variant.stock <= 0);
+  // Prefer the default variant, but never present a sold-out one while another can be bought.
+  const active = variants.find((variant) => variant.isDefault && canBuy(variant))
+    ?? variants.find(canBuy)
+    ?? variants.find((variant) => variant.isDefault)
+    ?? variants[0]
+    ?? null;
+  const price = active ? unitPriceOf(active.price, product.displayPrice) ?? 0 : product.displayPrice;
+  const compareAt = active ? active.compareAtPrice : product.compareAtPrice;
+  const state = priceState(price, compareAt);
+  const off = discountPercent(price, compareAt);
+  const stockType = active?.stockType ?? product.stockType;
+  const buyable = active
+    ? isPurchasable({ available: product.available, stockType }) && !(stockType === "limited" && active.stock <= 0)
+    : isPurchasable(product);
+  const image = active?.imageUrl ?? resolveProductImage(product);
+  const { label, model } = splitProductName(product.name);
+  const modelText = (product.englishName || model || "").replace(/\s+\d+\s*\/\s*\d+.*$/i, "").trim();
+  const href = `/shop/${product.slug}`;
+  const brand = product.brand?.name ? brandLabel(product.brand.name) : null;
+
+  return (
+    <article className="fp-card" style={{ "--fp-i": index } as React.CSSProperties}>
+      <Link href={href} className="fp-card__plate" data-photo-plate="" aria-label={product.name} tabIndex={-1}>
+        {!isPlaceholderImage(image) && (
+          <AdaptiveProductImage
+            src={image}
+            alt=""
+            fill
+            sizes="(max-width: 767px) 196px, 240px"
+            className="fp-card__image"
+            priority={index < 2}
+            unoptimized={!image.startsWith("/")}
+          />
+        )}
+        {off != null && <span className="fp-card__off">٪{toFaDigits(off)} تخفیف</span>}
+        {product.specialOffer && off == null && (
+          <span className="fp-card__off fp-card__off--gold"><Sparkles aria-hidden="true" /> ویژه</span>
+        )}
+      </Link>
+
+      <div className="fp-card__body">
+        {brand && <span className="fp-card__brand">{brand}</span>}
+        <h3 className="fp-card__name">
+          <Link href={href}>{label}</Link>
+        </h3>
+        {modelText && <span className="fp-card__model" dir="ltr">{modelText}</span>}
+
+        <div className="fp-card__buy">
+          <div className="fp-card__price">
+            {state === "sale" && compareAt != null && (
+              <del><TomanPrice amount={compareAt} /></del>
+            )}
+            {state === "unavailable" ? (
+              <strong className="fp-card__call">تماس بگیرید</strong>
+            ) : (
+              <TomanPrice as="strong" amount={price} />
+            )}
+          </div>
+          <AddToCartButton
+            productId={product.id}
+            variantId={active?.id}
+            disabled={!buyable || state === "unavailable"}
+            iconOnly
+            className="fp-card__cart"
+          />
+        </div>
+      </div>
+    </article>
+  );
 }
 
 export function FeaturedProducts({ products }: { products: RailProduct[] }) {
-  const [wishlist, setWishlist] = useState<Set<number>>(() => new Set());
-  const [selectedVariantIds, setSelectedVariantIds] = useState<Record<number, number>>({});
+  const scroller = useRef<HTMLDivElement>(null);
   const [page, setPage] = useState(0);
   const [pages, setPages] = useState(1);
-  const scroller = useRef<HTMLDivElement>(null);
 
   const measure = useCallback(() => {
     const element = scroller.current;
     if (!element) return;
     const max = element.scrollWidth - element.clientWidth;
-    const step = pageStep(element);
-    const count = max > 10 ? Math.ceil(max / step) + 1 : 1;
-    setPages(count);
-    setPage(max > 10 ? Math.min(count - 1, Math.round(element.scrollLeft / step)) : 0);
+    const count = max > 10 ? Math.ceil(max / CARD_STEP) + 1 : 1;
+    setPages(Math.min(count, 8));
+    setPage(max > 10 ? Math.min(count - 1, Math.round(Math.abs(element.scrollLeft) / CARD_STEP)) : 0);
   }, []);
 
   useEffect(() => {
@@ -38,106 +119,78 @@ export function FeaturedProducts({ products }: { products: RailProduct[] }) {
     return () => window.removeEventListener("resize", measure);
   }, [measure, products]);
 
-  const toggleWish = (id: number) => {
-    setWishlist((current) => {
-      const next = new Set(current);
-      if (next.has(id)) next.delete(id);
-      else next.add(id);
-      return next;
-    });
+  const go = (direction: 1 | -1) => {
+    const element = scroller.current;
+    if (!element) return;
+    // In an RTL scroller "forward" is toward negative scrollLeft.
+    const axis = getComputedStyle(element).direction === "rtl" ? -1 : 1;
+    element.scrollBy({ left: direction * axis * CARD_STEP * 2, behavior: "smooth" });
   };
-
-  const selectVariant = (productId: number, variantId: number) => {
-    setSelectedVariantIds((current) => ({ ...current, [productId]: variantId }));
-  };
-
-  const scrollToPage = (index: number) => {
-    if (!scroller.current) return;
-    scroller.current.scrollTo({ left: index * pageStep(scroller.current), behavior: "smooth" });
-  };
-
-  const nextPage = () => scrollToPage(page >= pages - 1 ? 0 : page + 1);
 
   return (
-    <section id="featured" className="featured-products" aria-labelledby="featured-title">
-      <div className="featured-products__inner">
-        <div className="featured-products__flourish" aria-hidden="true">
-          <p>کیفیت، اعتبار، همراهی همیشگی</p>
-          <svg viewBox="0 0 320 64" fill="none">
-            <path d="M8 30 C 80 50 240 50 312 22" stroke="currentColor" strokeWidth="2.4" strokeLinecap="round" />
-            <path d="M52 40 C 120 52 200 52 268 38" stroke="currentColor" strokeWidth="1" strokeLinecap="round" opacity=".45" />
-            <path d="M160 20c-3.2-6.4-13-5.2-13 2.2 0 6 13 13 13 13s13-7 13-13c0-7.4-9.8-8.6-13-2.2z" fill="currentColor" />
-            <circle cx="26" cy="33" r="2.2" fill="currentColor" opacity=".8" />
-            <circle cx="296" cy="27" r="2.2" fill="currentColor" opacity=".8" />
-          </svg>
-        </div>
-
+    <section id="featured" className="featured-products fp" aria-labelledby="featured-title">
+      <div className="fp__inner">
         <Reveal>
-          <header className="featured-products__header">
-            <div className="featured-products__heading">
-              <h2 id="featured-title" className="featured-products__title">محصولات حامی همراه</h2>
-            </div>
+          <header className="fp__head">
+            <span className="eyebrow"><i /> تازه‌ترین‌ها، آماده سفارش</span>
+            <h2 id="featured-title" className="fp__title">
+              محصولات <span className="emphasis">حامی همراه</span>
+            </h2>
+            <p className="fp__sub">
+              هر چیزی که این‌جا می‌بینید همین امروز قابل خرید است؛ با {storeWarranty.label}.
+            </p>
+            <ul className="fp__proof" role="list">
+              <li><PackageCheck aria-hidden="true" /> موجود و قابل خرید</li>
+              <li><ShieldCheck aria-hidden="true" /> گارانتی ۱۸ ماهه شرکتی</li>
+              <li><Store aria-hidden="true" /> فروشگاه حضوری در مشهد</li>
+            </ul>
           </header>
         </Reveal>
 
-        <Reveal delay={80} className="featured-products__catalogue">
-          <div className="featured-products__carousel-wrap">
+        <Reveal delay={80}>
+          <div className="fp__rail-wrap">
             <div
               ref={scroller}
-              onScroll={(event) => setPage(Math.round(event.currentTarget.scrollLeft / pageStep(event.currentTarget)))}
-              dir="ltr"
-              className="featured-products__carousel"
+              onScroll={measure}
+              className="fp__rail"
+              role="region"
               aria-label="فهرست محصولات حامی همراه"
+              tabIndex={0}
             >
               {products.map((product, index) => (
-                <ProductCard
-                  key={product.id}
-                  product={product as ProductCardData}
-                  index={index}
-                  variant="museum"
-                  frame="bleed"
-                  sourceStyle
-                  wished={wishlist.has(product.id)}
-                  onWish={toggleWish}
-                  selectedVariantId={selectedVariantIds[product.id]}
-                  onVariantChange={(variantId) => selectVariant(product.id, variantId)}
-                  imageSizes="292px"
-                  priorityImage={index === 0}
-                />
+                <FeaturedCard key={product.id} product={product} index={index} />
               ))}
               {products.length === 0 && (
-                <div className="featured-products__empty" dir="rtl" role="status">
-                  <Heart aria-hidden="true" />
-                  <p>در حال حاضر محصولی برای نمایش نیست.</p>
-                </div>
+                <p className="fp__empty" role="status">در حال حاضر محصولی برای نمایش نیست.</p>
               )}
             </div>
 
-            {products.length > 0 && (
-              <button type="button" className="featured-products__next extend-touch-target" onClick={nextPage} aria-label="محصولات بعدی">
-                <ArrowRight aria-hidden="true" />
-              </button>
+            {products.length > 1 && (
+              <>
+                <button type="button" className="fp__nav fp__nav--prev extend-touch-target" onClick={() => go(-1)} aria-label="محصولات قبلی">
+                  <ArrowRight aria-hidden="true" />
+                </button>
+                <button type="button" className="fp__nav fp__nav--next extend-touch-target" onClick={() => go(1)} aria-label="محصولات بعدی">
+                  <ArrowLeft aria-hidden="true" />
+                </button>
+              </>
             )}
           </div>
 
           {pages > 1 && (
-            <div className="featured-products__pagination" aria-label="صفحه‌های محصولات">
-              {Array.from({ length: pages }).map((_, index) => (
-                <button
-                  key={index}
-                  type="button"
-                  aria-label={`صفحه ${toFaDigits(index + 1)}`}
-                  aria-current={page === index ? "page" : undefined}
-                  className={cn("extend-touch-target", page === index && "is-active")}
-                  onClick={() => scrollToPage(index)}
-                />
+            <div className="fp__dots" aria-hidden="true">
+              {Array.from({ length: pages }).map((_, i) => (
+                <span key={i} className={cn(page === i && "is-active")} />
               ))}
             </div>
           )}
         </Reveal>
 
-        <div className="featured-products__footer-cta">
-          <Link href="/shop" className="featured-products__all extend-touch-target">مشاهده فروشگاه <ArrowLeft aria-hidden="true" /></Link>
+        <div className="fp__cta">
+          <Link href="/shop" className="cta-lux cta-lux--gold lightbeam-cta">
+            <span>مشاهده همه‌ی محصولات</span>
+            <ArrowLeft aria-hidden="true" />
+          </Link>
         </div>
       </div>
     </section>

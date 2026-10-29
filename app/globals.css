@@ -1422,3 +1422,103 @@ nav[aria-label="ناوبری سریع فروشگاه"] {
   background: none;
   pointer-events: auto;
 }
+
+/* ===========================================================================
+   PREMIUM BUTTON FINISH
+   ---------------------------------------------------------------------------
+   One lit-metal finish for the two main button variants, so every call to
+   action in the shop (login, cart, checkout, forms) reads as the same object
+   as the hero's: champagne gold with a lit top edge, and oxblood with a
+   champagne rim. Static — only the hero and the closing band animate.
+   =========================================================================== */
+.btn-gold {
+  border: 1px solid rgb(255 244 205 / 70%);
+  background: linear-gradient(180deg, #f8e4a2 0%, #e2b85a 46%, #b9862a 100%);
+  color: #2a0610;
+  box-shadow:
+    0 10px 24px -8px rgb(212 175 55 / 55%),
+    inset 0 1px 0 rgb(255 255 255 / 60%),
+    inset 0 -2px 0 rgb(120 80 10 / 22%);
+  transition: transform 160ms ease, box-shadow 200ms ease, filter 200ms ease;
+}
+
+.btn-gold:hover {
+  filter: brightness(1.06) saturate(1.05);
+  box-shadow:
+    0 14px 30px -8px rgb(212 175 55 / 72%),
+    inset 0 1px 0 rgb(255 255 255 / 70%),
+    inset 0 -2px 0 rgb(120 80 10 / 22%);
+}
+
+.btn-oxblood {
+  border: 1px solid rgb(229 211 179 / 55%);
+  background: linear-gradient(160deg, #9a1d33 0%, #6e0415 50%, #3f010b 100%);
+  color: #fff;
+  box-shadow:
+    0 12px 26px -10px rgb(100 2 17 / 75%),
+    inset 0 1px 0 rgb(255 255 255 / 28%);
+  transition: transform 160ms ease, box-shadow 200ms ease, filter 200ms ease;
+}
+
+.btn-oxblood:hover {
+  filter: brightness(1.1);
+  box-shadow:
+    0 16px 34px -10px rgb(100 2 17 / 90%),
+    inset 0 1px 0 rgb(255 255 255 / 34%);
+}
+
+/* The page-heading kicker used by PageHeader, the catalogue listings and the auth forms:
+   an ordinal, a champagne hairline, then the label — one line, not three stacked fragments. */
+.section-label {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  color: rgb(var(--foreground) / 0.72);
+  font-size: 0.78rem;
+  font-weight: 800;
+  line-height: 1.6;
+}
+
+.section-label > span {
+  color: var(--aqua);
+  font-weight: 900;
+}
+
+.section-label > i {
+  flex: 0 0 2.25rem;
+  block-size: 1px;
+  background: linear-gradient(to left, var(--aqua), transparent);
+}
+
+.section-label > p {
+  margin: 0;
+}
+
+/* Studio photographs (see AdaptiveProductImage): the shop's own burgundy set is a full frame, so it
+   fills the plate instead of being matted on white. Packshots keep the original framing. */
+.lux-card .lux-stage[data-kind="studio"] {
+  aspect-ratio: 4 / 5;
+  background: #2a050d;
+}
+
+.lux-card .lux-stage[data-kind="studio"] img {
+  padding: 0;
+  object-fit: cover;
+  object-position: 80% 34%;
+}
+
+.lux-card .lux-stage[data-kind="studio"]::after {
+  display: none;
+}
+
+.pdp-plate[data-kind="studio"] {
+  aspect-ratio: 4 / 5;
+  background: #2a050d;
+}
+
+.pdp-plate[data-kind="studio"] img {
+  padding: 0;
+  object-fit: cover;
+  object-position: 80% 34%;
+  mix-blend-mode: normal;
+}

@@ -56,7 +56,7 @@ export function PageHeader({
         <i aria-hidden="true" />
         <p>{eyebrow}</p>
       </div>
-      <h1 className="mt-4 text-2xl font-black leading-[1.4] tracking-normal md:text-3xl">
+      <h1 className="mt-4 text-3xl font-black leading-[1.35] tracking-normal md:text-4xl">
         {title}
         {accent ? (
           <>

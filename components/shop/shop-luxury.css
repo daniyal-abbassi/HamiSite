@@ -265,3 +265,43 @@
 @media (max-width: 767px) {
   .shop-luxury .shop-product-grid > .card-oxblood .lux-buy button { width: 44px; height: 44px; }
 }
+
+/* Studio photographs (see AdaptiveProductImage) are full burgundy frames with the house mark at the
+   top right: in the grid they run edge to edge across the card's top instead of sitting in the matted
+   specimen frame, and the "HAMI / 01" counter steps aside so it never lands on the mark. */
+.shop-luxury .shop-product-grid > .card-oxblood .lux-stage[data-kind="studio"] {
+  aspect-ratio: 4 / 5;
+  margin: 0;
+  border: 0;
+  border-radius: 8px 8px 0 0;
+  background: #2a050d;
+  box-shadow: none;
+}
+
+.shop-luxury .shop-product-grid > .card-oxblood .lux-stage[data-kind="studio"] img {
+  padding: 0;
+  mix-blend-mode: normal;
+  object-fit: cover;
+  object-position: 80% 34%;
+}
+
+.shop-luxury .shop-product-grid > .card-oxblood .lux-stage[data-kind="studio"]::before,
+.shop-luxury .shop-product-grid > .card-oxblood .lux-stage[data-kind="studio"]::after {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .shop-luxury .shop-product-grid > .card-oxblood .lux-stage[data-kind="studio"] {
+    aspect-ratio: 4 / 5;
+    margin: 0;
+    border-radius: 10px 10px 0 0;
+  }
+
+  .shop-luxury .shop-product-grid > .card-oxblood .lux-stage[data-kind="studio"] img {
+    padding: 0;
+  }
+
+  .shop-luxury .shop-product-grid > .card-oxblood .lux-body {
+    padding-inline: 10px;
+  }
+}

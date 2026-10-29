@@ -231,8 +231,12 @@ export async function findProductBySlug(slug: string, { includeAdminFields = fal
   return product ? serializeProduct(product, true, includeAdminFields) : null;
 }
 
+/** A reduction under 3% reads as noise, not an offer; the shelf must not sell on it. */
+export const MIN_MEANINGFUL_DISCOUNT = 0.03;
+
 function hasPriceReduction(price: number | null | undefined, compareAtPrice: number | null | undefined) {
-  return price != null && price > 0 && compareAtPrice != null && compareAtPrice > price;
+  return price != null && price > 0 && compareAtPrice != null && compareAtPrice > price
+    && (compareAtPrice - price) / compareAtPrice >= MIN_MEANINGFUL_DISCOUNT;
 }
 
 export type DiscountedRailProduct = CatalogProduct & { initialVariantId?: number };

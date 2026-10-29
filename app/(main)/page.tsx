@@ -6,13 +6,10 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import storePhoto from "@/public/store/shop-ai-relight.png";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
-import { additionalProductsRail, discountedProductsRail, homepageProductsRail } from "@/lib/home-rails-db";
-import { AdditionalProducts } from "@/components/home/AdditionalProducts";
+import { discountedProductsRail, homepageProductsRail } from "@/lib/home-rails-db";
 import { DiscountedProducts } from "@/components/home/DiscountedProducts";
-import { ObtainableNow } from "@/components/home/ObtainableNow";
 import { AssemblyBand } from "@/components/home/AssemblyBand";
 import { BrandShowcase } from "@/components/home/BrandShowcase";
-import { MobileQuickRoutes } from "@/components/home/MobileQuickRoutes";
 import { CategoryHub } from "@/components/home/CategoryHub";
 import { B2bSection } from "@/components/home/B2bSection";
 import { OnlineServices } from "@/components/home/OnlineServices";
@@ -141,11 +138,6 @@ async function DiscountedProductsSection() {
   return <DiscountedProducts products={products} />;
 }
 
-async function AdditionalProductsSection() {
-  const products = await additionalProductsRail();
-  return <AdditionalProducts products={products} />;
-}
-
 export default function HomePage() {
   return (
     <>
@@ -156,21 +148,11 @@ export default function HomePage() {
       <Suspense fallback={null}>
         <DiscountedProductsSection />
       </Suspense>
-      {/* Mobile only (`md:hidden`), and a shop entry rather than an interruption:
-          a row of route chips straight into the catalogue. */}
-      <MobileQuickRoutes />
-      {/* A strict sellability shelf: every item here can actually be purchased. */}
-      <Suspense fallback={null}>
-        <ObtainableNow />
-      </Suspense>
       <Suspense fallback={null}>
         <CategoryHub />
       </Suspense>
       <Suspense fallback={null}>
         <BrandShowcase />
-      </Suspense>
-      <Suspense fallback={<HomeRailSkeleton />}>
-        <AdditionalProductsSection />
       </Suspense>
       <OnlineServices />
       <B2bSection />

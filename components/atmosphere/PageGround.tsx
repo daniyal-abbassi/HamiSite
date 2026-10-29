@@ -20,7 +20,7 @@ export function PageGround() {
     <div
       className={`hami-page-ground${isHome ? " hami-page-ground--home" : ""}`}
       aria-hidden="true"
-      style={{ backgroundColor: isHome ? "#30080f" : interior! }}
+      style={{ backgroundColor: isHome ? "#2a050d" : interior! }}
     />
   );
 }

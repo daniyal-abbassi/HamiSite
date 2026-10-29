@@ -57,12 +57,12 @@ describe("Persian RTL UI Standards (037)", () => {
   });
 
   describe("Directional Icon Semantics", () => {
-    it("uses ArrowLeft for forward product details action in ProductCard", () => {
-      const path = "components/shop/ProductCard.tsx";
-      const content = readFileSync(path, "utf-8");
-      // The detail link button must use ArrowLeft, not ArrowRight
-      expect(content).toContain("<ArrowLeft");
-      expect(content).not.toMatch(/<ArrowRight[^>]*aria-hidden="true"/);
+    it("points forward with ArrowLeft and back with ArrowRight in the featured carousel", () => {
+      const content = readFileSync("components/home/FeaturedProducts.tsx", "utf-8");
+      // In an RTL document "next" is to the left.
+      expect(content).toMatch(/aria-label="محصولات بعدی"[\s\S]*?<ArrowLeft/);
+      expect(content).toMatch(/aria-label="محصولات قبلی"[\s\S]*?<ArrowRight/);
+      expect(content).toMatch(/مشاهده همه‌ی محصولات<\/span>\s*<ArrowLeft/);
     });
 
     it("uses ChevronLeft for next page and ChevronRight for previous page in Pagination", () => {

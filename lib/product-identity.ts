@@ -231,14 +231,22 @@ export type PriceState = "sale" | "plain" | "unavailable";
  */
 export function priceState(displayPrice: number, compareAtPrice?: number | null): PriceState {
   if (!displayPrice || displayPrice <= 0) return "unavailable";
-  if (compareAtPrice != null && compareAtPrice > displayPrice) return "sale";
+  if (isMeaningfulReduction(displayPrice, compareAtPrice)) return "sale";
   return "plain";
+}
+
+/** A saving under 3% is noise, not an offer: no strike-through, no badge. */
+const MIN_MEANINGFUL_REDUCTION = 0.03;
+
+function isMeaningfulReduction(displayPrice: number, compareAtPrice?: number | null): compareAtPrice is number {
+  return compareAtPrice != null && compareAtPrice > displayPrice
+    && (compareAtPrice - displayPrice) / compareAtPrice >= MIN_MEANINGFUL_REDUCTION;
 }
 
 /** Whole-percent saving, or null when there isn't one. */
 export function discountPercent(displayPrice: number, compareAtPrice?: number | null): number | null {
   if (!displayPrice || displayPrice <= 0) return null;
-  if (compareAtPrice == null || compareAtPrice <= displayPrice) return null;
+  if (!isMeaningfulReduction(displayPrice, compareAtPrice)) return null;
   const off = Math.round(((compareAtPrice - displayPrice) / compareAtPrice) * 100);
   return off > 0 ? off : null;
 }

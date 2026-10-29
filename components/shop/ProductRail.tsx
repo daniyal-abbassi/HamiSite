@@ -25,7 +25,7 @@ import { cn } from "@/lib/utils";
  * which the rail becomes a grid, the snap behaviour, the keyboard affordance —
  * is inside, so the two call sites cannot drift apart. That is the whole reason
  * this is a module rather than a copied block of classes: the same rail is
- * needed by FeaturedProducts and AdditionalProducts, and a third caller is likely.
+ * needed by FeaturedProducts and RelatedProducts.
  *
  * ## The keyboard affordance is not optional
  *
