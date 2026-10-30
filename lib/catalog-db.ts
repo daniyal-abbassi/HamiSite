@@ -245,6 +245,12 @@ export type DiscountedRailProduct = CatalogProduct & { initialVariantId?: number
  * Deep query projection: retrieves the top purchasable products with active price reductions,
  * computing variant-level eligibility and ranking by highest discount rate in one cohesive module.
  */
+/** A product whose default photo is one of the studio shots, not an old catalogue mirror. */
+export function hasStudioPhoto(product: { images: Array<{ url: string; isDefault: boolean }> }) {
+  const primary = product.images.find((image) => image.isDefault) ?? product.images[0];
+  return primary?.url.startsWith("/images/products/") ?? false;
+}
+
 export async function queryDiscountedRailProducts(limit = 5): Promise<DiscountedRailProduct[]> {
   const records = await prisma.product.findMany({
     where: { available: true },
@@ -279,7 +285,7 @@ export async function queryDiscountedRailProducts(limit = 5): Promise<Discounted
   });
 
   return candidates
-    .sort((a, b) => b.rate - a.rate)
+    .sort((a, b) => Number(hasStudioPhoto(b.product)) - Number(hasStudioPhoto(a.product)) || b.rate - a.rate)
     .slice(0, limit)
     .map(({ product }) => product);
 }

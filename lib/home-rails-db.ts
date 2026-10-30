@@ -1,4 +1,4 @@
-import { queryDiscountedRailProducts, queryProducts } from "@/lib/catalog-db";
+import { hasStudioPhoto, queryDiscountedRailProducts, queryProducts } from "@/lib/catalog-db";
 import { findProductBySlug } from "@/lib/catalog";
 import { isPurchasable, splitProductName } from "@/lib/product-identity";
 import mirroredImages from "@/data/catalog-images.json";
@@ -40,12 +40,6 @@ export type RailProduct = {
     imageUrl: string | null;
   }>;
 };
-
-/** A product whose default photo is one of the studio shots, not an old catalog mirror. */
-function hasStudioPhoto(product: { images: Array<{ url: string; isDefault: boolean }> }) {
-  const primary = product.images.find((image) => image.isDefault) ?? product.images[0];
-  return primary?.url.startsWith("/images/products/") ?? false;
-}
 
 function modelKey(name: string) {
   const { model } = splitProductName(name);

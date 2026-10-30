@@ -32,6 +32,18 @@ test("featured showcase thumbnails change the product on stage", async ({ page }
   await page.waitForLoadState("networkidle");
 });
 
+test("discounted offers keep every price in view on a narrow phone", async ({ page }) => {
+  await page.setViewportSize({ width: 360, height: 800 });
+  await page.goto("/");
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBe(360);
+  const lead = page.locator("#discounted .offer--lead");
+  await lead.scrollIntoViewIfNeeded();
+  await expect(lead.locator(".offer__seal")).toBeVisible();
+  await expect(lead.locator(".offer__saving")).toBeVisible();
+  await expect(page.locator("#discounted .offer .offer__price strong")).toHaveCount(5);
+  await page.waitForLoadState("networkidle");
+});
+
 test("desktop ticker is a compact pill whose marquee fills the bar", async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 752 });
   await page.goto("/");

@@ -29,6 +29,7 @@
 .hami-page-ground--home ~ * {
   --seam-dark: #2a050d;
   --seam-fade: 6rem;
+  --offers-curve: clamp(2.5rem, 6vw, 5rem);
 }
 
 .hami-page-ground--home ~ main > #top { background-color: var(--seam-dark); }
@@ -41,17 +42,6 @@
 .hami-page-ground--home ~ main > .home-section-ground--dark::before {
   -webkit-mask-image: linear-gradient(to bottom, transparent 0, #000 var(--seam-fade), #000 calc(100% - var(--seam-fade)), transparent 100%);
   mask-image: linear-gradient(to bottom, transparent 0, #000 var(--seam-fade), #000 calc(100% - var(--seam-fade)), transparent 100%);
-}
-
-/* The discount panel floats on the seam colour edge to edge, instead of on
-   whatever happened to be behind a width-limited section. */
-.hami-page-ground--home ~ main > #discounted {
-  width: 100%;
-  max-width: none;
-  margin: 0;
-  padding-block: clamp(2rem, 5vw, 4rem);
-  padding-inline: max(1rem, calc((100% - 1280px) / 2));
-  background-color: var(--seam-dark);
 }
 
 /* The footer joins the closing band with no gap, no hairline, and the same fade. */
@@ -67,9 +57,18 @@
   background-size: cover;
 }
 
+/* The dark-to-ivory edge stays hard but curves, in the language of the arches above it. */
+.hami-page-ground--home ~ main > #discounted {
+  z-index: 3;
+  margin-block-end: calc(var(--offers-curve) * -1);
+  border-end-start-radius: 50% var(--offers-curve);
+  border-end-end-radius: 50% var(--offers-curve);
+}
+
+/* The offers section's curved foot overlaps this one by --offers-curve. */
 .hami-page-ground--home ~ main > #categories {
   background-color: #f4f1ea;
-  padding-block: clamp(48px, 6vw, 88px);
+  padding-block: calc(clamp(48px, 6vw, 88px) + var(--offers-curve, 0px)) clamp(48px, 6vw, 88px);
   box-shadow: none;
 }
 

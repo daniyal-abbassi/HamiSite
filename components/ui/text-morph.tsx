@@ -287,6 +287,8 @@ export function TextMorph({
         aria-hidden="true"
         className="relative block min-w-0 max-w-full select-none"
       >
+        {/* Both layers are absolute, so this holds the box until the script measures it. */}
+        <span className="invisible block w-max whitespace-pre">{currentWord}</span>
         <span
           ref={currentLayerRef}
           className="absolute left-1/2 top-0 block w-max whitespace-pre"
