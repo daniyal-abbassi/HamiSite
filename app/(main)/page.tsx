@@ -3,6 +3,7 @@ import Image from "next/image";
 import { pageMetadata } from "@/lib/seo-metadata";
 import { ArrowLeft } from "lucide-react";
 import { buttonVariants } from "@/components/ui/button";
+import { TextMorph } from "@/components/ui/text-morph";
 import { cn } from "@/lib/utils";
 import storePhoto from "@/public/store/shop-ai-relight.png";
 import { FeaturedProducts } from "@/components/home/FeaturedProducts";
@@ -32,6 +33,17 @@ export const revalidate = 60;
    (2 copies = 712px against a 1466px window). Six copies = 2136px covers every
    width the ticker is allowed to take, desktop pill included. */
 const TICKER_TEXT_COPIES = Array.from({ length: 6 }, (_, i) => i);
+
+/* The hero's second title line used to be a fixed "تلفن همراه و لوازم جانبی".
+   Cycling it through the shop's real category groups states the same breadth
+   of range without a longer, more crowded headline. */
+const HERO_CATEGORY_WORDS = [
+  "تلفن همراه",
+  "ساعت هوشمند",
+  "هدفون و ایرپاد",
+  "شارژر و کابل",
+  "پاوربانک",
+];
 
 function Hero() {
   return (
@@ -104,7 +116,7 @@ function Hero() {
             <span className="homepage-hero__title-emphasis">
               فروش عمده و تکی
               <br />
-              تلفن همراه و لوازم جانبی
+              <TextMorph words={HERO_CATEGORY_WORDS} interval={2200} />
             </span>
           </h1>
 
