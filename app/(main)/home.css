@@ -1476,42 +1476,16 @@
   transform: scale(0.97);
 }
 
-/* ---------- featured products: lit carousel of purchasable newest arrivals ---------- */
+/* ---------- featured products: one product at a time, on its own stage ---------- */
 .fp {
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding-block: 2.75rem 3.5rem;
+  padding-block: 2.5rem 3rem;
   color: #fbf4eb;
-  background-color: var(--seam-dark, #2a050d);
-  background-image: url("/images/backgrounds/hami-background-01.webp");
-  background-position: 72% center;
-  background-size: cover;
-}
-
-/* The artwork dissolves into the page's shared burgundy at the top (where the hero
-   ends) and the bottom (where the next chapter begins); a soft champagne bloom sits
-   behind the rail so the cards read as lit. */
-.fp::before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset: 0;
   background:
-    radial-gradient(70% 34% at 50% 52%, rgb(229 211 179 / 11%), transparent 72%),
-    linear-gradient(180deg, var(--seam-dark, #2a050d) 0, rgb(42 5 13 / 82%) 3rem, rgb(42 5 13 / 34%) 15rem, rgb(42 5 13 / 74%) 100%);
-  pointer-events: none;
-}
-
-.fp::after {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  inset-inline: 0;
-  inset-block-end: 0;
-  block-size: 7rem;
-  background: linear-gradient(180deg, transparent, var(--seam-dark, #2a050d));
-  pointer-events: none;
+    radial-gradient(90% 28rem at 50% 12rem, rgb(120 16 34 / 34%), transparent 72%),
+    var(--seam-dark, #2a050d);
 }
 
 .fp__inner {
@@ -1525,380 +1499,459 @@
 }
 
 .fp__title {
-  margin: 0.9rem 0 0;
-  font-size: clamp(2rem, 9vw, 2.7rem);
-  font-weight: 900;
+  margin: 0.75rem 0 0;
+  color: #fffaf3;
+  font-size: var(--type-display);
+  font-weight: 800;
   line-height: 1.25;
   letter-spacing: 0;
-  color: #fffaf3;
-}
-
-.fp__sub {
-  max-inline-size: 30rem;
-  margin: 0.75rem 0 0;
-  color: rgb(251 244 235 / 74%);
-  font-size: 0.92rem;
-  line-height: 1.95;
-}
-
-.fp__proof {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem;
-  margin: 1.15rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.fp__proof li {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.4rem;
-  padding: 0.4rem 0.8rem;
-  border: 1px solid rgb(229 211 179 / 28%);
-  border-radius: 999px;
-  background: rgb(30 3 10 / 48%);
-  color: #e5d3b3;
-  font-size: 0.74rem;
-  font-weight: 800;
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-}
-
-.fp__proof svg {
-  inline-size: 1rem;
-  block-size: 1rem;
-  flex: 0 0 auto;
-}
-
-.fp__rail-wrap {
-  position: relative;
-  margin-block-start: 1.75rem;
-}
-
-.fp__rail {
-  display: flex;
-  gap: 0.9rem;
-  overflow-x: auto;
-  overscroll-behavior-x: contain;
-  scroll-snap-type: x mandatory;
-  scroll-padding-inline: 1.25rem;
-  scrollbar-width: none;
-  padding: 0.6rem 1.25rem 1.6rem;
-  -webkit-overflow-scrolling: touch;
-}
-
-.fp__rail::-webkit-scrollbar {
-  display: none;
-}
-
-.fp__rail:focus-visible {
-  outline: 2px solid #e5d3b3;
-  outline-offset: -2px;
 }
 
 .fp__empty {
   margin: 0;
-  padding: 2rem 0;
+  padding: 2rem 1.25rem;
   color: rgb(251 244 235 / 70%);
 }
 
-/* The card: dark smoked glass, a white plate for the photograph (the catalogue
-   photos are shot on white), champagne price, gold buy button. */
-.fp-card {
+/* Slides are exactly one stage wide with no gap: the active index is derived from that. */
+.fp__stage {
   display: flex;
-  flex: 0 0 12.25rem;
-  flex-direction: column;
-  overflow: hidden;
+  margin-block-start: 1.25rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.fp__stage::-webkit-scrollbar {
+  display: none;
+}
+
+.fp__stage:focus-visible {
+  outline: 2px solid #e5d3b3;
+  outline-offset: -2px;
+}
+
+.fp-slide {
+  position: relative;
+  flex: 0 0 100%;
+  min-inline-size: 0;
   scroll-snap-align: start;
-  border: 1px solid rgb(229 211 179 / 24%);
-  border-radius: 24px;
-  background: linear-gradient(165deg, rgb(54 8 21 / 94%), rgb(24 3 10 / 96%));
-  box-shadow: 0 24px 42px -22px rgb(0 0 0 / 88%), inset 0 1px 0 rgb(229 211 179 / 20%);
-  animation: fp-rise 0.7s cubic-bezier(0.22, 1, 0.36, 1) both;
-  animation-delay: calc(var(--fp-i, 0) * 70ms);
-  transition: transform 220ms ease, box-shadow 220ms ease;
 }
 
-@media (hover: hover) {
-  .fp-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 30px 50px -22px rgb(0 0 0 / 90%), 0 0 0 1px rgb(229 211 179 / 45%), inset 0 1px 0 rgb(229 211 179 / 30%);
-  }
-}
-
-/* Two kinds of photograph (see AdaptiveProductImage): a white-ground packshot is matted whole on a
-   white plate; the shop's own studio shot — a full burgundy frame with the house mark at the top
-   right — fills the plate edge to edge and fades into the card body. */
-.fp-card__plate {
+/* No card frame: the studio set is already burgundy, so the photograph dissolves into the section
+   and the product appears to stand in the room. A white packshot is matted whole instead. */
+.fp-slide__plate {
   position: relative;
   display: block;
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 5 / 6;
   overflow: hidden;
   background: #f4efe7;
 }
 
-.fp-card__plate[data-kind="studio"] {
-  background: #2a050d;
+.fp-slide__plate[data-kind="studio"] {
+  background: var(--seam-dark, #2a050d);
 }
 
-.fp-card__plate[data-kind="studio"]::after {
+.fp-slide__plate::after {
   content: "";
   position: absolute;
   inset-inline: 0;
   inset-block-end: 0;
-  block-size: 28%;
-  background: linear-gradient(180deg, transparent, rgb(30 4 12 / 92%));
+  block-size: 30%;
+  background: linear-gradient(180deg, transparent, var(--seam-dark, #2a050d));
   pointer-events: none;
 }
 
-.fp-card__image {
+.fp-slide__image {
   object-fit: contain;
-  padding: 0.9rem;
-  transition: transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  padding: 1.5rem 1.5rem 4rem;
+  transform: scale(1.04);
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.fp-card__plate[data-kind="studio"] .fp-card__image {
+.fp-slide__plate[data-kind="studio"] .fp-slide__image {
   object-fit: cover;
-  /* Biased toward the house mark at the top right so a square frame does not crop it off. */
-  object-position: 80% 34%;
+  /* Keeps the house mark at the top and the whole product in frame. */
+  object-position: 50% 45%;
   padding: 0;
 }
 
-@media (hover: hover) {
-  .fp-card:hover .fp-card__image {
-    transform: scale(1.05);
-  }
+.fp-slide.is-active .fp-slide__image {
+  transform: none;
 }
 
-.fp-card__off {
-  position: absolute;
+.fp-slide__info {
+  position: relative;
   z-index: 1;
-  inset-block-start: 0.6rem;
-  inset-inline-end: 0.6rem;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.25rem;
-  padding: 0.28rem 0.65rem;
-  border-radius: 999px;
-  background: linear-gradient(135deg, #b3243d, #6e0415);
-  color: #fff;
-  font-size: 0.7rem;
-  font-weight: 900;
-  box-shadow: 0 8px 16px -8px rgb(100 2 17 / 80%);
-}
-
-.fp-card__off--gold {
-  background: linear-gradient(135deg, #f8e4a2, #d9a940);
-  color: #2a0610;
-}
-
-.fp-card__off svg {
-  inline-size: 0.8rem;
-  block-size: 0.8rem;
-}
-
-.fp-card__body {
   display: flex;
-  flex: 1;
   flex-direction: column;
-  gap: 0.3rem;
-  padding: 0.75rem 0.9rem 1rem;
+  margin-block-start: -3rem;
+  padding-inline: 1.25rem;
 }
 
-.fp-card__brand {
+.fp-slide__info > * {
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 240ms ease, transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fp-slide.is-active .fp-slide__info > * {
+  opacity: 1;
+  transform: none;
+}
+
+.fp-slide.is-active .fp-slide__info > :nth-child(2) { transition-delay: 40ms; }
+.fp-slide.is-active .fp-slide__info > :nth-child(3) { transition-delay: 80ms; }
+.fp-slide.is-active .fp-slide__info > :nth-child(4) { transition-delay: 120ms; }
+.fp-slide.is-active .fp-slide__info > :nth-child(n + 5) { transition-delay: 160ms; }
+
+.fp-slide__meta {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   color: #e5d3b3;
-  font-size: 0.68rem;
-  font-weight: 900;
-}
-
-.fp-card__model {
-  display: block;
-  overflow: hidden;
-  color: rgb(251 244 235 / 62%);
-  font-family: var(--font-mono, ui-monospace, monospace);
-  font-size: 0.7rem;
+  font-size: var(--type-label);
   font-weight: 700;
-  line-height: 1.5;
-  text-align: start;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
-.fp-card__name {
-  display: -webkit-box;
-  min-block-size: calc(1 * 1.7 * 0.86rem);
-  margin: 0;
-  overflow: hidden;
+.fp-slide__count {
+  color: rgb(251 244 235 / 60%);
+  font-weight: 500;
+}
+
+.fp-slide__title {
+  margin: 0.25rem 0 0;
   color: #fffaf3;
-  font-size: 0.86rem;
+  font-size: var(--type-display);
   font-weight: 800;
-  line-height: 1.7;
-  text-align: start;
-  unicode-bidi: plaintext;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
+  line-height: 1.25;
+  letter-spacing: 0;
 }
 
-.fp-card__name a {
+.fp-slide__title a {
   color: inherit;
   text-decoration: none;
 }
 
-.fp-card__buy {
+.fp-slide__facts {
   display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 0.5rem;
-  margin-block-start: auto;
-  padding-block-start: 0.65rem;
-  border-block-start: 1px dashed rgb(229 211 179 / 22%);
-}
-
-.fp-card__price {
-  display: flex;
-  min-inline-size: 0;
-  flex-direction: column;
-}
-
-.fp-card__price del {
-  color: rgb(251 244 235 / 50%);
-  font-size: 0.68rem;
-}
-
-.fp-card__price strong {
-  color: #f4dfa8;
-  font-size: 1rem;
-  font-weight: 900;
-  line-height: 1.5;
-  white-space: nowrap;
-  text-shadow: 0 0 14px rgb(229 211 179 / 28%);
-}
-
-.fp-card__price .toman-price__unit {
-  font-size: 0.66rem;
-  font-weight: 700;
-  opacity: 0.8;
-}
-
-.fp-card__cart {
-  inline-size: 2.75rem;
-  block-size: 2.75rem;
-  flex: 0 0 auto;
+  flex-wrap: wrap;
+  gap: 0.25rem 0;
+  margin: 0.75rem 0 0;
   padding: 0;
+  color: #fbf4eb;
+  font-size: var(--type-caption);
+  font-weight: 600;
+  line-height: 1.6;
+  list-style: none;
+}
+
+.fp-slide__facts li + li {
+  margin-inline-start: 0.75rem;
+  padding-inline-start: 0.75rem;
+  border-inline-start: 1px solid rgb(229 211 179 / 35%);
+}
+
+.fp-slide__price {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.25rem 0.75rem;
+  margin-block-start: 1rem;
+}
+
+.fp-slide__price strong {
+  color: #f4dfa8;
+  font-size: var(--type-page);
+  font-weight: 800;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+
+.fp-slide__price strong .toman-price__unit {
+  font-size: var(--type-label);
+  font-weight: 600;
+}
+
+.fp-slide__was {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgb(251 244 235 / 60%);
+  font-size: var(--type-caption);
+}
+
+.fp-slide__was b {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  color: #f4dfa8;
+  font-weight: 700;
+}
+
+.fp-slide__was svg {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+.fp-slide__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-block-start: 1rem;
+}
+
+.fp-slide__cart {
+  flex: 1 1 auto;
+  min-block-size: 3rem;
   border: 1px solid rgb(255 244 205 / 70%);
-  border-radius: 14px;
+  border-radius: 999px;
   background: linear-gradient(180deg, #f8e4a2 0%, #e2b85a 46%, #b9862a 100%);
   color: #2a0610;
-  box-shadow: 0 10px 20px -8px rgb(212 175 55 / 60%), inset 0 1px 0 rgb(255 255 255 / 60%);
+  font-size: var(--type-body);
+  font-weight: 800;
+  box-shadow: 0 12px 24px -12px rgb(212 175 55 / 70%), inset 0 1px 0 rgb(255 255 255 / 60%);
 }
 
-.fp-card__cart:disabled {
-  background: rgb(251 244 235 / 10%);
+.fp-slide__cart:disabled {
   border-color: rgb(229 211 179 / 22%);
+  background: rgb(251 244 235 / 10%);
   color: rgb(251 244 235 / 60%);
   box-shadow: none;
+}
+
+.fp-slide__details {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  min-block-size: 3rem;
+  padding-inline: 1.25rem;
+  border: 1px solid rgb(229 211 179 / 35%);
+  border-radius: 999px;
+  color: #e5d3b3;
+  font-size: var(--type-support);
+  font-weight: 700;
+  text-decoration: none;
+  transition: background-color 180ms ease, color 180ms ease;
+}
+
+.fp-slide__details:hover {
+  background: #e5d3b3;
+  color: #2a0610;
+}
+
+.fp__picker {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-block-start: 1.5rem;
+}
+
+.fp__thumbs {
+  display: flex;
+  flex: 1 1 auto;
+  gap: 0.5rem;
+  min-inline-size: 0;
+  overflow-x: auto;
+  padding: 0.25rem 1.25rem;
+  scrollbar-width: none;
+}
+
+.fp__thumbs::-webkit-scrollbar {
+  display: none;
+}
+
+.fp__thumb {
+  position: relative;
+  flex: 0 0 3.5rem;
+  block-size: 4.5rem;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  border-radius: 12px;
+  background: #f4efe7;
+  cursor: pointer;
+  opacity: 0.55;
+  transition: opacity 200ms ease, box-shadow 200ms ease;
+}
+
+.fp__thumb img {
+  object-fit: cover;
+}
+
+.fp__thumb.is-active {
+  opacity: 1;
+  box-shadow: 0 0 0 2px var(--seam-dark, #2a050d), 0 0 0 4px #e5d3b3;
+}
+
+.fp__thumb:focus-visible {
+  opacity: 1;
+  outline: 2px solid #f8ecc9;
+  outline-offset: 3px;
 }
 
 .fp__nav {
   display: none;
 }
 
-.fp__dots {
+.fp__foot {
   display: flex;
-  justify-content: center;
-  gap: 0.4rem;
-  margin-block-start: -0.4rem;
-}
-
-.fp__dots span {
-  inline-size: 6px;
-  block-size: 6px;
-  border-radius: 99px;
-  background: rgb(251 244 235 / 35%);
-  transition: inline-size 220ms ease, background-color 220ms ease;
-}
-
-.fp__dots span.is-active {
-  inline-size: 22px;
-  background: #e5d3b3;
-}
-
-.fp__cta {
-  display: flex;
-  justify-content: center;
-  margin-block-start: 1.5rem;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.5rem;
+  margin-block-start: 1.25rem;
   padding-inline: 1.25rem;
 }
 
-@keyframes fp-rise {
-  from { opacity: 0; transform: translateY(18px) scale(0.98); }
-  to { opacity: 1; transform: none; }
+.fp__trust {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1rem;
+  margin: 0;
+  color: rgb(251 244 235 / 70%);
+  font-size: var(--type-caption);
+  line-height: 1.6;
 }
 
-@media (min-width: 768px) {
+.fp__all {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+  color: #e5d3b3;
+  font-size: var(--type-support);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.fp__all svg {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  transition: transform 200ms ease;
+}
+
+.fp__all:hover svg {
+  transform: translateX(-4px);
+}
+
+@media (min-width: 1024px) {
   .fp {
-    padding-block: 4.5rem 5rem;
+    padding-block: 5rem;
   }
 
-  .fp__head {
+  .fp__inner {
+    max-inline-size: 1120px;
+  }
+
+  .fp__head,
+  .fp__foot {
     padding-inline: 2rem;
   }
 
-  .fp__title {
-    font-size: 3rem;
+  .fp__stage {
+    margin-block-start: 2rem;
   }
 
-  .fp__rail {
-    gap: 1.25rem;
+  /* The photograph keeps the reading side; the offer answers it across the page. */
+  .fp-slide {
+    display: grid;
+    grid-template-columns: 500px minmax(0, 1fr);
+    gap: 5rem;
+    align-items: center;
     padding-inline: 2rem;
-    scroll-padding-inline: 2rem;
   }
 
-  .fp-card {
-    flex-basis: 15rem;
+  .fp-slide__plate {
+    border-radius: 28px;
   }
 
-  .fp-card__name {
-    font-size: 0.92rem;
+  .fp-slide__plate::after {
+    display: none;
+  }
+
+  .fp-slide__image {
+    padding: 2rem;
+  }
+
+  .fp-slide__info {
+    margin-block-start: 0;
+    padding-inline: 0;
+  }
+
+  .fp-slide__title {
+    font-size: var(--type-page);
+  }
+
+  .fp-slide__actions {
+    max-inline-size: 26rem;
+    margin-block-start: 1.5rem;
+  }
+
+  .fp__picker {
+    gap: 0.5rem;
+    margin-block-start: 2rem;
+    padding-inline: 2rem;
+  }
+
+  .fp__thumbs {
+    justify-content: safe center;
+    padding-inline: 0.5rem;
+  }
+
+  .fp__thumb {
+    flex-basis: 4rem;
+    block-size: 5.25rem;
+  }
+
+  .fp__thumb:hover {
+    opacity: 1;
   }
 
   .fp__nav {
-    position: absolute;
-    inset-block-start: 42%;
-    z-index: 2;
     display: grid;
+    flex: 0 0 auto;
     inline-size: 3rem;
     block-size: 3rem;
     place-items: center;
     border: 1px solid rgb(229 211 179 / 45%);
     border-radius: 50%;
-    background: rgb(24 3 10 / 78%);
+    background: transparent;
     color: #e5d3b3;
     cursor: pointer;
-    box-shadow: 0 12px 26px -12px rgb(0 0 0 / 90%);
-    -webkit-backdrop-filter: blur(8px);
-    backdrop-filter: blur(8px);
-    transition: background-color 180ms ease, color 180ms ease;
+    transition: background-color 180ms ease, color 180ms ease, opacity 180ms ease;
   }
 
-  .fp__nav:hover {
+  .fp__nav:hover:not(:disabled) {
     background: #e5d3b3;
     color: #2a0610;
   }
 
-  .fp__nav--prev { inset-inline-start: 0.75rem; }
-  .fp__nav--next { inset-inline-end: 0.75rem; }
+  .fp__nav:disabled {
+    cursor: default;
+    opacity: 0.35;
+  }
+
+  .fp__foot {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    margin-block-start: 2rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .fp-card {
-    animation: none;
+  .fp-slide__image,
+  .fp-slide__info > *,
+  .fp__thumb,
+  .fp__all svg {
     transition: none;
   }
 
-  .fp__rail {
-    scroll-behavior: auto;
+  .fp-slide__image {
+    transform: none;
   }
 }
 

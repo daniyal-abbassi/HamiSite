@@ -1,6 +1,6 @@
 import { queryDiscountedRailProducts, queryProducts } from "@/lib/catalog-db";
 import { findProductBySlug } from "@/lib/catalog";
-import { isPurchasable } from "@/lib/product-identity";
+import { isPurchasable, splitProductName } from "@/lib/product-identity";
 import mirroredImages from "@/data/catalog-images.json";
 
 const catalogImageMirror = mirroredImages as Record<string, string>;
@@ -41,14 +41,27 @@ export type RailProduct = {
   }>;
 };
 
-/** The twelve most recently added products the shop can actually sell, with a price on the record. */
+/** A product whose default photo is one of the studio shots, not an old catalog mirror. */
+function hasStudioPhoto(product: { images: Array<{ url: string; isDefault: boolean }> }) {
+  const primary = product.images.find((image) => image.isDefault) ?? product.images[0];
+  return primary?.url.startsWith("/images/products/") ?? false;
+}
+
+function modelKey(name: string) {
+  const { model } = splitProductName(name);
+  return (model ?? name).toLowerCase().replace(/\b[45]g\b/g, "").replace(/\s+/g, " ").trim();
+}
+
+/** Twelve distinct models the shop can actually sell, studio photography first, then newest. */
 export async function homepageProductsRail(): Promise<RailProduct[]> {
   const result = await queryProducts({
     sort: "newest",
     purchasableOnly: true,
     includeVariants: true,
     page: 1,
-    pageSize: 24,
+    // Pulls the whole sellable catalog so the studio-photo prioritization below
+    // isn't fishing in just the newest 24 — most of those are still on old photos.
+    pageSize: 200,
   });
 
   /* Product-level `purchasable` is not enough: a product can be sellable while its default variant is
@@ -64,7 +77,27 @@ export async function homepageProductsRail(): Promise<RailProduct[]> {
     );
   });
 
-  return sellable.slice(0, 12).map((product) => {
+  // Studio-photographed products lead the shelf; everything else fills the
+  // remaining slots in its original (newest-first) order. Array.sort is stable,
+  // so within each group the newest ordering from the query is preserved.
+  const prioritized = [...sellable].sort(
+    (a, b) => Number(hasStudioPhoto(b)) - Number(hasStudioPhoto(a)),
+  );
+
+  // One slot per model: storage configurations are separate catalogue records,
+  // and without this a dozen slots came down to seven phones. The top configuration
+  // represents the model; Map keeps the slot of the model's first appearance.
+  const byModel = new Map<string, (typeof prioritized)[number]>();
+  for (const product of prioritized) {
+    const key = modelKey(product.name);
+    const kept = byModel.get(key);
+    const outranks = kept
+      && hasStudioPhoto(product) === hasStudioPhoto(kept)
+      && product.displayPrice > kept.displayPrice;
+    if (!kept || outranks) byModel.set(key, product);
+  }
+
+  return [...byModel.values()].slice(0, 12).map((product) => {
     // The database query is authoritative for product, price, stock, and order.
     // Some imported DB variants have no ProductVariant.imageId even though the
     // catalog snapshot still has the merchant's explicit image_url per variant.

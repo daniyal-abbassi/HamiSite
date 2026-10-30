@@ -6,20 +6,29 @@ test("homepage renders its main storefront entry points", async ({ page }) => {
   await expect(
     page.getByRole("navigation", { name: "مسیرهای اصلی" }).getByRole("link", { name: /مشاهده محصولات/ }),
   ).toBeVisible();
-  await expect(page.locator("#featured article.product-card").first()).toBeVisible();
-  await expect(page.locator("#featured article.product-card img").first()).toHaveJSProperty("complete", true);
+  await expect(page.locator("#featured article.fp-slide").first()).toBeVisible();
+  await expect(page.locator("#featured article.fp-slide img").first()).toHaveJSProperty("complete", true);
   await page.waitForLoadState("networkidle");
 });
 
-test("featured rail keeps its first product visible on a phone", async ({ page }) => {
+test("featured showcase keeps its first product visible on a phone", async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("/");
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
-  const card = page.locator("#featured article.product-card").first();
-  await expect(card).toBeVisible();
-  await card.scrollIntoViewIfNeeded();
-  await expect(card.locator(".toman-price").first()).toBeVisible();
-  await expect.poll(() => card.locator(".lux-stage img").evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
+  const slide = page.locator("#featured article.fp-slide").first();
+  await expect(slide).toBeVisible();
+  await slide.scrollIntoViewIfNeeded();
+  await expect(slide.locator(".toman-price").first()).toBeVisible();
+  await expect.poll(() => slide.locator(".fp-slide__plate img").evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
+  await page.waitForLoadState("networkidle");
+});
+
+test("featured showcase thumbnails change the product on stage", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await page.locator("#featured .fp__thumb").nth(2).click();
+  await expect(page.locator("#featured .fp__thumb").nth(2)).toHaveAttribute("aria-current", "true");
+  await expect(page.locator("#featured .fp-slide").nth(2)).toHaveClass(/is-active/);
   await page.waitForLoadState("networkidle");
 });
 
