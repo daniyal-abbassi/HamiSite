@@ -3,7 +3,6 @@ import { PackageSearch } from "lucide-react";
 import { toFaDigits } from "@/lib/utils";
 import { ProductCard, type CardVariant } from "./ProductCard";
 import { ProductListRow } from "./ProductListRow";
-import { ShopResultControls } from "./ShopResultControls";
 import type { ShopMeta, ShopProduct } from "./types";
 
 type SearchParams = Record<string, string | string[] | undefined>;
@@ -12,7 +11,6 @@ type ShopResultsProps = {
   cardVariant?: CardVariant;
   products: ShopProduct[] | null;
   meta: ShopMeta | null;
-  activeSort: string;
   activeFilters?: { key: string; label: string }[];
   unknownFilter?: string | null;
   searchParams: SearchParams;
@@ -37,7 +35,6 @@ export function ShopResults({
   products,
   cardVariant = "obsidian",
   meta,
-  activeSort,
   unknownFilter = null,
   activeFilters = [],
   searchParams,
@@ -47,31 +44,24 @@ export function ShopResults({
   const listView = first(searchParams.view) === "list";
 
   return (
-    <div className="shop-results min-w-0 flex-1">
+    <div className="shop-results min-w-0">
       {activeFilters.length > 0 && (
-        <div className="mb-3 flex flex-wrap items-center gap-2" role="group" aria-label="فیلترهای فعال">
+        <div className="shop-active" role="group" aria-label="فیلترهای فعال">
           {activeFilters.map((filter) => (
             <Link
               key={`${filter.key}-${filter.label}`}
               href={hrefWith(searchParams, filter.key)}
-              className="inline-flex min-h-11 items-center gap-1.5 rounded-full border border-champagne/30 bg-champagne/10 px-3 py-1.5 text-xs font-bold text-foreground transition-colors hover:border-champagne/60"
+              className="shop-active__chip"
             >
               {filter.label}<span aria-hidden="true">×</span>
               <span className="sr-only">حذف فیلتر {filter.label}</span>
             </Link>
           ))}
-          <Link href="/shop" className="inline-flex min-h-11 items-center text-xs font-bold text-aqua underline-offset-4 hover:underline">
+          <Link href="/shop" className="shop-active__clear">
             حذف همه فیلترها
           </Link>
         </div>
       )}
-
-      <div className="shop-results-toolbar flex flex-wrap items-center justify-between gap-3 rounded-xl glass px-4 py-3">
-        <p className="text-xs text-foreground/60" aria-live="polite">
-          {unknownFilter ? "—" : products === null ? "در حال بارگذاری…" : `${toFaDigits(meta?.total ?? products.length)} محصول`}
-        </p>
-        <ShopResultControls activeSort={activeSort} listView={listView} />
-      </div>
 
       {unknownFilter && (
         <div className="mt-6 rounded-xl glass p-12 text-center" role="status">
@@ -83,7 +73,7 @@ export function ShopResults({
       )}
 
       {!unknownFilter && products === null && (
-        <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 xl:grid-cols-3" aria-busy="true">
+        <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 2xl:grid-cols-4" aria-busy="true">
           {Array.from({ length: 6 }, (_, index) => (
             <div key={index} className="rounded-2xl border border-line/60 bg-ink-2/40 p-4 space-y-3 animate-pulse" aria-hidden="true">
               <div className="aspect-square w-full rounded-xl bg-foreground/5" />
@@ -114,9 +104,9 @@ export function ShopResults({
           {listView ? (
             <div className="shop-product-list mt-6 space-y-4">{products.map((product) => <ProductListRow key={product.id} product={product} />)}</div>
           ) : (
-            <div className="shop-product-grid mt-6 grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-5 xl:grid-cols-2 2xl:grid-cols-3">
+            <div className="shop-product-grid mt-6 grid grid-cols-2 gap-3 sm:gap-5 lg:grid-cols-3 2xl:grid-cols-4">
               {products.map((product, index) => (
-                <ProductCard key={product.id} product={product} variant={cardVariant} frame="plinth" priorityImage={index === 0} imageSizes="(max-width: 767px) calc((100vw - 44px) / 2), (max-width: 1023px) calc((100vw - 68px) / 2), (max-width: 1535px) calc((100vw - 356px) / 2), 350px" />
+                <ProductCard key={product.id} product={product} variant={cardVariant} frame="plinth" priorityImage={index === 0} imageSizes="(max-width: 767px) calc((100vw - 44px) / 2), (max-width: 1023px) calc((100vw - 68px) / 2), (max-width: 1535px) 410px, 320px" />
               ))}
             </div>
           )}

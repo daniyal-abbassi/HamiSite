@@ -4,92 +4,8 @@ import { useId, useRef, useState, type ReactNode } from "react";
 import { ArrowUpLeft, Building2, Check, FileCheck2, Loader2, Store, UploadCloud } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { toFaDigits } from "@/lib/utils";
-import { normalizePersianDigits } from "@/lib/persian-typography";
-import { isValidEconomicCode, isValidIranianMobile, isValidIranianNationalCode, isValidIranianPostalCode, isValidLegalNationalId, isValidIranianLandline } from "@/lib/validators";
-import { partnerEntityOptions, partnerFileTypesNote, partnerIndividualFields, partnerLegalFields, partnerSharedFields, type PartnerEntity } from "@/lib/content/partners";
-import { validateUploadFile } from "@/lib/security/upload-validation";
-
-const ACCEPT = "image/jpeg,image/png,image/webp,application/pdf";
-const MAX_FILE_BYTES = 10 * 1024 * 1024;
-
-type FormValues = {
-  fullName: string;
-  mobile: string;
-  nationalCode: string;
-  shopName: string;
-  shopAddress: string;
-  postalCode: string;
-  shopPhone: string;
-  companyName: string;
-  companyAddress: string;
-  legalNationalId: string;
-  economicCode: string;
-};
-
-type FormFiles = Record<string, File | null>;
-type FormErrors = Record<string, string>;
-
-const EMPTY_VALUES: FormValues = {
-  fullName: "",
-  mobile: "",
-  nationalCode: "",
-  shopName: "",
-  shopAddress: "",
-  postalCode: "",
-  shopPhone: "",
-  companyName: "",
-  companyAddress: "",
-  legalNationalId: "",
-  economicCode: "",
-};
-
-function clientValidate(values: FormValues, files: FormFiles, entity: PartnerEntity): FormErrors {
-  const errors: FormErrors = {};
-
-  if (values.fullName.trim().length < 2) errors.fullName = "نام و نام خانوادگی الزامی است";
-  if (!isValidIranianMobile(values.mobile)) errors.mobile = "شماره موبایل معتبر نیست";
-  if (!isValidIranianNationalCode(values.nationalCode)) errors.nationalCode = "کد ملی معتبر نیست";
-  if (values.shopName.trim().length < 2) errors.shopName = "نام فروشگاه الزامی است";
-  if (values.shopAddress.trim().length < 5) errors.shopAddress = "آدرس فروشگاه الزامی است";
-
-  if (entity === "INDIVIDUAL") {
-    if (!isValidIranianPostalCode(values.postalCode)) errors.postalCode = "کد پستی باید ۱۰ رقم باشد";
-    // A shop line is a landline more often than a mobile, and `length < 7` accepted
-    // either by accident and a great deal else besides. FR-063.
-    if (!values.shopPhone.trim()) errors.shopPhone = "تلفن فروشگاه الزامی است";
-    else if (!isValidIranianMobile(values.shopPhone) && !isValidIranianLandline(values.shopPhone)) {
-      errors.shopPhone = "تلفن فروشگاه را با پیش‌شماره وارد کنید (مثلاً ۰۵۱۳۱۲۳۴۵۶۷)";
-    }
-    if (!files.leaseDocument) errors.leaseDocument = "عکس اجاره‌نامه الزامی است";
-    if (!files.businessLicense) errors.businessLicense = "عکس جواز کسب الزامی است";
-  } else {
-    if (values.companyName.trim().length < 2) errors.companyName = "نام شرکت الزامی است";
-    if (values.companyAddress.trim().length < 5) errors.companyAddress = "آدرس شرکت الزامی است";
-    if (!isValidLegalNationalId(values.legalNationalId)) errors.legalNationalId = "شناسه ملی شرکت باید ۱۱ رقم باشد";
-    if (!isValidEconomicCode(values.economicCode)) errors.economicCode = "شماره اقتصادی باید ۱۲ رقم باشد";
-    if (!files.leaseDocument) errors.leaseDocument = "اجاره‌نامه الزامی است";
-    if (!files.registrationNotice) errors.registrationNotice = "آگهی تغییرات الزامی است";
-  }
-
-  const activeFileKeys = entity === "INDIVIDUAL" ? ["leaseDocument", "businessLicense"] : ["leaseDocument", "registrationNotice"];
-  for (const key of activeFileKeys) {
-    const file = files[key];
-    if (!file) continue;
-    const validation = validateUploadFile(file, "partner-document");
-    if (!validation.valid) {
-      errors[key] = validation.error ?? "فرمت فایل یا حجم آن معتبر نیست.";
-    }
-  }
-
-  return errors;
-}
-
-function formatFileSize(bytes: number): string {
-  // FR-011: the unit is Persian, so the quantity beside it cannot be Latin.
-  if (bytes < 1024) return `${toFaDigits(bytes)} بایت`;
-  if (bytes < 1024 * 1024) return `${toFaDigits(Math.round(bytes / 1024))} کیلوبایت`;
-  return `${toFaDigits((bytes / (1024 * 1024)).toFixed(1))} مگابایت`;
-}
+import { partnerEntityOptions, partnerFieldLabel, partnerFileTypesNote, partnerIndividualFields, partnerLegalFields, partnerSharedFields, type PartnerEntity } from "@/lib/content/partners";
+import { buildPartnerFormData, clientValidate, EMPTY_VALUES, formatFileSize, PARTNER_FILE_ACCEPT, selectedFileError, type FormErrors, type FormFiles, type FormValues } from "@/lib/partner-form-validation";
 
 function Field({ id, label, required, error, children }: {
   id: string; label: string; required: boolean; error?: string; children: ReactNode;
@@ -116,7 +32,7 @@ function FileField({ id, name, label, required, error, file, onSelect, onClear, 
   return (
     <Field id={id} label={label} required={required} error={error}>
       <div className="partner-file">
-        <input ref={inputRef} id={id} name={name} type="file" accept={ACCEPT} required={required}
+        <input ref={inputRef} id={id} name={name} type="file" accept={PARTNER_FILE_ACCEPT} required={required}
           aria-invalid={!!error} aria-describedby={error ? `${noteId} ${id}-error` : noteId} className="sr-only"
           onChange={(event) => { const selected = event.target.files?.[0]; if (selected) onSelect(selected); }} />
         <label htmlFor={id}>
@@ -160,8 +76,7 @@ export function PartnerForm() {
 
   function onSelectFile(key: string, file: File) {
     setFiles((current) => ({ ...current, [key]: file }));
-    const error = file.size > MAX_FILE_BYTES ? "حجم فایل نباید بیشتر از ۱۰ مگابایت باشد"
-      : !ACCEPT.split(",").includes(file.type) ? "فرمت فایل مجاز نیست (JPG/PNG/WebP/PDF)" : null;
+    const error = selectedFileError(file);
     setErrors((current) => { const next = { ...current }; if (error) next[key] = error; else delete next[key]; return next; });
   }
 
@@ -179,21 +94,7 @@ export function PartnerForm() {
     submittingRef.current = true;
     setStatus({ kind: "submitting" });
     try {
-      const formData = new FormData();
-      formData.set("entityType", entity);
-      for (const field of [...partnerSharedFields, ...branchTextFields]) {
-        let value = values[field.key as keyof FormValues];
-        if (value) {
-          if (("dir" in field && field.dir === "ltr") || field.key === "mobile" || field.key === "shopPhone") {
-            value = normalizePersianDigits(value.trim());
-          }
-          formData.set(field.key, value);
-        }
-      }
-      for (const field of branchFileFields) {
-        const file = files[field.key];
-        if (file) formData.set(field.key, file);
-      }
+      const formData = buildPartnerFormData(values, files, entity, branchFields);
       const response = await fetch("/api/partners", { method: "POST", body: formData });
       const body = (await response.json()) as {
         success: boolean; data?: { id: number };
@@ -224,8 +125,7 @@ export function PartnerForm() {
   function renderTextField(field: ConfigTextField) {
     const key = field.key as keyof FormValues;
     const id = `${uid}-${key}`;
-    const label = !branchIsIndividual && key === "nationalCode" ? "کد ملی نماینده شرکت"
-      : !branchIsIndividual && key === "fullName" ? "نام و نام خانوادگی نماینده شرکت" : field.label;
+    const label = partnerFieldLabel(field, entity);
     const autoComplete = key === "fullName" ? "name" : key === "mobile" ? "tel" : key === "companyName" ? "organization" : "off";
     const isPhone = key === "mobile" || key === "shopPhone";
     return (

@@ -113,10 +113,9 @@ export async function GET(request: Request) {
 
         // An order resolved by an earlier attempt must never be re-transitioned,
         // in EITHER direction:
-        //  - paid -> FAILED would restock and reverse B2B credit for goods that
-        //    were actually paid for;
-        //  - failed/canceled -> PROCESSING would silently keep the stock and
-        //    credit that the failing attempt already gave back, because
+        //  - paid -> FAILED would restock goods that were actually paid for;
+        //  - failed/canceled -> PROCESSING would silently keep the stock that
+        //    the failing attempt already gave back, because
         //    applyOrderStatusTransition only reverses on open -> closed and
         //    never re-applies on closed -> open.
         // The Payment row's own outcome is already recorded by the claim above

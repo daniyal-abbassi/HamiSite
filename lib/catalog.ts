@@ -184,7 +184,6 @@ function serializeProduct(p: RawProduct, includeVariants: boolean) {
         // The export has no B2B tiers, so every quote is the plain unit price.
         quoted: {
           quantity: 1,
-          paymentTerm: "CASH",
           role: "RETAIL",
           unitPrice: v.price ?? price,
           matchedTier: null,

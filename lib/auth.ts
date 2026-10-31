@@ -54,8 +54,6 @@ export function sanitizeUser(user: User) {
     shopName: user.shopName,
     businessLicenseNumber: user.businessLicenseNumber,
     businessVerified: user.businessVerified,
-    creditLimit: toNumber(user.creditLimit),
-    creditUsed: toNumber(user.creditUsed),
     agentId: user.agentId,
     isActive: user.isActive,
     receiveNewsletters: user.receiveNewsletters,

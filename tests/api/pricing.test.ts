@@ -17,7 +17,7 @@ function quotePayload(overrides: Record<string, unknown> = {}) {
 }
 
 describe("pricing quote authorization", () => {
-  it("an anonymous caller always gets RETAIL role and null credit, with no way to spoof another user's data", async () => {
+  it("an anonymous caller always gets RETAIL role and no way to spoof another user's data", async () => {
     const res = await quotePricing(
       jsonRequest("http://localhost/api/pricing/quote", "POST", quotePayload({ role: "WHOLESALE", userId: seed.wholesale.id })),
     );
@@ -25,10 +25,9 @@ describe("pricing quote authorization", () => {
 
     const body = await res.json();
     expect(body.data.role).toBe("RETAIL");
-    expect(body.data.credit).toBeNull();
   });
 
-  it("an authenticated WHOLESALE user's own request returns their own role and credit figures", async () => {
+  it("an authenticated WHOLESALE user's own request returns their own role", async () => {
     const cookie = await loginAs(seed.wholesale);
 
     const res = await quotePricing(
@@ -38,10 +37,9 @@ describe("pricing quote authorization", () => {
 
     const body = await res.json();
     expect(body.data.role).toBe("WHOLESALE");
-    expect(body.data.credit).toEqual({ creditLimit: seed.wholesale.creditLimit, creditUsed: 0 });
   });
 
-  it("a WHOLESALE user cannot see another user's credit data via a spoofed userId", async () => {
+  it("a caller cannot take another user's role via a spoofed userId", async () => {
     const retailCookie = await loginAs(seed.retail);
 
     const res = await quotePricing(
@@ -56,6 +54,5 @@ describe("pricing quote authorization", () => {
 
     const body = await res.json();
     expect(body.data.role).toBe("RETAIL");
-    expect(body.data.credit).toEqual({ creditLimit: 0, creditUsed: 0 });
   });
 });

@@ -1,4 +1,4 @@
-import type { Role } from "@prisma/client";
+import type { PartnerApplicationStatus, PartnerEntityType, Role } from "@prisma/client";
 import type { z } from "zod";
 import type { sanitizeUser } from "@/lib/auth";
 import type {
@@ -24,13 +24,6 @@ export interface PublicUser {
   shopName: string | null;
   businessLicenseNumber: string | null;
   businessVerified: boolean;
-  /** `number | null`, not `number`: the DB columns are non-nullable Decimals
-   * defaulting to 0, but `toNumber` (lib/serializers.ts) is typed
-   * `(value: unknown) => number | null`, so that is the shape actually on the
-   * wire. The frontend must handle null. Do not "tighten" this to `number` —
-   * the drift assertion below will fail. */
-  creditLimit: number | null;
-  creditUsed: number | null;
   agentId: number | null;
   isActive: boolean;
   receiveNewsletters: boolean;
@@ -52,6 +45,10 @@ export type LoginResponse = PublicUser;
  * to E.164. For the shape a client actually sends, use z.input<typeof registerSchema>. */
 export type RegisterRequest = z.infer<typeof registerSchema>;
 export type RegisterResponse = PublicUser;
+export type RegisterPartnerResponse = {
+  user: PublicUser;
+  application: { id: number; entityType: PartnerEntityType; status: PartnerApplicationStatus };
+};
 export type MeResponse = PublicUser;
 export type LogoutResponse = { loggedOut: true };
 

@@ -13,7 +13,7 @@ import { useCart } from "@/components/providers/CartProvider";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { ApiClientError, apiGet, apiPost } from "@/lib/api-client";
 import { checkoutAddressError } from "@/lib/checkout-validation";
-import { paymentTermLabels, shippingOptions, type ShippingOptionKey } from "@/lib/content/order";
+import { shippingOptions, type ShippingOptionKey } from "@/lib/content/order";
 import { cn, formatToman } from "@/lib/utils";
 import { normalizePersianDigits } from "@/lib/persian-typography";
 import type { Address, CouponValidation, OrderCreationResult, PaymentInitiation } from "@/types/store";
@@ -53,13 +53,11 @@ export function CheckoutClient() {
   const [coupon, setCoupon] = useState<CouponValidation | null>(null);
   const [couponChecking, setCouponChecking] = useState(false);
   const [couponMessage, setCouponMessage] = useState<string | null>(null);
-  const [paymentTerm, setPaymentTerm] = useState<"CASH" | "CREDIT_60_DAYS">("CASH");
   const [note, setNote] = useState("");
 
   const [placing, setPlacing] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const isWholesale = user?.role === "WHOLESALE";
   const shippingOption = shippingOptions.find((option) => option.key === shippingKey) ?? shippingOptions[0];
 
   // Auth guard: the cart/order APIs are all withAuth.
@@ -153,8 +151,7 @@ export function CheckoutClient() {
       postalCode: normalizePersianDigits(saved?.postalCode || newAddress.postalCode || "") || undefined,
       shippingMethodName: shippingOption.label,
       shippingPrice: shippingOption.price,
-      paymentTerm,
-      paymentMethod: paymentTerm === "CASH" ? "card" : "credit",
+      paymentMethod: "card",
       ...(coupon?.valid && coupon.coupon?.code ? { couponCode: coupon.coupon.code } : {}),
       ...(note.trim() !== "" ? { customerNote: note.trim() } : {}),
       items: cart.items.map((item) => ({
@@ -171,12 +168,8 @@ export function CheckoutClient() {
       // Order placed — the server cart's job is done.
       await clear();
 
-      // B2B credit orders settle off-gateway; everything else goes to the
-      // gateway redirect (dev: mock auto-confirm → callback; prod: Zarinpal).
-      if (paymentTerm === "CREDIT_60_DAYS") {
-        router.push(`/order/${order.id}`);
-        return;
-      }
+      // Every order goes to the gateway redirect (dev: mock auto-confirm →
+      // callback; prod: Zarinpal).
       try {
         const payment = await apiPost<PaymentInitiation>(`/api/orders/${order.id}/pay`);
         if (payment.free) {
@@ -420,34 +413,9 @@ export function CheckoutClient() {
             <h2 className="text-base font-black">پرداخت</h2>
           </header>
           <div className="brand-hairline my-4" />
-          {isWholesale ? (
-            <div className="grid gap-2.5 sm:grid-cols-2">
-              {(["CASH", "CREDIT_60_DAYS"] as const).map((term) => (
-                <label
-                  key={term}
-                  className={cn(
-                    "cursor-pointer rounded-xl border p-3.5 type-label transition-all duration-fast",
-                    paymentTerm === term ? "border-aqua bg-aqua/10" : "border-line bg-foreground/5 hover:border-aqua/40",
-                  )}
-                >
-                  <span className="flex items-center gap-2.5">
-                    <input
-                      type="radio"
-                      name="paymentTerm"
-                      className="accent-brass"
-                      checked={paymentTerm === term}
-                      onChange={() => setPaymentTerm(term)}
-                    />
-                    <strong>{paymentTermLabels[term]}</strong>
-                  </span>
-                </label>
-              ))}
-            </div>
-          ) : (
-            <p className="type-label text-muted-foreground">
-              پس از ثبت سفارش، برای پرداخت آنلاین به درگاه زرین‌پال منتقل می‌شوید.
-            </p>
-          )}
+          <p className="type-label text-muted-foreground">
+            پس از ثبت سفارش، برای پرداخت آنلاین به درگاه زرین‌پال منتقل می‌شوید.
+          </p>
           <div className="mt-4">
             <label htmlFor="co-note" className="type-label mb-1 block font-bold text-foreground/80">یادداشت سفارش (اختیاری)</label>
             <Input id="co-note" className={inputClass} value={note} onChange={(event) => setNote(event.target.value)} placeholder="مثلاً زمان مناسب تحویل…" />

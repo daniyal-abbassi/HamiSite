@@ -94,20 +94,40 @@ A wrong *current* password in change-password is deliberately a **400**, not a
 ### `POST /api/auth/register`
 
 Requires the single-use `registration_proof` HttpOnly cookie issued after a successful REGISTER OTP verification. The request body contains profile fields; `phoneNumber` and `password` are not accepted as registration credentials.
-`role` accepts `RETAIL` or `WHOLESALE` **only** — `AGENT` and `ADMIN` are
-provisioned out-of-band and are rejected as validation errors.
-`shopName` / `businessLicenseNumber` are silently dropped unless the role is
-`WHOLESALE`. `agentId` is only valid on `WHOLESALE` and must reference an
-active `AGENT`.
+`role` accepts `RETAIL` **only**. `WHOLESALE`, `AGENT` and `ADMIN` are rejected as
+validation errors: wholesale access comes only from an administrator approving a
+partner application, and `AGENT` and `ADMIN` are provisioned out-of-band.
 
 The server binds the account phone to the proof, assigns an unusable random password hash, and creates a session atomically. Succeeds with **200** and clears the proof cookie.
 
 | Status | Code |
 |---|---|
 | 200 | — `data: PublicUser`, `meta.message: "Account created"` |
-| 400 | `VALIDATION_FAILED` (incl. bad role / bad agentId), `MALFORMED_JSON` |
+| 400 | `VALIDATION_FAILED` (incl. bad role), `MALFORMED_JSON` |
 | 401 | `REGISTRATION_PROOF_REQUIRED` — missing, expired, or replayed proof |
 | 409 | `DUPLICATE_ACCOUNT` — username, phone, or email already taken |
+
+### `POST /api/auth/register/partner`
+
+Creates a customer account and a pending partner application in one operation, or neither. Requires the same `registration_proof` cookie. The body is `multipart/form-data` with the fields of `POST /api/partners`, validated by the same rules:
+
+| Field | When |
+|---|---|
+| `entityType` (`INDIVIDUAL` or `LEGAL`), `fullName`, `nationalCode`, `shopName`, `shopAddress`, `leaseDocument` (file) | always |
+| `postalCode`, `shopPhone`, `businessLicense` (file) | `INDIVIDUAL` |
+| `companyName`, `companyAddress`, `legalNationalId`, `economicCode`, `registrationNotice` (file) | `LEGAL` |
+
+Documents are JPG, PNG, WebP or PDF, at most 10 MB each, and not empty. A `mobile` field is ignored; the application and the account both take the verified number from the proof. The account has role `RETAIL` and a generated `partner_<digits>` username. It gains `WHOLESALE` only when an administrator approves the application, which upgrades this same account. A rejection leaves it a working customer account.
+
+| Status | Code |
+|---|---|
+| 200 | — `data: { user: PublicUser, application: { id, entityType, status } }`, `meta.message: "Application submitted"`. Sets the session cookie and clears the proof cookie. |
+| 400 | `MALFORMED_JSON`; `VALIDATION_FAILED` with `details.fieldErrors` for text or `details.field` for a document |
+| 401 | `REGISTRATION_PROOF_REQUIRED` — missing, expired, or replayed proof |
+| 403 | `FORBIDDEN` — cross-origin request |
+| 409 | `CONFLICT` — this mobile already has an application. `DUPLICATE_ACCOUNT` — this mobile already has an account. Refused before anything is stored, so the proof stays usable. |
+
+Stored documents are removed on any failure after they are written.
 
 ### `POST /api/auth/otp/request`
 
@@ -153,7 +173,7 @@ Body: `UpdateProfileRequest`. At least one field required.
 **Editable:** `firstName`, `lastName`, `city`, `email`, `receiveNewsletters`.
 
 **Not editable, and silently ignored if sent:** `role`, `isActive`,
-`creditLimit`, `creditUsed`, `agentId`, `phoneNumber`, `username`,
+`agentId`, `phoneNumber`, `username`,
 `phoneVerified`, `businessVerified`, `nationalNumber`, `shopName`,
 `businessLicenseNumber`, `cardNumber`. These are login identifiers, privileges,
 financial fields, server-asserted verification state, the evidence behind that
@@ -218,7 +238,6 @@ The only user shape any endpoint returns. `passwordHash` is never present.
 | `nationalNumber`, `city` | `string \| null` | |
 | `shopName`, `businessLicenseNumber` | `string \| null` | WHOLESALE only |
 | `businessVerified` | `boolean` | admin-asserted |
-| `creditLimit`, `creditUsed` | `number \| null` | serialized `Decimal`. **Handle null** — the columns default to 0 but the serializer's type is nullable. |
 | `agentId` | `number \| null` | assigned sales rep |
 | `isActive` | `boolean` | |
 | `receiveNewsletters` | `boolean` | |

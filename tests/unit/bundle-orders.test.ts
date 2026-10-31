@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { B2BPaymentTerm, OrderStatus, Role, StockType } from "@prisma/client";
+import { OrderStatus, Role, StockType } from "@prisma/client";
 import { serializeCart } from "@/lib/cart";
 import { applyOrderStatusTransition, TERMINAL_CANCEL_STATUSES } from "@/lib/orders";
 
@@ -101,17 +101,11 @@ describe("Cart and Order Bundle Processing", () => {
         product: {
           update: vi.fn().mockResolvedValue({}),
         },
-        user: {
-          findUniqueOrThrow: vi.fn().mockResolvedValue({ creditUsed: 0 }),
-          update: vi.fn().mockResolvedValue({}),
-        },
       };
 
       const mockOrder = {
         id: 99,
         status: OrderStatus.PENDING,
-        paymentTerm: B2BPaymentTerm.CASH,
-        totalAmount: { toString: () => "2000000" } as any,
         items: [
           {
             bundleId: 5,
@@ -142,17 +136,4 @@ describe("Cart and Order Bundle Processing", () => {
       expect(TERMINAL_CANCEL_STATUSES).toContain("REVERSED");
     });
   });
-
-  describe("B2B Payment Term rules for bundles", () => {
-    it("should ensure bundles disallow CREDIT_60_DAYS", () => {
-      const allowedTerm = B2BPaymentTerm.CASH;
-      const disallowedTerm = B2BPaymentTerm.CREDIT_60_DAYS;
-
-      const isAllowedForBundle = (term: B2BPaymentTerm) => term === B2BPaymentTerm.CASH;
-
-      expect(isAllowedForBundle(allowedTerm)).toBe(true);
-      expect(isAllowedForBundle(disallowedTerm)).toBe(false);
-    });
-  });
 });
-

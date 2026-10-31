@@ -387,6 +387,139 @@
   text-align: center;
 }
 
+.auth-choice--entity {
+  margin-block-start: 0;
+}
+
+.auth-file-note {
+  margin-block-start: 0;
+  text-align: start;
+}
+
+.auth-file {
+  display: flex;
+  align-items: stretch;
+  min-inline-size: 0;
+  overflow: hidden;
+  border: 1px dashed rgb(17 4 8 / 28%);
+  border-radius: 14px;
+  background: #fff;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.auth-file[data-chosen="true"] {
+  border-style: solid;
+  border-color: rgb(100 2 17 / 45%);
+}
+
+.auth-file:hover {
+  border-color: #640211;
+}
+
+.auth-file:focus-within {
+  border-color: #640211;
+  box-shadow: 0 0 0 3px rgb(100 2 17 / 14%);
+}
+
+.auth-file:has(input[aria-invalid="true"]) {
+  border-style: solid;
+  border-color: #8a1023;
+}
+
+.auth-file label {
+  display: flex;
+  flex: 1 1 auto;
+  align-items: center;
+  gap: 0.75rem;
+  min-inline-size: 0;
+  min-block-size: 3.25rem;
+  padding: 0.5rem 0.875rem;
+  color: #640211;
+  cursor: pointer;
+}
+
+.auth-file label > svg {
+  flex: 0 0 auto;
+}
+
+.auth-file__copy {
+  display: grid;
+  min-inline-size: 0;
+}
+
+.auth-file__label {
+  color: rgb(17 4 8);
+  font-size: var(--type-label);
+  font-weight: 700;
+  line-height: 1.5;
+}
+
+.auth-file__hint {
+  overflow: hidden;
+  color: rgb(74 62 60);
+  font-size: var(--type-caption);
+  line-height: 1.6;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.auth-file button {
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  inline-size: 2.75rem;
+  border: 0;
+  background: transparent;
+  color: rgb(74 62 60);
+  cursor: pointer;
+}
+
+.auth-file button:hover {
+  color: #8a1023;
+}
+
+.auth-file button:focus-visible {
+  outline: 2px solid #640211;
+  outline-offset: -2px;
+}
+
+.auth-submitted {
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  margin-block-start: 1.5rem;
+  text-align: center;
+}
+
+.auth-submitted:focus {
+  outline: 0;
+}
+
+.auth-submitted__mark {
+  display: grid;
+  place-items: center;
+  inline-size: 3.5rem;
+  block-size: 3.5rem;
+  border-radius: 50%;
+  background: rgb(100 2 17 / 8%);
+  color: #640211;
+}
+
+.auth-submitted .auth-card__title {
+  margin-block-start: 0.5rem;
+}
+
+.auth-submitted__code {
+  color: #640211;
+  font-size: var(--type-label);
+  font-weight: 700;
+}
+
+.auth-submitted a {
+  justify-self: stretch;
+  margin-block-start: 0.75rem;
+}
+
 .auth-card__verified {
   margin: 0;
   padding: 0.75rem 1rem;
@@ -461,6 +594,7 @@
   .auth-field label,
   .auth-tabs a,
   .auth-choice button,
+  .auth-file,
   .auth-card button[type="submit"] {
     transition: none;
   }

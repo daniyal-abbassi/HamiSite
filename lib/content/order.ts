@@ -45,11 +45,6 @@ export const shippingOptions = [
 
 export type ShippingOptionKey = (typeof shippingOptions)[number]["key"];
 
-export const paymentTermLabels: Record<string, string> = {
-  CASH: "پرداخت نقدی (درگاه آنلاین)",
-  CREDIT_60_DAYS: "اعتبار ۶۰ روزه (همکار عمده)",
-};
-
 /** ISO string → Persian date, e.g. ۱۴۰۴/۰۶/۱۴ */
 export function formatFaDate(iso: string | null | undefined): string {
   if (!iso) return "—";

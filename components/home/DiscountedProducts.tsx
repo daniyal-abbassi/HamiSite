@@ -9,6 +9,7 @@ import { AdaptiveProductImage } from "@/components/shop/AdaptiveProductImage";
 import { TomanPrice } from "@/components/ui/TomanPrice";
 import type { DiscountRailProduct, RailProduct } from "@/lib/home-rails-db";
 import { isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
+import { swatchColor } from "@/lib/swatch-color";
 import { isPurchasable, splitProductName } from "@/lib/product-identity";
 import { cn, toFaDigits } from "@/lib/utils";
 
@@ -35,20 +36,6 @@ function purchaseStatus(product: RailProduct, variant: ReturnType<typeof selecte
     && !(variant && stockType === "limited" && (variant.stock ?? 0) <= 0);
   if (!canBuy) return { canBuy: false, label: "ناموجود" };
   return { canBuy: true, label: stockType === "limited" ? "موجود محدود" : "موجود" };
-}
-
-function swatchColor(value: string) {
-  const normalized = value.trim().toLowerCase();
-  if (/^#[0-9a-f]{3,8}$/i.test(normalized)) return normalized;
-  const colors: Record<string, string> = {
-    "مشکی": "#292526", black: "#292526", "سفید": "#f7f5f2", white: "#f7f5f2",
-    "نقره‌ای": "#b9bdc3", "نقره ای": "#b9bdc3", silver: "#b9bdc3",
-    "خاکستری": "#8d9298", gray: "#8d9298", grey: "#8d9298",
-    "آبی": "#566b82", blue: "#566b82", "سبز": "#617660", green: "#617660",
-    "قرمز": "#a83242", red: "#a83242", "طلایی": "#b99a58", gold: "#b99a58",
-    "زرد": "#d1ac3d", yellow: "#d1ac3d", "صورتی": "#dfabb8", pink: "#dfabb8",
-  };
-  return colors[normalized] ?? "#a9a4a4";
 }
 
 function bestReduction(product: DiscountRailProduct) {

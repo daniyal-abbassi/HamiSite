@@ -45,7 +45,7 @@
  * **One default is deliberately turned off: `allowNestedScroll`.** With the library's default of `false`,
  * a vertical wheel gesture is captured wherever it lands, so scrolling the cart line-items list
  * (`components/cart/CartDrawer.tsx:96`), the shop filter sheet body
- * (`components/shop/FilterSheet.tsx:143`) or the saved-addresses list on checkout
+ * (`components/shop/ShopToolbar.tsx`) or the saved-addresses list on checkout
  * (`components/checkout/CheckoutClient.tsx:444`) would move the page *behind* the open panel instead of
  * the panel. `allowNestedScroll: true` makes Lenis consult `hasNestedScroll()` before capturing
  * (`lenis.mjs:609`, helper at `lenis.mjs:858`): it stands down while the element under the cursor can

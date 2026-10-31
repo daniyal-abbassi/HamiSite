@@ -33,9 +33,9 @@ export function CategoryTiles({ activeSlug, tiles }: { activeSlug: string | null
     <section aria-label="دسته‌بندی‌های فروشگاه" className="shop-departments">
       <div className="shop-departments-heading"><h2>از کجا شروع کنیم؟</h2><span>دسته‌بندی محصولات</span></div>
       <LiquidSelection
-        className="shop-department-track !gap-3 overflow-x-auto pb-2 !flex-nowrap lg:!grid lg:grid-cols-6 lg:!overflow-visible"
-        itemClassName="shop-department !min-w-28 flex-col items-center gap-2.5 !justify-start !whitespace-normal !rounded-xl glass border-line p-4 text-center transition-colors hover:border-aqua/50"
-        markerInset={6}
+        className="shop-department-track !gap-2.5 overflow-x-auto !flex-nowrap"
+        itemClassName="shop-department !min-w-0 flex-row items-center gap-2.5 !justify-start !whitespace-nowrap !rounded-full border-line transition-colors hover:border-aqua/50"
+        markerInset={0}
         value={activeSlug}
         // The surface announced `aria-current={active || undefined}` before the marker —
         // which React renders as "true", not "page". SC-010 allows zero changes to
@@ -46,20 +46,20 @@ export function CategoryTiles({ activeSlug, tiles }: { activeSlug: string | null
           to: tile.slug === activeSlug ? "/shop" : tile.href,
           label: (
             <>
-              <span className="shop-department-image relative grid size-14 place-items-center overflow-hidden rounded-xl bg-ink/40">
+              <span className="shop-department-image relative grid size-11 shrink-0 place-items-center overflow-hidden rounded-full bg-ink/40">
                 <Image
                   src={tile.image ?? categoryImageFor(tile.slug, tile.label)}
                   alt=""
-                  width={56}
-                  height={56}
-                  sizes="56px"
+                  width={44}
+                  height={44}
+                  sizes="44px"
                   className="size-full object-contain p-1.5"
                 />
               </span>
-              <span className="text-xs font-bold leading-5">{tile.label}</span>
+              <span className="shop-department-label">{tile.label}</span>
               {/* Absent rather than zero: a door that opens on part of its kind has no
                   honest number to print, so it prints nothing. */}
-              {tile.countLabel && <span className="font-mono text-xs text-muted-foreground">{tile.countLabel}</span>}
+              {tile.countLabel && <span className="shop-department-count">{tile.countLabel}</span>}
             </>
           ),
         }))}

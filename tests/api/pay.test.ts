@@ -90,7 +90,7 @@ describe("POST /api/orders/[id]/pay", () => {
     expect(res.status).toBe(404);
   });
 
-  it("rejects gateway initiation for wholesale credit orders", async () => {
+  it("sends an order to the gateway even when a stale client still asks for credit", async () => {
     const order = (await (
       await createOrder(
         jsonRequest("http://localhost/api/orders", "POST", {
@@ -98,15 +98,15 @@ describe("POST /api/orders/[id]/pay", () => {
           lastName: "Buyer",
           phone: "+989120000000",
           city: "Mashhad",
-          addressText: "456 Credit St",
+          addressText: "456 Main St",
           paymentTerm: "CREDIT_60_DAYS",
           items: [{ productId: seed.product.id, variantId: seed.variant.id, quantity: 1 }],
         }, wholesaleCookie), ctx())
     ).json()).data;
 
     const res = await pay(getRequest(`http://localhost/api/orders/${order.id}/pay`, wholesaleCookie), ctx({ id: String(order.id) }));
-    expect(res.status).toBe(409);
-    expect(await prisma.payment.count({ where: { orderId: order.id } })).toBe(0);
+    expect(res.status).toBe(200);
+    expect(await prisma.payment.count({ where: { orderId: order.id } })).toBe(1);
   });
 
   it("keeps an abandoned gateway order accessible and retryable by its owner", async () => {

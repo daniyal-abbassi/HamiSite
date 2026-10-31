@@ -97,8 +97,6 @@ async function seedUsers() {
       businessLicenseNumber: "IR-BIZ-4471829",
       businessVerified: true,
       businessVerifiedAt: new Date(),
-      creditLimit: 5_000_000_000, // 5,000,000,000 Toman credit ceiling
-      creditUsed: 0,
       agentId: agent.id,
       isActive: true,
     },

@@ -5,7 +5,7 @@
 // project's `openapi.json` (Mixin API v4) where equivalent resources exist
 // (Product, ProductVariant, Category, Brand, Order, OrderPayment, Coupon,
 // Customer/Address, ProductHistory), extended with the B2B pricing engine,
-// credit-limit and business-verification fields required for wholesale.
+// business-verification fields required for wholesale.
 //
 // DEV-MODE NOTE ON CASCADES
 // --------------------------------------------------------------------------
@@ -46,12 +46,6 @@ enum StockType {
   LIMITED     @map("limited")
   OUT_OF_STOCK @map("out_of_stock")
   CALL        @map("call")
-}
-
-/// B2B settlement terms used by the dynamic price-tier engine.
-enum B2BPaymentTerm {
-  CASH
-  CREDIT_60_DAYS
 }
 
 /// Mirrors OrderPayment `status` values found in openapi.json
@@ -141,10 +135,6 @@ model User {
   businessLicenseNumber String? // trade license / business registration number
   businessVerified     Boolean  @default(false)
   businessVerifiedAt   DateTime?
-  /// Approved B2B credit ceiling (Toman) for CREDIT_60_DAYS orders.
-  creditLimit          Decimal  @default(0) @db.Decimal(14, 2)
-  /// Outstanding credit currently drawn against `creditLimit`.
-  creditUsed           Decimal  @default(0) @db.Decimal(14, 2)
 
   /// Optional AGENT managing this WHOLESALE/RETAIL account (distribution rep).
   agentId Int?
@@ -502,8 +492,6 @@ model PriceTier {
   minQuantity      Int
   maxQuantity      Int?
 
-  paymentMethod    B2BPaymentTerm  @default(CASH)
-
   discountPercent  Decimal?        @db.Decimal(5, 2)
   /// Final resolved unit price (Toman) for this bracket — precomputed so the
   /// storefront/checkout can read it directly without recalculating discounts.
@@ -590,11 +578,6 @@ model Order {
   status          OrderStatus   @default(PENDING)
   paymentStatus   PaymentStatus @default(INITIATED)
   paymentMethod   String?
-  /// Actual B2B settlement term computed/gated at order creation — the
-  /// authoritative field for credit-limit increment/reversal decisions.
-  /// Distinct from `paymentMethod` (a free-text, client-overridable display
-  /// string) which must never be used to decide whether to touch `creditUsed`.
-  paymentTerm     B2BPaymentTerm @default(CASH)
 
   firstName       String
   lastName        String
@@ -691,7 +674,7 @@ model Payment {
   authority              String?       @unique
   amount                 Decimal       @db.Decimal(12, 2)
 
-  method                 String?       // e.g. "card", "zarinpal", "credit"
+  method                 String?       // e.g. "card", "zarinpal"
   methodDisplay          String?
 
   /// Payment Service Provider identifier (e.g. zarinpal, idpay, mellat).

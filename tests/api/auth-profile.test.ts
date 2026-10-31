@@ -54,7 +54,6 @@ describe("PATCH /api/auth/me", () => {
         firstName: "Ali",
         role: "ADMIN",
         isActive: false,
-        creditLimit: 999999999,
         agentId: seed.admin.id,
         businessVerified: true,
         phoneNumber: "+989999999999",
@@ -65,7 +64,6 @@ describe("PATCH /api/auth/me", () => {
     const user = await prisma.user.findUniqueOrThrow({ where: { id: seed.retail.id } });
     expect(user.role).toBe("RETAIL");
     expect(user.isActive).toBe(true);
-    expect(Number(user.creditLimit)).toBe(0);
     expect(user.agentId).toBeNull();
     expect(user.businessVerified).toBe(false);
     expect(user.phoneNumber).toBe("+989120000102");

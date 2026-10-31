@@ -33,7 +33,6 @@ export async function seedMinimal() {
       passwordHash,
       role: Role.WHOLESALE,
       isActive: true,
-      creditLimit: 100_000_000,
     },
   });
 
@@ -74,7 +73,7 @@ export async function seedMinimal() {
   return {
     admin: { id: admin.id, username: admin.username, password },
     retail: { id: retail.id, username: retail.username, password },
-    wholesale: { id: wholesale.id, username: wholesale.username, password, creditLimit: 100_000_000 },
+    wholesale: { id: wholesale.id, username: wholesale.username, password },
     product: { id: product.id, slug: product.slug, price: 1_000_000 },
     variant: { id: variant.id, price: 1_200_000, stock: 20 },
     coupon: { id: coupon.id, code: coupon.code },

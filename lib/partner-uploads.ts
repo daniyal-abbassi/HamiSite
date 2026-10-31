@@ -1,4 +1,4 @@
-import { mkdir, writeFile } from "node:fs/promises";
+import { mkdir, rm, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { randomBytes } from "node:crypto";
 import { ApiError } from "@/lib/http";
@@ -58,4 +58,14 @@ export async function savePartnerDocument(file: File, fieldName: string): Promis
   const buffer = Buffer.from(await file.arrayBuffer());
   await writeFile(path.join(PARTNER_UPLOAD_DIR, storedName), buffer);
   return storedName;
+}
+
+/**
+ * Remove documents a failed attempt left behind. Runs inside error handling, so a file
+ * that cannot be removed never replaces the error being reported. Only filenames this
+ * module generates are accepted; anything shaped like a path is ignored.
+ */
+export async function deletePartnerDocuments(names: string[]): Promise<void> {
+  const stored = names.filter((name) => /^[A-Za-z]+-[a-f0-9]{32}\.[a-z]+$/.test(name));
+  await Promise.allSettled(stored.map((name) => rm(path.join(PARTNER_UPLOAD_DIR, name), { force: true })));
 }

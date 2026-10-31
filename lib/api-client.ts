@@ -82,6 +82,17 @@ export async function apiMutate<T>(
   return unwrap<T>(response);
 }
 
+/** Multipart POST. The browser sets the `Content-Type` boundary itself. */
+export async function apiPostForm<T>(path: string, body: FormData): Promise<T> {
+  const response = await fetch(path, {
+    method: "POST",
+    credentials: "same-origin",
+    headers: { "X-Hami-Client": "web" },
+    body,
+  });
+  return unwrap<T>(response);
+}
+
 export const apiPost = <T,>(path: string, body?: unknown) => apiMutate<T>("POST", path, body);
 export const apiPatch = <T,>(path: string, body?: unknown) => apiMutate<T>("PATCH", path, body);
 export const apiDelete = <T,>(path: string) => apiMutate<T>("DELETE", path);

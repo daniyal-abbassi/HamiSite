@@ -95,8 +95,6 @@ describe("sanitizeUser", () => {
       shopName: null,
       businessLicenseNumber: null,
       businessVerified: false,
-      creditLimit: new Prisma.Decimal("1000000"),
-      creditUsed: new Prisma.Decimal("250000"),
       agentId: null,
       isActive: true,
       receiveNewsletters: false,
@@ -110,8 +108,6 @@ describe("sanitizeUser", () => {
     expect(sanitized.username).toBe("testuser");
     expect(sanitized.role).toBe(Role.RETAIL);
     expect(sanitized.isActive).toBe(true);
-    expect(sanitized.creditLimit).toBe(1000000);
-    expect(sanitized.creditUsed).toBe(250000);
     expect(sanitized.createdAt).toBe("2026-01-01T00:00:00.000Z");
   });
 });

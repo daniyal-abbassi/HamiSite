@@ -3,7 +3,7 @@
  * node-environment vitest suite can pin every formula (data-model.md:49-59).
  *
  * The terminal set is the code's own `TERMINAL_CANCEL_STATUSES` (lib/orders.ts:82), not
- * invented here, so the dashboard and the restock/credit logic agree on which statuses
+ * invented here, so the dashboard and the restock logic agree on which statuses
  * mean "reversed".
  */
 

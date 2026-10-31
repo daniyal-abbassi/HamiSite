@@ -83,7 +83,7 @@ export type ProductVariantDetail = {
   isDefault: boolean;
   options?: Array<{ label: string; value: string }>;
   imageUrl?: string | null;
-  /** Unit price for the requested quantity/paymentTerm — already tier-resolved. */
+  /** Unit price for the requested quantity — already tier-resolved. */
   unitPrice: number;
   matchedTier: PriceTierMatch | null;
 };
@@ -196,7 +196,6 @@ export type OrderCreationResult = {
   orderNumber: string;
   status: string;
   paymentStatus: string;
-  paymentTerm: string;
   customer: { id: number; username: string; role: string };
   coupon: { id: number; code: string; name: string | null; type: string } | null;
   totals: { subtotal: number; shippingPrice: number; discountAmount: number; totalAmount: number };

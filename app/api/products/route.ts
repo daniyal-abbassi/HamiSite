@@ -18,7 +18,6 @@ const querySchema = z.object({
   minPrice: z.coerce.number().nonnegative().optional(),
   maxPrice: z.coerce.number().nonnegative().optional(),
   sort: z.enum(["newest", "price-asc", "price-desc", "special"]).optional(),
-  paymentTerm: z.string().optional(),
   quantity: z.coerce.number().int().positive().optional(),
   role: z.enum(["RETAIL", "WHOLESALE", "AGENT", "ADMIN"]).optional(),
   includeVariants: z.enum(["true", "false"]).optional(),

@@ -44,7 +44,6 @@ export type AdminVariantListItem = {
   isDefault: boolean;
   quoted: {
     quantity: number;
-    paymentTerm: string;
     role: string;
     unitPrice: number;
     matchedTier: {

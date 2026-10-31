@@ -14,6 +14,14 @@ export const partnerPageCopy = {
     { index: "۰۲", title: "بررسی و گفتگو", description: "کارشناسان مدارک را بررسی می‌کنند و برای تکمیل مراحل با شما تماس می‌گیرند." },
     { index: "۰۳", title: "فعال‌سازی حساب همکاری", description: "پس از تأیید، قیمت همکاری و مسیر ثبت سفارش فعال می‌شود." },
   ] as const,
+  /** What approval unlocks. Only things the storefront really does for an approved partner account. */
+  perksTitleLead: "آنچه با حساب همکار",
+  perksTitleTail: "به دست می‌آورید.",
+  perks: [
+    { key: "tiers", title: "قیمت پلکانی همکاری", description: "برای محصولاتی که قیمت پلکانی دارند، هرچه تعداد خرید بیشتر باشد قیمت هر واحد مناسب‌تر می‌شود." },
+    { key: "bundles", title: "سبدهای ویژهٔ همکاران", description: "سبدهای تخفیف‌دار فقط برای همکاران تأییدشده، با سهمیهٔ مشخص و پرداخت آنی." },
+    { key: "support", title: "همراهی مستقیم", description: "در همهٔ مراحل با کارشناسان فروشگاه در مشهد در تماس هستید؛ بدون واسطه." },
+  ] as const,
 } as const;
 
 export type PartnerEntity = "INDIVIDUAL" | "LEGAL";
@@ -46,6 +54,13 @@ export const partnerLegalFields = [
   { key: "economicCode", label: "شماره اقتصادی", placeholder: "۱۲ رقم", required: true, dir: "ltr" as const },
   { key: "leaseDocument", label: "اجاره‌نامه (فایل)", kind: "file" as const, required: true },
 ] as const;
+
+/** A legal business is represented by a person, so the identity fields say whose they are. */
+export function partnerFieldLabel(field: { key: string; label: string }, entity: PartnerEntity): string {
+  if (entity === "LEGAL" && field.key === "nationalCode") return "کد ملی نماینده شرکت";
+  if (entity === "LEGAL" && field.key === "fullName") return "نام و نام خانوادگی نماینده شرکت";
+  return field.label;
+}
 
 export const partnerFileTypesNote = "فایل می‌تواند JPG، PNG، WebP یا PDF باشد؛ حداکثر ۱۰ مگابایت برای هر مدرک.";
 

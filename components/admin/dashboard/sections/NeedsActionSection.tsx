@@ -15,7 +15,7 @@ import type { OrderSummary } from "@/types/store";
  * Needs action — the count from `reports/summary.byStatus` over PENDING + PROCESSING +
  * SHIPPING (the states a human moves an order through), plus the six newest pending
  * orders. Display only: no status-change control (R3 — the PATCH validates no transition
- * and the cancel path has restock/credit side effects). Rows link to the existing order
+ * and the cancel path restocks). Rows link to the existing order
  * detail route in the same tab.
  */
 export function NeedsActionSection() {

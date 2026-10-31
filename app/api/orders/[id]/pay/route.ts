@@ -1,5 +1,5 @@
 import { randomBytes } from "node:crypto";
-import { B2BPaymentTerm, PaymentStatus } from "@prisma/client";
+import { PaymentStatus } from "@prisma/client";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { applyOrderStatusTransition, TERMINAL_CANCEL_STATUSES } from "@/lib/orders";
@@ -47,13 +47,9 @@ export const POST = withAuth<{ id: string }>(async (_request, { user, params }) 
     if (order.userId !== user.id) {
       throw new ApiError(403, "You do not have access to this order");
     }
-    if (order.paymentTerm !== B2BPaymentTerm.CASH) {
-      throw new ApiError(409, "Credit orders do not use gateway payment");
-    }
-
     // An order that is already settled, or already closed/reversed, must never
     // start a fresh payment attempt: a later failure callback on that new
-    // attempt would restock/reverse credit for an order that was already paid.
+    // attempt would restock an order that was already paid.
     const isClosed = TERMINAL_CANCEL_STATUSES.includes(order.status as (typeof TERMINAL_CANCEL_STATUSES)[number]);
     if (order.paymentStatus === PaymentStatus.COMPLETED || isClosed) {
       throw new ApiError(409, "Order is already paid or in a terminal state");

@@ -1,5 +1,5 @@
 import { hasStudioPhoto, queryDiscountedRailProducts, queryProducts } from "@/lib/catalog-db";
-import { findProductBySlug } from "@/lib/catalog";
+import { cardVariants } from "@/lib/card-variants";
 import { isPurchasable, modelKey } from "@/lib/product-identity";
 import mirroredImages from "@/data/catalog-images.json";
 
@@ -88,30 +88,7 @@ export async function homepageProductsRail(): Promise<RailProduct[]> {
 
   return [...byModel.values()].slice(0, 12).map((product) => {
     // The database query is authoritative for product, price, stock, and order.
-    // Some imported DB variants have no ProductVariant.imageId even though the
-    // catalog snapshot still has the merchant's explicit image_url per variant.
-    // Use that association as an image-only fallback, matched by product slug and
-    // variant axes; never infer a photo from color names or gallery position.
-    const sourceVariants = findProductBySlug(product.slug)?.variants ?? [];
-    const variants = product.variants.map((variant) => ({
-      id: variant.id,
-      color: variant.color ?? variant.options.find((option) => option.label.includes("رنگ"))?.value ?? null,
-      storage: variant.storage ?? variant.options.find((option) => option.label.includes("حافظه"))?.value ?? null,
-      price: variant.price,
-      compareAtPrice: variant.compareAtPrice,
-      stock: variant.stock,
-      stockType: variant.stockType,
-      isDefault: variant.isDefault,
-      imageUrl: variant.imageUrl ?? (() => {
-        const color = variant.color ?? variant.options.find((option) => option.label.includes("رنگ"))?.value ?? null;
-        const storage = variant.storage ?? variant.options.find((option) => option.label.includes("حافظه"))?.value ?? null;
-        if (!color) return null;
-        const sameColor = sourceVariants.filter((source) => source.color === color);
-        const exact = sameColor.find((source) => source.storage === storage && source.imageUrl);
-        const unambiguous = sameColor.length === 1 ? sameColor[0] : null;
-        return exact?.imageUrl ?? unambiguous?.imageUrl ?? null;
-      })(),
-    }));
+    const variants = cardVariants(product);
     const variantColors = [...new Set(variants.flatMap((variant) => variant.color ? [variant.color] : []))];
 
     return {

@@ -38,6 +38,20 @@ export type ShopProduct = {
    * cart control is honest. 16 records are "limited" with this false.
    */
   available: boolean;
+  /** Colours and storages of this product, with the photograph for each. */
+  variants?: ShopVariant[];
+};
+
+export type ShopVariant = {
+  id: number;
+  color: string | null;
+  storage: string | null;
+  price: number | null;
+  compareAtPrice: number | null;
+  stock: number;
+  stockType: string;
+  isDefault: boolean;
+  imageUrl: string | null;
 };
 
 export type ShopMeta = {

@@ -1,10 +1,10 @@
-import { B2BPaymentTerm, CouponType, OrderStatus, PaymentStatus, Role, StockType } from "@prisma/client";
+import { CouponType, OrderStatus, PaymentStatus, Role, StockType } from "@prisma/client";
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { evaluateCoupon } from "@/lib/coupons";
 import { ApiError, ok, parseJsonBody, parsePagination, withErrorHandling } from "@/lib/http";
 import { orderListInclude, serializeOrderSummary } from "@/lib/orders";
-import { ensureB2BTermAllowed, normalizePaymentTerm, resolveMatchingTier } from "@/lib/pricing";
+import { resolveMatchingTier } from "@/lib/pricing";
 import { prisma } from "@/lib/prisma";
 import { revalidateHomepage } from "@/lib/revalidate-homepage";
 import { serializeDate, toNumber } from "@/lib/serializers";
@@ -26,7 +26,6 @@ const createOrderSchema = z.object({
   shippingPrice: z.number().min(0).optional(),
   customerNote: z.string().optional(),
 
-  paymentTerm: z.string().optional(),
   paymentMethod: z.string().optional(),
   couponCode: z.string().optional(),
 
@@ -91,10 +90,6 @@ export const GET = withAuth(async (request, { user }) => {
 export const POST = withAuth(async (request, { user }) => {
   return withErrorHandling(async () => {
     const input = await parseJsonBody(request, createOrderSchema);
-    const paymentTerm = normalizePaymentTerm(input.paymentTerm ?? "CASH");
-
-    ensureB2BTermAllowed(user.role, paymentTerm);
-
     if (input.agentId && user.role !== Role.WHOLESALE) {
       throw new ApiError(400, "agentId can only be set for WHOLESALE customer orders");
     }
@@ -124,12 +119,6 @@ export const POST = withAuth(async (request, { user }) => {
       if (user.role !== Role.WHOLESALE && user.role !== Role.AGENT && user.role !== Role.ADMIN) {
         throw new ApiError(403, "سبدهای همکار تنها برای همکاران عمده و نمایندگان قابل سفارش است");
       }
-      if (paymentTerm !== B2BPaymentTerm.CASH) {
-        throw new ApiError(
-          400,
-          "خرید سبدهای تخفیف‌دار همکار فقط به‌صورت نقدی و پرداخت آنی امکان‌پذیر است"
-        );
-      }
     }
 
     const productIds = [
@@ -155,7 +144,7 @@ export const POST = withAuth(async (request, { user }) => {
           stock: true,
           stockType: true,
           priceTiers: {
-            where: { isActive: true, paymentMethod: paymentTerm },
+            where: { isActive: true },
             orderBy: { minQuantity: "desc" },
             select: {
               id: true,
@@ -265,7 +254,7 @@ export const POST = withAuth(async (request, { user }) => {
         unitPrice = toNumber(variant.price) ?? unitPrice;
         variantName = [variant.color, variant.storage].filter(Boolean).join(" / ") || null;
 
-        const tier = resolveMatchingTier({ quantity: item.quantity, paymentTerm, tiers: variant.priceTiers });
+        const tier = resolveMatchingTier({ quantity: item.quantity, tiers: variant.priceTiers });
         if (tier) {
           unitPrice = toNumber(tier.calculatedPrice) ?? unitPrice;
           priceTierId = tier.id;
@@ -329,22 +318,6 @@ export const POST = withAuth(async (request, { user }) => {
     const discountAppliedToSubtotal = appliedCoupon && appliedCoupon.type !== CouponType.SHIPPING_PRICE ? discountAmount : 0;
     const totalAmount = subtotal - discountAppliedToSubtotal + shippingPrice;
 
-    // wholesale credit check for CREDIT_60_DAYS — evaluated against the
-    // post-discount total so an applied coupon can bring an order back
-    // under the customer's credit limit.
-    if (paymentTerm === B2BPaymentTerm.CREDIT_60_DAYS && user.role === Role.WHOLESALE) {
-      const creditLimit = toNumber(user.creditLimit) ?? 0;
-      const creditUsed = toNumber(user.creditUsed) ?? 0;
-
-      if (creditUsed + totalAmount > creditLimit) {
-        throw new ApiError(409, "Credit limit exceeded", {
-          creditLimit,
-          creditUsed,
-          requested: totalAmount,
-        });
-      }
-    }
-
     const order = await prisma.$transaction(async (tx) => {
       const created = await tx.order.create({
         data: {
@@ -354,8 +327,7 @@ export const POST = withAuth(async (request, { user }) => {
           addressId: input.addressId,
           status: OrderStatus.PENDING,
           paymentStatus: PaymentStatus.INITIATED,
-          paymentMethod: input.paymentMethod ?? (paymentTerm === B2BPaymentTerm.CASH ? "card" : "credit"),
-          paymentTerm,
+          paymentMethod: input.paymentMethod ?? "card",
 
           firstName: input.firstName,
           lastName: input.lastName,
@@ -432,13 +404,6 @@ export const POST = withAuth(async (request, { user }) => {
         }
       }
 
-      if (paymentTerm === B2BPaymentTerm.CREDIT_60_DAYS && user.role === Role.WHOLESALE) {
-        await tx.user.update({
-          where: { id: user.id },
-          data: { creditUsed: { increment: totalAmount } },
-        });
-      }
-
       if (appliedCoupon) {
         await tx.couponUsage.create({
           data: { couponId: appliedCoupon.id, userId: user.id, orderId: created.id },
@@ -467,7 +432,6 @@ export const POST = withAuth(async (request, { user }) => {
         orderNumber: order.orderNumber,
         status: order.status,
         paymentStatus: order.paymentStatus,
-        paymentTerm,
         customer: order.user,
         coupon: appliedCoupon,
         totals: {

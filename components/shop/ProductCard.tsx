@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import type React from "react";
 import Image from "next/image";
 import { AdaptiveProductImage } from "@/components/shop/AdaptiveProductImage";
@@ -16,6 +19,7 @@ import {
   unitPriceOf,
 } from "@/lib/product-identity";
 import { storeWarranty } from "@/lib/content/verified-facts";
+import { swatchColor } from "@/lib/swatch-color";
 import { cn, toFaDigits } from "@/lib/utils";
 
 /**
@@ -108,10 +112,36 @@ export type ProductCardData = {
 
 const stockLabels: Record<string, string> = {
   unlimited: "موجود",
-  limited: "موجود محدود",
+  limited: "موجود",
   out_of_stock: "ناموجود",
   call: "تماس بگیرید",
 };
+
+const MAX_SWATCHES = 5;
+
+type CardVariantData = NonNullable<ProductCardData["variants"]>[number];
+
+/** One choice per colour. Among a colour's variants the one that can be bought wins, then the storage the shopper is already on. */
+function colorChoices(product: ProductCardData, active: CardVariantData | null) {
+  const canBuy = (variant: CardVariantData) =>
+    isPurchasable({ available: product.available, stockType: variant.stockType })
+    && !(variant.stockType === "limited" && (variant.stock ?? 0) <= 0);
+  const byColor = new Map<string, CardVariantData>();
+  for (const variant of product.variants ?? []) {
+    if (!variant.color) continue;
+    const kept = byColor.get(variant.color);
+    const better = !kept
+      || (canBuy(variant) && !canBuy(kept))
+      || (canBuy(variant) === canBuy(kept) && variant.storage === active?.storage && kept.storage !== active?.storage);
+    if (better) byColor.set(variant.color, variant);
+  }
+  return [...byColor.entries()].map(([color, variant]) => ({
+    color,
+    variantId: variant.id,
+    canBuy: canBuy(variant),
+    active: active?.color === color,
+  }));
+}
 
 export function ProductCard({
   product,
@@ -133,9 +163,12 @@ export function ProductCard({
   const onDark = DARK_GROUND[variant];
   const accent = brandAccent(product.brand?.name, onDark ? "dark" : "light");
   const { label, model, specs } = splitProductName(product.name);
-  const activeVariant = product.variants?.find((variant) => variant.isDefault)
-    ?? product.variants?.[0]
-    ?? null;
+  const defaultVariant = product.variants?.find((variant) => variant.isDefault) ?? product.variants?.[0] ?? null;
+  /* The colour a shopper picked. Price, stock, the cart control and the photograph all follow it, so
+     what is shown is always what «افزودن به سبد» adds. */
+  const [pickedId, setPickedId] = useState<number | null>(null);
+  const [swapped, setSwapped] = useState(false);
+  const activeVariant = product.variants?.find((variant) => variant.id === pickedId) ?? defaultVariant;
   const displayPrice = activeVariant ? unitPriceOf(activeVariant.price, product.displayPrice) ?? 0 : product.displayPrice;
   const compareAtPrice = activeVariant ? activeVariant.compareAtPrice : product.compareAtPrice;
   const state = priceState(displayPrice, compareAtPrice);
@@ -157,7 +190,10 @@ export function ProductCard({
   const productImage = variantImage ?? resolveProductImage(product);
   const noImage = isPlaceholderImage(productImage);
   const href = `/shop/${product.slug}`;
-  const title = label;
+  /* The model is the name: «Galaxy A07» is what a shopper looks for, while «گوشی موبایل سامسونگ» only
+     says what kind of thing it is. Names with no model fall back to the whole name. */
+  const title = model ?? label;
+  const swatches = colorChoices(product, activeVariant);
 
   return (
     <article
@@ -172,9 +208,11 @@ export function ProductCard({
         href={href}
         className="lux-stage block aspect-square relative"
         data-photo-plate=""
+        data-swapped={swapped ? "" : undefined}
         aria-label={product.name}
       >
         <AdaptiveProductImage
+          key={productImage}
           src={productImage}
           alt={isPlaceholderImage(productImage) ? PLACEHOLDER_ALT : product.name}
           width={720}
@@ -193,8 +231,7 @@ export function ProductCard({
       )}
 
       <div className="lux-body">
-        {/* Brand and model, together and quiet — they identify, they do not
-            announce. */}
+        {/* The brand identifies, quietly. The name below it is what the shopper reads. */}
         <div className="flex items-baseline justify-between gap-3">
           <span
             className="type-label font-bold tracking-normal"
@@ -202,36 +239,59 @@ export function ProductCard({
           >
             {brandLabel(product.brand?.name)}
           </span>
-          {model && (
-            <span
-              dir="ltr"
-              className="type-label min-w-0 max-w-[60%] break-words text-end font-mono tracking-normal text-foreground/70"
-            >
-              {model}
-            </span>
-          )}
         </div>
 
-        <h3 className="mt-2.5 type-body">
+        <h3 className="lux-name mt-1.5">
           <Link
             href={href}
+            dir={model ? "ltr" : undefined}
             /* line-clamp sets overflow:hidden, which clips any ::after hit-area
                extension — so the 44px target is real height (min-h-11) instead. */
-            className="relative line-clamp-3 min-h-11 font-bold leading-7"
+            className={cn("relative line-clamp-2 min-h-11 font-extrabold", model && "text-end")}
           >
             {title}
           </Link>
         </h3>
 
-        {specs && (
-          <p className="type-support mt-1 line-clamp-2 text-muted-foreground">{specs}</p>
+        {/* What kind of thing it is, then what distinguishes this configuration. */}
+        {(model || specs) && (
+          <div className="lux-meta type-support text-muted-foreground">
+            {model && <span className="lux-kind">{label}</span>}
+            {specs && <span className="lux-specs">{specs}</span>}
+          </div>
+        )}
+
+        {swatches.length > 1 && (
+          <div className="lux-swatches" role="group" aria-label="رنگ‌های موجود">
+            {swatches.slice(0, MAX_SWATCHES).map((choice) => (
+              <button
+                key={choice.color}
+                type="button"
+                title={choice.color}
+                aria-label={`رنگ ${choice.color}${choice.canBuy ? "" : "، ناموجود"}`}
+                aria-pressed={choice.active}
+                data-unavailable={choice.canBuy ? undefined : ""}
+                onClick={() => {
+                  setPickedId(choice.variantId);
+                  setSwapped(true);
+                }}
+              >
+                <span style={{ backgroundColor: swatchColor(choice.color) }} aria-hidden="true" />
+              </button>
+            ))}
+            {swatches.length > MAX_SWATCHES && (
+              <Link href={href} className="lux-swatches__more" aria-label={`${toFaDigits(swatches.length - MAX_SWATCHES)} رنگ دیگر`}>
+                +{toFaDigits(swatches.length - MAX_SWATCHES)}
+              </Link>
+            )}
+          </div>
         )}
 
         {/* Everything below is the transaction, held to the bottom so cards in a
             row align on their prices however long the names run. */}
         <div className="mt-auto pt-5">
           <div className="lux-stock flex items-center justify-between gap-2 type-label font-bold tracking-normal">
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-x-2.5 gap-y-1.5">
               <span
                 className="inline-flex items-center gap-1.5"
                 style={{ color: outOfStock ? undefined : accent }}
@@ -241,18 +301,18 @@ export function ProductCard({
                   style={{ background: "currentColor" }}
                   aria-hidden="true"
                 />
-                  {stockLabels[activeStockType ?? ""] ?? "—"}
+                {stockLabels[activeStockType ?? ""] ?? "—"}
               </span>
+              {/* «موجود» and «محدود» are two facts, so they are two marks: whether it can be bought,
+                  and that few remain. Read as one phrase they ran together. */}
+              {!outOfStock && activeStockType === "limited" && <span className="lux-scarce">محدود</span>}
               {off != null && (
-                <>
-                  <i className="h-3 w-px" style={{ background: "var(--lux-rule)" }} aria-hidden="true" />
-                  {/* FR-011: the number is Persian even inside an LTR run, because
-                      the run exists to keep the minus sign on the left, not to
-                      switch the digits back to Latin. */}
-                  <span dir="ltr" className="font-sans text-champagne tabular-nums">
-                    −{toFaDigits(off)}٪
-                  </span>
-                </>
+                /* FR-011: the number is Persian even inside an LTR run, because
+                   the run exists to keep the minus sign on the left, not to
+                   switch the digits back to Latin. */
+                <span dir="ltr" className="font-sans text-champagne tabular-nums">
+                  −{toFaDigits(off)}٪
+                </span>
               )}
             </div>
             <span className="hidden sm:inline-flex items-center gap-1 font-sans text-xs text-foreground/50 border border-champagne/15 rounded-full px-2 py-0.5">

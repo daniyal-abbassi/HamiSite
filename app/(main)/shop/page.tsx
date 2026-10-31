@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Suspense } from "react";
 import { ShopBanner } from "@/components/shop/ShopBanner";
 import { ShopClient } from "@/components/shop/ShopClient";
+import { ShopHeroSearch, ShopHeroSearchFallback } from "@/components/shop/ShopHeroSearch";
 import { ShopLoading } from "@/components/shop/ShopLoading";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
 import { catalogGeneratedAt } from "@/lib/catalog-db";
@@ -86,7 +87,17 @@ export default function ShopPage({
 }) {
   return (
     <div className="shop-luxury">
-      <ShopBanner />
+      <header className="shop-hero" data-ground="wine">
+        <div className="shop-wrap">
+          <ShopBanner />
+          <p className="shop-kicker">ویترین حامی همراه</p>
+          <h1>فروشگاه</h1>
+          <p className="shop-hero__lead">موبایل، ساعت هوشمند، هدفون و لوازم جانبی؛ جست‌وجو کنید، مقایسه کنید، انتخاب کنید.</p>
+          <Suspense fallback={<ShopHeroSearchFallback />}>
+            <ShopHeroSearch />
+          </Suspense>
+        </div>
+      </header>
       <section id="shop-catalog" className="shop-catalog" data-ground="paper" aria-label="محصولات فروشگاه">
         <div className="shop-wrap">
           <Suspense fallback={<ShopLoading />}>

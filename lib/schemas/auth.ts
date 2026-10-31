@@ -13,18 +13,16 @@ export const registerSchema = z.object({
   firstName: z.string().max(100).optional(),
   lastName: z.string().max(100).optional(),
   city: z.string().max(100).optional(),
-  // AGENT and ADMIN are provisioned out-of-band (seed script / admin API).
-  // AGENT is a B2B sales-rep principal, not a self-service storefront role.
-  role: z.enum([Role.RETAIL, Role.WHOLESALE]).optional(),
-  shopName: z.string().max(200).optional(),
-  businessLicenseNumber: z.string().max(100).optional(),
+  // Registration creates customers and nothing else. WHOLESALE comes only from an
+  // administrator approving a partner application; AGENT and ADMIN are provisioned
+  // out-of-band (seed script / admin API).
+  role: z.enum([Role.RETAIL]).optional(),
   nationalNumber: z.string().max(50).optional(),
-  agentId: z.number().int().positive().optional(),
   referer: z.string().max(200).optional(),
 });
 
 /** Self-service profile edits ONLY. Deliberately excludes role, isActive,
- * creditLimit, creditUsed, agentId, phoneNumber, username, businessVerified,
+ * agentId, phoneNumber, username, businessVerified,
  * phoneVerified, nationalNumber, cardNumber, shopName, businessLicenseNumber
  * — see docs/api/auth.md for why each is admin-managed.
  *

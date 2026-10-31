@@ -56,7 +56,7 @@ function serializeProduct(product: ProductRecord, includeVariants: boolean, incl
       imageUrl: variant.image?.url ?? null,
       unitPrice: variantPrice,
       matchedTier: null,
-      quoted: { quantity: 1, paymentTerm: "CASH", role: "RETAIL", unitPrice: variantPrice, matchedTier: null },
+      quoted: { quantity: 1, role: "RETAIL", unitPrice: variantPrice, matchedTier: null },
     };
   }) : [];
   const specs = Array.isArray(product.specs) ? product.specs.flatMap((item) => {

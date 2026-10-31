@@ -249,7 +249,6 @@ describe("PATCH /api/auth/me", () => {
           role: "ADMIN",
           isActive: false,
           id: 9999,
-          creditLimit: 99999999,
         }),
       }),
       ctx(),

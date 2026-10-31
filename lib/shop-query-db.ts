@@ -1,3 +1,4 @@
+import { cardVariants } from "@/lib/card-variants";
 import { categorySubtreeCounts, listBrands, listCategories, queryProducts } from "@/lib/catalog-db";
 import { categoryDepartments } from "@/lib/category-departments-db";
 import { resolveSortKey, SHOP_PAGE_SIZE, stockLabels } from "@/lib/content/shop";
@@ -139,8 +140,8 @@ export async function buildShopView(params: SearchParamsRecord): Promise<ShopVie
     stockType: one(params.stock) && one(params.stock) !== "purchasable" ? one(params.stock)! : undefined,
     specialOffer: special === "1" ? true : special === "0" ? false : undefined,
     sort: resolveSortKey(sort) || undefined,
-    // The listing renders name, price, image and stock; variants are the PDP's business.
-    includeVariants: false,
+    // The card offers a colour choice, so it needs each variant's colour, price, stock and photograph.
+    includeVariants: true,
     page,
     pageSize: SHOP_PAGE_SIZE,
   });
@@ -162,6 +163,7 @@ export async function buildShopView(params: SearchParamsRecord): Promise<ShopVie
       stockType: product.stockType,
       available: product.available,
       images: product.images.map(({ url, isDefault, order }) => ({ url, isDefault, order })),
+      variants: cardVariants(product),
     } satisfies ShopProduct)),
     meta: {
       page,

@@ -1,4 +1,4 @@
-import { B2BPaymentTerm, OrderStatus, Prisma, Role, StockType } from "@prisma/client";
+import { OrderStatus, Prisma, Role, StockType } from "@prisma/client";
 import { toNumber } from "@/lib/serializers";
 
 export function orderListInclude() {
@@ -79,8 +79,8 @@ export function serializeOrderSummary(order: ListedOrder) {
 }
 
 // Statuses that represent a "closed" order — once reached, stock decrements
-// and B2B credit usage from placing the order should be reversed if the
-// order moves here from a still-open status.
+// from placing the order should be reversed if the order moves here from a
+// still-open status.
 export const TERMINAL_CANCEL_STATUSES = ["CANCELED", "FAILED", "REVERSED"] as const;
 
 export async function applyOrderStatusTransition(
@@ -88,8 +88,6 @@ export async function applyOrderStatusTransition(
   order: {
     id: number;
     status: OrderStatus;
-    paymentTerm: B2BPaymentTerm;
-    totalAmount: Prisma.Decimal;
     items: {
       productId?: number | null;
       variantId?: number | null;
@@ -104,8 +102,6 @@ export async function applyOrderStatusTransition(
   const isCurrentlyClosed = TERMINAL_CANCEL_STATUSES.includes(order.status as (typeof TERMINAL_CANCEL_STATUSES)[number]);
   const willBecomeClosed = TERMINAL_CANCEL_STATUSES.includes(nextStatus as (typeof TERMINAL_CANCEL_STATUSES)[number]);
   const shouldRestock = !isCurrentlyClosed && willBecomeClosed;
-  const shouldReverseCredit =
-    shouldRestock && order.paymentTerm === B2BPaymentTerm.CREDIT_60_DAYS && order.user.role === Role.WHOLESALE;
 
   if (shouldRestock) {
     for (const item of order.items) {
@@ -156,19 +152,5 @@ export async function applyOrderStatusTransition(
         }
       }
     }
-  }
-
-  if (shouldReverseCredit) {
-    const currentUser = await tx.user.findUniqueOrThrow({
-      where: { id: order.user.id },
-      select: { creditUsed: true },
-    });
-    const reversalAmount = toNumber(order.totalAmount) ?? 0;
-    const newCreditUsed = Math.max(0, (toNumber(currentUser.creditUsed) ?? 0) - reversalAmount);
-
-    await tx.user.update({
-      where: { id: order.user.id },
-      data: { creditUsed: newCreditUsed },
-    });
   }
 }

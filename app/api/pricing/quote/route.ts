@@ -1,8 +1,8 @@
-import { B2BPaymentTerm, Role } from "@prisma/client";
+import { Role } from "@prisma/client";
 import { z } from "zod";
 import { getOptionalSessionUser } from "@/lib/auth";
 import { ApiError, ok, parseJsonBody, withErrorHandling } from "@/lib/http";
-import { ensureB2BTermAllowed, normalizePaymentTerm, resolveMatchingTier } from "@/lib/pricing";
+import { resolveMatchingTier } from "@/lib/pricing";
 import { prisma } from "@/lib/prisma";
 import { toNumber } from "@/lib/serializers";
 
@@ -13,19 +13,14 @@ const itemSchema = z.object({
 });
 
 const bodySchema = z.object({
-  paymentTerm: z.string().optional(),
   items: z.array(itemSchema).min(1),
 });
 
 export async function POST(request: Request) {
   return withErrorHandling(async () => {
     const input = await parseJsonBody(request, bodySchema);
-    const paymentTerm = normalizePaymentTerm(input.paymentTerm ?? "CASH");
-
     const sessionUser = await getOptionalSessionUser(request);
     const role: Role = sessionUser?.role ?? Role.RETAIL;
-
-    ensureB2BTermAllowed(role, paymentTerm);
 
     const productIds = [...new Set(input.items.map((i) => i.productId))];
     const variantIds = [...new Set(input.items.map((i) => i.variantId).filter((v): v is number => Boolean(v)))];
@@ -41,7 +36,7 @@ export async function POST(request: Request) {
           storage: true,
           price: true,
           priceTiers: {
-            where: { isActive: true, paymentMethod: paymentTerm },
+            where: { isActive: true },
             orderBy: { minQuantity: "desc" },
             select: {
               id: true,
@@ -49,7 +44,6 @@ export async function POST(request: Request) {
               maxQuantity: true,
               calculatedPrice: true,
               discountPercent: true,
-              paymentMethod: true,
             },
           },
         },
@@ -88,7 +82,6 @@ export async function POST(request: Request) {
 
         const tier = resolveMatchingTier({
           quantity: item.quantity,
-          paymentTerm: paymentTerm as B2BPaymentTerm,
           tiers: variant.priceTiers,
         });
 
@@ -114,7 +107,6 @@ export async function POST(request: Request) {
         variant: variantInfo,
         quantity: item.quantity,
         pricing: {
-          paymentTerm,
           unitPrice,
           lineTotal,
           matchedTier,
@@ -122,16 +114,8 @@ export async function POST(request: Request) {
       };
     });
 
-    const credit = sessionUser
-      ? {
-          creditLimit: toNumber(sessionUser.creditLimit) ?? 0,
-          creditUsed: toNumber(sessionUser.creditUsed) ?? 0,
-        }
-      : null;
-
     return ok({
       role,
-      paymentTerm,
       lines,
       totals: {
         subtotal,
@@ -140,7 +124,6 @@ export async function POST(request: Request) {
         tax: 0,
         grandTotal: subtotal,
       },
-      credit,
     });
   });
 }

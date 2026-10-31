@@ -1,4 +1,4 @@
-import { OrderStatus, PaymentStatus, B2BPaymentTerm, Role, type PrismaClient } from "@prisma/client";
+import { OrderStatus, PaymentStatus, Role, type PrismaClient } from "@prisma/client";
 import type { LegacyOrder, LegacyOrderPayment } from "./types";
 import { IMPORTED_CUSTOMER_PASSWORD } from "./customers";
 import { normalizePhoneNumber } from "./normalize";
@@ -136,7 +136,6 @@ export async function importOrders(
         status: mapOrderStatus(raw.status),
         paymentStatus: mapPaymentStatusFromOrder(raw.payment_status),
         paymentMethod: raw.payment_method,
-        paymentTerm: B2BPaymentTerm.CASH,
         firstName: raw.shipping_first_name ?? raw.customer_name,
         lastName: raw.shipping_last_name ?? "",
         phone: raw.shipping_phone_number ?? raw.customer_phone,
@@ -158,7 +157,6 @@ export async function importOrders(
         status: mapOrderStatus(raw.status),
         paymentStatus: mapPaymentStatusFromOrder(raw.payment_status),
         paymentMethod: raw.payment_method,
-        paymentTerm: B2BPaymentTerm.CASH,
         firstName: raw.shipping_first_name ?? raw.customer_name,
         lastName: raw.shipping_last_name ?? "",
         phone: raw.shipping_phone_number ?? raw.customer_phone,
