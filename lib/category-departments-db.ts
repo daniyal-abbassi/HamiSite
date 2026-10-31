@@ -26,7 +26,9 @@
  * did so silently — which is why the guard is the acceptance test rather than a comment.
  */
 
-import { categorySubtreeCounts, countProductsByKind, listCategories } from "@/lib/catalog-db";
+import { categorySubtreeCounts, countProductsByKind, hasStudioPhoto, listCategories, productsWithKind } from "@/lib/catalog-db";
+import { isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
+import { isPurchasable, modelKey, splitProductName } from "@/lib/product-identity";
 import { RHYTHM, type Tier, type TierBreakpoint } from "@/lib/category-masonry";
 
 export type DepartmentKind =
@@ -205,4 +207,64 @@ export async function categoryDepartments(): Promise<Department[]> {
   }
 
   return departments;
+}
+
+export type ShelfProduct = {
+  id: number;
+  title: string;
+  href: string;
+  image: string;
+  /** Null when the record carries no price to quote. */
+  price: number | null;
+  purchasable: boolean;
+};
+
+export type DepartmentShelf = Department & { products: ShelfProduct[] };
+
+const SHELF_SIZE = 6;
+
+/**
+ * Each department with a few of its own products: sellable first, then studio photography, then the
+ * most expensive model, one slot per model. A record with no photograph stays off the shelf.
+ */
+export async function departmentShelves(): Promise<DepartmentShelf[]> {
+  const [departments, catalogue] = await Promise.all([categoryDepartments(), productsWithKind()]);
+
+  const ranked = catalogue
+    .map(({ kind, product }) => ({
+      kind,
+      product,
+      image: resolveProductImage(product),
+      purchasable: product.variants?.length
+        ? product.variants.some((variant) =>
+          isPurchasable({ available: product.available, stockType: variant.stockType })
+          && !(variant.stockType === "limited" && variant.stock <= 0))
+        : isPurchasable(product),
+    }))
+    .filter(({ image }) => !isPlaceholderImage(image))
+    .sort((a, b) =>
+      Number(b.purchasable) - Number(a.purchasable)
+      || Number(hasStudioPhoto(b.product)) - Number(hasStudioPhoto(a.product))
+      || b.product.displayPrice - a.product.displayPrice);
+
+  return departments.map((department) => {
+    const seen = new Set<string>();
+    const products: ShelfProduct[] = [];
+    for (const { kind, product, image, purchasable } of ranked) {
+      if (kind !== department.kind || products.length === SHELF_SIZE) continue;
+      const key = modelKey(product.name);
+      if (seen.has(key)) continue;
+      seen.add(key);
+      const { model, label } = splitProductName(product.name);
+      products.push({
+        id: product.id,
+        title: (model || product.englishName || label).replace(/^[\s(]+|[\s()\-–|،,]+$/g, ""),
+        href: `/shop/${encodeURIComponent(product.slug)}`,
+        image,
+        price: product.displayPrice > 0 ? product.displayPrice : null,
+        purchasable,
+      });
+    }
+    return { ...department, products };
+  });
 }

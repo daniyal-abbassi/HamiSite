@@ -44,6 +44,51 @@ test("discounted offers keep every price in view on a narrow phone", async ({ pa
   await page.waitForLoadState("networkidle");
 });
 
+test("category shelves open on tap and show their own products", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+  const watches = page.locator("#categories .cats__slat").filter({ hasText: "ساعت هوشمند" });
+  await watches.getByRole("button").click();
+  await expect(watches.getByRole("button")).toHaveAttribute("aria-expanded", "true");
+  await expect(watches.locator(".cats__item").first()).toBeVisible();
+  await expect(page.locator("#categories .cats__slat.is-open")).toHaveCount(1);
+  // The shelf it replaced must leave the tab order, not just the screen.
+  await expect(page.locator("#categories .cats__slat").first().locator(".cats__item").first()).toBeHidden();
+  await page.waitForLoadState("networkidle");
+});
+
+test("scattered pieces settle into one arch by the end of the scroll", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const piece = page.locator("#store-experience [data-piece]").nth(1);
+  await expect(piece).toHaveCSS("transform", /matrix\(/);
+  const scattered = await piece.evaluate((node) => getComputedStyle(node).transform);
+  expect(scattered).not.toBe("matrix(1, 0, 0, 1, 0, 0)");
+
+  await page.evaluate(() => {
+    const track = document.querySelector(".assembly__track")!;
+    const end = track.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
+    window.scrollTo({ top: end, behavior: "instant" });
+  });
+  await expect.poll(() => piece.evaluate((node) => getComputedStyle(node).transform)).toMatch(/matrix\(1, 0, 0, 1, 0, 0\)|none/);
+  const panel = await page.locator(".assembly__panel").boundingBox();
+  expect(panel!.width).toBeLessThanOrEqual(390);
+  await page.waitForLoadState("networkidle");
+});
+
+test("reduced motion gets the finished arch in normal flow", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+  const piece = page.locator("#store-experience [data-piece]").nth(1);
+  await expect(piece).toBeVisible();
+  expect(await piece.evaluate((node) => getComputedStyle(node).transform)).toBe("none");
+  const track = await page.locator(".assembly__track").boundingBox();
+  expect(track!.height).toBeLessThan(900);
+  await page.waitForLoadState("networkidle");
+});
+
 test("desktop ticker is a compact pill whose marquee fills the bar", async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 752 });
   await page.goto("/");
@@ -76,6 +121,6 @@ test("homepage stays inside a narrow 360px phone viewport", async ({ page }) => 
   await page.goto("/");
   await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBe(360);
-  await expect(page.locator("#online-services .online-services-visual")).toBeVisible();
+  await expect(page.locator("#store-experience .assembly__panel")).toBeVisible();
   await page.waitForLoadState("networkidle");
 });

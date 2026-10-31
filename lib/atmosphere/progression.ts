@@ -48,8 +48,6 @@ export const HOMEPAGE_SECTIONS = [
   "categories",
   "brands",
   "new-arrivals",
-  "b2b",
-  "online-services",
   "store-experience",
   "band-settled",
 ] as const;
@@ -103,7 +101,6 @@ export const PROGRESSION = [
   { key: "arrival", anchor: "top", color: "#46101C" },
   { key: "goods", anchor: "featured", color: "#32132E" },
   { key: "shelves", anchor: "brands", color: "#151F35" },
-  { key: "trade", anchor: "b2b", color: "#102927" },
   { key: "counter", anchor: "store-experience", color: "#322014" },
   { key: "close", anchor: "band-settled", color: "#160406" },
 ] as const satisfies readonly AtmosphereStage[];

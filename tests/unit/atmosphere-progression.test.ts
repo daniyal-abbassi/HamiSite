@@ -118,7 +118,7 @@ describe("tone at position — FR-007, contract P5", () => {
   });
 
   it("lands on each chapter tone with uneven real section spacing", () => {
-    const offsets = [0, 0.12, 0.31, 0.44, 0.62, 0.73, 0.79, 0.87, 0.98];
+    const offsets = [0, 0.12, 0.31, 0.44, 0.62, 0.87, 0.98];
     const bounds = stageBoundaries(offsets);
     for (const stage of PROGRESSION) {
       const position = offsets[HOMEPAGE_SECTIONS.indexOf(stage.anchor)]!;

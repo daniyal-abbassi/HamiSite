@@ -94,7 +94,7 @@ export const metadata: Metadata = {
  *    the trade chapter → ember at the physical store → the deepest tone at the close. Travel is carried by
  *    hue and chroma at near-constant lightness, because lightness is the one axis a dark ground cannot
  *    spend without paying in contrast (worst point 5.59:1).
- *  - two **paper chapters** (`#categories`, `#online-services`) paint opaque ivory `#f4f1ea` with their own
+ *  - one **paper chapter** (`#categories`) paints opaque ivory `#f4f1ea` with its own
  *    inverted foreground — the contrast the owner asked for on 2026-09-24.
  *  - interior shopper routes take one settled tone each, borrowed from the homepage chapter they belong to;
  *    `/admin` gets no ground layer at all.

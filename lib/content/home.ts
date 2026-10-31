@@ -156,21 +156,6 @@ export const brandSlugByName: Readonly<Record<string, string>> = Object.fromEntr
   brandWall.map((brand) => [brand.name, brand.slug]),
 );
 
-export const b2bFeatures = [
-  { title: "قیمت همکاری", description: "قیمت روز را از کارشناس فروش دریافت کنید." },
-  { title: "استعلام موجودی", description: "پیش از ثبت سفارش، وضعیت کالا را بررسی کنید." },
-  { title: "تنوع کالا", description: "موبایل و لوازم جانبی از برندهای گوناگون." },
-  { title: "ثبت سفارش", description: "پس از تأیید درخواست همکاری، سفارش ثبت می‌شود." },
-] as const;
-
-export const b2bWorkflow = [
-  { index: "۰۱", title: "ثبت‌نام", description: "اطلاعات همکاری را ثبت می‌کنید." },
-  { index: "۰۲", title: "تأیید", description: "حساب همکاری بررسی و فعال می‌شود." },
-  { index: "۰۳", title: "سفارش", description: "دسترسی همکاری برای سفارش آماده می‌شود." },
-] as const;
-
-export const b2bSupplyAreas = ["موبایل", "لوازم جانبی", "چندبرندی", "همکاری مستمر"] as const;
-
 // `اسپیکر و Party Box` was removed here too: its category (`اسپیکر-پارتی-باکس`) has zero
 // products, so the row would only ever lead to an empty listing.
 
@@ -184,12 +169,6 @@ export const featuredOnlineService = {
   trustCopy: "فرآیند ساده، شفاف و قابل پیگیری.",
   href: categoryLinks.services,
 } as const;
-
-export const storeExperiencePoints = [
-  { index: "۰۱", title: "مشاهده و انتخاب", description: "محصول را ببینید، مقایسه کنید و انتخاب کنید." },
-  { index: "۰۲", title: "مشاوره تخصصی", description: "پیش از خرید، انتخاب مناسب خودتان را پیدا کنید." },
-  { index: "۰۳", title: "پشتیبانی پس از خرید", description: "همراه شما بعد از خرید." },
-] as const;
 
 export const finalConversionCopy = {
   eyebrow: "HAMI HAMRAH / FINAL NOTE",

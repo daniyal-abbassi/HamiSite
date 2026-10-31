@@ -68,12 +68,17 @@
 /* The offers section's curved foot overlaps this one by --offers-curve. */
 .hami-page-ground--home ~ main > #categories {
   background-color: #f4f1ea;
-  padding-block: calc(clamp(48px, 6vw, 88px) + var(--offers-curve, 0px)) clamp(48px, 6vw, 88px);
+  padding-block: calc(clamp(48px, 6vw, 88px) + var(--offers-curve, 0px));
   box-shadow: none;
 }
 
+/* The answering curve: the dark chapter rises over the ivory one in the same arch. */
 .hami-page-ground--home ~ main > #brands {
-  padding-top: clamp(48px, 6vw, 88px);
+  z-index: 3;
+  margin-block-start: calc(var(--offers-curve) * -1);
+  padding-top: calc(clamp(48px, 6vw, 88px) + var(--offers-curve));
+  border-start-start-radius: 50% var(--offers-curve);
+  border-start-end-radius: 50% var(--offers-curve);
 }
 
 .hami-page-ground--home ~ main > #new-arrivals {
@@ -83,10 +88,6 @@
 
 
 
-.hami-page-ground--home ~ main > #online-services {
-  background-color: #f4f1ea;
-  box-shadow: none;
-}
 
 
 

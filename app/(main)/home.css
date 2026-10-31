@@ -41,9 +41,6 @@
 #categories { --section-ground-image: url("/images/backgrounds/hami-background-02.webp"); --section-ground-position: 50% 82%; --section-ground-mobile-position: 50% 72%; }
 #brands { --section-ground-image: url("/images/backgrounds/hami-background-01.webp"); --section-ground-position: 50% 42%; --section-ground-mobile-position: 56% 52%; --section-ground-overlay: linear-gradient(110deg, rgb(35 1 10 / 78%), rgb(60 2 17 / 82%) 54%, rgb(30 1 9 / 86%)); }
 #new-arrivals { --section-ground-image: url("/images/backgrounds/hami-background-03.webp"); --section-ground-position: 50% 88%; --section-ground-mobile-position: 24% 82%; --section-ground-overlay: linear-gradient(112deg, rgb(248 244 237 / 28%), rgb(248 244 237 / 22%) 58%, rgb(248 244 237 / 28%)); }
-#b2b { --section-ground-image: url("/images/backgrounds/hami-background-04.webp"); --section-ground-position: 48% 72%; --section-ground-mobile-position: 55% 68%; --section-ground-overlay: linear-gradient(110deg, rgb(35 1 10 / 50%), rgb(76 3 21 / 54%) 54%, rgb(30 1 9 / 58%)); }
-#online-services { --section-ground-image: url("/images/backgrounds/hami-background-03.webp"); --section-ground-position: 50% 75%; --section-ground-mobile-position: 24% 80%; }
-#store-experience { --section-ground-image: url("/images/backgrounds/hami-background-04.webp"); --section-ground-position: 50% 45%; --section-ground-mobile-position: 55% 50%; --section-ground-overlay: linear-gradient(110deg, rgb(35 1 10 / 54%), rgb(76 3 21 / 58%) 54%, rgb(30 1 9 / 62%)); }
 
 @media (min-width: 768px) {
   .home-section-ground::before { background-position: center, var(--section-ground-position, center); }
@@ -51,8 +48,6 @@
     background-image: var(--section-ground-overlay, linear-gradient(112deg, rgb(248 244 237 / 10%), rgb(248 244 237 / 14%) 58%, rgb(248 244 237 / 10%))), var(--section-ground-image);
   }
   #new-arrivals { --section-ground-overlay: linear-gradient(112deg, rgb(248 244 237 / 22%), rgb(248 244 237 / 18%) 58%, rgb(248 244 237 / 22%)); }
-  #b2b { --section-ground-overlay: linear-gradient(110deg, rgb(36 1 10 / 36%), rgb(76 3 21 / 40%) 54%, rgb(30 1 9 / 44%)); }
-  #store-experience { --section-ground-overlay: linear-gradient(110deg, rgb(35 1 10 / 40%), rgb(76 3 21 / 44%) 54%, rgb(30 1 9 / 48%)); }
 }
 @media (forced-colors: active) {
   .home-section-ground { background-color: Canvas !important; background-image: none !important; }
@@ -1353,205 +1348,399 @@
   }
 }
 
-/* ==== 010 categories masonry — plan.md, research D1/D2, contracts Q1–Q9. =========
-   The arrangement lives here and nowhere else. `grid-auto-rows` plus a per-tier
-   `grid-row: span N` is the whole layout: the browser's sparse row-major auto-placement
-   fills each column from the top, so the bottoms stagger by themselves and no hole can
-   open mid-column. That is why this chapter is complete before a single script runs
-   (FR-008) and why its height is known at first paint (FR-022).
-
-   The spans are the numbers in `lib/category-masonry.ts`, which is also what
-   tests/unit/category-masonry.test.ts asserts against. Edit one without the other and
-   the suite fails — deliberately: Q1 measures the browser against that table, so a
-   stylesheet free-handing its own geometry would make the measurement meaningless.
-
-   Nothing here hides a tile. There is no `opacity: 0` and no resident blur in this
-   block: the arrival's starting state exists only in script memory, so a stalled or
-   blocked script renders exactly what CSS drew (FR-011).
-   -------------------------------------------------------------------------- */
-.cat-masonry {
-  display: grid;
-  grid-auto-rows: 8px;
-  /* `row` is the default, and `sparse` (which cannot be named) is the default flow.
-     Both are load-bearing here — `dense` would let a later small tile jump ahead of an
-     earlier one and repaint the DOM order out of visual order. Written out so nobody
-     "tidies" it away. */
-  grid-auto-flow: row;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-  margin: 0;
+/* ==== categories: one shelf open at a time, every department in view ============
+   Rows on a phone and vertical slats on a desktop, over the same markup. A closed shelf is hidden
+   with `visibility`, so its links leave the tab order while its products stay in the HTML. */
+.cats {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin: 1.5rem 0 0;
   padding: 0;
-  /* Preflight already removed the markers; restoring the declaration is what keeps
-     `role="list"` honest in WebKit, which drops list semantics from a markerless ul. */
   list-style: none;
 }
 
-.cat-masonry__item {
-  display: block;
-}
-
-/* Three attributes, one per breakpoint, because the tier a department holds CHANGES with width — that rotation
-   is the whole of FR-013a. A single `data-tier` re-scaled by media queries would keep every department at its
-   mobile tier forever, which is precisely the permanently-largest-tile shape that ended 009's variant B. */
-.cat-masonry__item[data-tier-base="S"] { grid-row: span 8; }
-.cat-masonry__item[data-tier-base="M"] { grid-row: span 11; }
-.cat-masonry__item[data-tier-base="L"] { grid-row: span 14; }
-
-.cat-card {
+.cats__slat {
+  --cats-closed: 4.5rem;
+  --cats-opened: 10rem;
   position: relative;
-  display: block;
   isolation: isolate;
   overflow: hidden;
-  height: 100%;
-  border-radius: 18px;
-  color: inherit;
-  text-decoration: none;
-  box-shadow: 0 1px 0 rgba(17, 4, 8, 0.06), 0 18px 36px -26px rgba(17, 4, 8, 0.55);
+  border-radius: 20px;
+  background: #1a040a;
+  color: #fbf4eb;
 }
-/* The ground under a panel. It is dark on purpose: if a file is missing the tile degrades
-   to a named dark doorway rather than a white hole on the paper, and a missing picture
-   stays visibly missing instead of being filled with a stand-in (Principle I). */
-.cat-card {
-  background: linear-gradient(165deg, #1e0a10 0%, #0b0204 58%, #050101 100%);
-}
-.cat-card__art {
+
+.cats__art {
   position: absolute;
-  inset-inline: 0;
-  inset-block: 0;
   z-index: -1;
-  display: block;
+  inset-inline: 0;
+  inset-block-start: 0;
+  block-size: var(--cats-closed);
+  overflow: hidden;
+  transition: block-size 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-.cat-card__art img {
-  width: 100%;
-  height: 100%;
+
+.cats__art img {
   object-fit: cover;
-  object-position: center 38%; /* the bottom glow band must never be cropped away */
-  display: block;
+  object-position: 50% 46%;
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-/* The label plate. Contrast is load-bearing, not decorative: the nine shipped panels
-   sample (2,1,2)…(11,11,9) at their bottom bands, and the scrim pins the worst-case
-   guarantee at 17.5:1 even if a later generation comes back lighter. */
-.cat-card::after {
+
+.cats__art::after {
   content: "";
   position: absolute;
-  inset-block-start: auto;
-  inset-block-end: 0;
-  inset-inline: 0;
-  z-index: 0;
-  height: 46%;
-  background: linear-gradient(to top, rgba(5, 1, 1, 0.88) 0%, rgba(5, 1, 1, 0.55) 45%, transparent 100%);
-  pointer-events: none;
+  inset: 0;
+  background: linear-gradient(270deg, rgb(26 4 10 / 92%) 0, rgb(26 4 10 / 66%) 46%, rgb(26 4 10 / 12%) 100%);
 }
-/* Permanently visible, never behind a hover (FR-005). `letter-spacing` is pinned to 0 as
-   an explicit reset: Persian letter joining breaks under tracking (001/FR-057), and a
-   `tracking-*` utility anywhere up the tree would otherwise reach this text. */
-.cat-card__label {
-  position: absolute;
-  inset-block-start: auto;
-  inset-block-end: 12px;
-  inset-inline: 14px;
-  z-index: 1;
-  color: #f0ece9; /* 16.8:1 min on the sampled bands; 17.7:1 on phone */
-  font-size: clamp(15px, 4.2vw, 19px);
-  font-weight: 700;
-  line-height: 1.45;
+
+.cats__slat.is-open .cats__art {
+  block-size: var(--cats-opened);
+}
+
+.cats__slat.is-open .cats__art::after {
+  background: linear-gradient(0deg, #1a040a 0, rgb(26 4 10 / 45%) 55%, rgb(26 4 10 / 15%) 100%);
+}
+
+.cats__heading {
+  margin: 0;
+}
+
+/* Doubled up to outrank the site-wide 44px minimum on buttons. */
+.cats__slat .cats__toggle {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  inline-size: 100%;
+  min-block-size: var(--cats-closed);
+  padding: 0.75rem 1.25rem;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  text-align: start;
+  transition: min-block-size 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cats__slat.is-open .cats__toggle {
+  align-items: flex-end;
+  min-block-size: var(--cats-opened);
+}
+
+.cats__toggle:focus-visible {
+  outline: 2px solid #f8ecc9;
+  outline-offset: -4px;
+  border-radius: 20px;
+}
+
+.cats__name {
+  color: #fffaf3;
+  font-size: var(--type-section);
+  font-weight: 800;
+  line-height: 1.3;
   letter-spacing: 0;
-  text-wrap: balance;
-  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.6);
 }
-/* Above the label line, on the reading side. The component exposes it to assistive tech
-   through `aria-describedby`, so this rule owns placement and nothing else. */
-.cat-card__count {
-  position: absolute;
-  inset-block-start: auto;
-  inset-block-end: 44px;
-  inset-inline-start: 14px;
-  inset-inline-end: auto;
-  z-index: 1;
-  display: inline-block;
-  padding: 3px 9px;
-  border-radius: 999px;
-  background: rgba(229, 211, 179, 0.14); /* over the band → #29211D → 10.8:1 under champagne */
-  border: 1px solid rgba(229, 211, 179, 0.35);
+
+.cats__count {
   color: #e5d3b3;
-  font-size: 11.5px;
+  font-size: var(--type-caption);
   font-weight: 600;
-  font-variant-numeric: tabular-nums;
+  line-height: 1.8;
+  white-space: nowrap;
 }
-/* Two-layer ring: a single colour cannot pass on both grounds (white-on-ivory is 1.5:1,
-   champagne-on-ivory 1.3:1). White line vs the dark photo ≈17:1; oxblood halo vs paper
-   11.9:1. Either layer alone clears 3:1 against the surface it sits on. */
-.cat-card:focus-visible {
-  outline: 3px solid #ffffff;
-  outline-offset: 3px;
-  box-shadow: 0 0 0 6px rgba(100, 2, 17, 0.85);
+
+.cats__icon {
+  flex: 0 0 auto;
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+  margin-inline-start: auto;
+  color: #e5d3b3;
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
 }
-@media (min-width: 768px) {
-  .cat-masonry {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 16px;
+
+.cats__slat.is-open .cats__icon {
+  transform: rotate(45deg);
+}
+
+.cats__panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 300ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 300ms;
+}
+
+.cats__slat.is-open .cats__panel {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.cats__panel-inner {
+  min-block-size: 0;
+  min-inline-size: 0;
+  overflow: hidden;
+}
+
+.cats__rail {
+  display: flex;
+  gap: 0.75rem;
+  margin: 0;
+  padding: 0.25rem 1.25rem 0.5rem;
+  overflow-x: auto;
+  overscroll-behavior-x: contain;
+  scroll-padding-inline: 1.25rem;
+  scroll-snap-type: x proximity;
+  scrollbar-width: none;
+  list-style: none;
+}
+
+.cats__rail::-webkit-scrollbar {
+  display: none;
+}
+
+.cats__rail > li {
+  flex: 0 0 8.5rem;
+  min-inline-size: 0;
+  opacity: 0;
+  scroll-snap-align: start;
+  transform: translateY(10px);
+  transition: opacity 240ms ease, transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cats__slat.is-open .cats__rail > li {
+  opacity: 1;
+  transform: none;
+  transition-delay: calc(80ms + var(--i, 0) * 40ms);
+}
+
+.cats__item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  min-inline-size: 0;
+  color: #fbf4eb;
+  text-decoration: none;
+}
+
+.cats__plate {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4;
+  margin-block-end: 0.375rem;
+  overflow: hidden;
+  border-radius: 14px;
+  background: #f4efe7;
+}
+
+.cats__plate[data-kind="studio"] {
+  background: #3d0814;
+}
+
+.cats__photo {
+  object-fit: contain;
+  padding: 0.5rem;
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.cats__plate[data-kind="studio"] .cats__photo {
+  object-fit: cover;
+  padding: 0;
+}
+
+.cats__title {
+  overflow: hidden;
+  color: #fffaf3;
+  font-size: var(--type-caption);
+  font-weight: 700;
+  line-height: 1.6;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.cats__item strong {
+  color: #f4dfa8;
+  font-size: var(--type-caption);
+  font-weight: 700;
+  line-height: 1.6;
+  white-space: nowrap;
+}
+
+.cats__state {
+  color: rgb(251 244 235 / 62%);
+  font-size: var(--type-caption);
+  line-height: 1.6;
+}
+
+.cats__item:focus-visible,
+.cats__all:focus-visible {
+  outline: 2px solid #f8ecc9;
+  outline-offset: 2px;
+  border-radius: 8px;
+}
+
+.cats__all {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+  margin-block-end: 0.5rem;
+  padding-inline: 1.25rem;
+  color: #e5d3b3;
+  font-size: var(--type-label);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.cats__all svg {
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  transition: transform 200ms ease;
+}
+
+.cats__all:hover svg {
+  transform: translateX(-4px);
+}
+
+@media (hover: hover) {
+  .cats__item:hover .cats__photo {
+    transform: scale(1.04);
   }
-  .cat-masonry__item[data-tier-md="S"] { grid-row: span 10; }
-  .cat-masonry__item[data-tier-md="M"] { grid-row: span 14; }
-  .cat-masonry__item[data-tier-md="L"] { grid-row: span 17; }
-}
-@media (min-width: 1280px) {
-  .cat-masonry {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 20px;
-  }
-  .cat-masonry__item[data-tier-xl="S"] { grid-row: span 11; }
-  .cat-masonry__item[data-tier-xl="M"] { grid-row: span 15; }
-  .cat-masonry__item[data-tier-xl="L"] { grid-row: span 19; }
-  .cat-card__label { inset-block-end: 16px; inset-inline: 18px; font-size: 19px; }
-  .cat-card__count { inset-block-end: 52px; inset-inline-start: 18px; }
-}
-/* Press and hover — one response, reached by two paths (FR-012, US3).
-   A phone fires `:active` on touch, so the same declaration answers the finger without a `touchstart` listener
-   standing in for a hover that will never come. The scale lands on the image inside `overflow: hidden` rather
-   than on the grid item, because a 3% scale on a row-spanned item changes its painted bounds against its
-   neighbours (D8). Nothing here touches the label's presence: Q4 forbids a name living behind an interaction,
-   and the brightness step below is the only hover effect the text gets. */
-.cat-card__art img {
-  transition: transform 260ms cubic-bezier(0.2, 0.7, 0.3, 1);
-}
-.cat-card:active .cat-card__art img {
-  transform: scale(1.03);
-}
-@media (hover: hover) and (pointer: fine) {
-  /* The guard is not decoration. Without it a phone latches the hovered state on after a tap and the tile stays
-     enlarged while the shopper reads the next one. */
-  .cat-card:hover .cat-card__art img {
+
+  .cats__slat:hover .cats__art img {
     transform: scale(1.03);
   }
-  .cat-card:hover .cat-card__label {
-    color: #ffffff;
+}
+
+@media (min-width: 1024px) {
+  .cats {
+    flex-direction: row;
+    block-size: 36rem;
+    margin-block-start: 2rem;
+  }
+
+  .cats__slat {
+    flex: 1 1 0;
+    min-inline-size: 0;
+    border-radius: 24px;
+    transition: flex-grow 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  .cats__slat.is-open {
+    flex-grow: 10;
+  }
+
+  .cats__art,
+  .cats__slat.is-open .cats__art {
+    block-size: 100%;
+  }
+
+  .cats__art::after {
+    background: linear-gradient(0deg, rgb(26 4 10 / 88%) 0, rgb(26 4 10 / 25%) 55%, rgb(26 4 10 / 25%) 100%);
+  }
+
+  .cats__slat.is-open .cats__art::after {
+    background: linear-gradient(0deg, rgb(26 4 10 / 96%) 0, rgb(26 4 10 / 78%) 42%, rgb(26 4 10 / 10%) 76%);
+  }
+
+  /* Closed, the whole slat is the control and its name runs up the strip. */
+  .cats__heading {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+  }
+
+  .cats__slat .cats__toggle,
+  .cats__slat.is-open .cats__toggle {
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    block-size: 100%;
+    min-block-size: 0;
+    padding: 1.25rem 0.5rem;
+  }
+
+  .cats__name {
+    font-size: var(--type-body);
+    font-weight: 700;
+    white-space: nowrap;
+    writing-mode: vertical-rl;
+  }
+
+  .cats__count,
+  .cats__icon {
+    display: none;
+  }
+
+  .cats__slat.is-open .cats__heading {
+    inset: 1.5rem 1.75rem auto;
+  }
+
+  .cats__slat.is-open .cats__toggle {
+    flex-direction: row;
+    align-items: baseline;
+    justify-content: flex-start;
+    gap: 0.75rem;
+    block-size: auto;
+    padding: 0;
+    cursor: default;
+  }
+
+  .cats__slat.is-open .cats__name {
+    font-size: var(--type-display);
+    font-weight: 800;
+    writing-mode: horizontal-tb;
+  }
+
+  .cats__slat.is-open .cats__count {
+    display: inline;
+  }
+
+  .cats__panel {
+    position: absolute;
+    z-index: 2;
+    inset-inline: 0;
+    inset-block-end: 0;
+    opacity: 0;
+    transition: opacity 160ms ease, visibility 0s linear 160ms;
+  }
+
+  .cats__slat.is-open .cats__panel {
+    opacity: 1;
+    transition: opacity 200ms ease 120ms, visibility 0s;
+  }
+
+  /* Fixed width, so the content does not reflow while the slat is still growing. */
+  .cats__panel-inner {
+    inline-size: 38rem;
+    padding-block-end: 0.5rem;
+  }
+
+  .cats__rail {
+    padding-inline: 1.75rem;
+    scroll-padding-inline: 1.75rem;
+  }
+
+  .cats__all {
+    padding-inline: 1.75rem;
   }
 }
-/* Print: every department on the page, named, and none caught half-faded mid-arrival. The hidden state normally
-   exists only in script memory, but a print *during* the wave would otherwise be enough. */
-@media print {
-  .cat-masonry__item,
-  .cat-card,
-  .cat-card__art,
-  .cat-card__art img {
-    opacity: 1 !important;
-    transform: none !important;
-    filter: none !important;
-  }
-}
+
 @media (prefers-reduced-motion: reduce) {
-  /* The arrival is not created at all under reduced motion; this neutralises everything
-     else that could still move inside the chapter. */
-  .cat-card,
-  .cat-card__art img { transition: none; }
-  .cat-card:active .cat-card__art img,
-  .cat-card:hover .cat-card__art img { transform: none; }
+  .cats__slat,
+  .cats__art,
+  .cats__art img,
+  .cats__toggle,
+  .cats__icon,
+  .cats__panel,
+  .cats__rail > li,
+  .cats__photo,
+  .cats__all svg {
+    transition: none;
+  }
 }
-@media (forced-colors: active) {
-  .cat-card { border: 1px solid CanvasText; }
-}
-/* ==== end 010 categories masonry ==== */
+
+/* ==== end categories ==== */
 
 
 
@@ -1579,8 +1768,7 @@
 
 /* Pressed feedback for the hand-rolled pills on this page. */
 #new-arrivals button[class*="rounded-full"]:active,
-#accessories a[class*="rounded-full"]:active,
-#online-services a[class*="rounded-full"]:active {
+#accessories a[class*="rounded-full"]:active {
   transform: scale(0.97);
 }
 
@@ -2792,187 +2980,3 @@
 /* ==== end 018 homepage hero ==== */
 
 /* Online services: visual taxonomy first, supporting copy second. */
-.online-services-heading {
-  max-width: 34rem;
-}
-.online-services-visual {
-  position: relative;
-  isolation: isolate;
-  display: flex;
-  min-height: 27rem;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
-  border: 1px solid rgba(100, 2, 17, 0.2);
-  border-radius: 1.65rem;
-  padding: clamp(1.1rem, 3vw, 2rem);
-  background: #f6efe4;
-  box-shadow: 0 24px 64px -38px rgba(63, 0, 12, 0.42);
-}
-.online-services-visual__image,
-.online-services-visual__wash {
-  position: absolute;
-  z-index: -1;
-  inset: 0;
-}
-.online-services-visual__image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  object-position: 55% center;
-}
-.online-services-visual__wash {
-  background: linear-gradient(100deg, rgba(248, 244, 236, 0.93) 0%, rgba(248, 244, 236, 0.8) 49%, rgba(248, 244, 236, 0.42) 100%);
-}
-.online-services-visual__header,
-.online-services-visual__footer {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-}
-.online-services-visual__header {
-  color: #690013;
-  font: 700 0.67rem/1 var(--font-mono, monospace);
-  letter-spacing: 0.13em;
-}
-.online-services-visual__status {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.45rem;
-  border: 1px solid rgba(100, 2, 17, 0.15);
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.7);
-  padding: 0.55rem 0.75rem;
-  color: #54000f;
-  font: 600 0.72rem/1 var(--font-sans, sans-serif);
-  letter-spacing: 0;
-}
-.online-services-visual__status i {
-  width: 0.42rem;
-  height: 0.42rem;
-  border-radius: 50%;
-  background: #9b5a29;
-  box-shadow: 0 0 0 3px rgba(155, 90, 41, 0.12);
-}
-.online-services-tiles {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.7rem;
-  margin-block: 2.5rem;
-}
-.online-services-tile {
-  position: relative;
-  display: flex;
-  min-width: 0;
-  min-height: 6.35rem;
-  align-items: center;
-  gap: 0.7rem;
-  border: 1px solid rgba(100, 2, 17, 0.13);
-  border-radius: 1rem;
-  background: rgba(255, 253, 249, 0.87);
-  padding: 0.8rem;
-  color: #1e1113;
-  box-shadow: 0 10px 24px -20px rgba(48, 0, 9, 0.5);
-  backdrop-filter: blur(8px);
-  transition: transform 220ms ease, border-color 220ms ease, background-color 220ms ease;
-}
-.online-services-tile:hover {
-  transform: translateY(-3px);
-  border-color: rgba(100, 2, 17, 0.38);
-  background: #fff;
-}
-.online-services-tile__icon {
-  display: grid;
-  width: 2.65rem;
-  height: 2.65rem;
-  flex: 0 0 auto;
-  place-items: center;
-  border-radius: 0.82rem;
-  background: #6a0015;
-  color: #f3dfbd;
-}
-.online-services-tile__icon svg {
-  width: 1.25rem;
-  height: 1.25rem;
-  stroke-width: 1.7;
-}
-.online-services-tile__copy {
-  display: grid;
-  min-width: 0;
-  gap: 0.3rem;
-}
-.online-services-tile__copy strong {
-  color: #31000a;
-  font-size: 0.88rem;
-  font-weight: 800;
-  line-height: 1.35;
-}
-.online-services-tile__copy small {
-  color: rgba(35, 17, 20, 0.72);
-  font-size: 0.68rem;
-  line-height: 1.5;
-}
-.online-services-tile__index {
-  position: absolute;
-  top: 0.55rem;
-  inset-inline-end: 0.65rem;
-  color: rgba(100, 2, 17, 0.5);
-  font: 600 0.58rem/1 var(--font-mono, monospace);
-}
-.online-services-visual__footer {
-  min-height: 44px;
-  border-top: 1px solid rgba(100, 2, 17, 0.2);
-  padding-top: 0.9rem;
-  color: #600013;
-  font-size: 0.78rem;
-  font-weight: 750;
-}
-.online-services-visual__footer svg {
-  width: 1rem;
-  height: 1rem;
-  transition: transform 180ms ease;
-}
-.online-services-visual__footer:hover svg {
-  transform: translateX(-3px);
-}
-@media (max-width: 639px) {
-  .online-services-visual {
-    /* The desktop 16:10 ratio combined with the phone's 24rem min-height
-       forced this card to 614px wide at 390px, widening the whole RTL page. */
-    width: 100%;
-    max-width: 100%;
-    aspect-ratio: auto;
-    min-height: 24rem;
-    border-radius: 1.2rem;
-    padding: 1rem;
-  }
-  .online-services-tiles {
-    gap: 0.55rem;
-    margin-block: 2rem;
-  }
-  .online-services-tile {
-    min-height: 6rem;
-    gap: 0.55rem;
-    border-radius: 0.85rem;
-    padding: 0.65rem;
-  }
-  .online-services-tile__icon {
-    width: 2.25rem;
-    height: 2.25rem;
-    border-radius: 0.7rem;
-  }
-  .online-services-tile__icon svg {
-    width: 1.08rem;
-    height: 1.08rem;
-  }
-  .online-services-tile__copy strong { font-size: 0.78rem; }
-  .online-services-tile__copy small { font-size: 0.62rem; }
-}
-@media (prefers-reduced-motion: reduce) {
-  .online-services-tile,
-  .online-services-visual__footer svg {
-    transition: none;
-  }
-  .online-services-tile:hover { transform: none; }
-}

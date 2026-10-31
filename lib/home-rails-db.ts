@@ -1,6 +1,6 @@
 import { hasStudioPhoto, queryDiscountedRailProducts, queryProducts } from "@/lib/catalog-db";
 import { findProductBySlug } from "@/lib/catalog";
-import { isPurchasable, splitProductName } from "@/lib/product-identity";
+import { isPurchasable, modelKey } from "@/lib/product-identity";
 import mirroredImages from "@/data/catalog-images.json";
 
 const catalogImageMirror = mirroredImages as Record<string, string>;
@@ -40,11 +40,6 @@ export type RailProduct = {
     imageUrl: string | null;
   }>;
 };
-
-function modelKey(name: string) {
-  const { model } = splitProductName(name);
-  return (model ?? name).toLowerCase().replace(/\b[45]g\b/g, "").replace(/\s+/g, " ").trim();
-}
 
 /** Twelve distinct models the shop can actually sell, studio photography first, then newest. */
 export async function homepageProductsRail(): Promise<RailProduct[]> {

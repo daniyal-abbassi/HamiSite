@@ -12,8 +12,6 @@ import { DiscountedProducts } from "@/components/home/DiscountedProducts";
 import { AssemblyBand } from "@/components/home/AssemblyBand";
 import { BrandShowcase } from "@/components/home/BrandShowcase";
 import { CategoryHub } from "@/components/home/CategoryHub";
-import { B2bSection } from "@/components/home/B2bSection";
-import { OnlineServices } from "@/components/home/OnlineServices";
 import { Suspense } from "react";
 import { HomeRailSkeleton } from "@/components/home/HomeRailSkeleton";
 import "./home.css";
@@ -166,8 +164,6 @@ export default function HomePage() {
       <Suspense fallback={null}>
         <BrandShowcase />
       </Suspense>
-      <OnlineServices />
-      <B2bSection />
       <AssemblyBand />
     </>
   );

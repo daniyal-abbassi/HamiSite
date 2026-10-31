@@ -307,6 +307,12 @@ export async function findProductSlugById(id: number) {
   return (await prisma.product.findUnique({ where: { id }, select: { slug: true } }))?.slug ?? null;
 }
 
+/** Every product with its kind, which the serialized shape does not carry. */
+export async function productsWithKind() {
+  const records = await prisma.product.findMany({ include: productRelations });
+  return records.map((record) => ({ kind: record.kind, product: serializeProduct(record, true) }));
+}
+
 export async function countProductsByKind(): Promise<Record<string, number>> {
   const groups = await prisma.product.groupBy({ by: ["kind"], _count: { _all: true } });
   return Object.fromEntries(groups.map((group) => [group.kind ?? "(none)", group._count._all]));
