@@ -43,12 +43,17 @@ export function AssemblyMotion({ children }: { children: ReactNode }) {
       pieces.forEach((piece, index) => {
         const scatter = SCATTER[index % SCATTER.length]!;
         // Offsets are layout boxes, untouched by the transform, so these hold across a refresh.
+        // GSAP re-reads them while reverting, by which time a navigation has detached the piece.
+        let lastSeat = { x: 0, y: 0 };
         const seat = () => {
-          const panel = piece.offsetParent as HTMLElement;
-          return {
-            x: panel.offsetLeft + piece.offsetLeft + piece.offsetWidth / 2,
-            y: panel.offsetTop + piece.offsetTop + piece.offsetHeight / 2,
-          };
+          const panel = piece.offsetParent;
+          if (panel instanceof HTMLElement) {
+            lastSeat = {
+              x: panel.offsetLeft + piece.offsetLeft + piece.offsetWidth / 2,
+              y: panel.offsetTop + piece.offsetTop + piece.offsetHeight / 2,
+            };
+          }
+          return lastSeat;
         };
         timeline.from(piece, {
           x: () => (scatter.x * window.innerWidth) / 100 - seat().x,
