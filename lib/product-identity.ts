@@ -216,7 +216,7 @@ export function splitProductName(name: string): ProductNameParts {
 /** One key per model, so storage and network configurations collapse into a single shelf slot. */
 export function modelKey(name: string): string {
   const { model } = splitProductName(name);
-  return (model ?? name).toLowerCase().replace(/\b[45]g\b/g, "").replace(/\s+/g, " ").trim();
+  return (model ?? name).toLowerCase().replace(/\b[45]g\b/g, "").replace(/[\s()\-–|،,]+$/, "").replace(/\s+/g, " ").trim();
 }
 
 /* ------------------------------------------------------------------------- *

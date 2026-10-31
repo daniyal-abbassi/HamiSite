@@ -26,6 +26,7 @@
  * did so silently — which is why the guard is the acceptance test rather than a comment.
  */
 
+import { unstable_cache } from "next/cache";
 import { categorySubtreeCounts, countProductsByKind, hasStudioPhoto, listCategories, productsWithKind } from "@/lib/catalog-db";
 import { isPlaceholderImage, resolveProductImage } from "@/lib/product-images";
 import { isPurchasable, modelKey, splitProductName } from "@/lib/product-identity";
@@ -268,3 +269,28 @@ export async function departmentShelves(): Promise<DepartmentShelf[]> {
     return { ...department, products };
   });
 }
+
+export type CatalogMapDepartment = {
+  label: string;
+  href: string;
+  /** Null unless the destination really holds the whole department. */
+  count: number | null;
+  products: Array<{ title: string; href: string }>;
+};
+
+const MAP_PRODUCTS = 6;
+
+/** The header's site map. It renders on every page, so it reads the catalogue at most every five minutes. */
+export const catalogMap = unstable_cache(
+  async (): Promise<CatalogMapDepartment[]> => {
+    const shelves = await departmentShelves();
+    return shelves.map((department) => ({
+      label: department.label,
+      href: department.href,
+      count: department.showsCount ? department.reachableCount : null,
+      products: department.products.slice(0, MAP_PRODUCTS).map(({ title, href }) => ({ title, href })),
+    }));
+  },
+  ["catalog-map"],
+  { revalidate: 300 },
+);

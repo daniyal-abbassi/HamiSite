@@ -156,12 +156,6 @@
     color: rgb(255 255 255 / 95%);
   }
 
-  /* Bare white category trigger: the closed glass pill duplicates a surface
-     that is already solid. The open panel keeps its glass presentation. */
-  .site-header-glass .site-header-category > div:first-child {
-    display: none;
-  }
-
   /* The mockup spreads the four actions across the bar's left half. */
   .site-header-glass > nav > .ms-auto {
     gap: 1.25rem;
@@ -260,5 +254,200 @@
     background: #350713;
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
+  }
+}
+
+/* ---------- catalog map: a shutter lowered over the page ---------- */
+.catalog-map-trigger {
+  display: grid;
+  inline-size: 2.75rem;
+  block-size: 2.75rem;
+  place-items: center;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: rgb(255 255 255 / 95%);
+  cursor: pointer;
+}
+
+.catalog-map-trigger svg {
+  inline-size: 1.25rem;
+  block-size: 1.25rem;
+}
+
+.catalog-map-trigger:focus-visible {
+  outline: 2px solid #f8ecc9;
+  outline-offset: -2px;
+  border-radius: 50%;
+}
+
+.catalog-map__scrim {
+  position: fixed;
+  z-index: 48;
+  inset: 0;
+  background: rgb(16 2 6 / 0%);
+  transition: background-color 320ms ease;
+}
+
+.catalog-map.is-lowered .catalog-map__scrim {
+  background: rgb(16 2 6 / 55%);
+}
+
+/* Sits under the header, so the bar stays in place and the panel unrolls from behind it. */
+.catalog-map__panel {
+  position: fixed;
+  z-index: 49;
+  inset-block-start: var(--map-top, 0);
+  inset-inline: 0;
+  max-block-size: calc(100dvh - var(--map-top, 0px) - 6rem);
+  padding-block-end: 0.25rem;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  border-block-end: 1px solid rgb(229 211 179 / 35%);
+  border-end-start-radius: 1.5rem;
+  border-end-end-radius: 1.5rem;
+  background: #2a050d;
+  color: #fbf4eb;
+  clip-path: inset(0 0 100% 0);
+  transition: clip-path 320ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.catalog-map.is-lowered .catalog-map__panel {
+  clip-path: inset(0);
+}
+
+.catalog-map__panel > ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.catalog-map__row + .catalog-map__row {
+  border-block-start: 1px solid rgb(229 211 179 / 14%);
+}
+
+.catalog-map__row > button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  inline-size: 100%;
+  min-block-size: 3rem;
+  padding-inline: 1.25rem;
+  border: 0;
+  background: transparent;
+  color: #fffaf3;
+  cursor: pointer;
+  text-align: start;
+}
+
+.catalog-map__row > button span {
+  font-size: var(--type-support);
+  font-weight: 700;
+  line-height: 1.4;
+}
+
+.catalog-map__row > button small {
+  color: rgb(251 244 235 / 62%);
+  font-size: var(--type-caption);
+}
+
+.catalog-map__row > button svg {
+  flex: 0 0 auto;
+  inline-size: 1.125rem;
+  block-size: 1.125rem;
+  margin-inline-start: auto;
+  color: #e5d3b3;
+  transition: transform 240ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.catalog-map__row.is-expanded > button svg {
+  transform: rotate(180deg);
+}
+
+.catalog-map__row.is-expanded > button span {
+  color: #e5d3b3;
+}
+
+.catalog-map__fold {
+  display: grid;
+  grid-template-rows: 0fr;
+  visibility: hidden;
+  transition: grid-template-rows 240ms cubic-bezier(0.22, 1, 0.36, 1), visibility 0s linear 240ms;
+}
+
+.catalog-map__row.is-expanded .catalog-map__fold {
+  grid-template-rows: 1fr;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.catalog-map__fold > div {
+  min-block-size: 0;
+  overflow: hidden;
+}
+
+.catalog-map__links {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem;
+  padding: 0.25rem 1.25rem 0.5rem;
+}
+
+.catalog-map__links a {
+  display: flex;
+  align-items: center;
+  min-inline-size: 0;
+  min-block-size: 2.75rem;
+  padding-inline: 0.75rem;
+  border-radius: 12px;
+  background: rgb(229 211 179 / 9%);
+  color: #fbf4eb;
+  font-size: var(--type-caption);
+  line-height: 1.4;
+  text-decoration: none;
+}
+
+.catalog-map__links bdi {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.catalog-map__enter {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-block-size: 2.75rem;
+  padding-inline: 1.25rem;
+  color: #e5d3b3;
+  font-size: var(--type-caption);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.catalog-map__enter svg {
+  inline-size: 1rem;
+  block-size: 1rem;
+}
+
+.catalog-map__enter--all {
+  justify-content: center;
+  border-block-start: 1px solid rgb(229 211 179 / 22%);
+  font-size: var(--type-label);
+}
+
+.catalog-map__panel a:focus-visible,
+.catalog-map__panel button:focus-visible {
+  outline: 2px solid #f8ecc9;
+  outline-offset: -2px;
+  border-radius: 12px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .catalog-map__scrim,
+  .catalog-map__panel,
+  .catalog-map__fold,
+  .catalog-map__row > button svg {
+    transition: none;
   }
 }

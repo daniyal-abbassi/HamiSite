@@ -89,6 +89,50 @@ test("reduced motion gets the finished arch in normal flow", async ({ page }) =>
   await page.waitForLoadState("networkidle");
 });
 
+test("the header map lowers under the bar and every row opens", async ({ page }) => {
+  await page.setViewportSize({ width: 384, height: 645 });
+  await page.goto("/");
+  const trigger = page.locator(".catalog-map-trigger");
+  await trigger.click();
+  const map = page.getByRole("navigation", { name: "نقشه فروشگاه" });
+  await expect(map.locator(".catalog-map__row")).toHaveCount(10);
+  await expect.poll(() => map.evaluate((node) => getComputedStyle(node).clipPath)).toBe("inset(0px)");
+
+  const box = (await map.boundingBox())!;
+  expect(box.height).toBeLessThan(645 - box.y);
+
+  const rows = map.locator(".catalog-map__row > button");
+  for (let index = 0; index < 10; index += 1) {
+    await rows.nth(index).click();
+    await expect(rows.nth(index)).toHaveAttribute("aria-expanded", "true");
+    await expect(map.locator(".catalog-map__row").nth(index).locator("a").first()).toBeVisible();
+  }
+
+  await page.keyboard.press("Escape");
+  await expect(map).toBeHidden();
+  await expect(trigger).toBeFocused();
+  await page.waitForLoadState("networkidle");
+});
+
+test("leaving the homepage through the map raises no runtime error", async ({ page }) => {
+  const failures: string[] = [];
+  page.on("pageerror", (error) => failures.push(error.message));
+  await page.setViewportSize({ width: 384, height: 645 });
+
+  for (const row of [0, 1, 2]) {
+    await page.goto("/");
+    await page.locator(".catalog-map-trigger").click();
+    const map = page.getByRole("navigation", { name: "نقشه فروشگاه" });
+    await map.locator(".catalog-map__row > button").nth(row).click();
+    await map.locator(".catalog-map__row").nth(row).locator("a").first().click();
+    await expect(page).not.toHaveURL(/\/$/);
+    await expect(map).toBeHidden();
+    await expect.poll(() => page.evaluate(() => document.body.style.overflow)).not.toBe("hidden");
+  }
+
+  expect(failures).toEqual([]);
+});
+
 test("desktop ticker is a compact pill whose marquee fills the bar", async ({ page }) => {
   await page.setViewportSize({ width: 1600, height: 752 });
   await page.goto("/");

@@ -7,7 +7,19 @@ import { ScrollSmooth } from "@/components/atmosphere/ScrollSmooth";
 import { MainContent } from "@/components/layout/MainContent";
 import { AuthProvider } from "@/components/providers/AuthProvider";
 import { CartProvider } from "@/components/providers/CartProvider";
-export default function MainLayout({ children }: { children: React.ReactNode }) {
+import { catalogMap, type CatalogMapDepartment } from "@/lib/category-departments-db";
+/** A navigation aid must never take a page down with it. */
+async function loadCatalogMap(): Promise<CatalogMapDepartment[]> {
+  try {
+    return await catalogMap();
+  } catch (error) {
+    console.warn("catalogMap: unavailable, the map opens with its brand links only", error);
+    return [];
+  }
+}
+
+export default async function MainLayout({ children }: { children: React.ReactNode }) {
+  const departments = await loadCatalogMap();
   return (
     <AuthProvider>
       {/* CartProvider depends on AuthProvider: the server cart API is withAuth */}
@@ -28,7 +40,7 @@ export default function MainLayout({ children }: { children: React.ReactNode }) 
               `.gradient-blur`, a fixed blurred scrim whose only job was to soften content
               passing under a header that had its own opaque ground. */}
           <PageGround />
-          <Header />
+          <Header catalogMap={departments} />
           {/* The credentials marquee used to sit here and carried the padding
               that cleared the fixed header island. With it gone that clearance
               moves onto <main>, or the first section slides under the nav. */}

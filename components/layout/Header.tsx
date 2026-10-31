@@ -12,6 +12,7 @@ import SmoothDropdown from "@/components/smooth-dropdown";
 import hamiWordmark from "@/public/brand/قسمت-فارسی-لوگو-زمینه-سفید.png";
 import hamiMarkAlpha from "@/public/brand/hami-mark-alpha.png";
 import hamiWordmarkFa from "@/public/brand/hami-wordmark-fa.png";
+import type { CatalogMapDepartment } from "@/lib/category-departments-db";
 import { cn } from "@/lib/utils";
 import { nextHeaderScrollState, type HeaderScrollState } from "./header-scroll";
 import "./header-glass.css";
@@ -27,7 +28,7 @@ const navItems: PillNavItem[] = [
  *   border that cleanly masks content scrolling beneath it, preventing any
  *   overlapping lines, text, or ghost borders.
  */
-export function Header() {
+export function Header({ catalogMap = [] }: { catalogMap?: CatalogMapDepartment[] }) {
   const [scrolled, setScrolled] = useState(false);
   const [visible, setVisible] = useState(true);
   const scrollState = useRef<HeaderScrollState>({ lastY: 0, travel: 0, visible: true });
@@ -122,7 +123,7 @@ export function Header() {
         {/* Compact utilities take only the space their controls need, leaving
             the brand and navigation clear at phone and desktop widths. */}
         <div className="ms-auto flex min-w-0 shrink-0 items-center gap-1 md:gap-2">
-          <DiscoverButton />
+          <DiscoverButton catalogMap={catalogMap} />
 
           {/*
            * Visible at every width now. It was `hidden … md:flex`, and `UserMenu` is

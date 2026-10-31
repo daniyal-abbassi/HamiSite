@@ -2,11 +2,12 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 import { motion } from "motion/react";
-import { Menu, Search, X } from "lucide-react";
+import { Search, X } from "lucide-react";
+import { CatalogMap } from "@/components/layout/CatalogMap";
 import { brandHref, brandSlugByName } from "@/lib/content/home";
-import { GlassMenu, type GlassMenuItem } from "@/components/ui/liquid-glass";
+import type { CatalogMapDepartment } from "@/lib/category-departments-db";
 
 const TABS = [
   {
@@ -36,16 +37,14 @@ const TABS = [
 ] as const;
 
 const spring = { type: "spring" as const, damping: 24, stiffness: 260, mass: 0.9 };
-const mobileItems: GlassMenuItem[] = TABS.map(({ id, label }) => ({ id, label }));
+const mapBrands = TABS.map(({ label, href }) => ({ label, href }));
 
 /** Animated one-row search and category toolbar for the navbar. */
-export default function DiscoverButton() {
+export default function DiscoverButton({ catalogMap }: { catalogMap: CatalogMapDepartment[] }) {
   const pathname = usePathname();
-  const router = useRouter();
   const [activeTab, setActiveTab] = useState<(typeof TABS)[number]["id"]>(TABS[0].id);
   const [isSearching, setIsSearching] = useState(false);
   const [isSearchPending, setIsSearchPending] = useState(false);
-  const [isMenuPending, setIsMenuPending] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const routeTab = TABS.find((tab) => pathname === tab.href || pathname.startsWith(`${tab.href}/`));
 
@@ -175,7 +174,7 @@ export default function DiscoverButton() {
         </motion.div>
       </motion.div>
 
-      <div className="relative sm:hidden" aria-busy={isMenuPending ? "true" : undefined}>
+      <div className="relative sm:hidden">
         {isSearching ? (
           <button
             type="button"
@@ -186,22 +185,7 @@ export default function DiscoverButton() {
             <X className="size-5" aria-hidden="true" />
           </button>
         ) : (
-          <GlassMenu
-            items={mobileItems}
-            label="دسته‌بندی‌های گوشی"
-            triggerIcon={<Menu className="size-5 text-white/95" strokeWidth={1.8} />}
-            expandDirection="down"
-            pillHeight={44}
-            className="extend-touch-target site-header-category"
-            transparency={0.72}
-            onSelect={(id) => {
-              const tab = TABS.find((item) => item.id === id);
-              if (!tab) return;
-              setActiveTab(tab.id);
-              setIsMenuPending(true);
-              router.push(tab.href);
-            }}
-          />
+          <CatalogMap departments={catalogMap} brands={mapBrands} />
         )}
       </div>
     </div>
