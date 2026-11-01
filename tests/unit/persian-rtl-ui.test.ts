@@ -76,12 +76,10 @@ describe("Persian RTL UI Standards (037)", () => {
   });
 
   describe("Form Bidi Controls", () => {
-    it("enforces dir='ltr' on password fields in LoginForm and RegisterForm", () => {
-      const login = readFileSync("components/auth/LoginForm.tsx", "utf-8");
-      expect(login).toMatch(/id="password"[\s\S]*?dir="ltr"/);
-
-      const register = readFileSync("components/auth/RegisterForm.tsx", "utf-8");
-      expect(register).toMatch(/id="password"[\s\S]*?dir="ltr"/);
+    it("enforces dir='ltr' on the password field in StaffLoginForm", () => {
+      // Shoppers sign in by OTP now; the only password field is staff sign-in.
+      const staff = readFileSync("components/auth/StaffLoginForm.tsx", "utf-8");
+      expect(staff).toMatch(/id="staff-password"[\s\S]*?dir="ltr"/);
     });
 
     it("enforces dir='ltr' and inputMode='tel' on telephone inputs", () => {
