@@ -21,12 +21,14 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((category) => (subtreeCounts.get(category.id) ?? 0) > 0)
     .map((category) => ({
       url: formatCanonicalUrl(`/categories/${encodeURIComponent(category.slug)}`),
+      lastModified: category.updatedAt,
       changeFrequency: "weekly" as const,
       priority: 0.7,
     }));
 
   const brandEntries = brands.map((brand) => ({
     url: formatCanonicalUrl(`/brands/${encodeURIComponent(brand.slug)}`),
+    lastModified: brand.updatedAt,
     changeFrequency: "weekly" as const,
     priority: 0.6,
   }));

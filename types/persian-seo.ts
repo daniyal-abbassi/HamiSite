@@ -17,7 +17,6 @@ export interface PersianProductJsonLdInput {
   slug: string;
   images?: string[];
   price?: number;
-  currency?: "IRR" | "IRT";
   inStock?: boolean;
   brandName?: string;
   sku?: string;

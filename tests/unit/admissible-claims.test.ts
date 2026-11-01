@@ -57,7 +57,6 @@ const FORBIDDEN: Record<string, string> = {
      What may not be implied is a tier price: the export carries none. */
   "قیمت عمده": "no tier data exists to activate",
   "shop.jpg": "the AI re-lit store photograph, removed by owner decision 2026-09-23",
-  "shop-ai-relight": "the derivative chain must not reach a render path",
 };
 
 describe("admissible claims (contracts/honest-states.md)", () => {

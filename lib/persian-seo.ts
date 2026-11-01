@@ -54,6 +54,10 @@ export function buildProductJsonLd(input: PersianProductJsonLdInput): Record<str
     .filter((image) => image && !isPlaceholderImage(image))
     .map((image) => new URL(image, SITE_ORIGIN).toString());
   const hasOffer = typeof input.price === "number" && Number.isFinite(input.price) && input.price > 0;
+  // schema.org/Offer requires an ISO 4217 currency code — "IRT" (Toman) isn't
+  // one. The site prices and displays in Toman everywhere else, so convert
+  // only at this boundary: 1 Toman = 10 Rial.
+  const priceInRial = hasOffer ? Math.round((input.price as number) * 10) : undefined;
 
   return {
     "@context": "https://schema.org",
@@ -65,8 +69,8 @@ export function buildProductJsonLd(input: PersianProductJsonLdInput): Record<str
     ...(input.brandName ? { brand: { "@type": "Brand", name: input.brandName } } : {}),
     ...(hasOffer ? { offers: {
       "@type": "Offer",
-      priceCurrency: input.currency ?? "IRT",
-      price: input.price,
+      priceCurrency: "IRR",
+      price: priceInRial,
       ...(typeof input.inStock === "boolean" ? {
         availability: input.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       } : {}),

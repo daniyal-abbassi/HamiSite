@@ -9,6 +9,7 @@ import { pageMetadata } from "@/lib/seo-metadata";
 import { buildProductJsonLd, buildBreadcrumbJsonLd } from "@/lib/persian-seo";
 import { isPurchasable } from "@/lib/product-identity";
 import { escapeJsonLd } from "@/lib/security/xss";
+import "@/components/shop/product-detail.css";
 
 type Params = Promise<{ slug: string }>;
 
@@ -21,8 +22,12 @@ export async function generateMetadata({ params }: { params: Params }): Promise<
   const { slug } = await params;
   const product = await productForRequest(slug);
   if (!product) notFound();
+  // Use the pre-stripped plain-text description, not the raw HTML one — the
+  // HTML field's entities (e.g. &zwnj;) were already escaped once on import,
+  // so a second escape+strip pass here left the literal string "&zwnj;"
+  // visible in SERP snippets and social-share previews.
   const description =
-    product.description?.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim().slice(0, 155) ||
+    product.descriptionText?.replace(/\s+/g, " ").trim().slice(0, 155) ||
     `مشخصات و وضعیت عرضه ${product.name} در فروشگاه حامی همراه مشهد؛ برای استعلام قیمت روز و راهنمای خرید با فروشگاه تماس بگیرید.`;
   return pageMetadata({
     title: product.name,
@@ -53,8 +58,12 @@ export default async function ProductPage({ params }: { params: Params }) {
       product.name,
     slug: product.slug,
     images: product.images?.map((img) => img.url).filter(Boolean),
+    // Deliberately still gated on `purchasable`, not just "has a price > 0":
+    // ~56 catalog rows carry a known-placeholder price (see the import's own
+    // data_quality_warnings) and are not purchasable today. Widening this to
+    // show a price for any non-purchasable row would surface those fake
+    // prices to Google. Fix the underlying data first, then relax this gate.
     price: purchasable && product.price > 0 ? product.price : undefined,
-    currency: "IRT",
     inStock: purchasable ? true : undefined,
     brandName: product.brand?.name,
     sku: String(product.id),
@@ -78,7 +87,7 @@ export default async function ProductPage({ params }: { params: Params }) {
   const nonce = (await headers()).get("x-nonce") ?? undefined;
 
   return (
-    <div className="container py-10">
+    <div className="pdp">
       <script
         type="application/ld+json"
         nonce={nonce}
@@ -86,7 +95,9 @@ export default async function ProductPage({ params }: { params: Params }) {
         dangerouslySetInnerHTML={{ __html: escapeJsonLd(structuredData) }}
       />
       <ProductDetail product={product} generatedAt={generatedAt} />
-      <RelatedProducts productId={product.id} />
+      <div className="pdp-wrap pdp-related">
+        <RelatedProducts productId={product.id} />
+      </div>
     </div>
   );
 }

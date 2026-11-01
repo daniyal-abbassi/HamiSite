@@ -348,6 +348,7 @@ export async function listBrands() {
     id: brand.id, name: brand.name, slug: brand.slug, imageUrl: brand.imageUrl,
     imageAlt: brand.imageAlt, iconUrl: brand.iconUrl, seoTitle: brand.seoTitle,
     seoDescription: brand.seoDescription, productCount: brand._count.products,
+    updatedAt: brand.updatedAt,
   }));
 }
 
@@ -392,6 +393,6 @@ export async function listCategories() {
   return rows.map((category) => ({
     id: category.id, name: category.name, slug: category.slug, parentId: category.parentId,
     level: category.level, description: category.description, imageUrl: category.imageUrl,
-    imageAlt: category.imageAlt, iconUrl: category.iconUrl,
+    imageAlt: category.imageAlt, iconUrl: category.iconUrl, updatedAt: category.updatedAt,
   }));
 }
