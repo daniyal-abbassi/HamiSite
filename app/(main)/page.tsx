@@ -10,6 +10,7 @@ import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { discountedProductsRail, homepageProductsRail } from "@/lib/home-rails-db";
 import { DiscountedProducts } from "@/components/home/DiscountedProducts";
 import { AssemblyBand } from "@/components/home/AssemblyBand";
+import { BrandFilm } from "@/components/home/BrandFilm";
 import { BrandShowcase } from "@/components/home/BrandShowcase";
 import { CategoryHub } from "@/components/home/CategoryHub";
 import { Suspense } from "react";
@@ -155,6 +156,7 @@ export default function HomePage() {
       <Suspense fallback={<HomeRailSkeleton />}>
         <FeaturedProductsSection />
       </Suspense>
+      <BrandFilm />
       <Suspense fallback={null}>
         <DiscountedProductsSection />
       </Suspense>

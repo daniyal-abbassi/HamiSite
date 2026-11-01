@@ -61,7 +61,6 @@ describe("Persian SEO Utilities", () => {
         description: "گوشی موبایل اپل با حافظه ۲۵۶ گیگابایت",
         slug: "iphone-16-pro",
         price: 85_000_000,
-        currency: "IRT",
         inStock: true,
         brandName: "Apple",
         sku: "APL-IP16P-256",
@@ -74,8 +73,10 @@ describe("Persian SEO Utilities", () => {
 
       const offers = schema.offers as Record<string, unknown>;
       expect(offers["@type"]).toBe("Offer");
-      expect(offers.price).toBe(85_000_000);
-      expect(offers.priceCurrency).toBe("IRT");
+      // schema.org/Offer requires an ISO 4217 code; the input price is Toman
+      // (the site's display/storage unit), so the schema emits it as Rial (×10).
+      expect(offers.price).toBe(850_000_000);
+      expect(offers.priceCurrency).toBe("IRR");
       expect(offers.availability).toBe("https://schema.org/InStock");
     });
 

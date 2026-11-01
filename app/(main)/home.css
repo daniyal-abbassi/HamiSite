@@ -1812,10 +1812,13 @@
 /* Slides are exactly one stage wide with no gap: the active index is derived from that. */
 .fp__stage {
   display: flex;
+  gap: 0.75rem;
   margin-block-start: 1.25rem;
+  padding-inline: 1.25rem;
   overflow-x: auto;
   overscroll-behavior-x: contain;
   scroll-snap-type: x mandatory;
+  scroll-padding-inline-start: 1.25rem;
   scrollbar-width: none;
   -webkit-overflow-scrolling: touch;
 }
@@ -1831,7 +1834,10 @@
 
 .fp-slide {
   position: relative;
-  flex: 0 0 100%;
+  /* Deliberately short of 100%: the next card's edge peeks in on the left
+     (previous on the right, since this scroller is RTL) so a shopper sees
+     there's more to swipe through instead of a single full-bleed image. */
+  flex: 0 0 88%;
   min-inline-size: 0;
   scroll-snap-align: start;
 }
@@ -1843,6 +1849,7 @@
   display: block;
   aspect-ratio: 5 / 6;
   overflow: hidden;
+  border-radius: 20px;
   background: #f4efe7;
 }
 
@@ -2147,13 +2154,18 @@
     padding-inline: 2rem;
   }
 
+  /* Arrows carry the affordance here, so a slide takes the whole stage again. */
   .fp__stage {
+    gap: 0;
     margin-block-start: 2rem;
+    padding-inline: 0;
+    scroll-padding-inline-start: 0;
   }
 
   /* The photograph keeps the reading side; the offer answers it across the page. */
   .fp-slide {
     display: grid;
+    flex-basis: 100%;
     grid-template-columns: 500px minmax(0, 1fr);
     gap: 5rem;
     align-items: center;
@@ -2980,3 +2992,67 @@
 /* ==== end 018 homepage hero ==== */
 
 /* Online services: visual taxonomy first, supporting copy second. */
+
+/* ==== brand film ==== */
+
+/* The ground system builds `background-image` as an overlay layer over
+   `--section-ground-image`, so a section that wants no photograph still has to
+   name the layer — `none` keeps the declaration valid and leaves the dark
+   canvas on its own behind the film. */
+#brand-film {
+  --section-ground-image: none;
+}
+
+.brand-film {
+  padding-block: clamp(2.5rem, 6vw, 4.5rem);
+}
+
+.brand-film__frame {
+  position: relative;
+  inline-size: min(100% - 2rem, 1180px);
+  margin-inline: auto;
+  /* Holds the row's height before the poster decodes, so the rails below it
+     do not jump (CLS). */
+  aspect-ratio: 16 / 9;
+  overflow: hidden;
+  border: 1px solid rgb(229 211 179 / 14%);
+  border-radius: 1rem;
+  background-color: #0b0204;
+}
+
+.brand-film__video {
+  display: block;
+  inline-size: 100%;
+  block-size: 100%;
+  object-fit: cover;
+}
+
+.brand-film__toggle {
+  position: absolute;
+  inset-block-end: 0.75rem;
+  inset-inline-end: 0.75rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 44px;
+  block-size: 44px;
+  border: 1px solid rgb(229 211 179 / 24%);
+  border-radius: 999px;
+  background-color: rgb(11 2 4 / 72%);
+  color: #e5d3b3;
+}
+
+.brand-film__toggle:focus-visible {
+  outline: 2px solid #f8ecc9;
+  outline-offset: 3px;
+}
+
+/* Phones get the stacked cut, so the frame takes its 4:5 shape. The breakpoint
+   is the one BrandFilm picks the file on — they must agree, or `cover` crops
+   the film it was given. */
+@media (max-width: 767px) {
+  .brand-film__frame {
+    inline-size: min(100% - 2rem, 520px);
+    aspect-ratio: 4 / 5;
+  }
+}

@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Check, Copy, Minus, Phone, Plus, ShoppingBag } from "lucide-react";
+import { Check, ChevronDown, Copy, Minus, Phone, Plus, ShieldCheck, ShoppingBag, Store } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/components/providers/AuthProvider";
 import { useCart } from "@/components/providers/CartProvider";
@@ -11,8 +11,9 @@ import { ApiClientError } from "@/lib/api-client";
 import { apiErrorToFa } from "@/lib/api-error-fa";
 import { stockLabels } from "@/lib/content/shop";
 import { storeContact } from "@/lib/content/contact";
-import { storeWarranty } from "@/lib/content/verified-facts";
-import { compareAtOf, isPurchasable, unitPriceOf } from "@/lib/product-identity";
+import { storeWarranty, trustFacts } from "@/lib/content/verified-facts";
+import { compareAtOf, discountPercent, isPurchasable, splitProductName, unitPriceOf } from "@/lib/product-identity";
+import { swatchColor } from "@/lib/swatch-color";
 import { cn, toFaDigits } from "@/lib/utils";
 import { TomanPrice } from "@/components/ui/TomanPrice";
 import { DataCurrencyNote } from "@/components/shop/DataCurrencyNote";
@@ -33,6 +34,54 @@ import type { CatalogProduct } from "@/lib/catalog-db";
 
 type Props = { product: CatalogProduct; generatedAt: string | null };
 
+const STORE_FACT = trustFacts.find((fact) => fact.key === "store")?.label;
+/** Rows shown before «نمایش همه»; the rest stay in the markup for crawlers. */
+const SPEC_PREVIEW = 8;
+/** Below this length the description fits its preview and needs no toggle. */
+const STORY_PREVIEW_CHARS = 420;
+
+/** Colours as swatches: the name is read from the heading and each button's accessible name. */
+function ColorPicker({
+  label,
+  colors,
+  selected,
+  isSoldOut,
+  onPick,
+}: {
+  label: string;
+  colors: string[];
+  selected: string | null;
+  isSoldOut: (color: string) => boolean;
+  onPick: (color: string) => void;
+}) {
+  return (
+    <div className="pdp-option">
+      <p className="pdp-option__label">
+        {label}
+        {selected && <b>{selected}</b>}
+      </p>
+      <div className="pdp-swatches" role="group" aria-label={label}>
+        {colors.map((color) => {
+          const soldOut = isSoldOut(color);
+          return (
+            <button
+              key={color}
+              type="button"
+              title={color}
+              aria-label={`${label}: ${color}${soldOut ? "، ناموجود" : ""}`}
+              aria-pressed={selected === color}
+              data-unavailable={soldOut ? "" : undefined}
+              onClick={() => onPick(color)}
+            >
+              <span style={{ backgroundColor: swatchColor(color) }} aria-hidden="true" />
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  );
+}
+
 /**
  * The number as text a shopper can take with them. FR-039: the contact action MUST
  * work on a device where placing a call is not possible, and until this existed the
@@ -50,7 +99,7 @@ function CopyPhoneButton() {
         setCopied(true);
         window.setTimeout(() => setCopied(false), 1800);
       }}
-      className="inline-flex min-h-11 extend-touch-target items-center gap-1.5 rounded-xl border border-champagne/25 px-4 py-3 text-xs font-bold text-foreground/80 transition-colors hover:border-champagne/50"
+      className="pdp-copy"
     >
       {copied ? <Check className="size-4" /> : <Copy className="size-4" />}
       {copied ? "کپی شد" : "کپی شماره"}
@@ -85,6 +134,8 @@ export function ProductDetail({ product, generatedAt }: Props) {
   const [quantity, setQuantity] = useState(1);
   const [addState, setAddState] = useState<"idle" | "loading" | "done">("idle");
   const [actionError, setActionError] = useState<string | null>(null);
+  const [specsOpen, setSpecsOpen] = useState(false);
+  const [storyOpen, setStoryOpen] = useState(false);
 
   const selectedVariant = useMemo(() => {
     if (product.variants.length === 0) return null;
@@ -203,344 +254,335 @@ export function ProductDetail({ product, generatedAt }: Props) {
 
   function Chip({ active, children, onClick, label }: { active: boolean; children: React.ReactNode; onClick: () => void; label: string }) {
     return (
-      <button
-        type="button"
-        onClick={(e) => {
-          e.currentTarget.setAttribute("aria-busy", "true");
-          onClick();
-        }}
-        aria-pressed={active}
-        aria-label={label}
-        className={cn(
-          "rounded-full border px-4 py-2 min-h-11 extend-touch-target text-xs font-bold transition-all duration-fast",
-          active
-            ? "border-aqua bg-aqua/15 text-aqua shadow-glow-cta"
-            : "border-line bg-foreground/5 text-foreground/75 hover:border-aqua/40 hover:text-foreground",
-        )}
-      >
+      <button type="button" onClick={onClick} aria-pressed={active} aria-label={label} className="pdp-chip">
         {children}
       </button>
     );
   }
 
-  const variantTitle = [selectedVariant?.storage, selectedVariant?.color].filter(Boolean).join(" — ");
+  const colorSoldOut = (color: string) =>
+    !product.variants.some(
+      (variant) =>
+        (variant.color === color || variant.options?.some((option) => option.value === color))
+        && isPurchasable({ available: product.available, stockType: variant.stockType })
+        && !(variant.stockType === "limited" && (variant.stock ?? 0) <= 0),
+    );
+
+  const { label: nameLabel, model: nameModel, specs: nameSpecs } = splitProductName(product.name);
+  const off = unitPrice !== null ? discountPercent(unitPrice, compareAtPrice) : null;
+  const soldOutNow = stockType === "out_of_stock" || variantSoldOut;
+  const hasStory = Boolean(product.descriptionText?.trim());
+  const longStory = (product.descriptionText?.length ?? 0) > STORY_PREVIEW_CHARS;
 
   return (
-    /* pb clears the sticky mobile buy bar *and* the dock under it. Without it
-       the tags row at the bottom of this page sits behind both. */
-    <div className="pb-[calc(9.5rem+env(safe-area-inset-bottom))] md:pb-0">
-      {/* Breadcrumb */}
-      <nav aria-label="مسیر صفحه" className="type-label mb-6 flex flex-wrap items-center gap-1.5 text-muted-foreground/70">
-        <Link href="/" className="inline-flex min-h-11 items-center transition-colors hover:text-aqua">خانه</Link>
-        <span aria-hidden="true">/</span>
-        <Link href="/shop" className="inline-flex min-h-11 items-center transition-colors hover:text-aqua">فروشگاه</Link>
-        {product.mainCategory && (
-          <>
+    <>
+      <section className="pdp-stage">
+        <div className="pdp-wrap">
+          <nav aria-label="مسیر صفحه" className="pdp-crumbs">
+            <Link href="/">خانه</Link>
             <span aria-hidden="true">/</span>
-            <Link href={`/categories/${encodeURIComponent(product.mainCategory.slug)}`} className="inline-flex min-h-11 items-center transition-colors hover:text-aqua">
-              {product.mainCategory.name}
-            </Link>
-          </>
-        )}
-        <span aria-hidden="true">/</span>
-        <span className="text-foreground/85">{product.name}</span>
-      </nav>
+            <Link href="/shop">فروشگاه</Link>
+            {product.mainCategory && (
+              <>
+                <span aria-hidden="true">/</span>
+                <Link href={`/categories/${encodeURIComponent(product.mainCategory.slug)}`}>{product.mainCategory.name}</Link>
+              </>
+            )}
+            <span aria-hidden="true" className="pdp-crumbs__tail">/</span>
+            <span aria-current="page" className="pdp-crumbs__tail">{product.name}</span>
+          </nav>
 
-      <div className="grid gap-10 lg:grid-cols-2">
-        <ProductGallery product={product} variantImageUrl={selectedVariant?.imageUrl ?? null} />
+          <div className="pdp-hero">
+            <ProductGallery product={product} variantImageUrl={selectedVariant?.imageUrl ?? null} />
 
-        {/* Buy box */}
-        <div>
-          <span className="type-label tracking-normal text-champagne">
-            {product.brand?.name ?? "—"}
-            {product.englishName ? ` · ${product.englishName}` : ""}
-          </span>
-          <h1 className="type-page mt-2 text-foreground">{product.name}</h1>
-
-          <div className="mt-3 flex flex-wrap items-center gap-2 text-xs">
-            <span className={cn("inline-flex items-center gap-1.5 rounded-full border border-champagne/20 bg-champagne/5 px-3 py-1", stockType === "out_of_stock" && "text-destructive")}>
-              <i className={cn("size-1.5 rounded-full", stockType === "out_of_stock" ? "bg-destructive" : "bg-emerald-400")} aria-hidden="true" />
-              {stockLabels[stockType] ?? "—"}
-            </span>
-            {/* Owner-confirmed 2026-09-23, and a storefront-wide fact: the export
-                holds no guarantee field, so this must not look per-product. The
-                «ضمانت اصالت ۱۰۰٪» badge that sat here asserted a percentage nobody
-                measured and came out with it. */}
-            <span className="rounded-full border border-champagne/20 bg-champagne/5 px-3 py-1 text-muted-foreground">
-              {storeWarranty.label}
-            </span>
-          </div>
-
-          <div className="mt-6 rounded-2xl glass-smoked border border-champagne/25 p-6 shadow-card">
-            <DataCurrencyNote generatedAt={generatedAt} className="type-label mb-3" />
-            {unitPrice !== null ? (
-              <div className="flex flex-wrap items-baseline gap-3">
-                {compareAtPrice != null && compareAtPrice > unitPrice && (
-                  <del className="type-label text-foreground/50"><TomanPrice amount={compareAtPrice} /></del>
-                )}
-                <TomanPrice as="strong" className="type-price text-champagne tracking-normal" amount={unitPrice * quantity} aria-live="polite" />
-                {quantity > 1 && (
-                  <span className="type-label text-muted-foreground">
-                    ({toFaDigits(quantity)} × <TomanPrice amount={unitPrice} />)
-                  </span>
-                )}
+            <div className="pdp-buy">
+              <div className="pdp-status">
+                <span className="pdp-pill" data-state={soldOutNow ? "out" : "in"}>
+                  <i aria-hidden="true" />
+                  {soldOutNow ? stockLabels.out_of_stock : stockLabels[stockType] ?? "—"}
+                </span>
+                {product.brand?.name && <span className="pdp-brand">{product.brand.name}</span>}
               </div>
-            ) : (
-              /* The audit found this line to be text plus an icon with no number
-                 and no link, which is a claim about a phone call rather than a way
-                 to make one. FR-039 asks for the latter. */
-              <a
-                href={storeContact.phoneHref}
-                className="inline-flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
-              >
-                <Phone className="size-4 text-aqua" />
-                برای استعلام قیمت تماس بگیرید
-                <b dir="ltr" className="font-mono text-xs font-bold text-champagne">
-                  {storeContact.phoneDisplay}
-                </b>
-              </a>
+
+              {/* The whole catalogue name stays in the heading; only its emphasis is split. */}
+              <h1 className="pdp-title">
+                {nameModel ? (
+                  <>
+                    <span className="pdp-title__label">{nameLabel} مدل</span>{" "}
+                    <span className="pdp-title__model"><bdi>{nameModel}</bdi></span>{" "}
+                    {nameSpecs && <span className="pdp-title__specs">{nameSpecs}</span>}
+                  </>
+                ) : (
+                  product.name
+                )}
+              </h1>
+
+              <div className="pdp-price">
+                {unitPrice !== null ? (
+                  <>
+                    {compareAtPrice != null && compareAtPrice > unitPrice && (
+                      <p className="pdp-price__was">
+                        <del><TomanPrice amount={compareAtPrice} /></del>
+                        {off != null && <b>٪{toFaDigits(off)} تخفیف</b>}
+                      </p>
+                    )}
+                    <TomanPrice as="strong" className="type-price tracking-normal" amount={unitPrice * quantity} aria-live="polite" />
+                    {quantity > 1 && (
+                      <p className="pdp-price__each">
+                        {toFaDigits(quantity)} × <TomanPrice amount={unitPrice} />
+                      </p>
+                    )}
+                  </>
+                ) : (
+                  /* The audit found this line to be text plus an icon with no number
+                     and no link, which is a claim about a phone call rather than a way
+                     to make one. FR-039 asks for the latter. */
+                  <a href={storeContact.phoneHref} className="pdp-price__call">
+                    <Phone className="size-4" aria-hidden="true" />
+                    برای استعلام قیمت تماس بگیرید
+                    <b dir="ltr">{storeContact.phoneDisplay}</b>
+                  </a>
+                )}
+                <DataCurrencyNote generatedAt={generatedAt} className="pdp-price__note" />
+              </div>
+
+              {/* Variant selection */}
+              {optionGroups.length > 0 && (
+                <div className="pdp-options">
+                  {optionGroups.map(([label, values]) =>
+                    label === "رنگ" ? (
+                      <ColorPicker
+                        key={label}
+                        label={label}
+                        colors={values}
+                        selected={selectedVariant?.options?.find((option) => option.label === label)?.value ?? null}
+                        isSoldOut={colorSoldOut}
+                        onPick={(value) => pickOption(label, value)}
+                      />
+                    ) : (
+                      <div key={label} className="pdp-option">
+                        <p className="pdp-option__label">{label}</p>
+                        {/*
+                          One marker per option group, not one per product: a product like
+                          347 carries three independent groups (دامنه/سرور/نوع), and each
+                          group asks its own one-of-N question. The shared component allows
+                          `value` to be null, so a group the current variant does not answer
+                          simply has no marker until it does.
+                        */}
+                        <LiquidSelection
+                          className="!gap-2"
+                          itemClassName="pdp-chip"
+                          value={selectedVariant?.options?.find((option) => option.label === label)?.value ?? null}
+                          announce="pressed"
+                          markerInset={4}
+                          onChange={(value) => pickOption(label, value)}
+                          items={values.map((value) => ({
+                            id: value,
+                            label: <span>{value}</span>,
+                            // `name`, not the visible text: the accessible name must stay
+                            // «دامنه: جیمیل» — group label plus value — byte-identical to
+                            // what the chip announced before the marker (SC-010). A bare
+                            // value would silently drop the group half of the name.
+                            name: `${label}: ${value}`,
+                          }))}
+                        />
+                      </div>
+                    ),
+                  )}
+                </div>
+              )}
+
+              {(colors.length > 0 || storages.length > 0) && optionGroups.length === 0 && (
+                <div className="pdp-options">
+                  {storages.length > 0 && (
+                    <div className="pdp-option">
+                      <p className="pdp-option__label">حافظه</p>
+                      <div className="flex flex-wrap gap-2">
+                        {storages.map((storage) => (
+                          <Chip key={storage} label={`حافظه ${storage}`} active={selectedVariant?.storage === storage} onClick={() => pickByStorage(storage)}>
+                            {storage}
+                          </Chip>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+                  {colors.length > 0 && (
+                    <ColorPicker
+                      label="رنگ"
+                      colors={colors}
+                      selected={selectedVariant?.color ?? null}
+                      isSoldOut={colorSoldOut}
+                      onPick={pickByColor}
+                    />
+                  )}
+                </div>
+              )}
+
+              {/* Quantity + the one action this record supports. An out-of-stock or
+                  call-for-price product gets the phone, not a dead button: FR-037
+                  asks for one unambiguous action per state and FR-039 for reaching a
+                  human in a single interaction, including where dialing is not
+                  possible — hence the copy control beside the tel: link. */}
+              {!purchasable && (
+                <div className="pdp-actions">
+                  <a href={storeContact.phoneHref} className="pdp-call">
+                    <Phone className="size-4" aria-hidden="true" />
+                    تماس برای اطلاع از موجودی
+                  </a>
+                  <CopyPhoneButton />
+                </div>
+              )}
+
+              {purchasable && (
+                <div className="pdp-actions">
+                  <div className="pdp-qty">
+                    <button
+                      type="button"
+                      aria-label="کاهش تعداد"
+                      disabled={quantity <= 1 || addState === "loading"}
+                      onClick={() => setQuantity((value) => Math.max(1, value - 1))}
+                    >
+                      <Minus className="size-4" aria-hidden="true" />
+                    </button>
+                    <span aria-live="polite">{toFaDigits(quantity)}</span>
+                    <button
+                      type="button"
+                      aria-label="افزایش تعداد"
+                      disabled={addState === "loading" || (maxQuantity !== null && quantity >= maxQuantity)}
+                      onClick={() => setQuantity((value) => value + 1)}
+                    >
+                      <Plus className="size-4" aria-hidden="true" />
+                    </button>
+                  </div>
+
+                  <Button
+                    size="lg"
+                    variant="oxblood"
+                    className="pdp-add"
+                    loading={addState === "loading"}
+                    disabled={addState === "done"}
+                    onClick={(e) => void handleAddToCart(e)}
+                  >
+                    {addState === "done" ? <Check className="size-5" /> : <ShoppingBag className="size-5" />}
+                    {addState === "done" ? "به سبد اضافه شد" : "افزودن به سبد خرید"}
+                  </Button>
+                </div>
+              )}
+
+              {maxQuantity !== null && maxQuantity > 0 && purchasable && (
+                <p className="pdp-hint">حداکثر {toFaDigits(maxQuantity)} عدد در انبار موجود است.</p>
+              )}
+
+              {/* The other half of T066: a choice has to say what it cost. Without this
+                  the sold-out colour simply loses its «حداکثر …» line, which a shopper
+                  can read as nothing having changed. */}
+              {variantSoldOut && (
+                <p className="pdp-hint" role="status">
+                  این انتخاب در انبار موجود نیست. انتخاب دیگری ببینید یا برای هماهنگی تماس بگیرید.
+                </p>
+              )}
+
+              {actionError && <p role="alert" className="pdp-error">{actionError}</p>}
+
+              {/* Owner-confirmed 2026-09-23, and a storefront-wide fact: the export
+                  holds no guarantee field, so this must not look per-product. */}
+              <ul className="pdp-assure" role="list">
+                <li><ShieldCheck aria-hidden="true" />{storeWarranty.label}</li>
+                {STORE_FACT && <li><Store aria-hidden="true" />{STORE_FACT}</li>}
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {(product.specs.length > 0 || hasStory || product.tags.length > 0) && (
+        <div className="pdp-wrap pdp-body">
+          <div className="pdp-details">
+            {/*
+             * Specifications. `product.specs` has carried name/value pairs for 166 of
+             * the 189 records and nothing on this page read them: the block that existed
+             * printed `product.analysis`, a field the seam never emits, so the section
+             * was permanently absent and FR-032 was unmet for the 166 while passing
+             * vacuously for the 23 that have none (FR-005).
+             */}
+            {product.specs.length > 0 && (
+              <section className="pdp-card pdp-specs" data-open={specsOpen}>
+                <h2>مشخصات</h2>
+                <dl>
+                  {product.specs.map((spec) => (
+                    <div key={`${spec.name}-${spec.value}`}>
+                      <dt>{spec.name}</dt>
+                      <dd><bdi>{spec.value}</bdi></dd>
+                    </div>
+                  ))}
+                </dl>
+                {product.specs.length > SPEC_PREVIEW && (
+                  <button type="button" className="pdp-more" aria-expanded={specsOpen} onClick={() => setSpecsOpen((open) => !open)}>
+                    {specsOpen ? "بستن" : `نمایش همه‌ی ${toFaDigits(product.specs.length)} مشخصه`}
+                    <ChevronDown aria-hidden="true" />
+                  </button>
+                )}
+              </section>
             )}
 
+            {hasStory && (
+              <section className="pdp-card pdp-story">
+                <h2>توضیحات محصول</h2>
+                {/* `descriptionText`, not `description`: the latter is the export's
+                   raw HTML, so 147 records were printing literal <p> tags and
+                   &zwnj; entities to shoppers. */}
+                <p data-open={storyOpen || !longStory}>{product.descriptionText}</p>
+                {longStory && (
+                  <button type="button" className="pdp-more" aria-expanded={storyOpen} onClick={() => setStoryOpen((open) => !open)}>
+                    {storyOpen ? "بستن" : "ادامه‌ی توضیحات"}
+                    <ChevronDown aria-hidden="true" />
+                  </button>
+                )}
+              </section>
+            )}
           </div>
 
-          {/* Variant selection */}
-          {optionGroups.length > 0 && (
-            <div className="mt-6 space-y-4">
-              {optionGroups.map(([label, values]) => (
-                <div key={label}>
-                  <p className="mb-2 type-label text-muted-foreground/70">{label}</p>
-                  {/*
-                    One marker per option group, not one per product: a product like
-                    347 carries three independent groups (دامنه/سرور/نوع), and each
-                    group asks its own one-of-N question. The shared component allows
-                    `value` to be null, so a group the current variant does not answer
-                    simply has no marker until it does.
-                  */}
-                  <LiquidSelection
-                    className="!gap-2"
-                    itemClassName="rounded-full border border-line bg-foreground/5 px-4 py-2 min-h-11 extend-touch-target text-xs font-bold hover:border-aqua/40"
-                    value={selectedVariant?.options?.find((option) => option.label === label)?.value ?? null}
-                    announce="pressed"
-                    markerInset={4}
-                    onChange={(value) => pickOption(label, value)}
-                    items={values.map((value) => ({
-                      id: value,
-                      label: <span>{value}</span>,
-                      // `name`, not the visible text: the accessible name must stay
-                      // «دامنه: جیمیل» — group label plus value — byte-identical to
-                      // what the chip announced before the marker (SC-010). A bare
-                      // value would silently drop the group half of the name.
-                      name: `${label}: ${value}`,
-                    }))}
-                  />
-                </div>
-              ))}
-            </div>
+          {product.tags.length > 0 && (
+            <ul className="pdp-tags" role="list" aria-label="برچسب‌ها">
+              {product.tags.map((tag) => <li key={tag}>{tag}</li>)}
+            </ul>
           )}
-
-          {(colors.length > 0 || storages.length > 0) && optionGroups.length === 0 && (
-            <div className="mt-6 space-y-4">
-              {storages.length > 0 && (
-                <div>
-                  <p className="mb-2 font-mono text-xs tracking-normal text-muted-foreground/70">حافظه</p>
-                  <div className="flex flex-wrap gap-2">
-                    {storages.map((storage) => (
-                      <Chip key={storage} label={`حافظه ${storage}`} active={selectedVariant?.storage === storage} onClick={() => pickByStorage(storage)}>
-                        {storage}
-                      </Chip>
-                    ))}
-                  </div>
-                </div>
-              )}
-              {colors.length > 0 && (
-                <div>
-                  <p className="mb-2 font-mono text-xs tracking-normal text-muted-foreground/70">رنگ</p>
-                  <div className="flex flex-wrap gap-2">
-                    {colors.map((color) => (
-                      <Chip key={color} label={`رنگ ${color}`} active={selectedVariant?.color === color} onClick={() => pickByColor(color)}>
-                        {color}
-                      </Chip>
-                    ))}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Quantity + the one action this record supports. An out-of-stock or
-              call-for-price product gets the phone, not a dead button: FR-037
-              asks for one unambiguous action per state and FR-039 for reaching a
-              human in a single interaction, including where dialing is not
-              possible — hence the copy control beside the tel: link. */}
-          {!purchasable && (
-            <div className="mt-7 flex flex-wrap items-center gap-3">
-              <a
-                href={storeContact.phoneHref}
-                className="inline-flex min-w-52 flex-1 items-center justify-center gap-2 rounded-xl bg-oxblood px-6 py-3 text-sm font-bold text-white transition-opacity hover:opacity-90"
-              >
-                <Phone className="size-4" />
-                تماس برای اطلاع از موجودی
-              </a>
-              <CopyPhoneButton />
-            </div>
-          )}
-
-          {purchasable && (
-          <div className="mt-7 flex flex-wrap items-center gap-3">
-            <div className="inline-flex items-center gap-1 rounded-full border border-line bg-ink/40 p-1.5">
-              <button
-                type="button"
-                aria-label="کاهش تعداد"
-                disabled={quantity <= 1 || addState === "loading"}
-                onClick={() => setQuantity((value) => Math.max(1, value - 1))}
-                className="grid size-11 place-items-center rounded-full text-foreground/75 transition-colors duration-fast hover:bg-foreground/10 disabled:opacity-40"
-              >
-                <Minus className="size-4" />
-              </button>
-                <span className="min-w-9 text-center font-sans text-base tabular-nums" aria-live="polite">
-                {toFaDigits(quantity)}
-              </span>
-              <button
-                type="button"
-                aria-label="افزایش تعداد"
-                disabled={addState === "loading" || (maxQuantity !== null && quantity >= maxQuantity)}
-                onClick={() => setQuantity((value) => value + 1)}
-                className="grid size-11 place-items-center rounded-full text-foreground/75 transition-colors duration-fast hover:bg-foreground/10 disabled:opacity-40"
-              >
-                <Plus className="size-4" />
-              </button>
-            </div>
-
-            <Button
-              size="lg"
-              className="min-w-52 flex-1"
-              loading={addState === "loading"}
-              disabled={!purchasable || addState === "done"}
-              onClick={(e) => void handleAddToCart(e)}
-            >
-              {addState === "done" ? (
-                <>
-                  <Check className="size-5" />
-                  به سبد اضافه شد
-                </>
-              ) : (
-                <>
-                  <ShoppingBag className="size-5" />
-                  {purchasable ? "افزودن به سبد خرید" : "ناموجود"}
-                </>
-              )}
-            </Button>
-          </div>
-          )}
-
-          {maxQuantity !== null && maxQuantity > 0 && purchasable && (
-            <p className="mt-2.5 text-xs text-muted-foreground/70">
-              حداکثر {toFaDigits(maxQuantity)} عدد در انبار موجود است.
-            </p>
-          )}
-
-          {/* The other half of T066: a choice has to say what it cost. Without this
-              the sold-out colour simply loses its «حداکثر …» line, which a shopper
-              can read as nothing having changed. */}
-          {variantSoldOut && (
-            <p className="mt-2.5 text-xs text-muted-foreground" role="status">
-              این انتخاب در انبار موجود نیست. انتخاب دیگری ببینید یا برای هماهنگی تماس بگیرید.
-            </p>
-          )}
-
-          {actionError && (
-            <p role="alert" className="mt-3 rounded-xl border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive">
-              {actionError}
-            </p>
-          )}
-
-        </div>
-      </div>
-
-      {/*
-       * Specifications. `product.specs` has carried name/value pairs for 166 of
-       * the 189 records and nothing on this page read them: the block that existed
-       * printed `product.analysis`, a field the seam never emits, so the section
-       * was permanently absent and FR-032 was unmet for the 166 while passing
-       * vacuously for the 23 that have none (FR-005).
-       */}
-      {product.specs.length > 0 && (
-        <section className="mt-12">
-          <h2 className="text-base font-black text-foreground">مشخصات</h2>
-          <div className="brand-hairline my-3.5" />
-          <dl className="grid gap-x-8 gap-y-0 sm:grid-cols-2">
-            {product.specs.map((spec) => (
-              <div key={`${spec.name}-${spec.value}`} className="flex items-baseline justify-between gap-4 border-b border-line/60 py-2.5">
-                <dt className="text-xs text-muted-foreground">{spec.name}</dt>
-                <dd className="text-xs font-bold text-foreground/85">{spec.value}</dd>
-              </div>
-            ))}
-          </dl>
-        </section>
-      )}
-
-      {/* Description / tags */}
-      <div className="mt-12 grid gap-6 lg:grid-cols-2">
-        {product.description && (
-          <section className="glass-smoked rounded-2xl p-7 border border-champagne/20 shadow-card">
-            <h2 className="text-base font-black text-foreground">توضیحات محصول</h2>
-            <div className="brand-hairline my-3.5" />
-            {/* `descriptionText`, not `description`: the latter is the export's
-               raw HTML, so 147 records were printing literal <p> tags and
-               &zwnj; entities to shoppers. */}
-            <p className="whitespace-pre-line text-sm leading-8 text-foreground/75">{product.descriptionText}</p>
-          </section>
-        )}
-      </div>
-
-      {product.tags.length > 0 && (
-        <div className="mt-8 flex flex-wrap items-center gap-2">
-          <span className="type-label tracking-normal text-champagne">برچسب‌ها:</span>
-          {product.tags.map((tag) => (
-            <span key={tag} className="rounded-full border border-champagne/15 bg-champagne/5 px-3 py-1 font-mono text-xs text-foreground/70">
-              {tag}
-            </span>
-          ))}
         </div>
       )}
 
-      {/* ---------------------------------------------------------------
-          Sticky buy bar — mobile only. Opaque, not glass: T074 took the
+      {/* Sticky buy bar — mobile only. Opaque, not glass: T074 took the
           backdrop-filter off it, and a bar that must be readable over any
           product photograph has no business being translucent. */}
-      <div className="fixed inset-x-0 bottom-[calc(4.75rem+env(safe-area-inset-bottom))] z-40 border-t border-champagne/25 bg-ink px-4 py-3 shadow-monolith md:hidden">
-        <div className="flex items-center gap-3">
-          <div className="min-w-0 flex-1">
-            {unitPrice !== null ? (
-              <>
-                <span className="block type-caption text-champagne/75">قیمت نهایی</span>
-                <TomanPrice as="strong" className="block truncate text-base font-semibold leading-tight text-champagne" amount={unitPrice * quantity} />
-              </>
-            ) : (
-              <b className="block text-sm font-black text-muted-foreground">تماس بگیرید</b>
-            )}
-          </div>
+      <div className="pdp-buybar">
+        <div className="pdp-buybar__price">
+          {unitPrice !== null ? (
+            <>
+              <span>قیمت نهایی</span>
+              <TomanPrice as="strong" amount={unitPrice * quantity} />
+            </>
+          ) : (
+            <b>تماس بگیرید</b>
+          )}
+        </div>
+        {purchasable ? (
           <Button
             size="lg"
-            className="h-12 min-w-[9.5rem] shrink-0"
+            variant="oxblood"
+            className="pdp-buybar__action"
             loading={addState === "loading"}
-            disabled={!purchasable || addState === "done"}
+            disabled={addState === "done"}
             onClick={(e) => void handleAddToCart(e)}
           >
-            {addState === "done" ? (
-              <>
-                <Check className="size-5" />
-                اضافه شد
-              </>
-            ) : (
-              <>
-                <ShoppingBag className="size-5" />
-                {purchasable ? "افزودن به سبد خرید" : "ناموجود"}
-              </>
-            )}
+            {addState === "done" ? <Check className="size-5" /> : <ShoppingBag className="size-5" />}
+            {addState === "done" ? "اضافه شد" : "افزودن به سبد"}
           </Button>
-        </div>
+        ) : (
+          <a href={storeContact.phoneHref} className="pdp-call pdp-buybar__action">
+            <Phone className="size-4" aria-hidden="true" />
+            تماس
+          </a>
+        )}
       </div>
-    </div>
+    </>
   );
 }

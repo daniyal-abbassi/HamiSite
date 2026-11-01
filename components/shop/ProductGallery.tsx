@@ -46,21 +46,22 @@ export function ProductGallery({ product, variantImageUrl }: { product: CatalogP
   const [isChanging, setIsChanging] = useState(false);
 
   return (
-    <div>
+    <div className="pdp-gallery">
       <div
-        className="pdp-plate relative aspect-square overflow-hidden rounded-3xl bg-contrastBackground border border-champagne/25 shadow-monolith"
+        className="pdp-plate relative aspect-square overflow-hidden"
         data-photo-plate=""
         aria-busy={isChanging ? "true" : undefined}
       >
-        {noImage && (
-          <span className="absolute end-4 top-4 z-20 rounded-full border border-champagne/25 bg-ink/80 px-3 py-1.5 font-mono text-xs text-foreground/75">
-            {PLACEHOLDER_LABEL}
+        {noImage && <span className="pdp-plate__tag">{PLACEHOLDER_LABEL}</span>}
+        {product.specialOffer && (
+          <span className="pdp-plate__offer">
+            <Sparkles className="size-3.5" aria-hidden="true" />
+            پیشنهاد ویژه
           </span>
         )}
-        {product.specialOffer && (
-          <span className="absolute start-4 top-4 z-10 inline-flex items-center gap-1.5 rounded-full border border-champagne/30 bg-oxblood px-3.5 py-1.5 font-mono text-xs tracking-[0.14em] text-champagne shadow-glow-oxblood">
-            <Sparkles className="size-3 text-champagne" />
-            SPECIAL OFFER
+        {shownViews.length > 1 && (
+          <span className="pdp-plate__count" aria-hidden="true">
+            {toFaDigits(current + 1)} / {toFaDigits(shownViews.length)}
           </span>
         )}
         {activeView && (
@@ -74,7 +75,7 @@ export function ProductGallery({ product, variantImageUrl }: { product: CatalogP
             }
             fill
             sizes="(min-width: 1024px) 40vw, 90vw"
-            className="object-contain p-8 mix-blend-multiply transition-transform duration-700 hover:scale-105"
+            className="object-contain p-8 mix-blend-multiply"
             priority
             unoptimized={!activeView.startsWith("/")}
             onLoad={() => setIsChanging(false)}
@@ -88,22 +89,18 @@ export function ProductGallery({ product, variantImageUrl }: { product: CatalogP
         )}
       </div>
 
-      {/*
-        * flex-wrap, not a scroll container: 22 thumbs measured 1626px wide inside a
-        * 360px viewport, which the page only survived because `body` clips the
-        * overflow — FR-041 asks for composition rather than clipping, and the row
-        * breaks the same way at every width on a desktop column half that wide.
-       */}
+      {/* One scrolling row: a record can hold 22 views, and wrapped they pushed the buy box a screen down. */}
       {shownViews.length > 1 && (
-        <div className="mt-3 flex flex-wrap items-center gap-2">
+        <div className="pdp-thumbs">
           <LiquidSelection
             className="!gap-2"
-            itemClassName="relative size-16 shrink-0 overflow-hidden !rounded-xl border border-line hover:border-champagne/50"
+            itemClassName="pdp-thumb"
+            noWrap
             value={shownViews[current]}
             announce="pressed"
             groupRole="group"
             label="نمای دیگر این محصول"
-            markerInset={4}
+            markerInset={2}
             onChange={(url) => {
               setIsChanging(true);
               setViewIndex(shownViews.indexOf(url));
@@ -121,17 +118,6 @@ export function ProductGallery({ product, variantImageUrl }: { product: CatalogP
               name: `نمای ${toFaDigits(index + 1)} از ${toFaDigits(shownViews.length)}`,
             }))}
           />
-          {/*
-            The counter cannot live inside the marker's row: the shared component
-            renders exactly its items and has no children slot, and the marker
-            measures itself against that row. It keeps its own line after the grid
-            instead of sitting after the last thumbnail — the one layout change on
-            this surface, measured in verification/surf-b-interaction.json (the
-            gallery's rows are identical to before; only the counter moved).
-          */}
-          <span className="ms-1 font-mono text-xs text-muted-foreground">
-            {toFaDigits(current + 1)} / {toFaDigits(shownViews.length)}
-          </span>
         </div>
       )}
     </div>

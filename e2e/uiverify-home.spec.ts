@@ -32,6 +32,78 @@ test("featured showcase thumbnails change the product on stage", async ({ page }
   await page.waitForLoadState("networkidle");
 });
 
+test("brand film reserves its row and fetches nothing until it is reached", async ({ page }) => {
+  await page.goto("/");
+  const video = page.locator("#brand-film video");
+  await expect(video).toHaveAttribute("poster", "/videos/banner-poster.webp");
+  await expect(video).toHaveAttribute("preload", "none");
+
+  // Below the fold it must still be still: nothing played, nothing downloaded.
+  expect(await video.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true);
+
+  // The row owns its height before the poster decodes, so the rails under it
+  // do not jump once the picture arrives.
+  const frame = (await page.locator(".brand-film__frame").boundingBox())!;
+  expect(Math.abs(frame.width / frame.height - 16 / 9)).toBeLessThan(0.02);
+  await page.waitForLoadState("networkidle");
+});
+
+test("brand film plays on arrival and the reader can stop it", async ({ page }) => {
+  await page.goto("/");
+  const video = page.locator("#brand-film video");
+  await video.scrollIntoViewIfNeeded();
+  await expect.poll(() => video.evaluate((node: HTMLVideoElement) => node.paused)).toBe(false);
+
+  const toggle = page.locator(".brand-film__toggle");
+  const box = (await toggle.boundingBox())!;
+  expect(box.width).toBeGreaterThanOrEqual(44);
+  expect(box.height).toBeGreaterThanOrEqual(44);
+
+  await toggle.click();
+  await expect.poll(() => video.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true);
+
+  // Scrolling back over it must not undo the reader's choice.
+  await page.locator("#top").scrollIntoViewIfNeeded();
+  await video.scrollIntoViewIfNeeded();
+  expect(await video.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true);
+
+  // Leave the element on one known frame so the archive is the same every run.
+  await video.evaluate((node: HTMLVideoElement) => {
+    node.currentTime = 4.3;
+  });
+  await page.waitForLoadState("networkidle");
+});
+
+test("phones get the stacked cut so the tagline stays readable", async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto("/");
+
+  const video = page.locator("#brand-film video");
+  await expect(video).toHaveAttribute("src", "/videos/banner-portrait.mp4");
+  await expect(video).toHaveAttribute("poster", "/videos/banner-portrait-poster.webp");
+
+  // The frame has to take the film's own shape, or `cover` crops the copy off.
+  const frame = (await page.locator(".brand-film__frame").boundingBox())!;
+  expect(Math.abs(frame.width / frame.height - 4 / 5)).toBeLessThan(0.02);
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth)).toBe(390);
+  await page.waitForLoadState("networkidle");
+});
+
+test("brand film stays still when the reader asked for less motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  const video = page.locator("#brand-film video");
+  await video.scrollIntoViewIfNeeded();
+
+  // Give it the time it would have needed to start, then confirm it did not.
+  await page.waitForTimeout(600);
+  expect(await video.evaluate((node: HTMLVideoElement) => node.paused)).toBe(true);
+
+  // The control is still there, so the film remains available on request.
+  await expect(page.locator(".brand-film__toggle")).toBeVisible();
+  await page.waitForLoadState("networkidle");
+});
+
 test("discounted offers keep every price in view on a narrow phone", async ({ page }) => {
   await page.setViewportSize({ width: 360, height: 800 });
   await page.goto("/");

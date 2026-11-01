@@ -87,6 +87,17 @@ export function TextMorph({
   const nextWord = values[nextIndex]!;
   const thresholdOffset = -MORPH_THRESHOLD * 0.46;
 
+  // The crossfade needs a same-sized placeholder and a preloaded "next word"
+  // layer sitting in the DOM alongside the current one. Rendering all three
+  // from the server leaves three real text nodes back to back with nothing
+  // between them — fine for sighted users (CSS hides the extra two), but a
+  // crawler reading raw HTML/the accessibility tree sees them concatenated
+  // (e.g. "تلفن همراهتلفن همراهساعت هوشمند"). Mount the extra layers only
+  // once on the client, after hydration: the first paint — and anything that
+  // reads static HTML — has exactly one word's worth of text here.
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
+
   const measureStage = useCallback(
     (target: "current" | "next", immediate = false) => {
       const stage = stageRef.current;
@@ -129,7 +140,9 @@ export function TextMorph({
       ? "none"
       : `width ${Math.max(160, morphDuration)}ms cubic-bezier(0.22, 1, 0.36, 1), height ${Math.max(160, morphDuration)}ms cubic-bezier(0.22, 1, 0.36, 1)`;
     measureStage("current", true);
-  }, [currentIndex, measureStage, morphDuration, reducedMotion, values]);
+    // `mounted` isn't read in the body, but the absolute-positioned layers
+    // this effect measures/sizes don't exist until it flips true — rerun then.
+  }, [currentIndex, measureStage, morphDuration, mounted, reducedMotion, values]);
 
   useEffect(() => {
     const currentLayer = currentLayerRef.current;
@@ -287,26 +300,32 @@ export function TextMorph({
         aria-hidden="true"
         className="relative block min-w-0 max-w-full select-none"
       >
-        {/* Both layers are absolute, so this holds the box until the script measures it. */}
-        <span className="invisible block w-max whitespace-pre">{currentWord}</span>
+        {/* Sizing placeholder and the preloaded "next word" layer are purely
+         * visual scaffolding for the crossfade — mount them client-side only
+         * (see `mounted` above) so static HTML exposes a single clean word. */}
+        {mounted && (
+          <span className="invisible block w-max whitespace-pre">{currentWord}</span>
+        )}
         <span
           ref={currentLayerRef}
-          className="absolute left-1/2 top-0 block w-max whitespace-pre"
-          style={{ transform: "translateX(-50%)", transformOrigin: "center" }}
+          className={cn("w-max whitespace-pre", mounted ? "absolute left-1/2 top-0 block" : "inline-block")}
+          style={mounted ? { transform: "translateX(-50%)", transformOrigin: "center" } : undefined}
         >
           {currentWord}
         </span>
-        <span
-          ref={nextLayerRef}
-          className="absolute left-1/2 top-0 block w-max whitespace-pre opacity-0"
-          style={{
-            filter: `blur(${MORPH_BLUR}px)`,
-            transform: "translateX(-50%) scale(0.992)",
-            transformOrigin: "center",
-          }}
-        >
-          {nextWord}
-        </span>
+        {mounted && (
+          <span
+            ref={nextLayerRef}
+            className="absolute left-1/2 top-0 block w-max whitespace-pre opacity-0"
+            style={{
+              filter: `blur(${MORPH_BLUR}px)`,
+              transform: "translateX(-50%) scale(0.992)",
+              transformOrigin: "center",
+            }}
+          >
+            {nextWord}
+          </span>
+        )}
       </span>
     </span>
   );

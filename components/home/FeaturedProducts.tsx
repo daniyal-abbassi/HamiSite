@@ -174,8 +174,13 @@ export function FeaturedProducts({ products }: { products: RailProduct[] }) {
       frame.current = 0;
       const element = stage.current;
       if (!element) return;
+      // Slides are narrower than the stage so the next one peeks in; measure the real step.
+      const [first, second] = element.children;
+      const step = first && second
+        ? Math.abs((first as HTMLElement).offsetLeft - (second as HTMLElement).offsetLeft)
+        : element.clientWidth;
       // scrollLeft is negative in an RTL scroller.
-      setActive(Math.round(Math.abs(element.scrollLeft) / element.clientWidth));
+      setActive(Math.round(Math.abs(element.scrollLeft) / step));
     });
   }, []);
 
@@ -195,7 +200,9 @@ export function FeaturedProducts({ products }: { products: RailProduct[] }) {
     const element = stage.current;
     const slide = element?.children[index];
     if (!element || !slide) return;
-    const offset = slide.getBoundingClientRect().left - element.getBoundingClientRect().left;
+    // Slides snap to the stage's inline start, which in RTL is its right edge inside the padding.
+    const inset = parseFloat(getComputedStyle(element).paddingInlineStart) || 0;
+    const offset = slide.getBoundingClientRect().right - (element.getBoundingClientRect().right - inset);
     // A long jump would otherwise sweep the shopper through every product in between.
     const behavior = Math.abs(index - active) === 1 ? smoothOrInstant() : "auto";
     element.scrollBy({ left: offset, behavior });
