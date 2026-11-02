@@ -3,19 +3,20 @@
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
 
-/* Two cuts of the same film. The wide one scales a 1920px-wide composition down
-   to roughly a phone's width, which leaves the tagline under about 11px; the
-   stacked cut carries the same copy at twice that size. */
+/* Two cuts of the same film. The wide one scaled to a phone's width leaves the
+   phone numbers near 8px, so narrow screens get the stacked cut, which carries
+   them at 20px. The posters are the film's final frame: a reader who asked for
+   less motion sees nothing else, so they have to hold the whole offer. */
 const WIDE = {
-  src: "/videos/banner.mp4",
-  poster: "/videos/banner-poster.webp",
+  src: "/videos/s26-ultra-hero.mp4",
+  poster: "/videos/s26-ultra-hero-poster.webp",
   width: 1920,
   height: 1080,
 };
 
 const STACKED = {
-  src: "/videos/banner-portrait.mp4",
-  poster: "/videos/banner-portrait-poster.webp",
+  src: "/videos/s26-ultra-hero-portrait.mp4",
+  poster: "/videos/s26-ultra-hero-portrait-poster.webp",
   width: 1080,
   height: 1350,
 };
@@ -100,8 +101,13 @@ export function BrandFilm() {
       aria-labelledby="brand-film-title"
     >
       <h2 id="brand-film-title" className="sr-only">
-        معرفی حامی همراه
+        گلکسی S26 اولترا
       </h2>
+      {/* Words inside a video reach neither screen readers nor search engines. */}
+      <p className="sr-only">
+        ۲۴۴ میلیون تومان. گارانتی امداد موبایل. رجیستر شده | دارای کد فعال‌سازی. سفارش از واتساپ: 09331214000 |
+        09153313001
+      </p>
 
       <div className="brand-film__frame">
         <video
@@ -121,7 +127,7 @@ export function BrandFilm() {
 
         <button type="button" className="brand-film__toggle" onClick={toggle}>
           {paused ? <Play aria-hidden="true" /> : <Pause aria-hidden="true" />}
-          <span className="sr-only">{paused ? "پخش ویدیوی معرفی" : "توقف ویدیوی معرفی"}</span>
+          <span className="sr-only">{paused ? "پخش ویدیوی گلکسی S26 اولترا" : "توقف ویدیوی گلکسی S26 اولترا"}</span>
         </button>
       </div>
     </section>

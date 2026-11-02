@@ -35,7 +35,7 @@ test("featured showcase thumbnails change the product on stage", async ({ page }
 test("brand film reserves its row and fetches nothing until it is reached", async ({ page }) => {
   await page.goto("/");
   const video = page.locator("#brand-film video");
-  await expect(video).toHaveAttribute("poster", "/videos/banner-poster.webp");
+  await expect(video).toHaveAttribute("poster", "/videos/s26-ultra-hero-poster.webp");
   await expect(video).toHaveAttribute("preload", "none");
 
   // Below the fold it must still be still: nothing played, nothing downloaded.
@@ -79,8 +79,8 @@ test("phones get the stacked cut so the tagline stays readable", async ({ page }
   await page.goto("/");
 
   const video = page.locator("#brand-film video");
-  await expect(video).toHaveAttribute("src", "/videos/banner-portrait.mp4");
-  await expect(video).toHaveAttribute("poster", "/videos/banner-portrait-poster.webp");
+  await expect(video).toHaveAttribute("src", "/videos/s26-ultra-hero-portrait.mp4");
+  await expect(video).toHaveAttribute("poster", "/videos/s26-ultra-hero-portrait-poster.webp");
 
   // The frame has to take the film's own shape, or `cover` crops the copy off.
   const frame = (await page.locator(".brand-film__frame").boundingBox())!;

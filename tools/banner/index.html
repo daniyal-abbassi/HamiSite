@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>Hami Hamrah — homepage banner</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<style>
+  @font-face {
+    font-family: 'Vazirmatn';
+    src: url('../../public/fonts/vazirmatn-arabic-wght-normal.woff2') format('woff2');
+    font-weight: 100 900;
+    font-display: block;
+  }
+
+  :root {
+    --obsidian: #0B0204;
+    --champagne: #E5D3B3;
+    --oxblood: #640211;
+  }
+
+  html, body { margin: 0; padding: 0; background: var(--obsidian); }
+
+  #root {
+    position: relative;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    background: var(--obsidian);
+    font-family: 'Vazirmatn', sans-serif;
+  }
+
+  /* Spill from the lit screen. Lives inside .phone-wrap so it enters and leaves
+     with the device — otherwise it sits alone on the loop frame as a stray blob. */
+  .glow {
+    position: absolute;
+    left: 50%; top: 50%;
+    width: 1500px; height: 1180px;
+    margin-left: -750px; margin-top: -590px;
+    background: radial-gradient(ellipse at center, rgba(130, 26, 38, 0.42) 0%, rgba(100, 2, 17, 0.18) 42%, rgba(11, 2, 4, 0) 70%);
+  }
+
+  .vignette {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 50%, rgba(11,2,4,0) 55%, rgba(11,2,4,0.75) 100%);
+  }
+
+  /* ---- device ---- */
+  .phone-wrap {
+    position: absolute;
+    left: 330px; top: 116px;
+    width: 448px; height: 848px;
+  }
+
+  .phone {
+    width: 100%; height: 100%;
+    border-radius: 54px;
+    background: linear-gradient(145deg, #2a2024 0%, #141013 38%, #0d090b 100%);
+    border: 2px solid rgba(229, 211, 179, 0.22);
+    box-shadow: 0 60px 120px rgba(0, 0, 0, 0.75), inset 0 2px 0 rgba(229, 211, 179, 0.18);
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Lit champagne screen: the oxblood mark is drawn for a light ground, so this is
+     where it actually reads — and it makes the device the focal point. */
+  .screen {
+    position: absolute;
+    inset: 14px;
+    border-radius: 42px;
+    background: linear-gradient(165deg, #F4E9D5 0%, #E5D3B3 58%, #CDB68E 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mark { width: 168px; }
+
+  /* specular sweeping down the glass */
+  .sheen {
+    position: absolute;
+    left: -60%; top: -120%;
+    width: 110%; height: 340%;
+    background: linear-gradient(100deg, rgba(255,255,255,0) 38%, rgba(255,255,255,0.38) 50%, rgba(255,255,255,0) 62%);
+  }
+
+  .notch {
+    position: absolute;
+    top: 26px; left: 50%;
+    margin-left: -58px;
+    width: 116px; height: 12px;
+    border-radius: 999px;
+    background: rgba(11, 2, 4, 0.9);
+    border: 1px solid rgba(229, 211, 179, 0.12);
+  }
+
+  /* ---- copy ---- */
+  .copy {
+    position: absolute;
+    right: 150px; top: 356px;
+    width: 880px;
+    text-align: right;
+  }
+
+  .title {
+    margin: 0;
+    font-size: 168px;
+    font-weight: 700;
+    line-height: 1.22;
+    color: var(--champagne);
+    letter-spacing: 0;
+  }
+
+  .rule {
+    width: 320px; height: 4px;
+    margin: 36px 0 0 auto;
+    background: linear-gradient(to left, var(--champagne), rgba(229, 211, 179, 0));
+    transform-origin: right center;
+  }
+
+  .tagline {
+    margin: 34px 0 0;
+    font-size: 64px;
+    font-weight: 500;
+    line-height: 1.6;
+    color: #E5D3B3;
+    opacity: 0.92;
+  }
+</style>
+</head>
+<body>
+  <div id="root" data-composition-id="Banner" data-width="1920" data-height="1080" data-duration="8">
+    <div class="phone-wrap">
+      <div class="glow"></div>
+      <div class="phone">
+        <div class="screen">
+          <img class="mark" src="../../public/brand/hami-mark-alpha.png" alt="">
+        </div>
+        <div class="notch"></div>
+        <div class="sheen"></div>
+      </div>
+    </div>
+
+    <div class="copy">
+      <h1 class="title">حامی همراه</h1>
+      <div class="rule"></div>
+      <p class="tagline">اطمینان در انتخاب</p>
+    </div>
+
+    <div class="vignette"></div>
+  </div>
+
+<script>
+  const FPS = 30;
+
+  const tl = gsap.timeline({ paused: true });
+
+  // device slides in from the left edge and settles, still turning
+  tl.fromTo('.phone-wrap',
+      { x: -780, rotate: -14, opacity: 0 },
+      { x: 0, rotate: -6, opacity: 1, duration: 1.7, ease: 'power3.out' }, 0.15)
+
+    // copy rises, staggered behind the device
+    .fromTo('.title',
+      { y: 64, opacity: 0 },
+      { y: 0, opacity: 1, duration: 1.0, ease: 'power2.out' }, 0.95)
+    .fromTo('.rule',
+      { scaleX: 0 },
+      { scaleX: 1, duration: 0.9, ease: 'power2.inOut' }, 1.35)
+    .fromTo('.tagline',
+      { y: 34, opacity: 0 },
+      { y: 0, opacity: 1, duration: 0.9, ease: 'power2.out' }, 1.5)
+
+    // the slow turn that carries the middle of the banner
+    .to('.phone-wrap', { rotate: 1.5, y: -26, duration: 4.1, ease: 'sine.inOut' }, 1.85)
+    .fromTo('.sheen',
+      { y: '-34%' },
+      { y: '34%', duration: 3.4, ease: 'sine.inOut' }, 2.1)
+
+    // settle back to the frame-0 state so the loop has no seam
+    .to(['.title', '.rule', '.tagline'],
+      { opacity: 0, y: -34, duration: 0.75, ease: 'power2.in' }, 6.55)
+    .to('.phone-wrap',
+      { x: 760, rotate: 12, opacity: 0, duration: 1.0, ease: 'power3.in' }, 6.7);
+
+  function tick(timeMs) {
+    tl.seek(timeMs / 1000);
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+</script>
+</body>
+</html>
