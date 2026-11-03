@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { Pause, Play } from "lucide-react";
+import { storeContact } from "@/lib/content/contact";
 
 /* Two cuts of the same film. The wide one scaled to a phone's width leaves the
    phone numbers near 8px, so narrow screens get the stacked cut, which carries
@@ -105,8 +106,8 @@ export function BrandFilm() {
       </h2>
       {/* Words inside a video reach neither screen readers nor search engines. */}
       <p className="sr-only">
-        قیمت استثنایی. گارانتی امداد موبایل. رجیستر شده | دارای کد فعال‌سازی. سفارش از واتساپ: 09331214000 |
-        09153313001
+        قیمت استثنایی. گارانتی امداد موبایل. رجیستر شده | دارای کد فعال‌سازی. سفارش از واتساپ:{" "}
+        {storeContact.whatsappNumbers.join(" | ")}
       </p>
 
       <div className="brand-film__frame">
