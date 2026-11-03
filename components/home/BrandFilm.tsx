@@ -105,7 +105,7 @@ export function BrandFilm() {
       </h2>
       {/* Words inside a video reach neither screen readers nor search engines. */}
       <p className="sr-only">
-        ۲۴۴ میلیون تومان. گارانتی امداد موبایل. رجیستر شده | دارای کد فعال‌سازی. سفارش از واتساپ: 09331214000 |
+        قیمت استثنایی. گارانتی امداد موبایل. رجیستر شده | دارای کد فعال‌سازی. سفارش از واتساپ: 09331214000 |
         09153313001
       </p>
 
