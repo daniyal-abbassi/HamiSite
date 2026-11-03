@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "files": {
+    "https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js": {
+      "sha256": "28033e449a31ebcc396e5be8b13b63152bf03094288fb5867034321927bce087",
+      "size": 72214
+    }
+  }
+}
