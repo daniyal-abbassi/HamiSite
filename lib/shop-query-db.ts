@@ -72,6 +72,17 @@ async function toCategoryTree(): Promise<Omit<ShopCategory, "productCount">[]> {
   return (await listCategories()).map((c) => ({ id: c.id, name: c.name, slug: c.slug, parentId: c.parentId }));
 }
 
+/** Owner decision 2026-11-18: used iPhones are not sold, so they stay out of the default vitrine. */
+const USED_IPHONE_SLUG = "آیفون-استوک";
+
+export function subtreeIds(categories: readonly { id: number; parentId: number | null; slug: string }[], slug: string): number[] {
+  const root = categories.find((c) => c.slug === slug);
+  if (!root) return [];
+  const ids = [root.id];
+  for (let i = 0; i < ids.length; i++) for (const c of categories) if (c.parentId === ids[i]) ids.push(c.id);
+  return ids;
+}
+
 /** Category products including everything filed below them, by category id. */
 export function subtreeCounts() {
   return categorySubtreeCounts();
@@ -133,6 +144,9 @@ export async function buildShopView(params: SearchParamsRecord): Promise<ShopVie
      */
     categorySubtreeId: categoryOutcome.status === "resolved" ? categoryOutcome.item.id : undefined,
     brandId: brandOutcome.status === "resolved" ? brandOutcome.item.id : undefined,
+    // Default listing only: a visitor who picks a category or brand still sees everything filed there.
+    excludeCategoryIds:
+      categoryOutcome.status === "resolved" || brandOutcome.status === "resolved" ? undefined : subtreeIds(categories, USED_IPHONE_SLUG),
     minPrice: asInt(one(params.min), 0, Number.MAX_SAFE_INTEGER) ?? undefined,
     maxPrice: asInt(one(params.max), 0, Number.MAX_SAFE_INTEGER) ?? undefined,
     // `purchasable` is obtainability (the merchant's flag); the rest are shelf states.

@@ -112,6 +112,8 @@ export type CatalogQuery = {
   brandId?: number;
   categoryId?: number;
   categorySubtreeId?: number;
+  /** Category ids whose products are left out (main or secondary filing). */
+  excludeCategoryIds?: number[];
   stockType?: string;
   purchasableOnly?: boolean;
   specialOffer?: boolean;
@@ -153,6 +155,10 @@ export async function queryProducts(input: CatalogQuery, { includeAdminFields = 
   if (input.categorySubtreeId != null) {
     const ids = await descendantCategoryIds(input.categorySubtreeId);
     where.AND = [{ OR: [{ mainCategoryId: { in: [...ids] } }, { otherCategories: { some: { id: { in: [...ids] } } } }] }];
+  }
+  if (input.excludeCategoryIds?.length) {
+    const ids = input.excludeCategoryIds;
+    where.NOT = { OR: [{ mainCategoryId: { in: ids } }, { otherCategories: { some: { id: { in: ids } } } }] };
   }
 
   const start = Math.max(0, (input.page - 1) * input.pageSize);
