@@ -120,6 +120,7 @@ export async function buildShopView(params: SearchParamsRecord): Promise<ShopVie
   const page = asInt(one(params.page), 1, 10_000) ?? 1;
   const special = one(params.special);
   const sort = one(params.sort);
+  const stockParam = one(params.stock);
 
   const result = await queryProducts({
     q: one(params.q) ?? undefined,
@@ -136,8 +137,12 @@ export async function buildShopView(params: SearchParamsRecord): Promise<ShopVie
     minPrice: asInt(one(params.min), 0, Number.MAX_SAFE_INTEGER) ?? undefined,
     maxPrice: asInt(one(params.max), 0, Number.MAX_SAFE_INTEGER) ?? undefined,
     // `purchasable` is obtainability (the merchant's flag); the rest are shelf states.
-    purchasableOnly: one(params.stock) === "purchasable" ? true : undefined,
-    stockType: one(params.stock) && one(params.stock) !== "purchasable" ? one(params.stock)! : undefined,
+    // With no `stock` filter the vitrine shows only products the merchant flagged
+    // sellable (`available`): a product deactivated in the admin panel leaves the
+    // shop listing (used iPhones, Apple ID, SIM lines) while staying in the admin
+    // panel. An explicit shelf state keeps today's behaviour.
+    purchasableOnly: !stockParam || stockParam === "purchasable" ? true : undefined,
+    stockType: stockParam && stockParam !== "purchasable" ? stockParam : undefined,
     specialOffer: special === "1" ? true : special === "0" ? false : undefined,
     sort: resolveSortKey(sort) || undefined,
     // The card offers a colour choice, so it needs each variant's colour, price, stock and photograph.

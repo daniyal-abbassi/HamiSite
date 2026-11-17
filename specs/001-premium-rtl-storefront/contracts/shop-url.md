@@ -18,7 +18,7 @@ result set.
 | `category` | a category **slug**, Persian, URL-encoded | that category **or anything filed below it**, by `parent_id`. Amended in band 2: see the destination rules below. |
 | `brand` | a brand slug | AND-combines with `category` |
 | `min`, `max` | integer Toman | see the absent-price rule below |
-| `stock` | `purchasable` \| `limited` \| `call` \| `out_of_stock` | `purchasable` is obtainability (the merchant's flag); the other three are shelf states |
+| `stock` | `purchasable` \| `limited` \| `call` \| `out_of_stock` | `purchasable` is obtainability (the merchant's flag); the other three are shelf states. **Default (no `stock` key): the vitrine lists only `available` products** — a product deactivated in the admin panel leaves the shop listing. |
 | `special` | `1` | `special_offer` true; 11 records |
 | `sort` | `price-asc` \| `price-desc` \| `newest` \| `special` | all four have comparators since band 2 (T050); validated by `resolveSortKey()`, so an unknown key is no sort rather than a cast |
 | `page` | integer, **omitted at 1** | `:297-304` |
@@ -46,6 +46,12 @@ result set.
 6. **Default ordering is obtainability-first without hiding anything** (FR-025). `:287-294` orders
    purchasable → offer → `updated_at`, and `:240-243` deliberately refuses to use availability as a
    default *filter*. Do not "fix" the 184 unobtainable results by filtering them out.
+   **Amended 2026-11-17 (owner decision, Dani):** the vitrine now hides admin-deactivated products by
+   default — `buildShopView` (`lib/shop-query-db.ts`) passes `purchasableOnly: true` when no `stock` key
+   is present, so a product switched off in the admin panel (e.g. used iPhones) leaves `/shop`. The
+   ordering rule above still holds within the listed set, and an explicit shelf-state filter
+   (`stock=out_of_stock` etc.) still shows deactivated rows. The legacy in-memory seam
+   (`lib/shop-query.ts`) keeps the old behaviour and its tests; only the DB seam serving `/shop` changed.
 7. **`page` resets when any other key changes** (`ShopResults.tsx:52-59` does this for `sort`). A filter
    change that leaves the shopper on page 4 of a result set that no longer has 4 pages reads as a broken
    filter.
