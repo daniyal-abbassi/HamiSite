@@ -46,6 +46,13 @@ result set.
 6. **Default ordering is obtainability-first without hiding anything** (FR-025). `:287-294` orders
    purchasable → offer → `updated_at`, and `:240-243` deliberately refuses to use availability as a
    default *filter*. Do not "fix" the 184 unobtainable results by filtering them out.
+   **Amended 2026-11-18 (owner decision, Dani):** the default `/shop` listing leaves out the used-iPhone
+   category subtree (`آیفون-استوک`, id 28), because used phones are not sold. `buildShopView`
+   (`lib/shop-query-db.ts`) passes that subtree to `queryProducts` as `excludeCategoryIds`. This is a
+   category exclusion, **not** an availability filter: `available` is the legacy import's `purchasable`
+   flag (false on 183 of 195 rows), so the rule above still holds for everything else. An explicit
+   `category` or `brand` filter keeps today's behaviour. Only the DB seam serving `/shop` changed; the
+   legacy in-memory seam (`lib/shop-query.ts`) and its tests are untouched.
 7. **`page` resets when any other key changes** (`ShopResults.tsx:52-59` does this for `sort`). A filter
    change that leaves the shopper on page 4 of a result set that no longer has 4 pages reads as a broken
    filter.
