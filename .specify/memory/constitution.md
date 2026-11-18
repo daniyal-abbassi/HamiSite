@@ -3,6 +3,19 @@
 Sync Impact Report
 ==================
 
+Version change: 1.4.0 → 1.5.0
+
+Primary change:
+- Principle III: by owner instruction on 2026-11-18 (feature `specs/046-otp-auto-registration`),
+  customer authentication by SMS code is in scope, including creating a retail customer
+  automatically when a valid code is verified for a number with no account. Staff sign-in,
+  roles and business privileges are unchanged. This also records the earlier owner-approved
+  auth work of specs 043 (SMS.ir OTP login) and 045 (partner registration documents), which
+  had not been logged here. MINOR because it expands the existing scope without removing
+  a principle.
+
+---
+
 Version change: 1.3.0 → 1.4.0
 
 Primary change:
@@ -250,4 +263,4 @@ build traps, database safety, tooling. It is subordinate to this document, and a
 visual authority it claims (including describing `docs/inspires/` as a brand-design
 source of truth) is superseded by Principle IV.
 
-**Version**: 1.4.0 | **Ratified**: 2026-09-20 | **Last Amended**: 2026-10-04
+**Version**: 1.5.0 | **Ratified**: 2026-09-20 | **Last Amended**: 2026-11-18

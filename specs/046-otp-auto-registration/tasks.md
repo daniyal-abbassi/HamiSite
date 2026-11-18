@@ -96,7 +96,7 @@ No setup work. There is no schema change, no new dependency, no new environment 
 - [ ] T019 Merge PR #5
 - [ ] T020 Deploy to `i-083f7151b773eb5a3` with the larger Node heap (`NODE_OPTIONS=--max-old-space-size=1536`) or a build made elsewhere, then `pm2 reload tools/deploy/ecosystem.config.cjs --update-env`; the 913 MB server crashes a default build
 - [ ] T021 Run the manual steps in `quickstart.md` on https://hamihamrah-shop.cyou with a number you control
-- [ ] T022 Add an entry to the constitution's amendment log recording the owner instruction of 2026-11-18 for this auth change (Constitution Check "pass with note")
+- [x] T022 Add an entry to the constitution's amendment log recording the owner instruction of 2026-11-18 for this auth change (Constitution Check "pass with note")
 
 ---
 
@@ -119,6 +119,6 @@ No setup work. There is no schema change, no new dependency, no new environment 
 
 ## Summary
 
-- 22 tasks: 18 done, 4 open (T019 to T022 are the release steps: merge, deploy, manual check, constitution note).
+- 22 tasks: 19 done, 3 open (T019 merge, T020 deploy, T021 manual check).
 - Per story: US1 has 5 tasks, US2 3, US3 5, US4 3, plus 1 foundational and 5 release/polish tasks.
 - MVP: User Story 1, already in PR #5.
