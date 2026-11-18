@@ -96,7 +96,8 @@ export type AdminProductDetail = {
 
 /** `sanitizeUser` output — same as PublicUser (types/auth.ts). Re-exported for
  * admin list ergonomics. */
-export type { PublicUser as AdminUser } from "@/types/auth";
+import type { PublicUser } from "@/types/auth";
+export type AdminUser = PublicUser & { creationMethod: string | null };
 
 // ---------------------------------------------------------------------------
 // Categories & brands (public list shapes)

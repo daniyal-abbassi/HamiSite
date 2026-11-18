@@ -166,4 +166,73 @@ describe("SMS OTP customer authentication", () => {
     expect(await prisma.otpCode.count({ where: { phoneNumber: "+989120000102", status: "FAILED" } })).toBe(1);
     expect(sendCount).toBe(0);
   });
+  describe("automatic registration at first sign-in (spec 046)", () => {
+    const NEW = "+989121234567";
+
+    async function requestLogin(phoneNumber: string) {
+      const { data } = await (await requestOtp(request("/api/auth/otp/request", { phoneNumber, purpose: "LOGIN" }))).json();
+      return data.challengeId as string;
+    }
+
+    it("creates one retail customer and signs them in when a new number verifies", async () => {
+      const challengeId = await requestLogin(NEW);
+      const verified = await verifyOtp(request("/api/auth/otp/verify", { challengeId, code: deliveredCode }));
+      expect(verified.status).toBe(200);
+      expect(verified.headers.get("set-cookie")).toContain("session_token=");
+      const user = await prisma.user.findUniqueOrThrow({ where: { phoneNumber: NEW } });
+      expect(user).toMatchObject({ role: "RETAIL", phoneVerified: true, isActive: true, creationMethod: "otp-auto", firstName: null, businessVerified: false });
+      expect(await prisma.session.count({ where: { userId: user.id } })).toBe(1);
+    });
+
+    it("creates nothing for a wrong code", async () => {
+      const challengeId = await requestLogin(NEW);
+      const response = await verifyOtp(request("/api/auth/otp/verify", { challengeId, code: deliveredCode === "000000" ? "111111" : "000000" }));
+      expect(response.status).toBe(400);
+      expect(await prisma.user.count({ where: { phoneNumber: NEW } })).toBe(0);
+      expect(await prisma.session.count()).toBe(0);
+    });
+
+    it("creates nothing when only the code is requested", async () => {
+      await requestLogin(NEW);
+      expect(await prisma.user.count({ where: { phoneNumber: NEW } })).toBe(0);
+    });
+
+    it("keeps one account and one session when the same code is verified twice at once", async () => {
+      const challengeId = await requestLogin(NEW);
+      const body = { challengeId, code: deliveredCode };
+      const statuses = (await Promise.all([verifyOtp(request("/api/auth/otp/verify", body)), verifyOtp(request("/api/auth/otp/verify", body))])).map((r) => r.status).sort();
+      expect(statuses).toEqual([200, 400]);
+      expect(await prisma.user.count({ where: { phoneNumber: NEW } })).toBe(1);
+      expect(await prisma.session.count()).toBe(1);
+    });
+
+    it("signs into the account that appeared between the request and the verify", async () => {
+      const challengeId = await requestLogin(NEW);
+      const existing = await prisma.user.create({ data: { username: "registered.meanwhile", passwordHash: "unusable", role: "RETAIL", phoneNumber: NEW } });
+      const verified = await verifyOtp(request("/api/auth/otp/verify", { challengeId, code: deliveredCode }));
+      expect(verified.status).toBe(200);
+      expect((await verified.json()).data.id).toBe(existing.id);
+      expect(await prisma.user.count({ where: { phoneNumber: NEW } })).toBe(1);
+    });
+
+    it("signs a wholesale customer into their own account without changing role or business status", async () => {
+      const before = await prisma.user.findUniqueOrThrow({ where: { id: seed.wholesale.id } });
+      const challengeId = await requestLogin("+989120000103");
+      const verified = await verifyOtp(request("/api/auth/otp/verify", { challengeId, code: deliveredCode }));
+      expect(verified.status).toBe(200);
+      expect((await verified.json()).data.id).toBe(seed.wholesale.id);
+      const after = await prisma.user.findUniqueOrThrow({ where: { id: seed.wholesale.id } });
+      expect(after).toMatchObject({ role: "WHOLESALE", businessVerified: before.businessVerified, creationMethod: before.creationMethod });
+      expect(await prisma.user.count({ where: { creationMethod: "otp-auto" } })).toBe(0);
+    });
+
+    it("does not replace or sign in a deactivated customer", async () => {
+      const off = await prisma.user.create({ data: { username: "switched.off", passwordHash: "unusable", role: "RETAIL", phoneNumber: NEW, isActive: false } });
+      const challengeId = await requestLogin(NEW);
+      const response = await verifyOtp(request("/api/auth/otp/verify", { challengeId, code: deliveredCode }));
+      expect(response.status).toBe(400);
+      expect(await prisma.user.count({ where: { phoneNumber: NEW } })).toBe(1);
+      expect(await prisma.session.count({ where: { userId: off.id } })).toBe(0);
+    });
+  });
 });

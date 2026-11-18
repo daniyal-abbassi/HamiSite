@@ -86,6 +86,10 @@ export function AccountClient() {
     <div className="mt-8 space-y-6">
       <form onSubmit={saveProfile} className="rounded-2xl border border-line bg-card p-5 md:p-7">
         <h2 className="text-base font-black">اطلاعات تماس</h2>
+        {(() => {
+          const missing = [!profile.firstName && "نام", !profile.lastName && "نام خانوادگی", !profile.city && "شهر"].filter(Boolean);
+          return missing.length > 0 ? <p className="mt-2 text-xs leading-6 text-muted-foreground" role="status">اطلاعات تکمیل‌نشده: {missing.join("، ")}. برای ثبت سفارش به آن‌ها نیاز دارید.</p> : null;
+        })()}
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           <label className="text-xs font-bold">نام<input className={inputClass} value={profile.firstName ?? ""} onChange={(e) => setProfile({ ...profile, firstName: e.target.value || null })} maxLength={100} autoComplete="given-name" /></label>
           <label className="text-xs font-bold">نام خانوادگی<input className={inputClass} value={profile.lastName ?? ""} onChange={(e) => setProfile({ ...profile, lastName: e.target.value || null })} maxLength={100} autoComplete="family-name" /></label>

@@ -40,7 +40,7 @@ Request:
 }
 ```
 
-For LOGIN, a valid challenge belonging to an active RETAIL/WHOLESALE user is consumed atomically, `phoneVerified` is updated, and the existing session helper sets the same-origin session cookie. Response data contains the sanitized existing user and no OTP/provider secrets.
+For LOGIN, a valid challenge belonging to an active RETAIL/WHOLESALE user (or, per spec 046, to a number with no account, which creates one) is consumed atomically, `phoneVerified` is updated, and the existing session helper sets the same-origin session cookie. Response data contains the sanitized existing user and no OTP/provider secrets.
 
 For REGISTER, a valid challenge is consumed and a short-lived RegistrationProof is created. Set its random token in a Secure, HttpOnly, SameSite=Lax cookie; do not return the token to JavaScript. Return only the verified masked phone and proof expiry. No `User` or customer session is created at this step.
 
@@ -51,7 +51,7 @@ Failure contract:
 | Invalid code | Generic invalid/expired response; increment attempt count atomically. |
 | Expired, used, superseded, failed, or locked challenge | Generic invalid/expired response; no session/proof. |
 | More than 5 attempts | Lock challenge and reject. |
-| LOGIN number has no eligible customer | Return generic account-not-found only after phone ownership has been proven; do not create a session. |
+| LOGIN number has no account | **Amended 2026-11-18 (spec 046):** after phone ownership is proven, a retail customer is created and signed in. A number whose account is inactive, ADMIN or AGENT still returns `OTP_INVALID` with no session. |
 | Inactive account or staff role | Do not authenticate; do not change activation/role/permissions. |
 
 ## `POST /api/auth/register`

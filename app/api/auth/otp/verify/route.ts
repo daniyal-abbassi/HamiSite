@@ -1,7 +1,7 @@
 import { createHash, randomBytes } from "node:crypto";
-import { OtpChallengeStatus, OtpPurpose, Role } from "@prisma/client";
+import { OtpChallengeStatus, OtpPurpose, Prisma, Role } from "@prisma/client";
 import { NextResponse } from "next/server";
-import { generateSessionToken, hashSessionToken, sanitizeUser, SESSION_TTL_MS, setSessionCookie } from "@/lib/auth";
+import { generateSessionToken, hashPassword, hashSessionToken, sanitizeUser, SESSION_TTL_MS, setSessionCookie } from "@/lib/auth";
 import { ApiError, ok, parseJsonBody, withErrorHandling } from "@/lib/http";
 import { assertSameOrigin } from "@/lib/security/csrf";
 import { prisma } from "@/lib/prisma";
@@ -15,7 +15,7 @@ export async function POST(request: Request) {
   return withErrorHandling(async () => {
     assertSameOrigin(request);
     const { challengeId, code } = await parseJsonBody(request, otpVerifySchema);
-    const result = await prisma.$transaction(async (tx) => {
+    const verifyInTransaction = () => prisma.$transaction(async (tx) => {
       await tx.$queryRaw`SELECT id FROM "otp_codes" WHERE "publicId" = ${challengeId} FOR UPDATE`;
       const [{ now: databaseNow }] = await tx.$queryRaw<Array<{ now: Date }>>`SELECT timezone('UTC', clock_timestamp()) AS now`;
       const challenge = await tx.otpCode.findUnique({ where: { publicId: challengeId } });
@@ -34,7 +34,21 @@ export async function POST(request: Request) {
         await tx.registrationProof.create({ data: { tokenHash: createHash("sha256").update(token).digest("hex"), phoneNumber: challenge.phoneNumber, expiresAt: new Date(databaseNow.getTime() + 10 * 60_000) } });
         return { kind: "register" as const, token, phone: challenge.phoneNumber };
       }
-      const user = challenge.userId ? await tx.user.findUnique({ where: { id: challenge.userId } }) : null;
+      // A valid code proves ownership of the number, so an unknown number becomes a retail customer here
+      // (spec 046). A known number must still be an active customer, never staff.
+      let user = await tx.user.findUnique({ where: { phoneNumber: challenge.phoneNumber } });
+      if (user && challenge.userId && user.id !== challenge.userId) user = null;
+      if (!user && !challenge.userId) {
+        user = await tx.user.create({
+          data: {
+            username: `m${challenge.phoneNumber.replace(/\D/g, "")}`,
+            passwordHash: await hashPassword(randomBytes(48).toString("base64url")),
+            role: Role.RETAIL,
+            phoneNumber: challenge.phoneNumber,
+            creationMethod: "otp-auto",
+          },
+        });
+      }
       if (!user || user.phoneNumber !== challenge.phoneNumber || !user.isActive || (user.role !== Role.RETAIL && user.role !== Role.WHOLESALE)) return { kind: "invalid" as const, locked: false };
       const updated = await tx.user.update({ where: { id: user.id }, data: { phoneVerified: true, phoneVerifiedAt: databaseNow } });
       const token = generateSessionToken();
@@ -42,6 +56,15 @@ export async function POST(request: Request) {
       await tx.session.create({ data: { userId: user.id, tokenHash: hashSessionToken(token), userAgent: request.headers.get("user-agent"), expiresAt } });
       return { kind: "login" as const, token, expiresAt, user: updated };
     });
+    // Two verifications of one new number can race to create the user; the unique phone column picks the
+    // winner and the loser's transaction rolls back whole (code unconsumed), so one retry signs it in.
+    let result;
+    try {
+      result = await verifyInTransaction();
+    } catch (error) {
+      if (!(error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002")) throw error;
+      result = await verifyInTransaction();
+    }
     if (result.kind === "invalid") throw ApiError.coded(result.locked ? 429 : 400, result.locked ? "OTP_ATTEMPTS_EXCEEDED" : "OTP_INVALID", "Invalid verification code");
     if (result.kind === "register") {
       const response = ok({ maskedPhone: `${result.phone.slice(0, 5)}••••${result.phone.slice(-2)}`, expiresInSeconds: 600 });

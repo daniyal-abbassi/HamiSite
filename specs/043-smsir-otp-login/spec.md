@@ -21,6 +21,8 @@ As a returning customer from the previous shop, I want to verify the mobile numb
 2. **Given** a migrated account with an old shared password, **When** the customer attempts password sign-in, **Then** that password does not authenticate the customer.
 3. **Given** a number entered in Persian digits, English digits, or a supported Iranian mobile format, **When** the customer requests a code, **Then** the number resolves to the same normalized account identity.
 
+> **Amended 2026-11-18 (owner decision, spec 046):** verifying a code for a number with no account now creates a retail customer and signs them in, so a new visitor does not need the registration step below. The separate registration flow stays available for visitors who prefer it. See `specs/046-otp-auto-registration/`.
+
 ### User Story 2 - New customer registration (Priority: P2)
 
 As a new retail or wholesale customer, I want to verify my mobile number during registration so that my account is associated with a number I can receive messages on.
