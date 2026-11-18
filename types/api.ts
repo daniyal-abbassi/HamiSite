@@ -22,6 +22,9 @@ export type ApiErrorCode =
   | "NOT_FOUND"
   | "CONFLICT"
   | "DUPLICATE_ACCOUNT"
+  | "ORDER_NOT_PAYABLE"
+  | "MANUAL_PAYMENT_DISABLED"
+  | "NO_PAYMENT_REPORT"
   // 5xx
   | "INTERNAL_ERROR";
 

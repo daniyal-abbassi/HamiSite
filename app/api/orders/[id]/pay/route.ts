@@ -4,6 +4,7 @@ import { withAuth } from "@/lib/auth";
 import { ApiError, ok, withErrorHandling } from "@/lib/http";
 import { applyOrderStatusTransition, TERMINAL_CANCEL_STATUSES } from "@/lib/orders";
 import { getPaymentGateway } from "@/lib/payment/gateway";
+import { getCardToCardEnabled } from "@/lib/site-settings";
 import { prisma } from "@/lib/prisma";
 import { toNumber } from "@/lib/serializers";
 
@@ -89,6 +90,11 @@ export const POST = withAuth<{ id: string }>(async (_request, { user, params }) 
         await tx.order.update({ where: { id: orderId }, data: { status: "PROCESSING", paymentStatus: PaymentStatus.COMPLETED } });
       });
       return ok({ free: true, orderId }, { message: "Order settled without payment" });
+    }
+
+    // Gateway is down (or switched off by the owner): send the customer to the card-to-card page.
+    if (await getCardToCardEnabled()) {
+      return ok({ manual: true as const, orderId }, { message: "Manual payment required" });
     }
 
     const callbackUrl = new URL("/api/payments/callback", resolveBaseUrl()).toString();

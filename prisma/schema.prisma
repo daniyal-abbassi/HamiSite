@@ -696,6 +696,17 @@ model Payment {
   @@map("payments")
 }
 
+/// Small key/value store for owner-controlled switches edited from the admin
+/// dashboard. Today it holds `payment.cardToCard` ("on" | "off").
+model SiteSetting {
+  id        Int      @id @default(autoincrement())
+  key       String   @unique
+  value     String
+  updatedAt DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
 // ============================================================================
 // COUPONS & SPECIAL OFFERS
 // ============================================================================
