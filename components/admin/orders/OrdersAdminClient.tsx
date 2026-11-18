@@ -19,11 +19,12 @@ export function OrdersAdminClient() {
   const [orders, setOrders] = useState<OrderSummary[] | null>(null);
   const [page, setPage] = useState(1);
   const [status, setStatus] = useState<string>("");
+  const [awaitingPayment, setAwaitingPayment] = useState(false);
   const [meta, setMeta] = useState<{ total: number; hasNextPage: boolean } | null>(null);
   const [failed, setFailed] = useState(false);
   const requestVersion = useRef(0);
 
-  const load = useCallback(async (targetPage: number, targetStatus: string) => {
+  const load = useCallback(async (targetPage: number, targetStatus: string, onlyAwaitingPayment: boolean) => {
     const request = ++requestVersion.current;
     setOrders(null);
     setMeta(null);
@@ -31,6 +32,7 @@ export function OrdersAdminClient() {
     try {
       const params = new URLSearchParams({ page: String(targetPage), pageSize: String(PAGE_SIZE) });
       if (targetStatus) params.set("status", targetStatus);
+      if (onlyAwaitingPayment) params.set("paymentStatus", "SENT");
       const { data, meta: responseMeta } = await apiGetWithMeta<OrderSummary[]>(`/api/admin/orders?${params.toString()}`);
       if (request !== requestVersion.current) return;
       setOrders(data);
@@ -44,11 +46,11 @@ export function OrdersAdminClient() {
   }, []);
 
   useEffect(() => {
-    void load(page, status);
+    void load(page, status, awaitingPayment);
     return () => {
       requestVersion.current += 1;
     };
-  }, [load, page, status]);
+  }, [load, page, status, awaitingPayment]);
 
   return (
     <div>
@@ -69,13 +71,24 @@ export function OrdersAdminClient() {
             </option>
           ))}
         </Select>
+        <button
+          type="button"
+          aria-pressed={awaitingPayment}
+          onClick={() => {
+            setAwaitingPayment((value) => !value);
+            setPage(1);
+          }}
+          className={`min-h-11 rounded-xl border px-4 text-xs font-bold transition ${awaitingPayment ? "border-aqua bg-aqua/15 text-aqua" : "border-line text-foreground/80 hover:bg-foreground/5"}`}
+        >
+          در انتظار تأیید پرداخت
+        </button>
         {meta && <span className="font-mono text-[11px] text-muted-foreground/70">{meta.total.toLocaleString("fa-IR")} سفارش</span>}
       </div>
 
       {failed ? (
         <div className="flex flex-col items-center gap-3 rounded-2xl border border-destructive/40 bg-destructive/10 p-10 text-center">
           <p className="text-sm text-destructive">در بارگذاری سفارش‌ها خطایی رخ داد.</p>
-          <button type="button" onClick={() => void load(page, status)} className="flex items-center gap-1.5 text-xs font-bold text-aqua">
+          <button type="button" onClick={() => void load(page, status, awaitingPayment)} className="flex items-center gap-1.5 text-xs font-bold text-aqua">
             <RotateCcw className="size-3.5" /> تلاش دوباره
           </button>
         </div>

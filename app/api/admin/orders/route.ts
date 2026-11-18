@@ -1,4 +1,4 @@
-import { OrderStatus, Role } from "@prisma/client";
+import { OrderStatus, PaymentStatus, Role } from "@prisma/client";
 import { z } from "zod";
 import { withAuth } from "@/lib/auth";
 import { ApiError, ok, parsePagination, withErrorHandling } from "@/lib/http";
@@ -12,6 +12,7 @@ export const GET = withAuth(
       const pagination = parsePagination(searchParams);
       const userIdParam = searchParams.get("userId");
       const statusParam = searchParams.get("status");
+      const paymentStatusParam = searchParams.get("paymentStatus");
 
       let userId: number | undefined;
       if (userIdParam !== null) {
@@ -30,9 +31,19 @@ export const GET = withAuth(
         status = parsedStatus.data;
       }
 
+      let paymentStatus: PaymentStatus | undefined;
+      if (paymentStatusParam !== null) {
+        const parsedPaymentStatus = z.nativeEnum(PaymentStatus).safeParse(paymentStatusParam);
+        if (!parsedPaymentStatus.success) {
+          throw new ApiError(400, "Invalid paymentStatus");
+        }
+        paymentStatus = parsedPaymentStatus.data;
+      }
+
       const where = {
         ...(userId ? { userId } : {}),
         ...(status ? { status } : {}),
+        ...(paymentStatus ? { paymentStatus } : {}),
       };
 
       const [total, orders] = await Promise.all([

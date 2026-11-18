@@ -3,20 +3,22 @@
 import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { ArrowRight, Check, Truck } from "lucide-react";
+import { ArrowRight, Check, Landmark, Truck } from "lucide-react";
 import { StatusBadge } from "@/components/admin/StatusBadge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { Skeleton } from "@/components/ui/skeleton";
 import { apiErrorToFa } from "@/lib/api-error-fa";
-import { ApiClientError, apiGet, apiPatch } from "@/lib/api-client";
+import { ApiClientError, apiGet, apiPatch, apiPost } from "@/lib/api-client";
 import { formatFaDateTime, formatFaDate, paymentStatusTones } from "@/lib/content/order";
 import { formatToman } from "@/lib/utils";
 import type { OrderDetail } from "@/types/store";
 
 const ORDER_STATUSES = ["PENDING", "PROCESSING", "SHIPPING", "COMPLETED", "CANCELED", "FAILED", "REVERSED"] as const;
 const TERMINAL_STATUSES = ["CANCELED", "FAILED", "REVERSED"];
+
+const isTerminalOrder = (order: { status: string }) => TERMINAL_STATUSES.includes(order.status);
 
 export function OrderAdminDetailClient({ orderId }: { orderId: string }) {
   const router = useRouter();
@@ -27,6 +29,7 @@ export function OrderAdminDetailClient({ orderId }: { orderId: string }) {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [savedMessage, setSavedMessage] = useState<string | null>(null);
+  const [payBusy, setPayBusy] = useState(false);
 
   const load = useCallback(async () => {
     setFailed(false);
@@ -64,6 +67,25 @@ export function OrderAdminDetailClient({ orderId }: { orderId: string }) {
       setError(apiErrorToFa(cause));
     } finally {
       setSaving(false);
+    }
+  }
+
+  async function decidePayment(action: "confirm" | "reject") {
+    const question = action === "confirm"
+      ? "واریز در حساب بانکی بررسی شد و پرداخت این سفارش تأیید شود؟"
+      : "گزارش پرداخت مشتری رد شود؟ سفارش به حالت پرداخت‌نشده برمی‌گردد.";
+    if (!window.confirm(question)) return;
+    setPayBusy(true);
+    setError(null);
+    setSavedMessage(null);
+    try {
+      await apiPost(`/api/admin/orders/${orderId}/payment`, { action });
+      await load();
+      setSavedMessage(action === "confirm" ? "پرداخت تأیید شد و سفارش در حال پردازش است." : "گزارش پرداخت رد شد.");
+    } catch (cause) {
+      setError(apiErrorToFa(cause));
+    } finally {
+      setPayBusy(false);
     }
   }
 
@@ -115,6 +137,32 @@ export function OrderAdminDetailClient({ orderId }: { orderId: string }) {
           </p>
         )}
       </div>
+
+      {!isTerminalOrder(order) && (order.paymentStatus === "INITIATED" || order.paymentStatus === "SENT") && (
+        <section className="rounded-2xl border border-line bg-ink-2/60 p-6">
+          <h3 className="flex items-center gap-2 text-sm font-black">
+            <Landmark className="size-4 text-aqua" />
+            پرداخت کارت‌به‌کارت
+          </h3>
+          <div className="brand-hairline my-4" />
+          <p className="text-[13px] leading-6 text-muted-foreground">
+            {order.paymentStatus === "SENT"
+              ? "مشتری اعلام کرده که مبلغ را واریز کرده است. پس از بررسی حساب بانکی، پرداخت را تأیید یا رد کنید."
+              : "مشتری هنوز پرداخت را اعلام نکرده است. اگر واریز را در حساب خود دیدید، می‌توانید پرداخت را تأیید کنید."}
+          </p>
+          <div className="mt-4 flex flex-wrap gap-3">
+            <Button loading={payBusy} onClick={() => void decidePayment("confirm")}>
+              <Check className="size-4" />
+              تأیید پرداخت
+            </Button>
+            {order.paymentStatus === "SENT" && (
+              <Button variant="outline" disabled={payBusy} onClick={() => void decidePayment("reject")}>
+                رد پرداخت
+              </Button>
+            )}
+          </div>
+        </section>
+      )}
 
       {/* Status update */}
       <section className="rounded-2xl border border-line bg-ink-2/60 p-6">

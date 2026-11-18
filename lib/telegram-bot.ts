@@ -114,3 +114,59 @@ export async function notifyAdminsNewOrder(
   return { sentCount, failedCount };
 }
 
+export interface PaymentReportData extends OrderNotificationData {
+  reportedAt: Date;
+}
+
+/** Persian alert for a customer's "I have paid" card-to-card report. */
+export function formatPaymentReportedMessage(order: PaymentReportData): string {
+  const time = new Intl.DateTimeFormat("fa-IR", { dateStyle: "short", timeStyle: "short", timeZone: "Asia/Tehran" }).format(order.reportedAt);
+  return `💳 *مشتری پرداخت کارت‌به‌کارت را اعلام کرد*
+
+📦 شماره سفارش: \`${order.orderNumber}\`
+👤 مشتری: ${order.customerName}
+📞 تماس: \`${toFaDigits(order.phone)}\`
+💰 مبلغ: *${formatToman(order.totalAmount)}*
+🕒 زمان: ${time}
+
+لطفاً واریز را در حساب بانکی بررسی و سپس پرداخت را تأیید یا رد کنید:`;
+}
+
+/**
+ * Alert the Telegram admins that a customer reported a card-to-card payment.
+ * Reuses the new-order transport; never throws.
+ */
+export async function notifyAdminsPaymentReported(
+  order: PaymentReportData,
+  botToken: string = process.env.TELEGRAM_BOT_TOKEN || "",
+  adminIds: (string | number)[] | string = process.env.TELEGRAM_ADMIN_IDS || "",
+  appBaseUrl: string = process.env.APP_BASE_URL || "http://localhost:3000",
+  customFetch: typeof fetch = fetch
+): Promise<{ sentCount: number; failedCount: number }> {
+  if (!botToken || botToken === "mock_telegram_bot_token") return { sentCount: 0, failedCount: 0 };
+  const targetIds = (Array.isArray(adminIds) ? adminIds.map(String) : adminIds.split(/[,\s]+/)).map((id) => id.trim()).filter(Boolean);
+  if (targetIds.length === 0) return { sentCount: 0, failedCount: 0 };
+
+  const text = formatPaymentReportedMessage(order);
+  const reply_markup = createOrderInlineKeyboard(order.id, appBaseUrl);
+  let sentCount = 0;
+  let failedCount = 0;
+  for (const chatId of targetIds) {
+    try {
+      const res = await customFetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ chat_id: chatId, text, parse_mode: "Markdown", reply_markup }),
+      });
+      if (res.ok) sentCount++;
+      else {
+        failedCount++;
+        console.warn(`Telegram payment alert failed for chat_id ${chatId}: HTTP ${res.status}`);
+      }
+    } catch (err) {
+      failedCount++;
+      console.warn(`Telegram payment alert error for chat_id ${chatId}:`, err);
+    }
+  }
+  return { sentCount, failedCount };
+}

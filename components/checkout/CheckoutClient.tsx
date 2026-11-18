@@ -172,7 +172,9 @@ export function CheckoutClient() {
       // callback; prod: Zarinpal).
       try {
         const payment = await apiPost<PaymentInitiation>(`/api/orders/${order.id}/pay`);
-        if (payment.free) {
+        if (payment.manual) {
+          router.push(`/order/${order.id}/transfer`);
+        } else if (payment.free) {
           router.push(`/payment/result?payment=success&orderId=${payment.orderId}`);
         } else {
           window.location.href = payment.redirectUrl;

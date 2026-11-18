@@ -5,6 +5,7 @@ import { POST as pay } from "@/app/api/orders/[id]/pay/route";
 import { GET as callback } from "@/app/api/payments/callback/route";
 import { GET as mockConfirm } from "@/app/api/payments/mock-confirm/route";
 import { prisma } from "@/lib/prisma";
+import { setCardToCardEnabled } from "@/lib/site-settings";
 import { ctx, getRequest, jsonRequest, loginAs } from "../helpers/request";
 import { seedMinimal, type SeedResult } from "../helpers/seed";
 
@@ -13,6 +14,8 @@ let retailCookie: string;
 
 beforeEach(async () => {
   seed = await seedMinimal();
+  // These tests cover the gateway path; card-to-card mode is on by default.
+  await setCardToCardEnabled(false);
   retailCookie = await loginAs(seed.retail);
 });
 

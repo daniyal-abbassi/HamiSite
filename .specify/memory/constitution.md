@@ -3,6 +3,18 @@
 Sync Impact Report
 ==================
 
+Version change: 1.5.0 → 1.6.0
+
+Primary change:
+- Principle III: by owner instruction on 2026-11-19 (feature `specs/047-card-to-card-payment`),
+  a manual card-to-card payment path is in scope while the online gateway is unavailable:
+  customers are shown the shop's bank details and report their transfer, an administrator is
+  alerted and confirms or rejects it, and an owner switch in the admin dashboard chooses
+  between this path and the gateway. Confirmation reuses the gateway's order-settlement
+  rules. MINOR because it expands the existing payment scope without removing a principle.
+
+---
+
 Version change: 1.4.0 → 1.5.0
 
 Primary change:
@@ -263,4 +275,4 @@ build traps, database safety, tooling. It is subordinate to this document, and a
 visual authority it claims (including describing `docs/inspires/` as a brand-design
 source of truth) is superseded by Principle IV.
 
-**Version**: 1.5.0 | **Ratified**: 2026-09-20 | **Last Amended**: 2026-11-18
+**Version**: 1.6.0 | **Ratified**: 2026-09-20 | **Last Amended**: 2026-11-19

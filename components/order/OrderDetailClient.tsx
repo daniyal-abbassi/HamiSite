@@ -57,7 +57,9 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
     setError(null);
     try {
       const payment = await apiPost<PaymentInitiation>(`/api/orders/${orderId}/pay`);
-      if (payment.free) {
+      if (payment.manual) {
+        router.push(`/order/${orderId}/transfer`);
+      } else if (payment.free) {
         router.push(`/payment/result?payment=success&orderId=${payment.orderId}`);
       } else {
         window.location.href = payment.redirectUrl;
@@ -120,7 +122,12 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
           </div>
         </div>
 
-        {canPay && (
+        {canPay && order.paymentStatus === "SENT" && (
+          <div className="mt-5 rounded-xl border border-aqua/40 bg-aqua/10 p-4" role="status">
+            <p className="text-sm leading-6">گزارش پرداخت کارت‌به‌کارت شما ثبت شد و سفارش در انتظار تأیید پرداخت است. پس از بررسی، وضعیت سفارش به‌روز می‌شود.</p>
+          </div>
+        )}
+        {canPay && order.paymentStatus !== "SENT" && (
           <div className="mt-5 rounded-xl border border-aqua/40 bg-aqua/10 p-4">
             <p className="text-sm leading-6">این سفارش هنوز پرداخت نشده است. برای ادامه فرایند، پرداخت را انجام دهید.</p>
             <Button className="mt-3" loading={paying} onClick={() => void pay()}>

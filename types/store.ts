@@ -205,5 +205,6 @@ export type OrderCreationResult = {
 
 /** POST /api/orders/[id]/pay response */
 export type PaymentInitiation =
-  | { redirectUrl: string; authority: string; free?: never; orderId?: never }
-  | { free: true; orderId: number; redirectUrl?: never; authority?: never };
+  | { redirectUrl: string; authority: string; free?: never; orderId?: never; manual?: never }
+  | { free: true; orderId: number; redirectUrl?: never; authority?: never; manual?: never }
+  | { manual: true; orderId: number; free?: never; redirectUrl?: never; authority?: never };

@@ -32,6 +32,12 @@ export function apiErrorToFa(error: unknown, fallback = "خطایی رخ داد.
       return "حساب شما غیرفعال شده است. با پشتیبانی تماس بگیرید.";
     case "DUPLICATE_ACCOUNT":
       return "این حساب قبلاً ثبت شده است؛ وارد شوید یا شماره/ایمیل دیگری امتحان کنید.";
+    case "ORDER_NOT_PAYABLE":
+      return "این سفارش قبلاً پرداخت شده یا بسته شده است.";
+    case "MANUAL_PAYMENT_DISABLED":
+      return "پرداخت کارت‌به‌کارت در حال حاضر فعال نیست.";
+    case "NO_PAYMENT_REPORT":
+      return "پرداختی برای رد کردن ثبت نشده است.";
     case "VALIDATION_FAILED": {
       const fieldErrors = (error.details as { formErrors?: string[]; fieldErrors?: Record<string, string[]> } | undefined);
       const first = fieldErrors?.formErrors?.[0] ?? Object.values(fieldErrors?.fieldErrors ?? {})[0]?.[0];
