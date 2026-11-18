@@ -49,7 +49,8 @@ export function UserMenu() {
     );
   }
 
-  const displayName = user.firstName ?? user.username;
+  // An auto-registered customer has no name yet; show their number rather than the generated username.
+  const displayName = user.firstName || `0${user.phoneNumber.slice(3)}`;
 
   return (
     <>

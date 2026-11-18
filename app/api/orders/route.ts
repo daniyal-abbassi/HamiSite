@@ -319,6 +319,11 @@ export const POST = withAuth(async (request, { user }) => {
     const totalAmount = subtotal - discountAppliedToSubtotal + shippingPrice;
 
     const order = await prisma.$transaction(async (tx) => {
+      // Complete a bare (auto-registered) profile from its first order so the details are not asked twice.
+      // Only empty fields are filled; nothing the customer already set is overwritten.
+      if (!user.firstName || !user.lastName || !user.city) {
+        await tx.user.update({ where: { id: user.id }, data: { firstName: user.firstName ?? input.firstName, lastName: user.lastName ?? input.lastName, city: user.city ?? input.city } });
+      }
       const created = await tx.order.create({
         data: {
           orderNumber: createOrderNumber(),

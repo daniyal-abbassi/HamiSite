@@ -172,3 +172,20 @@ describe("order payment", () => {
     expect(await prisma.payment.count({ where: { orderId: created.id } })).toBe(0);
   });
 });
+
+describe("profile completion from an order (spec 046)", () => {
+  it("fills an empty profile from the order and leaves existing details alone", async () => {
+    await prisma.user.update({ where: { id: seed.retail.id }, data: { firstName: null, lastName: null, city: "Shiraz" } });
+    const res = await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx());
+    expect(res.status).toBe(200);
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: seed.retail.id } });
+    expect(user).toMatchObject({ firstName: "Ali", lastName: "Retail", city: "Shiraz" });
+  });
+
+  it("never overwrites a name the customer already has", async () => {
+    await prisma.user.update({ where: { id: seed.retail.id }, data: { firstName: "Existing", lastName: "Name", city: "Isfahan" } });
+    await createOrder(jsonRequest("http://localhost/api/orders", "POST", orderPayload(), retailCookie), ctx());
+    const user = await prisma.user.findUniqueOrThrow({ where: { id: seed.retail.id } });
+    expect(user).toMatchObject({ firstName: "Existing", lastName: "Name", city: "Isfahan" });
+  });
+});
