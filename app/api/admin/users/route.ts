@@ -32,7 +32,7 @@ export const GET = withAuth(
         }),
       ]);
 
-      return ok(users.map(sanitizeUser), {
+      return ok(users.map((user) => ({ ...sanitizeUser(user), creationMethod: user.creationMethod })), {
         page: pagination.page,
         pageSize: pagination.pageSize,
         total,

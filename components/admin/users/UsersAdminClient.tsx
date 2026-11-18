@@ -167,6 +167,7 @@ export function UsersAdminClient() {
                               {u.firstName ? `${u.firstName} ${u.lastName ?? ""}`.trim() : u.username}
                             </span>
                             <ActiveBadge active={u.isActive} />
+                            {u.creationMethod === "otp-auto" && <span className="rounded-full bg-foreground/10 px-1.5 py-0.5 text-[10px] font-bold text-muted-foreground">ثبت‌نام خودکار</span>}
                           </div>
                           <span className="font-mono text-[10px] text-muted-foreground/70">
                             @{u.username}

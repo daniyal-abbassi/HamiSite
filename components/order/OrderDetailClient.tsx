@@ -203,7 +203,7 @@ export function OrderDetailClient({ orderId }: { orderId: string }) {
             </address>
           ) : (
             <p className="text-sm leading-7 text-muted-foreground">
-              {order.customer.username ? `${order.customer.username} — ` : ""}
+              {order.customer.phoneNumber ? `${order.customer.phoneNumber} — ` : ""}
               تحویل حضوری / بدون آدرس ذخیره‌شده
             </p>
           )}

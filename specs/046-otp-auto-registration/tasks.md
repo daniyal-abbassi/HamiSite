@@ -54,7 +54,7 @@ No setup work. There is no schema change, no new dependency, no new environment 
 
 - [x] T007 [P] [US2] Existing test "authenticates the original customer account and consumes the challenge once" in `tests/api/auth-otp.test.ts` covers FR-006 for retail; keep it green
 - [x] T008 [P] [US2] In `tests/api/auth-otp.test.ts`: a deactivated customer's number returns `OTP_INVALID`, creates no replacement and no session (FR-007)
-- [ ] T009 [P] [US2] In `tests/api/auth-otp.test.ts`: a WHOLESALE customer signs in with `role` and `businessVerified` unchanged (FR-006, SC-005). Only retail is asserted today
+- [x] T009 [P] [US2] In `tests/api/auth-otp.test.ts`: a WHOLESALE customer signs in with `role` and `businessVerified` unchanged (FR-006, SC-005). Only retail is asserted today
 
 **Checkpoint**: US1 and US2 together are the full sign-in behaviour.
 
@@ -69,8 +69,8 @@ No setup work. There is no schema change, no new dependency, no new environment 
 - [x] T010 [US3] In `app/api/orders/route.ts`, inside the order transaction: fill `firstName`, `lastName` and `city` from the order only where the user's value is empty, never overwrite (FR-011, FR-012)
 - [x] T011 [P] [US3] In `tests/api/orders.test.ts`: empty profile is filled from the order; an existing name and city are left alone
 - [x] T012 [P] [US3] In `components/layout/UserMenu.tsx`: show `0` + the phone number without `+98` when `firstName` is empty (FR-013)
-- [ ] T013 [P] [US3] In `components/account/AccountClient.tsx` (rendered by `app/(main)/account/page.tsx`): when `firstName`, `lastName` or `city` is empty, show a short Persian notice above the form that names the missing details (FR-011, "the profile shows which details are still empty"). Today the empty inputs are the only hint
-- [ ] T014 [P] [US3] In `components/order/OrderDetailClient.tsx` (line 206): do not print the generated username `m98912…` as the customer's name; fall back to the order's own `firstName lastName` (FR-013)
+- [x] T013 [P] [US3] In `components/account/AccountClient.tsx` (rendered by `app/(main)/account/page.tsx`): when `firstName`, `lastName` or `city` is empty, show a short Persian notice above the form that names the missing details (FR-011, "the profile shows which details are still empty"). Today the empty inputs are the only hint
+- [x] T014 [P] [US3] In `components/order/OrderDetailClient.tsx` (line 206): show the customer's phone number instead of the generated username `m98912…` on the no-address line (FR-013); the order summary carries no name
 
 **Checkpoint**: a customer who signs in, shops and orders ends with a complete profile without ever filling a sign-up form.
 
@@ -84,7 +84,7 @@ No setup work. There is no schema change, no new dependency, no new environment 
 
 - [x] T015 [P] [US4] Existing test "does not grant staff access through a customer OTP challenge" in `tests/api/auth-otp.test.ts` covers an ADMIN number (FR-009); keep it green
 - [x] T016 [P] [US4] The T004 assertion `role: "RETAIL", businessVerified: false` covers FR-008 for new accounts
-- [ ] T017 [US4] In `app/(admin)/admin/users/page.tsx`: show how each account was created (`creationMethod`) so auto-registered accounts can be found and unusual volume noticed (FR-015). Today they are findable only by querying the database
+- [x] T017 [US4] In `app/(admin)/admin/users/page.tsx`: show how each account was created (`creationMethod`) so auto-registered accounts can be found and unusual volume noticed (FR-015). Today they are findable only by querying the database
 
 **Checkpoint**: all four stories are independently verifiable.
 
@@ -119,6 +119,6 @@ No setup work. There is no schema change, no new dependency, no new environment 
 
 ## Summary
 
-- 22 tasks: 14 done, 8 open (T009, T013, T014, T017 are small follow-ups; T019 to T022 are the release steps).
+- 22 tasks: 18 done, 4 open (T019 to T022 are the release steps: merge, deploy, manual check, constitution note).
 - Per story: US1 has 5 tasks, US2 3, US3 5, US4 3, plus 1 foundational and 5 release/polish tasks.
 - MVP: User Story 1, already in PR #5.

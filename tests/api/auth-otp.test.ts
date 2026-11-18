@@ -215,6 +215,17 @@ describe("SMS OTP customer authentication", () => {
       expect(await prisma.user.count({ where: { phoneNumber: NEW } })).toBe(1);
     });
 
+    it("signs a wholesale customer into their own account without changing role or business status", async () => {
+      const before = await prisma.user.findUniqueOrThrow({ where: { id: seed.wholesale.id } });
+      const challengeId = await requestLogin("+989120000103");
+      const verified = await verifyOtp(request("/api/auth/otp/verify", { challengeId, code: deliveredCode }));
+      expect(verified.status).toBe(200);
+      expect((await verified.json()).data.id).toBe(seed.wholesale.id);
+      const after = await prisma.user.findUniqueOrThrow({ where: { id: seed.wholesale.id } });
+      expect(after).toMatchObject({ role: "WHOLESALE", businessVerified: before.businessVerified, creationMethod: before.creationMethod });
+      expect(await prisma.user.count({ where: { creationMethod: "otp-auto" } })).toBe(0);
+    });
+
     it("does not replace or sign in a deactivated customer", async () => {
       const off = await prisma.user.create({ data: { username: "switched.off", passwordHash: "unusable", role: "RETAIL", phoneNumber: NEW, isActive: false } });
       const challengeId = await requestLogin(NEW);

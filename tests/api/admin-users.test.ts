@@ -129,3 +129,12 @@ describe("admin users", () => {
     expect(stillRetail.role).toBe(Role.RETAIL);
   });
 });
+
+describe("admin user list shows how accounts were created (spec 046)", () => {
+  it("includes creationMethod so auto-registered accounts can be told apart", async () => {
+    await prisma.user.create({ data: { username: "m989121111111", passwordHash: "unusable", role: "RETAIL", phoneNumber: "+989121111111", creationMethod: "otp-auto" } });
+    const res = await listUsers(getRequest("http://localhost/api/admin/users?role=RETAIL", adminCookie), ctx());
+    const { data } = await res.json();
+    expect(data.find((u: { username: string }) => u.username === "m989121111111").creationMethod).toBe("otp-auto");
+  });
+});
