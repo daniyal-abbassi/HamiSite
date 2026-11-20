@@ -13,15 +13,20 @@ export interface OrderNotificationData {
 /**
  * Format an attractive Persian notification message for Telegram admins.
  */
-export function formatNewOrderAlertMessage(order: OrderNotificationData): string {
-  const cityLine = order.city ? `\n📍 مقصد: ${order.city}` : "";
-  return `🛍 *سفارش جدید در حامی همراه!*
+/* Messages are HTML, not Markdown: customer names and cities are free text, and one stray `_`, `*` or
+   backtick in Markdown makes Telegram reject the whole message with HTTP 400. Escaping three characters
+   in HTML is total; escaping Markdown reliably is not. */
+const esc = (value: string | number) => String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-📦 شماره سفارش: \`${order.orderNumber}\`
-👤 مشتری: ${order.customerName}
-📞 تماس: \`${toFaDigits(order.phone)}\`${cityLine}
+export function formatNewOrderAlertMessage(order: OrderNotificationData): string {
+  const cityLine = order.city ? `\n📍 مقصد: ${esc(order.city)}` : "";
+  return `🛍 <b>سفارش جدید در حامی همراه!</b>
+
+📦 شماره سفارش: <code>${esc(order.orderNumber)}</code>
+👤 مشتری: ${esc(order.customerName)}
+📞 تماس: <code>${esc(toFaDigits(order.phone))}</code>${cityLine}
 🛍 تعداد اقلام: ${toFaDigits(order.itemCount)} عدد
-💰 مبلغ کل: *${formatToman(order.totalAmount)}*
+💰 مبلغ کل: <b>${esc(formatToman(order.totalAmount))}</b>
 
 برای مشاهده سریع و تغییر وضعیت سفارش، دکمه زیر را لمس فرمایید:`;
 }
@@ -50,68 +55,85 @@ export function createOrderInlineKeyboard(
   };
 }
 
+let warnedUnconfigured = false;
+
+function parseAdminIds(adminIds: (string | number)[] | string): string[] {
+  return (Array.isArray(adminIds) ? adminIds.map(String) : adminIds.split(/[,\s]+/)).map((id) => id.trim()).filter(Boolean);
+}
+
+/** Telegram's own explanation of a refusal ("chat not found", "can't parse entities"...). The token is never part of it. */
+async function refusalReason(res: Response): Promise<string> {
+  try {
+    const body = (await res.json()) as { description?: string };
+    return body.description ?? "no description";
+  } catch {
+    return "no description";
+  }
+}
+
 /**
- * Send new order alert messages with Mini App buttons to all configured admin IDs.
- * Non-blocking and never throws errors upwards.
+ * Deliver one alert to every administrator. Never throws; one unreachable admin never blocks the rest.
+ * A refusal is logged with Telegram's reason. If the mini-app button is what Telegram refused, the text
+ * is resent without it: an alert without a button beats no alert.
  */
-export async function notifyAdminsNewOrder(
+async function sendAdminAlert(
+  kind: string,
+  orderNumber: string,
+  text: string,
+  replyMarkup: ReturnType<typeof createOrderInlineKeyboard>,
+  botToken: string,
+  adminIds: (string | number)[] | string,
+  customFetch: typeof fetch,
+): Promise<{ sentCount: number; failedCount: number }> {
+  const targetIds = parseAdminIds(adminIds);
+  if (!botToken || botToken === "mock_telegram_bot_token" || targetIds.length === 0) {
+    if (!warnedUnconfigured && process.env.NODE_ENV === "production") {
+      warnedUnconfigured = true;
+      console.warn("Telegram alerts are not configured (TELEGRAM_BOT_TOKEN / TELEGRAM_ADMIN_IDS): no admin will be alerted");
+    }
+    return { sentCount: 0, failedCount: 0 };
+  }
+
+  const post = (chat_id: string, withButton: boolean) =>
+    customFetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ chat_id, text, parse_mode: "HTML", ...(withButton ? { reply_markup: replyMarkup } : {}) }),
+    });
+
+  let sentCount = 0;
+  let failedCount = 0;
+  for (const chatId of targetIds) {
+    try {
+      let res = await post(chatId, true);
+      if (!res.ok && res.status === 400) {
+        const reason = await refusalReason(res);
+        console.warn(`Telegram ${kind} alert for order ${orderNumber} refused for chat_id ${chatId}: HTTP 400 — ${reason}; retrying without the button`);
+        res = await post(chatId, false);
+      }
+      if (res.ok) {
+        sentCount++;
+      } else {
+        failedCount++;
+        console.warn(`Telegram ${kind} alert for order ${orderNumber} failed for chat_id ${chatId}: HTTP ${res.status} — ${await refusalReason(res)}`);
+      }
+    } catch (err) {
+      failedCount++;
+      console.warn(`Telegram ${kind} alert for order ${orderNumber} error for chat_id ${chatId}:`, err instanceof Error ? err.message : err);
+    }
+  }
+  return { sentCount, failedCount };
+}
+
+/** New order alert with the mini-app button. Non-blocking, never throws. */
+export function notifyAdminsNewOrder(
   order: OrderNotificationData,
   botToken: string = process.env.TELEGRAM_BOT_TOKEN || "",
   adminIds: (string | number)[] | string = process.env.TELEGRAM_ADMIN_IDS || "",
   appBaseUrl: string = process.env.APP_BASE_URL || "http://localhost:3000",
   customFetch: typeof fetch = fetch
 ): Promise<{ sentCount: number; failedCount: number }> {
-  if (!botToken || botToken === "mock_telegram_bot_token") {
-    // Bot token not configured or default mock; log silently in non-production
-    return { sentCount: 0, failedCount: 0 };
-  }
-
-  let targetIds: string[] = [];
-  if (Array.isArray(adminIds)) {
-    targetIds = adminIds.map((id) => String(id).trim()).filter(Boolean);
-  } else if (typeof adminIds === "string") {
-    targetIds = adminIds
-      .split(/[,\s]+/)
-      .map((id) => id.trim())
-      .filter(Boolean);
-  }
-
-  if (targetIds.length === 0) {
-    return { sentCount: 0, failedCount: 0 };
-  }
-
-  const messageText = formatNewOrderAlertMessage(order);
-  const replyMarkup = createOrderInlineKeyboard(order.id, appBaseUrl);
-
-  let sentCount = 0;
-  let failedCount = 0;
-
-  for (const chatId of targetIds) {
-    try {
-      const res = await customFetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          chat_id: chatId,
-          text: messageText,
-          parse_mode: "Markdown",
-          reply_markup: replyMarkup,
-        }),
-      });
-
-      if (res.ok) {
-        sentCount++;
-      } else {
-        failedCount++;
-        console.warn(`Telegram alert failed for chat_id ${chatId}: HTTP ${res.status}`);
-      }
-    } catch (err) {
-      failedCount++;
-      console.warn(`Telegram alert error for chat_id ${chatId}:`, err);
-    }
-  }
-
-  return { sentCount, failedCount };
+  return sendAdminAlert("new-order", order.orderNumber, formatNewOrderAlertMessage(order), createOrderInlineKeyboard(order.id, appBaseUrl), botToken, adminIds, customFetch);
 }
 
 export interface PaymentReportData extends OrderNotificationData {
@@ -121,52 +143,24 @@ export interface PaymentReportData extends OrderNotificationData {
 /** Persian alert for a customer's "I have paid" card-to-card report. */
 export function formatPaymentReportedMessage(order: PaymentReportData): string {
   const time = new Intl.DateTimeFormat("fa-IR", { dateStyle: "short", timeStyle: "short", timeZone: "Asia/Tehran" }).format(order.reportedAt);
-  return `💳 *مشتری پرداخت کارت‌به‌کارت را اعلام کرد*
+  return `💳 <b>مشتری پرداخت کارت‌به‌کارت را اعلام کرد</b>
 
-📦 شماره سفارش: \`${order.orderNumber}\`
-👤 مشتری: ${order.customerName}
-📞 تماس: \`${toFaDigits(order.phone)}\`
-💰 مبلغ: *${formatToman(order.totalAmount)}*
-🕒 زمان: ${time}
+📦 شماره سفارش: <code>${esc(order.orderNumber)}</code>
+👤 مشتری: ${esc(order.customerName)}
+📞 تماس: <code>${esc(toFaDigits(order.phone))}</code>
+💰 مبلغ: <b>${esc(formatToman(order.totalAmount))}</b>
+🕒 زمان: ${esc(time)}
 
 لطفاً واریز را در حساب بانکی بررسی و سپس پرداخت را تأیید یا رد کنید:`;
 }
 
-/**
- * Alert the Telegram admins that a customer reported a card-to-card payment.
- * Reuses the new-order transport; never throws.
- */
-export async function notifyAdminsPaymentReported(
+/** Alert the Telegram admins that a customer reported a card-to-card payment. Never throws. */
+export function notifyAdminsPaymentReported(
   order: PaymentReportData,
   botToken: string = process.env.TELEGRAM_BOT_TOKEN || "",
   adminIds: (string | number)[] | string = process.env.TELEGRAM_ADMIN_IDS || "",
   appBaseUrl: string = process.env.APP_BASE_URL || "http://localhost:3000",
   customFetch: typeof fetch = fetch
 ): Promise<{ sentCount: number; failedCount: number }> {
-  if (!botToken || botToken === "mock_telegram_bot_token") return { sentCount: 0, failedCount: 0 };
-  const targetIds = (Array.isArray(adminIds) ? adminIds.map(String) : adminIds.split(/[,\s]+/)).map((id) => id.trim()).filter(Boolean);
-  if (targetIds.length === 0) return { sentCount: 0, failedCount: 0 };
-
-  const text = formatPaymentReportedMessage(order);
-  const reply_markup = createOrderInlineKeyboard(order.id, appBaseUrl);
-  let sentCount = 0;
-  let failedCount = 0;
-  for (const chatId of targetIds) {
-    try {
-      const res = await customFetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ chat_id: chatId, text, parse_mode: "Markdown", reply_markup }),
-      });
-      if (res.ok) sentCount++;
-      else {
-        failedCount++;
-        console.warn(`Telegram payment alert failed for chat_id ${chatId}: HTTP ${res.status}`);
-      }
-    } catch (err) {
-      failedCount++;
-      console.warn(`Telegram payment alert error for chat_id ${chatId}:`, err);
-    }
-  }
-  return { sentCount, failedCount };
+  return sendAdminAlert("payment-reported", order.orderNumber, formatPaymentReportedMessage(order), createOrderInlineKeyboard(order.id, appBaseUrl), botToken, adminIds, customFetch);
 }
