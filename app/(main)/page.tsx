@@ -10,10 +10,12 @@ import { FeaturedProducts } from "@/components/home/FeaturedProducts";
 import { discountedProductsRail, homepageProductsRail } from "@/lib/home-rails-db";
 import { DiscountedProducts } from "@/components/home/DiscountedProducts";
 import { AssemblyBand } from "@/components/home/AssemblyBand";
+import { BlackFridayHeroVideo } from "@/components/home/BlackFridayHeroVideo";
+import { BlackFridayBanner } from "@/components/home/BlackFridayBanner";
 import { BrandFilm } from "@/components/home/BrandFilm";
 import { BrandShowcase } from "@/components/home/BrandShowcase";
 import { CategoryHub } from "@/components/home/CategoryHub";
-import { Suspense } from "react";
+import { Suspense, type ReactNode } from "react";
 import { HomeRailSkeleton } from "@/components/home/HomeRailSkeleton";
 import "./home.css";
 
@@ -138,21 +140,34 @@ function Hero() {
   );
 }
 
-async function FeaturedProductsSection() {
-  const products = await homepageProductsRail();
-  return <FeaturedProducts products={products} />;
+/** A catalogue section must never take the homepage down: if the database is unreachable, render nothing for it. */
+async function guarded(name: string, render: () => Promise<ReactNode>): Promise<ReactNode> {
+  try {
+    return await render();
+  } catch (error) {
+    console.warn(`homepage: ${name} unavailable, section skipped`, error);
+    return null;
+  }
 }
 
-async function DiscountedProductsSection() {
-  const products = await discountedProductsRail();
-  if (products.length === 0) return null;
-  return <DiscountedProducts products={products} />;
-}
+const FeaturedProductsSection = () =>
+  guarded("featured rail", async () => <FeaturedProducts products={await homepageProductsRail()} />);
+
+const DiscountedProductsSection = () =>
+  guarded("discounted rail", async () => {
+    const products = await discountedProductsRail();
+    return products.length === 0 ? null : <DiscountedProducts products={products} />;
+  });
+
+const CategoryHubSection = () => guarded("category hub", () => CategoryHub());
+const BrandShowcaseSection = () => guarded("brand showcase", () => BrandShowcase());
 
 export default function HomePage() {
   return (
     <>
       <Hero />
+      <BlackFridayHeroVideo />
+      <BlackFridayBanner />
       <Suspense fallback={<HomeRailSkeleton />}>
         <FeaturedProductsSection />
       </Suspense>
@@ -161,10 +176,10 @@ export default function HomePage() {
         <DiscountedProductsSection />
       </Suspense>
       <Suspense fallback={null}>
-        <CategoryHub />
+        <CategoryHubSection />
       </Suspense>
       <Suspense fallback={null}>
-        <BrandShowcase />
+        <BrandShowcaseSection />
       </Suspense>
       <AssemblyBand />
     </>
